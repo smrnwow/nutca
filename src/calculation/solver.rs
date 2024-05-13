@@ -124,23 +124,16 @@ impl<'a> Solver<'a> {
 
 #[cfg(test)]
 mod tests {
+    use crate::calculation::composition::Composition;
+    use crate::calculation::profile::Profile;
+    use crate::fertilizers::fertilizer::Fertiliser;
+    use crate::formula::builder::Builder;
+
+    use super::Solver;
+
     #[test]
     fn basic_nutrient_profile() {
-        /*
-        let builder = Builder::new();
-
-        let calcium_nitrate = builder.build("Ca(NO3)2");
-        let pottasium_nitrate = builder.build("KNO3");
-        let ammonium_nitrate = builder.build("NH4NO3");
-        let magnesium_sulfate = builder.build("MgSO4*7H2O");
-        let pottasium_sulfate = builder.build("K2SO4");
-        let monopottasium_phosphate = builder.build("KH2PO4");
-        let iron_chelate = builder.build("C14H18N3O10Fe(NH4)2");
-        let manganesium_sulfate = builder.build("MnSO4*H2O");
-        let boric_acid = builder.build("H3BO3");
-        let molibdenium_acid = builder.build("Na2MoO4*2H2O");
-        let zink_sulfate = builder.build("ZnSO4*7H2O");
-        let cuprum_sulfate = builder.build("CuSO4*5H2O");
+        let formula_builder = Builder::new();
 
         let mut composition = Composition::new();
         composition.add_nutrient("N", 189.);
@@ -157,54 +150,77 @@ mod tests {
         composition.add_nutrient("Mo", 0.05);
 
         let mut profile = Profile::new(composition);
+
         profile.add_fertilizer(Fertiliser::from_formula(
-            "calcium_nitrate",
+            "calcium nitrate",
             "",
-            &calcium_nitrate,
-        ));
-        profile.add_fertilizer(Fertiliser::from_formula(
-            "pottasium_nitrate",
-            "",
-            &pottasium_nitrate,
-        ));
-        profile.add_fertilizer(Fertiliser::from_formula(
-            "ammonium_nitrate",
-            "",
-            &ammonium_nitrate,
-        ));
-        profile.add_fertilizer(Fertiliser::from_formula(
-            "magnesium_sulfate",
-            "",
-            &magnesium_sulfate,
-        ));
-        profile.add_fertilizer(Fertiliser::from_formula(
-            "pottasium_sulfate",
-            "",
-            &pottasium_sulfate,
-        ));
-        profile.add_fertilizer(Fertiliser::from_formula(
-            "monopottasium_phosphate",
-            "",
-            &monopottasium_phosphate,
+            formula_builder.build("Ca(NO3)2").unwrap(),
         ));
 
-        profile.add_fertilizer(Fertiliser::from_formula("iron_chelate", "", &iron_chelate));
         profile.add_fertilizer(Fertiliser::from_formula(
-            "manganesium_sulfate",
+            "pottasium nitrate",
             "",
-            &manganesium_sulfate,
+            formula_builder.build("KNO3").unwrap(),
         ));
-        profile.add_fertilizer(Fertiliser::from_formula("boric_acid", "", &boric_acid));
+
         profile.add_fertilizer(Fertiliser::from_formula(
-            "molibdenium_acid",
+            "ammonium nitrate",
             "",
-            &molibdenium_acid,
+            formula_builder.build("NH4NO3").unwrap(),
         ));
-        profile.add_fertilizer(Fertiliser::from_formula("zink_sulfate", "", &zink_sulfate));
+
         profile.add_fertilizer(Fertiliser::from_formula(
-            "cuprum_sulfate",
+            "magnesium sulfate",
             "",
-            &cuprum_sulfate,
+            formula_builder.build("MgSO4*7H2O").unwrap(),
+        ));
+
+        profile.add_fertilizer(Fertiliser::from_formula(
+            "pottasium sulfate",
+            "",
+            formula_builder.build("K2SO4").unwrap(),
+        ));
+
+        profile.add_fertilizer(Fertiliser::from_formula(
+            "monopottasium phosphate",
+            "",
+            formula_builder.build("KH2PO4").unwrap(),
+        ));
+
+        profile.add_fertilizer(Fertiliser::from_formula(
+            "iron chelate",
+            "",
+            formula_builder.build("C14H18N3O10Fe(NH4)2").unwrap(),
+        ));
+
+        profile.add_fertilizer(Fertiliser::from_formula(
+            "manganese sulfate",
+            "",
+            formula_builder.build("MnSO4*H2O").unwrap(),
+        ));
+
+        profile.add_fertilizer(Fertiliser::from_formula(
+            "boric acid",
+            "",
+            formula_builder.build("H3BO3").unwrap(),
+        ));
+
+        profile.add_fertilizer(Fertiliser::from_formula(
+            "molibden acid",
+            "",
+            formula_builder.build("Na2MoO4*2H2O").unwrap(),
+        ));
+
+        profile.add_fertilizer(Fertiliser::from_formula(
+            "zink sulfate",
+            "",
+            formula_builder.build("ZnSO4*7H2O").unwrap(),
+        ));
+
+        profile.add_fertilizer(Fertiliser::from_formula(
+            "cuprum sulfate",
+            "",
+            formula_builder.build("CuSO4*5H2O").unwrap(),
         ));
 
         match Solver::new(&profile) {
@@ -220,6 +236,5 @@ mod tests {
                 println!("{:#?}", errors);
             }
         }
-        */
     }
 }

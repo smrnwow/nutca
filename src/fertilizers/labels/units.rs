@@ -1,5 +1,5 @@
 #[derive(Debug)]
-pub enum MeasurementUnit {
+pub enum Units {
     Percentage,
     WeightVolume,
 }

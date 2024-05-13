@@ -1,2 +1,4 @@
+pub mod component;
 pub mod label;
-pub mod measurement_unit;
+pub mod nutrient;
+pub mod units;

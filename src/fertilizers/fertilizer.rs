@@ -1,3 +1,4 @@
+use super::labels::label::Label;
 use super::nutrient::Nutrient;
 use crate::formula::formula::Formula;
 
@@ -28,6 +29,23 @@ impl Fertiliser {
         }
     }
 
+    pub fn from_label(name: &str, vendor: &str, label: Label) -> Self {
+        let mut nutrients: Vec<Nutrient> = Vec::new();
+
+        label.components().iter().for_each(|component| {
+            nutrients.push(Nutrient {
+                element: component.element.clone(),
+                percent: component.percent,
+            });
+        });
+
+        Self {
+            name: String::from(name),
+            vendor: String::from(vendor),
+            nutrients,
+        }
+    }
+
     pub fn percent_of(&self, nutrient_symbol: &str) -> Option<f32> {
         let nutrient = self
             .nutrients
@@ -45,176 +63,38 @@ impl Fertiliser {
     }
 }
 
-/*
-    pub fn from_label(label: labels::Label) -> Fertiliser {
-        let composition = match label.units {
-            labels::MeasurementUnit::WeightVolume => {
-                let mut components: Vec<Component> = Vec::new();
-
-                let total_weight: f32 = label
-                    .nutrients
-                    .values()
-                    .map(|nutrient| nutrient.amount)
-                    .sum();
-
-                for nutrient in label.nutrients.values() {
-                    let comp = Component {
-                        element: nutrient.element.clone(),
-                        percent: (nutrient.amount / total_weight) * 100.,
-                    };
-
-                    components.push(comp.clone());
-
-                    /*
-                    println!(
-                        "{} has {} percent of {}",
-                        label.name, comp.element.symbol, comp.percent
-                    );
-                    */
-                }
-
-                components
-            }
-
-            labels::MeasurementUnit::Percentage => {
-                let mut components: Vec<Component> = Vec::new();
-
-                for nutrient in label.nutrients.values() {
-                    let comp = Component {
-                        element: nutrient.element.clone(),
-                        percent: nutrient.amount,
-                    };
-
-                    components.push(comp.clone());
-
-                    /*
-                    println!(
-                        "{} has {} percent of {}",
-                        label.name, comp.element.symbol, comp.percent
-                    );
-                    */
-                }
-
-                components
-            }
-        };
-
-        Fertiliser {
-            name: label.name.clone(),
-            vendor: String::new(),
-            composition,
-        }
-    }
-
-    pub fn from_model(name: String, vendor: String, nutrients: Vec<Component>) -> Fertiliser {
-        Fertiliser {
-            name,
-            vendor,
-            composition: nutrients,
-        }
-    }
-
-    pub fn components(&self) -> Vec<Component> {
-        let mut components: Vec<Component> = Vec::new();
-
-        for component in &self.composition {
-            if component.element.nutrient {
-                components.push(component.clone());
-            }
-        }
-
-        components
-    }
-
-    pub fn contains(&self, nutrient: &String) -> bool {
-        for component in &self.composition {
-            if component.element.symbol.contains(nutrient) {
-                return true;
-            }
-        }
-
-        false
-    }
-
-    pub fn calculate(&self, amount: f32) {
-        for component in &self.composition {
-            if component.element.nutrient {
-                println!(
-                    "{} provide {} PPM of {} in {} amount",
-                    self.name,
-                    ((component.percent / 100.) * amount) * 1000.,
-                    component.element.symbol,
-                    amount
-                );
-            }
-        }
-    }
-}
-*/
-
-/*
 #[cfg(test)]
 mod tests {
-    use super::{labels, Fertiliser};
+    use crate::fertilizers::labels::label::Label;
+    use crate::fertilizers::labels::nutrient::Nutrient;
+    use crate::fertilizers::labels::units::Units;
+    use crate::formula::builder::Builder;
+
+    use super::Fertiliser;
+
+    #[test]
+    fn from_label() {
+        let mut label = Label::new(Units::WeightVolume);
+
+        label.add_nutrient(Nutrient::Magnesium(Some(15000.), None));
+        label.add_nutrient(Nutrient::Iron(Some(3200.)));
+        label.add_nutrient(Nutrient::Manganese(Some(1600.)));
+        label.add_nutrient(Nutrient::Boron(Some(1200.)));
+        label.add_nutrient(Nutrient::Zink(Some(360.)));
+        label.add_nutrient(Nutrient::Cuprum(Some(320.)));
+        label.add_nutrient(Nutrient::Molibden(Some(102.)));
+
+        let fertilizer = Fertiliser::from_label("uniflor micro", "", label);
+
+        println!("{:#?}", fertilizer);
+    }
 
     #[test]
     fn from_formula() {
-        Fertiliser::from_formula("", "Ca(NO3)2*3H2O");
+        let formula = Builder::new().build("MgSO4*7H2O").unwrap();
 
-        // Fertiliser::from_formula("KNO3");
-        // Fertiliser::from_formula("MgSO4*7H2O");
-    }
+        let fertilizer = Fertiliser::from_formula("magnesium sulfate", "", formula);
 
-    #[test]
-    fn from_weight_volume_label() {
-        let label = labels::Label::new(
-            "Унифлор микро",
-            labels::MeasurementUnit::WeightVolume,
-            vec![
-                ("Mg", 15000.),
-                ("Fe", 3200.),
-                ("Na", 4800.),
-                ("Mn", 1600.),
-                ("B", 1200.),
-                ("Zn", 360.),
-                ("Cu", 320.),
-                ("Mo", 102.),
-                ("I", 80.),
-                ("Co", 48.),
-                ("Cr", 22.),
-                ("Ni", 29.),
-                ("Se", 10.),
-                ("Br", 6.),
-                ("Al", 0.9),
-            ],
-        );
-
-        Fertiliser::from_label(label);
-    }
-
-    #[test]
-    fn from_percentage_label() {
-        let label = labels::Label::new(
-            "Fertika люкс",
-            labels::MeasurementUnit::Percentage,
-            vec![
-                ("N", 3.2),
-                ("P2O5", 4.2),
-                ("K2O", 5.4),
-                ("Fe", 0.02),
-                ("Mn", 0.02),
-                ("B", 0.004),
-                ("Cu", 0.002),
-                ("Zn", 0.002),
-                ("Mo", 0.0004),
-            ],
-        );
-
-        Fertiliser::from_label(label).calculate(7.606);
-
-        Fertiliser::from_formula("", "Ca(NO3)2").calculate(0.696);
-
-        Fertiliser::from_formula("", "MgSO4*7H2O").calculate(0.486);
+        println!("{:#?}", fertilizer);
     }
 }
- */

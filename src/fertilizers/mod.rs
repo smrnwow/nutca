@@ -1,3 +1,3 @@
 pub mod fertilizer;
-// pub mod labels;
+pub mod labels;
 pub mod nutrient;
