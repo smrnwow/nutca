@@ -1,13 +1,13 @@
 use crate::chemistry::element::Element;
 
 #[derive(Debug)]
-pub struct FormulaComponent {
+pub struct Component {
     element: Element,
     atoms_count: i32,
     mass_percent: f32,
 }
 
-impl FormulaComponent {
+impl Component {
     pub fn new(element: Element, atoms_count: i32) -> Self {
         Self {
             element,

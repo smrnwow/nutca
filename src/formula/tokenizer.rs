@@ -1,62 +1,78 @@
-use super::compound::Compound;
-use super::element::Element;
-use super::group::Group;
-use super::hydrate::Hydrate;
+use super::tokens::{Compound, Element, Group, Hydrate};
+use crate::error::Error;
 use core::iter::Peekable;
 use core::str::Chars;
 
 pub struct Tokenizer<'a> {
+    formula: &'a str,
     chars: Peekable<Chars<'a>>,
 }
 
 impl<'a> Tokenizer<'a> {
-    pub fn new(formula: &str) -> Tokenizer {
-        Tokenizer {
+    pub fn new(formula: &'a str) -> Self {
+        Self {
+            formula,
             chars: formula.chars().peekable(),
         }
     }
 
-    pub fn tokenize(&mut self) -> Compound {
+    pub fn tokenize(&mut self) -> Result<Compound, Error> {
+        if self.formula.len() == 0 {
+            let message = format!("empty formula");
+            return Err(Error::new(message));
+        }
+
         self.compound()
     }
 
-    fn compound(&mut self) -> Compound {
+    fn compound(&mut self) -> Result<Compound, Error> {
         let mut compound = Compound::new();
 
-        while let Some(char) = self.chars.peek() {
-            match char {
-                '0'..='9' if compound.empty() => compound.add_coefficient(self.coefficient()),
-                'A'..='Z' => compound.add_element(self.element()),
-                '(' => compound.add_group(self.group()),
-                '*' => compound.add_hydrate(self.hydrate()),
-                _ => break,
+        loop {
+            if let Some(char) = self.chars.peek() {
+                match char {
+                    '0'..='9' if compound.empty() => compound.add_coefficient(self.coefficient()),
+                    'A'..='Z' => compound.add_element(self.element()),
+                    '(' => compound.add_group(self.group().unwrap()),
+                    '*' => compound.add_hydrate(self.hydrate()),
+                    _ => {
+                        let message = format!("unexpected character \"{}\"", char);
+                        break Err(Error::new(message));
+                    }
+                }
+            } else {
+                break Ok(compound);
             }
         }
-
-        compound
     }
 
-    fn group(&mut self) -> Group {
+    fn group(&mut self) -> Result<Group, Error> {
         self.chars.next();
 
         let mut group = Group::new();
 
-        while let Some(char) = self.chars.peek() {
-            match char {
-                'A'..='Z' => group.add_element(self.element()),
-                '(' => group.add_group(self.group()),
-                ')' => {
-                    self.chars.next();
+        loop {
+            if let Some(char) = self.chars.peek() {
+                match char {
+                    'A'..='Z' => group.add_element(self.element()),
+                    '(' => group.add_group(self.group()?),
+                    ')' => {
+                        self.chars.next();
 
-                    group.add_subscript(self.subscript());
+                        group.add_subscript(self.subscript());
 
-                    break;
+                        break Ok(group);
+                    }
+                    _ => {
+                        let message = format!("unexpected symbol \"{}\"", char);
+                        break Err(Error::new(message));
+                    }
                 }
-                _ => break,
+            } else {
+                let message = format!("unexpected end of formula");
+                break Err(Error::new(message));
             }
         }
-
-        group
     }
 
     fn hydrate(&mut self) -> Hydrate {
@@ -104,27 +120,22 @@ impl<'a> Tokenizer<'a> {
     fn symbol(&mut self) -> String {
         let mut symbol = String::new();
 
-        while let Some(char) = self.chars.next() {
+        while let Some(&char) = self.chars.peek() {
             if char.is_alphabetic() {
-                symbol.push(char);
-
-                match self.chars.peek() {
-                    Some(next) => {
-                        if !next.is_alphabetic() {
-                            break;
-                        }
-
-                        if next.is_uppercase() {
-                            break;
-                        }
-                    }
-                    None => {
-                        break;
-                    }
+                if char.is_uppercase() && symbol.len() == 0 {
+                    symbol.push(char);
+                    self.chars.next();
+                    continue;
                 }
-            } else {
-                break;
+
+                if char.is_lowercase() && symbol.len() > 0 {
+                    symbol.push(char);
+                    self.chars.next();
+                    continue;
+                }
             }
+
+            break;
         }
 
         symbol
@@ -136,11 +147,11 @@ impl<'a> Tokenizer<'a> {
         while let Some(&char) = self.chars.peek() {
             if char.is_digit(10) {
                 subscript.push(char);
-
                 self.chars.next();
-            } else {
-                break;
+                continue;
             }
+
+            break;
         }
 
         subscript.parse().unwrap_or(1)
@@ -150,26 +161,22 @@ impl<'a> Tokenizer<'a> {
 #[cfg(test)]
 mod tests {
     use super::Tokenizer;
-    use crate::formula::tokenization::component::Component;
-    use crate::formula::tokenization::compound::Compound;
-    use crate::formula::tokenization::element::Element;
-    use crate::formula::tokenization::group::Group;
-    use crate::formula::tokenization::hydrate::Hydrate;
+    use crate::formula::tokens::{Component, Compound, Element, Group, Hydrate};
 
     #[test]
     fn single_element() {
         assert_eq!(
-            Tokenizer::new("N").tokenize(),
+            Tokenizer::new("N").tokenize().unwrap(),
             Compound::from(1, vec![Component::Element(Element::from("N", 1))], None)
         );
 
         assert_eq!(
-            Tokenizer::new("Mg").tokenize(),
+            Tokenizer::new("Mg").tokenize().unwrap(),
             Compound::from(1, vec![Component::Element(Element::from("Mg", 1))], None)
         );
 
         assert_eq!(
-            Tokenizer::new("Mg3").tokenize(),
+            Tokenizer::new("Mg3").tokenize().unwrap(),
             Compound::from(1, vec![Component::Element(Element::from("Mg", 3))], None)
         );
     }
@@ -177,7 +184,7 @@ mod tests {
     #[test]
     fn multiple_elements() {
         assert_eq!(
-            Tokenizer::new("KNO3").tokenize(),
+            Tokenizer::new("KNO3").tokenize().unwrap(),
             Compound::from(
                 1,
                 vec![
@@ -193,7 +200,7 @@ mod tests {
     #[test]
     fn group() {
         assert_eq!(
-            Tokenizer::new("Ca(NO3)2").tokenize(),
+            Tokenizer::new("Ca(NO3)2").tokenize().unwrap(),
             Compound::from(
                 1,
                 vec![
@@ -211,7 +218,7 @@ mod tests {
         );
 
         assert_eq!(
-            Tokenizer::new("C14H18N3O10Fe(NH4)2").tokenize(),
+            Tokenizer::new("C14H18N3O10Fe(NH4)2").tokenize().unwrap(),
             Compound::from(
                 1,
                 vec![
@@ -236,7 +243,7 @@ mod tests {
     #[test]
     fn coefficient() {
         assert_eq!(
-            Tokenizer::new("2C14H18N3O10Fe(NH4)2").tokenize(),
+            Tokenizer::new("2C14H18N3O10Fe(NH4)2").tokenize().unwrap(),
             Compound::from(
                 2,
                 vec![
@@ -261,7 +268,7 @@ mod tests {
     #[test]
     fn hydrate() {
         assert_eq!(
-            Tokenizer::new("MgSO4*7H2O").tokenize(),
+            Tokenizer::new("MgSO4*7H2O").tokenize().unwrap(),
             Compound::from(
                 1,
                 vec![

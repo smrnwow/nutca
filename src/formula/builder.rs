@@ -1,5 +1,4 @@
-use super::formula::Formula;
-use super::tokenization::tokenizer::Tokenizer;
+use super::{Formula, Tokenizer};
 use crate::chemistry::table::Table;
 use crate::error::Error;
 
@@ -14,32 +13,22 @@ impl Builder {
         }
     }
 
-    pub fn build(&self, formula: &str) -> Result<Formula, Vec<Error>> {
-        let mut errors: Vec<Error> = Vec::new();
-
+    pub fn build(&self, formula: &str) -> Result<Formula, Error> {
         let mut formula_builder = Formula::new();
 
-        let compound = Tokenizer::new(formula).tokenize();
+        let compound = Tokenizer::new(formula).tokenize()?;
 
-        compound.elements().iter().for_each(|element| {
+        for element in compound.elements() {
             match self.table.element(element.symbol.as_str()) {
                 Some(chemical_element) => {
                     formula_builder.add_element(chemical_element, element.subscript);
                 }
                 None => {
-                    let message = format!("UnexpectedElement: {}", element.symbol);
+                    let message = format!("unknown element: {}", element.symbol);
 
-                    errors.push(Error::new(message));
+                    return Err(Error::new(message));
                 }
             }
-        });
-
-        if errors.len() > 0 {
-            return Err(errors);
-        }
-
-        if compound.coefficient() > 1 {
-            formula_builder.multiple(compound.coefficient());
         }
 
         formula_builder.calculate_molar_mass();

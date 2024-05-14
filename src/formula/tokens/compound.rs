@@ -1,7 +1,4 @@
-use super::component::Component;
-use super::element::Element;
-use super::group::Group;
-use super::hydrate::Hydrate;
+use super::{Component, Element, Group, Hydrate};
 
 #[derive(Debug)]
 pub struct Compound {
@@ -69,6 +66,12 @@ impl Compound {
         if let Some(hydrate) = &self.hydrate {
             hydrate.elements().iter().for_each(|element| {
                 elements.push(element.clone());
+            });
+        }
+
+        if self.coefficient > 1 {
+            elements.iter_mut().for_each(|element| {
+                element.subscript = element.subscript * self.coefficient;
             });
         }
 

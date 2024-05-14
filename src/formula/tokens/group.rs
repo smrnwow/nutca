@@ -1,5 +1,4 @@
-use super::component::Component;
-use super::element::Element;
+use super::{Component, Element};
 
 #[derive(Debug)]
 pub struct Group {

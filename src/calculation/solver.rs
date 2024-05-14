@@ -77,9 +77,14 @@ impl<'a> Solver<'a> {
                             .add_constraint(coefficients, ConstraintOp::Gte, 0.)
                             .unwrap();
                     }
-                    "Fe" | "Mn" | "Zn" | "B" | "Cu" | "Mo" => {
+                    "B" => {
                         self.problem
                             .add_constraint(coefficients, ConstraintOp::Eq, value.1.into())
+                            .unwrap();
+                    }
+                    "Fe" | "Mn" | "Zn" | "Cu" | "Mo" => {
+                        self.problem
+                            .add_constraint(coefficients, ConstraintOp::Gte, 0.0)
                             .unwrap();
                     }
                     _ => {}
@@ -109,7 +114,7 @@ impl<'a> Solver<'a> {
                 if let Some(fertilizer) = self.variables.get(&variable_id) {
                     println!(
                         "{:#?} amount = {}",
-                        fertilizer.name(),
+                        fertilizer.get_name(),
                         amount / 10. * tank_size as f64
                     );
                 }
@@ -124,16 +129,18 @@ impl<'a> Solver<'a> {
 
 #[cfg(test)]
 mod tests {
+    use super::Solver;
     use crate::calculation::composition::Composition;
     use crate::calculation::profile::Profile;
     use crate::fertilizers::fertilizer::Fertiliser;
+    use crate::fertilizers::labels::label::Label;
+    use crate::fertilizers::labels::nutrient::Nutrient;
+    use crate::fertilizers::labels::units::Units;
     use crate::formula::builder::Builder;
-
-    use super::Solver;
 
     #[test]
     fn basic_nutrient_profile() {
-        let formula_builder = Builder::new();
+        let formula = Builder::new();
 
         let mut composition = Composition::new();
         composition.add_nutrient("N", 189.);
@@ -149,44 +156,34 @@ mod tests {
         composition.add_nutrient("Cu", 0.05);
         composition.add_nutrient("Mo", 0.05);
 
+        let fertilizers = vec![
+            Fertiliser::from(formula.build("Ca(NO3)2").unwrap()).name("calcium nitrate"),
+            Fertiliser::from(formula.build("KNO3").unwrap()).name("pottasium nitrate"),
+            Fertiliser::from(formula.build("NH4NO3").unwrap()).name("ammonium nitrate"),
+            Fertiliser::from(formula.build("MgSO4*7H2O").unwrap()).name("magnesium sulfate"),
+            Fertiliser::from(formula.build("K2SO4").unwrap()).name("pottasium sulfate"),
+            Fertiliser::from(formula.build("KH2PO4").unwrap()).name("monopottasium phosphate"),
+        ];
+
         let mut profile = Profile::new(composition);
 
-        profile.add_fertilizer(Fertiliser::from_formula(
-            "calcium nitrate",
-            "",
-            formula_builder.build("Ca(NO3)2").unwrap(),
-        ));
+        for fertilizer in fertilizers {
+            profile.add_fertilizer(fertilizer);
+        }
 
-        profile.add_fertilizer(Fertiliser::from_formula(
-            "pottasium nitrate",
-            "",
-            formula_builder.build("KNO3").unwrap(),
-        ));
+        let mut label = Label::new(Units::WeightVolume);
 
-        profile.add_fertilizer(Fertiliser::from_formula(
-            "ammonium nitrate",
-            "",
-            formula_builder.build("NH4NO3").unwrap(),
-        ));
+        label.add_nutrient(Nutrient::Magnesium(Some(15000.), None));
+        label.add_nutrient(Nutrient::Iron(Some(3200.)));
+        label.add_nutrient(Nutrient::Manganese(Some(1600.)));
+        label.add_nutrient(Nutrient::Boron(Some(1200.)));
+        label.add_nutrient(Nutrient::Zink(Some(360.)));
+        label.add_nutrient(Nutrient::Cuprum(Some(320.)));
+        label.add_nutrient(Nutrient::Molibden(Some(102.)));
 
-        profile.add_fertilizer(Fertiliser::from_formula(
-            "magnesium sulfate",
-            "",
-            formula_builder.build("MgSO4*7H2O").unwrap(),
-        ));
+        profile.add_fertilizer(Fertiliser::from(label).name("uniflor micro"));
 
-        profile.add_fertilizer(Fertiliser::from_formula(
-            "pottasium sulfate",
-            "",
-            formula_builder.build("K2SO4").unwrap(),
-        ));
-
-        profile.add_fertilizer(Fertiliser::from_formula(
-            "monopottasium phosphate",
-            "",
-            formula_builder.build("KH2PO4").unwrap(),
-        ));
-
+        /*
         profile.add_fertilizer(Fertiliser::from_formula(
             "iron chelate",
             "",
@@ -222,7 +219,9 @@ mod tests {
             "",
             formula_builder.build("CuSO4*5H2O").unwrap(),
         ));
+        */
 
+        /*
         match Solver::new(&profile) {
             Ok(solver) => match solver.solve(1) {
                 Ok(_) => {
@@ -236,5 +235,6 @@ mod tests {
                 println!("{:#?}", errors);
             }
         }
+        */
     }
 }

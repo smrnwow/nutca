@@ -1,5 +1,4 @@
-use super::element::Element;
-use super::group::Group;
+use super::{Element, Group};
 
 #[derive(Debug)]
 pub enum Component {

@@ -5,45 +5,19 @@ use crate::formula::formula::Formula;
 #[derive(Clone, Debug)]
 pub struct Fertiliser {
     name: String,
-
-    pub vendor: String,
-
+    vendor: String,
     nutrients: Vec<Nutrient>,
 }
 
 impl Fertiliser {
-    pub fn from_formula(name: &str, vendor: &str, formula: Formula) -> Self {
-        let mut nutrients: Vec<Nutrient> = Vec::new();
-
-        formula.components().iter().for_each(|formula_component| {
-            nutrients.push(Nutrient {
-                element: formula_component.element().clone(),
-                percent: formula_component.mass_percent(),
-            });
-        });
-
-        Self {
-            name: String::from(name),
-            vendor: String::from(vendor),
-            nutrients,
-        }
+    pub fn name(mut self, name: &str) -> Self {
+        self.name = name.to_string();
+        self
     }
 
-    pub fn from_label(name: &str, vendor: &str, label: Label) -> Self {
-        let mut nutrients: Vec<Nutrient> = Vec::new();
-
-        label.components().iter().for_each(|component| {
-            nutrients.push(Nutrient {
-                element: component.element.clone(),
-                percent: component.percent,
-            });
-        });
-
-        Self {
-            name: String::from(name),
-            vendor: String::from(vendor),
-            nutrients,
-        }
+    pub fn vendor(mut self, vendor: &str) -> Self {
+        self.vendor = vendor.to_string();
+        self
     }
 
     pub fn percent_of(&self, nutrient_symbol: &str) -> Option<f32> {
@@ -58,8 +32,46 @@ impl Fertiliser {
         }
     }
 
-    pub fn name(&self) -> &String {
+    pub fn get_name(&self) -> &String {
         &self.name
+    }
+}
+
+impl From<Label> for Fertiliser {
+    fn from(label: Label) -> Self {
+        let mut nutrients: Vec<Nutrient> = Vec::new();
+
+        label.components().iter().for_each(|component| {
+            nutrients.push(Nutrient {
+                element: component.element.clone(),
+                percent: component.percent,
+            });
+        });
+
+        Self {
+            name: String::from(""),
+            vendor: String::from(""),
+            nutrients,
+        }
+    }
+}
+
+impl From<Formula> for Fertiliser {
+    fn from(formula: Formula) -> Self {
+        let mut nutrients: Vec<Nutrient> = Vec::new();
+
+        formula.components().iter().for_each(|formula_component| {
+            nutrients.push(Nutrient {
+                element: formula_component.element().clone(),
+                percent: formula_component.mass_percent(),
+            });
+        });
+
+        Self {
+            name: String::from(""),
+            vendor: String::from(""),
+            nutrients,
+        }
     }
 }
 
@@ -84,17 +96,17 @@ mod tests {
         label.add_nutrient(Nutrient::Cuprum(Some(320.)));
         label.add_nutrient(Nutrient::Molibden(Some(102.)));
 
-        let fertilizer = Fertiliser::from_label("uniflor micro", "", label);
+        let fertilizer = Fertiliser::from(label).name("uniflor micro");
 
-        println!("{:#?}", fertilizer);
+        // println!("{:#?}", fertilizer);
     }
 
     #[test]
     fn from_formula() {
         let formula = Builder::new().build("MgSO4*7H2O").unwrap();
 
-        let fertilizer = Fertiliser::from_formula("magnesium sulfate", "", formula);
+        let fertilizer = Fertiliser::from(formula).name("magnesium sulfate");
 
-        println!("{:#?}", fertilizer);
+        // println!("{:#?}", fertilizer);
     }
 }

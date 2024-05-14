@@ -1,4 +1,4 @@
-use super::element::Element;
+use super::Element;
 
 #[derive(Debug)]
 pub struct Hydrate {

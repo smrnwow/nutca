@@ -1,7 +1,12 @@
-// pub mod component;
-// pub mod compound;
-// pub mod parser;
 pub mod builder;
+
 pub mod formula;
-pub mod formula_component;
-pub mod tokenization;
+pub use formula::Formula;
+
+mod component;
+use component::Component;
+
+mod tokenizer;
+use tokenizer::Tokenizer;
+
+pub mod tokens;

@@ -1,10 +1,10 @@
-use super::formula_component::FormulaComponent;
+use super::Component;
 use crate::chemistry::element::Element;
 use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct Formula {
-    elements: HashMap<&'static str, FormulaComponent>,
+    elements: HashMap<&'static str, Component>,
     molar_mass: f32,
 }
 
@@ -23,15 +23,9 @@ impl Formula {
             }
             None => {
                 self.elements
-                    .insert(&element.symbol, FormulaComponent::new(element, atoms_count));
+                    .insert(&element.symbol, Component::new(element, atoms_count));
             }
         }
-    }
-
-    pub fn multiple(&mut self, coefficient: i32) {
-        self.elements
-            .values_mut()
-            .for_each(|formula_component| formula_component.multiple_atoms_count(coefficient));
     }
 
     pub fn calculate_molar_mass(&mut self) {
@@ -46,7 +40,7 @@ impl Formula {
         });
     }
 
-    pub fn components(&self) -> Vec<&FormulaComponent> {
+    pub fn components(&self) -> Vec<&Component> {
         self.elements.values().collect()
     }
 
