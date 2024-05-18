@@ -32,6 +32,13 @@ impl Fertiliser {
         }
     }
 
+    pub fn nutrients(&self) -> Vec<&Nutrient> {
+        self.nutrients
+            .iter()
+            .filter(|nutrient| nutrient.element.is_nutrient())
+            .collect()
+    }
+
     pub fn get_name(&self) -> &String {
         &self.name
     }
@@ -86,17 +93,19 @@ mod tests {
 
     #[test]
     fn from_label() {
-        let mut label = Label::new(Units::WeightVolume);
-
-        label.add_nutrient(Nutrient::Magnesium(Some(15000.), None));
-        label.add_nutrient(Nutrient::Iron(Some(3200.)));
-        label.add_nutrient(Nutrient::Manganese(Some(1600.)));
-        label.add_nutrient(Nutrient::Boron(Some(1200.)));
-        label.add_nutrient(Nutrient::Zink(Some(360.)));
-        label.add_nutrient(Nutrient::Cuprum(Some(320.)));
-        label.add_nutrient(Nutrient::Molibden(Some(102.)));
-
-        let fertilizer = Fertiliser::from(label).name("uniflor micro");
+        let fertilizer = Fertiliser::from(Label::from(
+            Units::WeightVolume,
+            vec![
+                Nutrient::Magnesium(Some(15000.), None),
+                Nutrient::Iron(Some(3200.)),
+                Nutrient::Manganese(Some(1600.)),
+                Nutrient::Boron(Some(1200.)),
+                Nutrient::Zink(Some(360.)),
+                Nutrient::Cuprum(Some(320.)),
+                Nutrient::Molibden(Some(102.)),
+            ],
+        ))
+        .name("uniflor micro");
 
         // println!("{:#?}", fertilizer);
     }

@@ -13,12 +13,20 @@ pub struct Label {
 
 impl Label {
     pub fn new(units: Units) -> Self {
-        let label = Self {
+        Self {
             table: Table::new(),
             units,
             nutrients: Vec::new(),
             composition: Vec::new(),
-        };
+        }
+    }
+
+    pub fn from(units: Units, nutrients: Vec<Nutrient>) -> Self {
+        let mut label = Self::new(units);
+
+        for nutrient in nutrients {
+            label.add_nutrient(nutrient);
+        }
 
         label
     }

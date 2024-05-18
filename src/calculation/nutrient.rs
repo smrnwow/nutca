@@ -1,3 +1,39 @@
+use ellp::problem::VariableId;
+
+#[derive(Clone)]
+pub struct Nutrient<'a> {
+    symbol: &'a str,
+    amount: f32,
+    coefficients: Vec<(VariableId, f64)>,
+}
+
+impl<'a> Nutrient<'a> {
+    pub fn new(symbol: &'a str, amount: f32) -> Self {
+        Self {
+            symbol,
+            amount,
+            coefficients: Vec::new(),
+        }
+    }
+
+    pub fn add_coefficient(&mut self, coefficient: (VariableId, f64)) {
+        self.coefficients.push(coefficient);
+    }
+
+    pub fn symbol(&self) -> &str {
+        &self.symbol
+    }
+
+    pub fn amount(&self) -> f64 {
+        self.amount.into()
+    }
+
+    pub fn coefficients(&self) -> Vec<(VariableId, f64)> {
+        self.coefficients.clone()
+    }
+}
+
+/*
 pub enum Nutrient {
     N,
     NO3,
@@ -29,3 +65,4 @@ pub enum Nutrient {
     Br,
     Al,
 }
+ */
