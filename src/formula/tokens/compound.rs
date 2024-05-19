@@ -47,8 +47,8 @@ impl Compound {
         self.empty = false;
     }
 
-    pub fn elements(&self) -> Vec<Element> {
-        let mut elements: Vec<Element> = vec![];
+    pub fn composition(&self) -> Vec<Element> {
+        let mut elements: Vec<Element> = Vec::new();
 
         self.composition
             .iter()
@@ -63,15 +63,17 @@ impl Compound {
                 }
             });
 
+        println!("composition {:#?}", elements);
+
+        elements
+    }
+
+    pub fn hydrate(&self) -> Vec<Element> {
+        let mut elements = Vec::new();
+
         if let Some(hydrate) = &self.hydrate {
             hydrate.elements().iter().for_each(|element| {
                 elements.push(element.clone());
-            });
-        }
-
-        if self.coefficient > 1 {
-            elements.iter_mut().for_each(|element| {
-                element.subscript = element.subscript * self.coefficient;
             });
         }
 

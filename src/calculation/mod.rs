@@ -1,4 +1,5 @@
-pub mod composition;
+pub mod desired_profile;
 pub mod error;
-pub mod nutrient;
+pub mod requirement;
+pub mod result_profile;
 pub mod solver;

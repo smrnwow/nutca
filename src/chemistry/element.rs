@@ -1,26 +1,95 @@
-#[derive(Debug, Clone)]
-pub struct Element {
-    pub symbol: &'static str,
-    pub atomic_weight: f32,
-    pub nutrient: bool,
+use super::Nutrient;
+
+#[derive(Debug, Copy, Clone, Eq, Hash, PartialEq)]
+pub enum Element {
+    Nitrogen,
+    Phosphorus,
+    Potassium,
+    Calcium,
+    Magnesium,
+    Sulfur,
+    Iron,
+    Zink,
+    Manganese,
+    Boron,
+    Copper,
+    Molybdenum,
+    Hydrogen,
+    Carbon,
+    Oxygen,
+    Sodium,
+    Aluminium,
+    Silicon,
+    Chlorine,
+    Cobalt,
 }
 
 impl Element {
-    pub fn new(symbol: &'static str, atomic_weight: f32) -> Self {
-        Self {
-            symbol,
-            atomic_weight,
-            nutrient: false,
+    pub fn atomic_weight(&self) -> f64 {
+        match self {
+            Self::Nitrogen => 14.0067,
+            Self::Phosphorus => 30.974,
+            Self::Potassium => 39.098,
+            Self::Calcium => 40.078,
+            Self::Magnesium => 24.305,
+            Self::Sulfur => 32.06,
+            Self::Iron => 55.845,
+            Self::Zink => 65.38,
+            Self::Manganese => 54.938,
+            Self::Boron => 10.81,
+            Self::Copper => 63.546,
+            Self::Molybdenum => 95.95,
+            Self::Hydrogen => 1.008,
+            Self::Carbon => 12.011,
+            Self::Oxygen => 15.999,
+            Self::Sodium => 22.990,
+            Self::Aluminium => 26.982,
+            Self::Silicon => 28.085,
+            Self::Chlorine => 35.45,
+            Self::Cobalt => 58.933,
         }
     }
 
-    pub fn nutrient(mut self) -> Self {
-        self.nutrient = true;
-
-        self
+    pub fn nutrient(&self) -> Option<Nutrient> {
+        match self {
+            Self::Nitrogen => Some(Nutrient::Nitrogen),
+            Self::Phosphorus => Some(Nutrient::Phosphorus),
+            Self::Potassium => Some(Nutrient::Potassium),
+            Self::Calcium => Some(Nutrient::Calcium),
+            Self::Magnesium => Some(Nutrient::Magnesium),
+            Self::Sulfur => Some(Nutrient::Sulfur),
+            Self::Iron => Some(Nutrient::Iron),
+            Self::Zink => Some(Nutrient::Zink),
+            Self::Manganese => Some(Nutrient::Manganese),
+            Self::Boron => Some(Nutrient::Boron),
+            Self::Copper => Some(Nutrient::Copper),
+            Self::Molybdenum => Some(Nutrient::Molybdenum),
+            _ => None,
+        }
     }
 
-    pub fn is_nutrient(&self) -> bool {
-        self.nutrient
+    pub fn symbol(&self) -> &'static str {
+        match self {
+            Self::Nitrogen => "N",
+            Self::Phosphorus => "P",
+            Self::Potassium => "K",
+            Self::Calcium => "Ca",
+            Self::Magnesium => "Mg",
+            Self::Sulfur => "S",
+            Self::Iron => "Fe",
+            Self::Zink => "Zn",
+            Self::Manganese => "Mn",
+            Self::Boron => "B",
+            Self::Copper => "Cu",
+            Self::Molybdenum => "Mo",
+            Self::Hydrogen => "H",
+            Self::Carbon => "C",
+            Self::Oxygen => "O",
+            Self::Sodium => "Na",
+            Self::Aluminium => "Al",
+            Self::Silicon => "Si",
+            Self::Chlorine => "Cl",
+            Self::Cobalt => "Co",
+        }
     }
 }

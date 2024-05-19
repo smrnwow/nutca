@@ -1,4 +1,5 @@
-pub mod component;
-pub mod label;
-pub mod nutrient;
-pub mod units;
+mod component;
+pub use component::Component;
+
+mod units;
+pub use units::Units;

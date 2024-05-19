@@ -1,27 +1,23 @@
 use super::tokens::{Compound, Element, Group, Hydrate};
+use crate::chemistry::Table;
 use crate::error::Error;
 use core::iter::Peekable;
 use core::str::Chars;
 
 pub struct Tokenizer<'a> {
-    formula: &'a str,
+    table: &'a Table,
     chars: Peekable<Chars<'a>>,
 }
 
 impl<'a> Tokenizer<'a> {
-    pub fn new(formula: &'a str) -> Self {
+    pub fn new(table: &'a Table, formula: &'a str) -> Self {
         Self {
-            formula,
+            table,
             chars: formula.chars().peekable(),
         }
     }
 
     pub fn tokenize(&mut self) -> Result<Compound, Error> {
-        if self.formula.len() == 0 {
-            let message = format!("empty formula");
-            return Err(Error::new(message));
-        }
-
         self.compound()
     }
 
@@ -32,9 +28,9 @@ impl<'a> Tokenizer<'a> {
             if let Some(char) = self.chars.peek() {
                 match char {
                     '0'..='9' if compound.empty() => compound.add_coefficient(self.coefficient()),
-                    'A'..='Z' => compound.add_element(self.element()),
-                    '(' => compound.add_group(self.group().unwrap()),
-                    '*' => compound.add_hydrate(self.hydrate()),
+                    'A'..='Z' => compound.add_element(self.element()?),
+                    '(' => compound.add_group(self.group()?),
+                    '*' => compound.add_hydrate(self.hydrate()?),
                     _ => {
                         let message = format!("unexpected character \"{}\"", char);
                         break Err(Error::new(message));
@@ -54,7 +50,7 @@ impl<'a> Tokenizer<'a> {
         loop {
             if let Some(char) = self.chars.peek() {
                 match char {
-                    'A'..='Z' => group.add_element(self.element()),
+                    'A'..='Z' => group.add_element(self.element()?),
                     '(' => group.add_group(self.group()?),
                     ')' => {
                         self.chars.next();
@@ -75,30 +71,34 @@ impl<'a> Tokenizer<'a> {
         }
     }
 
-    fn hydrate(&mut self) -> Hydrate {
+    fn hydrate(&mut self) -> Result<Hydrate, Error> {
         self.chars.next();
 
         let mut hydrate = Hydrate::new();
 
-        while let Some(char) = self.chars.peek() {
-            match char {
-                '0'..='9' if hydrate.empty() => hydrate.add_coefficient(self.coefficient()),
-                'A'..='Z' => hydrate.add_element(self.element()),
-                _ => break,
+        loop {
+            if let Some(char) = self.chars.peek() {
+                match char {
+                    '0'..='9' if hydrate.empty() => hydrate.add_coefficient(self.coefficient()),
+                    'A'..='Z' => hydrate.add_element(self.element()?),
+                    _ => break Ok(hydrate),
+                }
+            } else {
+                break Ok(hydrate);
             }
         }
-
-        hydrate
     }
 
-    fn element(&mut self) -> Element {
-        let mut element = Element::new();
+    fn element(&mut self) -> Result<Element, Error> {
+        let symbol = self.symbol();
 
-        element.add_symbol(self.symbol());
-
-        element.add_subscript(self.subscript());
-
-        element
+        match self.table.by_symbol(symbol.as_str()) {
+            Some(element) => Ok(Element::new(element, self.subscript())),
+            None => {
+                let message = format!("unknown element: {}", symbol);
+                Err(Error::new(message))
+            }
+        }
     }
 
     fn coefficient(&mut self) -> i32 {
@@ -161,30 +161,35 @@ impl<'a> Tokenizer<'a> {
 #[cfg(test)]
 mod tests {
     use super::Tokenizer;
+    use crate::chemistry::Table;
     use crate::formula::tokens::{Component, Compound, Element, Group, Hydrate};
 
     #[test]
     fn single_element() {
+        let table = Table::new();
+
         assert_eq!(
-            Tokenizer::new("N").tokenize().unwrap(),
+            Tokenizer::new(&table, "N").tokenize().unwrap(),
             Compound::from(1, vec![Component::Element(Element::from("N", 1))], None)
         );
 
         assert_eq!(
-            Tokenizer::new("Mg").tokenize().unwrap(),
+            Tokenizer::new(&table, "Mg").tokenize().unwrap(),
             Compound::from(1, vec![Component::Element(Element::from("Mg", 1))], None)
         );
 
         assert_eq!(
-            Tokenizer::new("Mg3").tokenize().unwrap(),
+            Tokenizer::new(&table, "Mg3").tokenize().unwrap(),
             Compound::from(1, vec![Component::Element(Element::from("Mg", 3))], None)
         );
     }
 
     #[test]
     fn multiple_elements() {
+        let table = Table::new();
+
         assert_eq!(
-            Tokenizer::new("KNO3").tokenize().unwrap(),
+            Tokenizer::new(&table, "KNO3").tokenize().unwrap(),
             Compound::from(
                 1,
                 vec![
@@ -199,8 +204,10 @@ mod tests {
 
     #[test]
     fn group() {
+        let table = Table::new();
+
         assert_eq!(
-            Tokenizer::new("Ca(NO3)2").tokenize().unwrap(),
+            Tokenizer::new(&table, "Ca(NO3)2").tokenize().unwrap(),
             Compound::from(
                 1,
                 vec![
@@ -218,7 +225,9 @@ mod tests {
         );
 
         assert_eq!(
-            Tokenizer::new("C14H18N3O10Fe(NH4)2").tokenize().unwrap(),
+            Tokenizer::new(&table, "C14H18N3O10Fe(NH4)2")
+                .tokenize()
+                .unwrap(),
             Compound::from(
                 1,
                 vec![
@@ -242,8 +251,12 @@ mod tests {
 
     #[test]
     fn coefficient() {
+        let table = Table::new();
+
         assert_eq!(
-            Tokenizer::new("2C14H18N3O10Fe(NH4)2").tokenize().unwrap(),
+            Tokenizer::new(&table, "2C14H18N3O10Fe(NH4)2")
+                .tokenize()
+                .unwrap(),
             Compound::from(
                 2,
                 vec![
@@ -267,8 +280,10 @@ mod tests {
 
     #[test]
     fn hydrate() {
+        let table = Table::new();
+
         assert_eq!(
-            Tokenizer::new("MgSO4*7H2O").tokenize().unwrap(),
+            Tokenizer::new(&table, "MgSO4*7H2O").tokenize().unwrap(),
             Compound::from(
                 1,
                 vec![
