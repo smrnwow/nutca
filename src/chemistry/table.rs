@@ -1,41 +1,41 @@
-use super::Element;
+use super::Symbol;
 
 #[derive(Debug)]
 pub struct Table {
-    elements: Vec<Element>,
+    elements: Vec<Symbol>,
 }
 
 impl Table {
     pub fn new() -> Table {
         let table = Table {
             elements: Vec::from([
-                Element::Nitrogen,
-                Element::Phosphorus,
-                Element::Potassium,
-                Element::Calcium,
-                Element::Magnesium,
-                Element::Sulfur,
-                Element::Iron,
-                Element::Zink,
-                Element::Manganese,
-                Element::Boron,
-                Element::Copper,
-                Element::Molybdenum,
-                Element::Hydrogen,
-                Element::Carbon,
-                Element::Oxygen,
-                Element::Sodium,
-                Element::Aluminium,
-                Element::Silicon,
-                Element::Chlorine,
-                Element::Cobalt,
+                Symbol::Nitrogen,
+                Symbol::Phosphorus,
+                Symbol::Potassium,
+                Symbol::Calcium,
+                Symbol::Magnesium,
+                Symbol::Sulfur,
+                Symbol::Iron,
+                Symbol::Zink,
+                Symbol::Manganese,
+                Symbol::Boron,
+                Symbol::Copper,
+                Symbol::Molybdenum,
+                Symbol::Hydrogen,
+                Symbol::Carbon,
+                Symbol::Oxygen,
+                Symbol::Sodium,
+                Symbol::Aluminium,
+                Symbol::Silicon,
+                Symbol::Chlorine,
+                Symbol::Cobalt,
             ]),
         };
 
         table
     }
 
-    pub fn by_symbol(&self, symbol: &str) -> Option<Element> {
+    pub fn by_symbol(&self, symbol: &str) -> Option<Symbol> {
         let element = self
             .elements
             .iter()
@@ -47,7 +47,7 @@ impl Table {
         }
     }
 
-    pub fn nutrients(&self) -> Vec<&Element> {
+    pub fn nutrients(&self) -> Vec<&Symbol> {
         self.elements
             .iter()
             .filter(|element| element.nutrient().is_some())

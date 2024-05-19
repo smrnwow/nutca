@@ -1,5 +1,4 @@
-use super::Units;
-use crate::fertilizers::NutrientPercent;
+use super::{NutrientPercent, Units};
 
 #[derive(Debug)]
 pub enum Component {

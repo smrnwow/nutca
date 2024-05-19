@@ -117,8 +117,7 @@ mod tests {
     use crate::calculation::desired_profile::DesiredProfile;
     use crate::calculation::requirement::Requirement;
     use crate::chemistry::Nutrient;
-    use crate::fertilizers::labels::{Component, Units};
-    use crate::fertilizers::FertilizerBuilder;
+    use crate::fertilizers::{Component, FertilizerBuilder, Units};
 
     #[test]
     fn basic_nutrient_profile() {

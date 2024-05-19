@@ -63,8 +63,6 @@ impl Compound {
                 }
             });
 
-        println!("composition {:#?}", elements);
-
         elements
     }
 

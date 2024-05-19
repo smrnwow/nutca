@@ -1,4 +1,4 @@
-use super::tokens::{Compound, Element, Group, Hydrate};
+use super::{Compound, Element, Group, Hydrate};
 use crate::chemistry::Table;
 use crate::error::Error;
 use core::iter::Peekable;
@@ -93,7 +93,7 @@ impl<'a> Tokenizer<'a> {
         let symbol = self.symbol();
 
         match self.table.by_symbol(symbol.as_str()) {
-            Some(element) => Ok(Element::new(element, self.subscript())),
+            Some(symbol) => Ok(Element::new(symbol, self.subscript())),
             None => {
                 let message = format!("unknown element: {}", symbol);
                 Err(Error::new(message))
@@ -161,8 +161,8 @@ impl<'a> Tokenizer<'a> {
 #[cfg(test)]
 mod tests {
     use super::Tokenizer;
+    use crate::chemistry::formulas::{Component, Compound, Element, Group, Hydrate};
     use crate::chemistry::Table;
-    use crate::formula::tokens::{Component, Compound, Element, Group, Hydrate};
 
     #[test]
     fn single_element() {

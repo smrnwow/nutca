@@ -1,7 +1,7 @@
 use super::Nutrient;
 
 #[derive(Debug, Copy, Clone, Eq, Hash, PartialEq)]
-pub enum Element {
+pub enum Symbol {
     Nitrogen,
     Phosphorus,
     Potassium,
@@ -24,7 +24,7 @@ pub enum Element {
     Cobalt,
 }
 
-impl Element {
+impl Symbol {
     pub fn atomic_weight(&self) -> f64 {
         match self {
             Self::Nitrogen => 14.0067,

@@ -36,10 +36,6 @@ impl Hydrate {
         self.empty = false;
     }
 
-    pub fn multiple_coefficient(&mut self, compound_coefficient: i32) {
-        self.coefficient = self.coefficient * compound_coefficient;
-    }
-
     pub fn empty(&self) -> bool {
         self.empty
     }

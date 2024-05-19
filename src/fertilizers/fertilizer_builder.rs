@@ -1,7 +1,6 @@
-use super::labels::{Component, Units};
-use super::Fertiliser;
+use super::{Component, Fertiliser, Units};
+use crate::chemistry::formulas::{Formula, Tokenizer};
 use crate::chemistry::Table;
-use crate::formula::{Formula, Tokenizer};
 
 pub struct FertilizerBuilder {
     table: Table,
@@ -28,8 +27,6 @@ impl FertilizerBuilder {
         let compound = Tokenizer::new(&self.table, formulation).tokenize().unwrap();
 
         let formula = Formula::from_compound(compound);
-
-        println!("formula {:#?}", formula);
 
         let mut fertilizer = Fertiliser::new();
 

@@ -1,11 +1,11 @@
-use super::tokens::Compound;
-use crate::chemistry::{Element, Nutrient};
+use super::{Compound, Element};
+use crate::chemistry::{Nutrient, Symbol};
 use crate::fertilizers::NutrientPercent;
 use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct Formula {
-    elements: HashMap<Element, i32>,
+    elements: HashMap<Symbol, i32>,
 }
 
 impl Formula {
@@ -16,38 +16,19 @@ impl Formula {
     }
 
     pub fn from_compound(compound: Compound) -> Self {
-        let mut elements: HashMap<Element, i32> = HashMap::new();
+        let mut formula = Self::new();
 
         compound.composition().iter().for_each(|element| {
-            match elements.get_mut(&element.element()) {
-                Some(elem) => {
-                    *elem += element.subscript;
-                }
-                None => {
-                    elements.insert(element.element(), element.subscript);
-                }
-            }
+            formula.add_element(element);
         });
 
-        compound
-            .hydrate()
-            .iter()
-            .for_each(|element| match elements.get_mut(&element.element()) {
-                Some(elem) => {
-                    *elem += element.subscript;
-                }
-                None => {
-                    elements.insert(element.element(), element.subscript);
-                }
-            });
+        compound.hydrate().iter().for_each(|element| {
+            formula.add_element(element);
+        });
 
-        if compound.coefficient() > 1 {
-            elements.values_mut().for_each(|atoms_count| {
-                *atoms_count *= compound.coefficient();
-            });
-        }
+        formula.apply_coefficient(compound.coefficient());
 
-        Self { elements }
+        formula
     }
 
     pub fn nutrients(&self) -> Vec<NutrientPercent> {
@@ -80,6 +61,25 @@ impl Formula {
         });
 
         nutrients
+    }
+
+    fn add_element(&mut self, element: &Element) {
+        match self.elements.get_mut(&element.symbol()) {
+            Some(elem) => {
+                *elem += element.subscript();
+            }
+            None => {
+                self.elements.insert(element.symbol(), element.subscript());
+            }
+        }
+    }
+
+    fn apply_coefficient(&mut self, coefficient: i32) {
+        if coefficient > 1 {
+            self.elements.values_mut().for_each(|atoms_count| {
+                *atoms_count *= coefficient;
+            });
+        }
     }
 
     fn molar_mass(&self) -> f64 {
