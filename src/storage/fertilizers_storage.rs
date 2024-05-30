@@ -46,12 +46,12 @@ impl FertilizersStorage {
             .connection()
             .prepare("SELECT * FROM fertilizers");
 
-        // println!("{:#?}", query);
-
         if query.is_ok() {
             query
                 .unwrap()
                 .query_map([], |row| {
+                    println!("{:#?}", row);
+
                     let data: String = row.get(1).unwrap();
 
                     Ok(serde_json::from_str::<Fertilizer>(&data).expect("Failed to deserialize"))

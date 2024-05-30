@@ -167,7 +167,32 @@ impl Label {
     }
 
     pub fn update_component(&mut self, component: Component) {
-        self.components[component.index()] = component;
+        match component {
+            Component::Nitrogen(value) => {
+                self.components[component.index()] = component;
+
+                self.components[self.nitrogen_nitrate().index()] =
+                    Component::NitrogenNitrate(value - self.nitrogen_ammonium().value());
+            }
+
+            Component::NitrogenNitrate(value) => {
+                self.components[component.index()] = component;
+
+                self.components[self.nitrogen().index()] =
+                    Component::Nitrogen(value + self.nitrogen_ammonium().value());
+            }
+
+            Component::NitrogenAmmonium(value) => {
+                self.components[component.index()] = component;
+
+                self.components[self.nitrogen().index()] =
+                    Component::Nitrogen(value + self.nitrogen_nitrate().value());
+            }
+
+            _ => {
+                self.components[component.index()] = component;
+            }
+        }
     }
 
     fn apply_units(&self, component: Component) -> Component {

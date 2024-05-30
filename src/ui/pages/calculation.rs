@@ -57,10 +57,14 @@ pub fn Calculation() -> Element {
                     on_requirement_update: move |nutrient_requirement| {
                         profile.write().set_nutrient(nutrient_requirement);
 
-                        if let Ok(result) = Calculation::new(profile.read().clone(), fertilizers_selected.read().clone())
-                        .unwrap()
-                        .solve(1) {
-                            *result_profile.write() = result;
+                        if fertilizers_selected.read().len() > 0 {
+                            if let Ok(result) = Calculation::new(profile.read().clone(), fertilizers_selected.read().clone())
+                            .unwrap()
+                            .solve(1) {
+                                *result_profile.write() = result;
+                            } else {
+                                *result_profile.write() = ResultProfile::empty(fertilizers_selected.read().clone());
+                            }
                         } else {
                             *result_profile.write() = ResultProfile::empty(fertilizers_selected.read().clone());
                         }
@@ -97,13 +101,17 @@ pub fn Calculation() -> Element {
                                         onchange: move |event| {
                                             update_list(fertilizers_list, fertilizer.id(), event.value());
 
-                                            if let Ok(result) = Calculation::new(profile.read().clone(), fertilizers_selected.read().clone())
+                                            if fertilizers_selected.read().len() > 0 {
+                                                if let Ok(result) = Calculation::new(profile.read().clone(), fertilizers_selected.read().clone())
                                                 .unwrap()
                                                 .solve(1) {
                                                     *result_profile.write() = result;
                                                 } else {
                                                     *result_profile.write() = ResultProfile::empty(fertilizers_selected.read().clone());
                                                 }
+                                            } else {
+                                                *result_profile.write() = ResultProfile::empty(fertilizers_selected.read().clone());
+                                            }
                                         },
                                     }
                                 }
