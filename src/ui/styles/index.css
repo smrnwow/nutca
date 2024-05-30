@@ -1,0 +1,510 @@
+body {
+    display: flex;
+    margin: 0;
+    /* background-color: #F6F8FB; */
+    background-color: #7AC455;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+#main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.header {
+    /* padding: 20px; */
+}
+
+.navigation {
+    display: flex;
+}
+
+.navigation__link {
+    padding: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #7AC455;
+    min-width: 100px;
+    text-align: center;
+}
+
+.navigation__link_active {
+    background-color: #ffffff;
+    color: #7AC455;
+}
+
+.content {
+    display: flex;
+    gap: 5%;
+    padding: 20px 20px;
+    background-color: #ffffff;
+    flex-grow: 1;
+    box-shadow: 0px 30px 32px rgba(255,255,255,0.16);
+    box-sizing: border-box;
+}
+
+.title {
+    margin: 0px;
+}
+
+.breadcrumbs {
+    text-transform: uppercase;
+    margin: 0px 0px 20px 0px;
+    font-size: 10px;
+}
+
+.editor {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 60%;
+}
+
+.preview {
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.add-fertilizer-button {
+    cursor: pointer;
+}
+
+.value-set {
+    display: flex;
+    /* border: 1px solid gray; */
+    border-radius: 5px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.value-set_vertical {
+    flex-direction: column;
+}
+
+.value {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid gray;
+    box-sizing: border-box;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.value-set .value {
+    flex-direction: row;
+    align-items: stretch;
+    border: none;
+    border-right: 1px solid gray;
+    border-radius: 0px;
+}
+
+.value-set_vertical .value {
+    border-bottom: 1px solid gray;
+    border-right: none;
+}
+
+.value-set .value:last-child {
+    border-right: none;
+}
+
+.value-set_vertical .value:last-child {
+    border-bottom: none;
+}
+
+.edged-value-set {
+    border-radius: 5px;
+    border: 1px solid gray;
+    overflow: hidden;
+}
+
+.edged-value-set .value-set {
+    border-radius: 0px;
+    border: none;
+    border-bottom: 1px solid gray;
+}
+
+.edged-value-set .value-set:last-child {
+    border-bottom: none;
+}
+
+.edged-value-set .value {
+    flex-grow: 1;
+}
+
+.value__text {
+    padding: 2px 5px;
+    font-size: 10px;
+}
+
+.value-set_vertical .value__text {
+    border-right: 1px solid gray;
+    width: 50%;
+}
+
+.value__input {
+    min-width: 100%;
+    border: none;
+    border-top: 1px solid gray;
+    font-size: 10px;
+    padding: 3px 5px;
+    margin: 0px;
+    text-align: center;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.value-set_vertical .value__input {
+    min-width: 50%;
+    border-top: none;
+}
+
+.composition {
+    margin-top: 20px;
+}
+
+/* fertilizers add page */
+.fertilizers-add-page {
+    display: flex;
+    width: 100%;
+    gap: 5%;
+    box-sizing: border-box;
+}
+
+.fertilizers-add-page__button {
+}
+
+
+.fertilizers__summary {
+    display: flex;
+    justify-content: space-between;
+    min-height: 45px;
+    align-items: center;
+    border-bottom: 1px solid gray;
+}
+
+.fertilizers__item {
+    padding: 6px 0px;
+    border-bottom: 1px solid gray;
+    box-sizing: border-box;
+}
+
+.fertilizers__name {
+    font-size: 12px;
+    margin: 0px;
+    margin-bottom: 4px;
+}
+
+.fertilizers__nutrients {
+    display: flex;
+    gap: 8px;
+}
+
+.fertilizers__count {}
+
+.fertilizers__number {
+    margin: 0px;
+}
+
+
+
+.add-fertilizer-button {}
+
+.add-fertilizer-button__icon {}
+
+
+
+/* fertilizers details */
+
+.fertilizers-details {
+    width: 100%;
+}
+
+.fertilizers-details__field {
+    display: flex;
+    margin-bottom: 16px;
+    padding-bottom: 4px;
+    /* border-bottom: 1px solid gray; */
+    box-sizing: border-box;
+    gap: 3px;
+}
+
+.fertilizers-details__input {
+    flex-grow: 1;
+}
+
+/* fertilizers composition */
+
+.fertilizers-composition {
+    width: 100%;    
+}
+
+/* fertilizers source */
+
+.fertilizers-source {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 16px;
+    /* border-bottom: 1px solid gray; */
+    padding-bottom: 4px;
+    box-sizing: border-box;
+}
+
+/* fertilizers label */
+
+.fertilizers-label__text {
+    font-size: 12px;
+    margin: 0px;
+}
+
+.fertilizers-label__title {
+    font-size: 12px;
+    margin: 0px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    box-sizing: border-box;
+}
+
+.fertilizers-label__group {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.fertilizers-label__units {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.fertilizers-label__unit {
+    font-size: 12px;
+}
+
+/* fertilizers formula */
+
+.fertilizers-formula {
+    font-size: 12px;
+}
+
+/* fertilizers preview */
+
+.fertilizers-preview__group {
+    display: flex;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.fertilizers-preview__title {
+    font-size: 18px;
+    margin: 0px;
+    margin-bottom: 15px;
+}
+
+.fertilizers-preview__text {
+    font-size: 12px;
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
+.calculation-index__workspace {
+    width: 65%;
+}
+
+.calculation-index__fertilizers {
+    /* height: 100%; */
+}
+
+.calculation-index__result {
+    width: 35%;
+}
+
+.calculation-index__title {
+    margin-top: 0px;
+    margin-bottom: 12px;
+}
+
+/* profile */
+
+.profile__group {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+/* fertilizers browser */
+
+.fertilizers-browser {
+    display: flex;
+    gap: 15px;
+    overflow: scroll;
+    /* height: 100%; */
+    border: 1px solid gray;
+    box-sizing: border-box;
+}
+
+.fertilizers-browser__list {
+    flex-grow: 1;
+    flex-basis: 40%;
+    padding: 0px 5px;
+    box-sizing: border-box;
+}
+
+.fertilizers-browser__item {
+    display: flex;
+    padding: 5px 0px;
+    border-bottom: 1px solid gray;
+}
+
+.fertilizers-browser__selector {
+    display: flex;
+    align-items: center;
+    padding: 0px 8px;
+}
+
+.fertilizers-browser__button {
+    cursor: pointer;
+}
+
+.fertilizers-browser__name {
+    font-size: 12px;
+    margin: 0px;
+    margin-bottom: 5px;
+}
+
+.fertilizers-browser__nutrients {
+    display: flex;
+    font-size: 8px;
+    gap: 5px;
+}
+
+
+/* nutrient value */
+
+.nutrient-value {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid gray;
+    padding-left: 4px;
+    box-sizing: border-box;
+}
+
+.nutrient-value__symbol {
+    font-size: 10px;
+    margin-bottom: 2px;
+}
+
+.nutrient-value__value {
+    font-size: 8px;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+/* calculated profile */ 
+
+.calculated-profile__group {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.calculated-profile__group .nutrient-value {
+    flex-basis: calc(100% / 6);
+    flex-grow: 1;
+}
+
+.calculated-profile__fertilizer-weight {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.calculated-profile__fertilizer {
+    margin: 0px;
+}
+
+.calculated-profile__weight {
+    margin: 0px;
+}
+
+/* nitrogen */
+
+.nutrient-value__nutrient {
+    flex-grow: 1;
+    flex-basis: calc(100% / 6);
+}
+
+.nutrient-value__elemental {
+    flex-grow: 1;
+    flex-basis: calc(100% / 6);
+}
+
+.nutrient-value__forms {
+    display: flex;
+}
+
+.nutrient-value__form {
+    flex-grow: 1;
+    flex-basis: 50%;
+}
+
+
+.nutrient-value__elemental .nutrient-value {
+    padding-left: 6px;
+    margin-bottom: 4px;
+}
+
+.nutrient-value__nutrient_small .nutrient-value {
+    padding-left: 4px;    
+}
+
+
+.nutrient-value__elemental .nutrient-value__symbol {
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+.nutrient-value__nutrient_small .nutrient-value__elemental .nutrient-value__symbol {
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.nutrient-value__elemental .nutrient-value__value {
+    font-size: 12px;
+}
+
+.nutrient-value__nutrient_small .nutrient-value__elemental .nutrient-value__value {
+    font-size: 10px;
+}
+
+.nutrient-value__form .nutrient-value {
+    padding-left: 4px;
+}
+
+.nutrient-value__form .nutrient-value__symbol {
+    font-size: 10px;
+    margin-bottom: 2px;
+}
+
+.nutrient-value__form .nutrient-value__value {
+    font-size: 10px;
+}
+
+/* fertilizers index */
+
+.fertilizers-index {
+    width: 100%;
+}

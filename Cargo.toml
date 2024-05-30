@@ -5,3 +5,13 @@ edition = "2021"
 
 [dependencies]
 ellp = "0.2.0"
+dioxus = { version = "0.5", features = ["desktop"] }
+dioxus-router = "0.5.0"
+manganis = "0.2.2"
+rusqlite = "0.31.0"
+serde = "1.0.203"
+serde_json = "1.0.117"
+uuid = { version = "1.8.0", features = ["v4"] }
+
+[features]
+desktop = ["dioxus/desktop"]
