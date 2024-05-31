@@ -1,6 +1,6 @@
-use super::Nutrient;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Copy, Clone, Eq, Hash, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, Copy, Clone, Eq, Hash, PartialEq)]
 pub enum Symbol {
     Nitrogen,
     Phosphorus,
@@ -47,24 +47,6 @@ impl Symbol {
             Self::Silicon => 28.085,
             Self::Chlorine => 35.45,
             Self::Cobalt => 58.933,
-        }
-    }
-
-    pub fn nutrient(&self) -> Option<Nutrient> {
-        match self {
-            Self::Nitrogen => Some(Nutrient::Nitrogen),
-            Self::Phosphorus => Some(Nutrient::Phosphorus),
-            Self::Potassium => Some(Nutrient::Potassium),
-            Self::Calcium => Some(Nutrient::Calcium),
-            Self::Magnesium => Some(Nutrient::Magnesium),
-            Self::Sulfur => Some(Nutrient::Sulfur),
-            Self::Iron => Some(Nutrient::Iron),
-            Self::Zink => Some(Nutrient::Zink),
-            Self::Manganese => Some(Nutrient::Manganese),
-            Self::Boron => Some(Nutrient::Boron),
-            Self::Copper => Some(Nutrient::Copper),
-            Self::Molybdenum => Some(Nutrient::Molybdenum),
-            _ => None,
         }
     }
 

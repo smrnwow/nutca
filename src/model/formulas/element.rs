@@ -1,6 +1,7 @@
 use crate::model::chemistry::{Symbol, Table};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Element {
     symbol: Symbol,
     subscript: i32,

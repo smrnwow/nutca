@@ -76,6 +76,13 @@ pub fn Calculation() -> Element {
 
                         *result_profile.write() = result;
                     },
+                    on_nitrogen_form_update: move |nitrogen_form| {
+                        profile.write().set_nitrogen_form(nitrogen_form);
+
+                        let result = calculate(fertilizers_selected.read().clone(), profile.read().clone());
+
+                        *result_profile.write() = result;
+                    }
                 }
             }
 
@@ -126,7 +133,7 @@ pub fn Calculation() -> Element {
                                     div {
                                         class: "fertilizers-browser__nutrients",
 
-                                        for nutrient in fertilizer.nutrient_contents().nutrients() {
+                                        for nutrient in fertilizer.nutrients() {
                                             NutrientValue {
                                                 symbol: nutrient.symbol(),
                                                 value: nutrient.value(),

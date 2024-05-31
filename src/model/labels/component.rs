@@ -1,11 +1,9 @@
-use super::NutrientContent;
+use crate::model::chemistry::NutrientAmount;
 use serde::{Deserialize, Serialize};
 
 #[derive(Copy, Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub enum Component {
     Nitrogen(f64),
-    NitrogenNitrate(f64),
-    NitrogenAmmonium(f64),
     Phosphor(f64),
     PhosphorPentoxide(f64),
     Potassium(f64),
@@ -29,8 +27,6 @@ impl Component {
     pub fn symbol(&self) -> &str {
         match self {
             Component::Nitrogen(_) => "N",
-            Component::NitrogenNitrate(_) => "NO3",
-            Component::NitrogenAmmonium(_) => "NH4",
             Component::Phosphor(_) => "P",
             Component::PhosphorPentoxide(_) => "P2O5",
             Component::Potassium(_) => "K",
@@ -54,8 +50,6 @@ impl Component {
     pub fn new(&self, value: f64) -> Self {
         match self {
             Component::Nitrogen(_) => Component::Nitrogen(value),
-            Component::NitrogenNitrate(_) => Component::NitrogenNitrate(value),
-            Component::NitrogenAmmonium(_) => Component::NitrogenAmmonium(value),
             Component::Phosphor(_) => Component::Phosphor(value),
             Component::PhosphorPentoxide(_) => Component::PhosphorPentoxide(value),
             Component::Potassium(_) => Component::Potassium(value),
@@ -79,8 +73,6 @@ impl Component {
     pub fn value(&self) -> f64 {
         match self {
             Component::Nitrogen(value) => *value,
-            Component::NitrogenNitrate(value) => *value,
-            Component::NitrogenAmmonium(value) => *value,
             Component::Phosphor(value) => *value,
             Component::PhosphorPentoxide(value) => *value,
             Component::Potassium(value) => *value,
@@ -101,53 +93,49 @@ impl Component {
         }
     }
 
-    pub fn nutrient_content(&self) -> NutrientContent {
+    pub fn nutrient_amount(&self) -> NutrientAmount {
         match self {
-            Component::Nitrogen(value) => NutrientContent::Nitrogen(*value),
-            Component::NitrogenNitrate(value) => NutrientContent::NitrogenNitrate(*value),
-            Component::NitrogenAmmonium(value) => NutrientContent::NitrogenAmmonium(*value),
-            Component::Phosphor(value) => NutrientContent::Phosphor(*value),
-            Component::PhosphorPentoxide(value) => NutrientContent::Phosphor(*value * 0.436421),
-            Component::Potassium(value) => NutrientContent::Potassium(*value),
-            Component::PotassiumOxide(value) => NutrientContent::Potassium(*value * 0.830148),
-            Component::Calcium(value) => NutrientContent::Calcium(*value),
-            Component::CalciumOxide(value) => NutrientContent::Calcium(*value * 0.714691),
-            Component::Magnesium(value) => NutrientContent::Magnesium(*value),
-            Component::MagnesiumOxide(value) => NutrientContent::Magnesium(*value * 0.603036),
-            Component::Sulfur(value) => NutrientContent::Sulfur(*value),
-            Component::SulfurTrioxide(value) => NutrientContent::Sulfur(*value * 0.400496),
-            Component::SulfurTetroxide(value) => NutrientContent::Sulfur(*value * 0.333793),
-            Component::Iron(value) => NutrientContent::Iron(*value),
-            Component::Manganese(value) => NutrientContent::Manganese(*value),
-            Component::Copper(value) => NutrientContent::Copper(*value),
-            Component::Zinc(value) => NutrientContent::Zinc(*value),
-            Component::Boron(value) => NutrientContent::Boron(*value),
-            Component::Molybdenum(value) => NutrientContent::Molybdenum(*value),
+            Component::Nitrogen(value) => NutrientAmount::Nitrogen(*value),
+            Component::Phosphor(value) => NutrientAmount::Phosphorus(*value),
+            Component::PhosphorPentoxide(value) => NutrientAmount::Phosphorus(*value * 0.436421),
+            Component::Potassium(value) => NutrientAmount::Potassium(*value),
+            Component::PotassiumOxide(value) => NutrientAmount::Potassium(*value * 0.830148),
+            Component::Calcium(value) => NutrientAmount::Calcium(*value),
+            Component::CalciumOxide(value) => NutrientAmount::Calcium(*value * 0.714691),
+            Component::Magnesium(value) => NutrientAmount::Magnesium(*value),
+            Component::MagnesiumOxide(value) => NutrientAmount::Magnesium(*value * 0.603036),
+            Component::Sulfur(value) => NutrientAmount::Sulfur(*value),
+            Component::SulfurTrioxide(value) => NutrientAmount::Sulfur(*value * 0.400496),
+            Component::SulfurTetroxide(value) => NutrientAmount::Sulfur(*value * 0.333793),
+            Component::Iron(value) => NutrientAmount::Iron(*value),
+            Component::Manganese(value) => NutrientAmount::Manganese(*value),
+            Component::Copper(value) => NutrientAmount::Copper(*value),
+            Component::Zinc(value) => NutrientAmount::Zinc(*value),
+            Component::Boron(value) => NutrientAmount::Boron(*value),
+            Component::Molybdenum(value) => NutrientAmount::Molybdenum(*value),
         }
     }
 
     pub fn index(&self) -> usize {
         match self {
             Component::Nitrogen(_) => 0,
-            Component::NitrogenNitrate(_) => 1,
-            Component::NitrogenAmmonium(_) => 2,
-            Component::Phosphor(_) => 3,
-            Component::PhosphorPentoxide(_) => 4,
-            Component::Potassium(_) => 5,
-            Component::PotassiumOxide(_) => 6,
-            Component::Calcium(_) => 7,
-            Component::CalciumOxide(_) => 8,
-            Component::Magnesium(_) => 9,
-            Component::MagnesiumOxide(_) => 10,
-            Component::Sulfur(_) => 11,
-            Component::SulfurTrioxide(_) => 12,
-            Component::SulfurTetroxide(_) => 13,
-            Component::Iron(_) => 14,
-            Component::Manganese(_) => 15,
-            Component::Copper(_) => 16,
-            Component::Zinc(_) => 17,
-            Component::Boron(_) => 18,
-            Component::Molybdenum(_) => 19,
+            Component::Phosphor(_) => 1,
+            Component::PhosphorPentoxide(_) => 2,
+            Component::Potassium(_) => 3,
+            Component::PotassiumOxide(_) => 4,
+            Component::Calcium(_) => 5,
+            Component::CalciumOxide(_) => 6,
+            Component::Magnesium(_) => 7,
+            Component::MagnesiumOxide(_) => 8,
+            Component::Sulfur(_) => 9,
+            Component::SulfurTrioxide(_) => 10,
+            Component::SulfurTetroxide(_) => 11,
+            Component::Iron(_) => 12,
+            Component::Manganese(_) => 13,
+            Component::Copper(_) => 14,
+            Component::Zinc(_) => 15,
+            Component::Boron(_) => 16,
+            Component::Molybdenum(_) => 17,
         }
     }
 }

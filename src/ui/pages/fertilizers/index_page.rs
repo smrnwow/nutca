@@ -1,6 +1,6 @@
+use crate::storage::FertilizersStorage;
 use crate::ui::components::NutrientValue;
 use crate::ui::router::Route;
-use crate::storage::FertilizersStorage;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
@@ -56,7 +56,7 @@ pub fn FertilizersIndexPage() -> Element {
                          div {
                              class: "fertilizers__nutrients",
 
-                             for nutrient in fertilizer.nutrient_contents().nutrients() {
+                             for nutrient in fertilizer.nutrients() {
                                  NutrientValue {
                                      symbol: nutrient.symbol(),
                                      value: nutrient.value(),

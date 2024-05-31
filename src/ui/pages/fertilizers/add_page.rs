@@ -1,4 +1,6 @@
-use crate::model::fertilizers::{Composition, Contents, Fertilizer, Formula, Label, Units};
+use crate::model::fertilizers::Fertilizer;
+use crate::model::formulas::Formula;
+use crate::model::labels::{Label, Units};
 use crate::storage::FertilizersStorage;
 use crate::ui::components::fertilizers::{
     FertilizersComposition, FertilizersDetails, FertilizersPreview,
@@ -11,15 +13,11 @@ use dioxus_router::prelude::*;
 pub fn FertilizersAddPage() -> Element {
     let fertilizers_storage = consume_context::<Signal<FertilizersStorage>>();
 
-    let mut fertilizer_composition = use_signal(|| Composition::Label(Label::new(Units::Percent)));
+    let mut fertilizer = use_signal(|| Fertilizer::build());
 
-    let mut fertilizer_label = use_signal(|| Label::new(Units::Percent));
+    let mut label = use_signal(|| Label::new(Units::Percent));
 
-    let mut fertilizer_name = use_signal(|| String::from(""));
-
-    let mut fertilizer_vendor = use_signal(|| String::from(""));
-
-    let mut nutrient_contents = use_signal(|| Contents::new());
+    let mut formula = use_signal(|| Formula::from(""));
 
     rsx! {
         div {
@@ -34,54 +32,42 @@ pub fn FertilizersAddPage() -> Element {
                 }
 
                 FertilizersDetails {
-                    name: fertilizer_name,
-                    on_name_update: move |name| *fertilizer_name.write() = name,
-                    vendor: fertilizer_vendor,
-                    on_vendor_update: move |vendor| *fertilizer_vendor.write() = vendor,
+                    fertilizer,
+                    on_name_update: move |name| {
+                        fertilizer.write().with_name(name);
+                    },
+                    on_vendor_update: move |vendor| {
+                        fertilizer.write().with_vendor(vendor);
+                    },
                 }
 
                 FertilizersComposition {
-                    composition: fertilizer_composition,
+                    fertilizer,
                     on_label_select: move |_| {
-                        let label = fertilizer_label.read().clone();
-
-                        *fertilizer_composition.write() = Composition::Label(label);
-
-                        let composition = fertilizer_composition.read().clone();
-
-                        *nutrient_contents.write() = composition.into();
+                        fertilizer.write().with_label(*label.read());
                     },
                     on_label_units_update: move |units| {
-                        fertilizer_label.write().update_units(units);
+                        label.write().update_units(units);
 
-                        *fertilizer_composition.write() = Composition::Label(*fertilizer_label.read());
-
-                        let composition = fertilizer_composition.read().clone();
-
-                        *nutrient_contents.write() = composition.into();
+                        fertilizer.write().with_label(*label.read());
                     },
                     on_label_component_update: move |component| {
-                        fertilizer_label.write().update_component(component);
+                        label.write().update_component(component);
 
-                        *fertilizer_composition.write() = Composition::Label(*fertilizer_label.read());
+                        fertilizer.write().with_label(*label.read());
+                    },
+                    on_label_nitrogen_form_update: move |nitrogen_form| {
+                        label.write().update_nitrogen_form(nitrogen_form);
 
-                        let composition = fertilizer_composition.read().clone();
-
-                        *nutrient_contents.write() = composition.into();
+                        fertilizer.write().with_label(*label.read());
                     },
                     on_formula_select: move |_| {
-                        *fertilizer_composition.write() = Composition::Formula(Formula::new("".to_string()));
-
-                        let composition = fertilizer_composition.read().clone();
-
-                        *nutrient_contents.write() = composition.into();
+                        fertilizer.write().with_formula(formula.read().clone());
                     },
-                    on_formula_update: move |formula| {
-                        *fertilizer_composition.write() = Composition::Formula(Formula::new(formula));
+                    on_formula_update: move |formula_update: String| {
+                        *formula.write() = Formula::from(formula_update);
 
-                        let composition = fertilizer_composition.read().clone();
-
-                        *nutrient_contents.write() = composition.into();
+                        fertilizer.write().with_formula(formula.read().clone());
                     }
                 }
             }
@@ -95,9 +81,7 @@ pub fn FertilizersAddPage() -> Element {
                 }
 
                 FertilizersPreview {
-                    name: fertilizer_name,
-                    vendor: fertilizer_vendor,
-                    nutrient_contents: nutrient_contents
+                    fertilizer,
                 }
 
                 button {
@@ -105,13 +89,7 @@ pub fn FertilizersAddPage() -> Element {
                     onclick: move |_| {
                         let storage = fertilizers_storage.read();
 
-
-                        let fertilizer_id = storage.add(
-                            Fertilizer::build()
-                                .set_name(fertilizer_name.read().clone())
-                                .set_vendor(fertilizer_vendor.read().clone())
-                                .set_composition(fertilizer_composition.read().clone())
-                        );
+                        let fertilizer_id = storage.add(fertilizer.read().clone());
 
                         println!("{:#?}", fertilizer_id);
 

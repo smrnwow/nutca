@@ -1,28 +1,27 @@
-use super::NutrientContent;
-use crate::model::fertilizers::Contents;
+use super::{NitrogenFormValue, NutrientContentValue};
+use crate::model::chemistry::{NitrogenForm, NutrientAmount};
+use crate::model::fertilizers::Fertilizer;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersPreviewProps {
-    name: Signal<String>,
-    vendor: Signal<String>,
-    nutrient_contents: Signal<Contents>,
+    fertilizer: Signal<Fertilizer>,
 }
 
 #[component]
 pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
-    let nutrient_contents = &*props.nutrient_contents.read();
+    let fertilizer = &*props.fertilizer.read();
 
-    let name = if *props.name.read() == String::from("") {
+    let name = if fertilizer.name() == String::from("") {
         "Без названия".to_string()
     } else {
-        props.name.read().clone()
+        fertilizer.name()
     };
 
-    let vendor = if *props.vendor.read() == String::from("") {
+    let vendor = if fertilizer.vendor() == String::from("") {
         "Не известно".to_string()
     } else {
-        props.vendor.read().clone()
+        fertilizer.vendor()
     };
 
     rsx! {
@@ -53,8 +52,30 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                     div {
                         class: "nutrient-value__elemental",
 
-                        NutrientContent {
-                            nutrient_content: nutrient_contents.nitrogen(),
+                        NutrientContentValue {
+                            nutrient_amount: fertilizer[NutrientAmount::Nitrogen(0.0)],
+                        }
+                    }
+
+                    div {
+                        class: "nutrient-value__forms",
+
+                        div {
+                            class: "nutrient-value__form",
+
+                            NitrogenFormValue {
+                                nitrogen_form: fertilizer[NitrogenForm::Nitrate(0.0)],
+                                on_update: move |_| {},
+                            }
+                        }
+
+                        div {
+                            class: "nutrient-value__form",
+
+                            NitrogenFormValue {
+                                nitrogen_form: fertilizer[NitrogenForm::Ammonium(0.0)],
+                                on_update: move |_| {},
+                            }
                         }
                     }
                 }
@@ -65,8 +86,8 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                     div {
                         class: "nutrient-value__elemental",
 
-                        NutrientContent {
-                            nutrient_content: nutrient_contents.phosphor(),
+                        NutrientContentValue {
+                            nutrient_amount: fertilizer[NutrientAmount::Phosphorus(0.0)],
                         }
                     }
                 }
@@ -77,8 +98,8 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                     div {
                         class: "nutrient-value__elemental",
 
-                        NutrientContent {
-                            nutrient_content: nutrient_contents.potassium(),
+                        NutrientContentValue {
+                            nutrient_amount: fertilizer[NutrientAmount::Potassium(0.0)],
                         }
                     }
                 }
@@ -89,8 +110,8 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                     div {
                         class: "nutrient-value__elemental",
 
-                        NutrientContent {
-                            nutrient_content: nutrient_contents.calcium(),
+                        NutrientContentValue {
+                            nutrient_amount: fertilizer[NutrientAmount::Calcium(0.0)],
                         }
                     }
                 }
@@ -101,8 +122,8 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                     div {
                         class: "nutrient-value__elemental",
 
-                        NutrientContent {
-                            nutrient_content: nutrient_contents.magnesium(),
+                        NutrientContentValue {
+                            nutrient_amount: fertilizer[NutrientAmount::Magnesium(0.0)],
                         }
                     }
                 }
@@ -113,8 +134,8 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                     div {
                         class: "nutrient-value__elemental",
 
-                        NutrientContent {
-                            nutrient_content: nutrient_contents.sulfur(),
+                        NutrientContentValue {
+                            nutrient_amount: fertilizer[NutrientAmount::Sulfur(0.0)],
                         }
                     }
                 }
@@ -129,8 +150,8 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                     div {
                         class: "nutrient-value__elemental",
 
-                        NutrientContent {
-                            nutrient_content: nutrient_contents.iron(),
+                        NutrientContentValue {
+                            nutrient_amount: fertilizer[NutrientAmount::Iron(0.0)],
                         }
                     }
                 }
@@ -141,8 +162,8 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                     div {
                         class: "nutrient-value__elemental",
 
-                        NutrientContent {
-                            nutrient_content: nutrient_contents.manganese(),
+                        NutrientContentValue {
+                            nutrient_amount: fertilizer[NutrientAmount::Manganese(0.0)],
                         }
                     }
                 }
@@ -153,8 +174,8 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                     div {
                         class: "nutrient-value__elemental",
 
-                        NutrientContent {
-                            nutrient_content: nutrient_contents.copper(),
+                        NutrientContentValue {
+                            nutrient_amount: fertilizer[NutrientAmount::Copper(0.0)],
                         }
                     }
                 }
@@ -165,8 +186,8 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                     div {
                         class: "nutrient-value__elemental",
 
-                        NutrientContent {
-                            nutrient_content: nutrient_contents.zinc(),
+                        NutrientContentValue {
+                            nutrient_amount: fertilizer[NutrientAmount::Zinc(0.0)],
                         }
                     }
                 }
@@ -177,8 +198,8 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                     div {
                         class: "nutrient-value__elemental",
 
-                        NutrientContent {
-                            nutrient_content: nutrient_contents.boron(),
+                        NutrientContentValue {
+                            nutrient_amount: fertilizer[NutrientAmount::Boron(0.0)],
                         }
                     }
                 }
@@ -189,8 +210,8 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                     div {
                         class: "nutrient-value__elemental",
 
-                        NutrientContent {
-                            nutrient_content: nutrient_contents.molybdenum(),
+                        NutrientContentValue {
+                            nutrient_amount: fertilizer[NutrientAmount::Molybdenum(0.0)],
                         }
                     }
                 }

@@ -1,4 +1,4 @@
-use crate::model::fertilizers::Component;
+use crate::model::labels::Component;
 use crate::ui::components::NutrientValue;
 use dioxus::prelude::*;
 

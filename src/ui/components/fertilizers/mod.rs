@@ -16,5 +16,8 @@ pub use formula::FertilizersFormula;
 mod preview;
 pub use preview::FertilizersPreview;
 
-mod nutrient_content;
-pub use nutrient_content::NutrientContent;
+mod nutrient_content_value;
+pub use nutrient_content_value::NutrientContentValue;
+
+mod nitrogen_form_value;
+pub use nitrogen_form_value::NitrogenFormValue;

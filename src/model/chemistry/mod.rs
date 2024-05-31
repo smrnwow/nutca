@@ -4,7 +4,8 @@ pub use symbol::Symbol;
 mod table;
 pub use table::Table;
 
-mod nutrient;
-pub use nutrient::Nutrient;
+mod nitrogen_form;
+pub use nitrogen_form::NitrogenForm;
 
-pub mod formulas;
+mod nutrient_amount;
+pub use nutrient_amount::NutrientAmount;

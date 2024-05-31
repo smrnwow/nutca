@@ -46,11 +46,4 @@ impl Table {
             None => None,
         }
     }
-
-    pub fn nutrients(&self) -> Vec<&Symbol> {
-        self.elements
-            .iter()
-            .filter(|element| element.nutrient().is_some())
-            .collect()
-    }
 }

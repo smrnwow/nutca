@@ -161,8 +161,8 @@ impl<'a> Tokenizer<'a> {
 #[cfg(test)]
 mod tests {
     use super::Tokenizer;
-    use crate::model::chemistry::formulas::{Component, Compound, Element, Group, Hydrate};
     use crate::model::chemistry::Table;
+    use crate::model::formulas::{Component, Compound, Element, Group, Hydrate};
 
     #[test]
     fn single_element() {

@@ -1,11 +1,14 @@
-use crate::model::calculation::{NutrientRequirement, Profile};
+use super::NitrogenFormValue;
+use crate::model::calculation::Profile;
+use crate::model::chemistry::{NitrogenForm, NutrientAmount};
 use crate::ui::components::calculation::NutrientRequirementInput;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ProfileProps {
     profile: Signal<Profile>,
-    on_requirement_update: EventHandler<NutrientRequirement>,
+    on_requirement_update: EventHandler<NutrientAmount>,
+    on_nitrogen_form_update: EventHandler<NitrogenForm>,
 }
 
 #[component]
@@ -26,7 +29,7 @@ pub fn Profile(props: ProfileProps) -> Element {
                             class: "nutrient-value__elemental",
 
                             NutrientRequirementInput {
-                                nutrient_requirement: profile.nitrogen(),
+                                nutrient_amount: profile[NutrientAmount::Nitrogen(0.0)],
                                 on_update: props.on_requirement_update,
                             }
                         }
@@ -37,18 +40,18 @@ pub fn Profile(props: ProfileProps) -> Element {
                             div {
                                 class: "nutrient-value__form",
 
-                                NutrientRequirementInput {
-                                    nutrient_requirement: profile.nitrogen_nitrate(),
-                                    on_update: props.on_requirement_update,
+                                NitrogenFormValue {
+                                    nitrogen_form: profile[NitrogenForm::Nitrate(0.0)],
+                                    on_update: props.on_nitrogen_form_update,
                                 }
                             }
 
                             div {
                                 class: "nutrient-value__form",
 
-                                NutrientRequirementInput {
-                                    nutrient_requirement: profile.nitrogen_ammonium(),
-                                    on_update: props.on_requirement_update,
+                                NitrogenFormValue {
+                                    nitrogen_form: profile[NitrogenForm::Ammonium(0.0)],
+                                    on_update: props.on_nitrogen_form_update,
                                 }
                             }
                         }
@@ -58,7 +61,7 @@ pub fn Profile(props: ProfileProps) -> Element {
                         class: "nutrient-value__elemental",
 
                         NutrientRequirementInput {
-                            nutrient_requirement: profile.phosphor(),
+                            nutrient_amount: profile[NutrientAmount::Phosphorus(0.0)],
                             on_update: props.on_requirement_update,
                         }
                     }
@@ -67,7 +70,7 @@ pub fn Profile(props: ProfileProps) -> Element {
                         class: "nutrient-value__elemental",
 
                         NutrientRequirementInput {
-                            nutrient_requirement: profile.potassium(),
+                            nutrient_amount: profile[NutrientAmount::Potassium(0.0)],
                             on_update: props.on_requirement_update,
                         }
                     }
@@ -76,7 +79,7 @@ pub fn Profile(props: ProfileProps) -> Element {
                         class: "nutrient-value__elemental",
 
                         NutrientRequirementInput {
-                            nutrient_requirement: profile.calcium(),
+                            nutrient_amount: profile[NutrientAmount::Calcium(0.0)],
                             on_update: props.on_requirement_update,
                         }
                     }
@@ -85,7 +88,7 @@ pub fn Profile(props: ProfileProps) -> Element {
                         class: "nutrient-value__elemental",
 
                         NutrientRequirementInput {
-                            nutrient_requirement: profile.magnesium(),
+                            nutrient_amount: profile[NutrientAmount::Magnesium(0.0)],
                             on_update: props.on_requirement_update,
                         }
                     }
@@ -94,7 +97,7 @@ pub fn Profile(props: ProfileProps) -> Element {
                         class: "nutrient-value__elemental",
 
                         NutrientRequirementInput {
-                            nutrient_requirement: profile.sulfur(),
+                            nutrient_amount: profile[NutrientAmount::Sulfur(0.0)],
                             on_update: props.on_requirement_update,
                         }
                     }
@@ -107,7 +110,7 @@ pub fn Profile(props: ProfileProps) -> Element {
                         class: "nutrient-value__elemental",
 
                         NutrientRequirementInput {
-                            nutrient_requirement: profile.iron(),
+                            nutrient_amount: profile[NutrientAmount::Iron(0.0)],
                             on_update: props.on_requirement_update,
                         }
                     }
@@ -116,7 +119,7 @@ pub fn Profile(props: ProfileProps) -> Element {
                         class: "nutrient-value__elemental",
 
                         NutrientRequirementInput {
-                            nutrient_requirement: profile.manganese(),
+                            nutrient_amount: profile[NutrientAmount::Manganese(0.0)],
                             on_update: props.on_requirement_update,
                         }
                     }
@@ -125,7 +128,7 @@ pub fn Profile(props: ProfileProps) -> Element {
                         class: "nutrient-value__elemental",
 
                         NutrientRequirementInput {
-                            nutrient_requirement: profile.copper(),
+                            nutrient_amount: profile[NutrientAmount::Copper(0.0)],
                             on_update: props.on_requirement_update,
                         }
                     }
@@ -134,7 +137,7 @@ pub fn Profile(props: ProfileProps) -> Element {
                         class: "nutrient-value__elemental",
 
                         NutrientRequirementInput {
-                            nutrient_requirement: profile.zinc(),
+                            nutrient_amount: profile[NutrientAmount::Zinc(0.0)],
                             on_update: props.on_requirement_update,
                         }
                     }
@@ -143,7 +146,7 @@ pub fn Profile(props: ProfileProps) -> Element {
                         class: "nutrient-value__elemental",
 
                         NutrientRequirementInput {
-                            nutrient_requirement: profile.boron(),
+                            nutrient_amount: profile[NutrientAmount::Boron(0.0)],
                             on_update: props.on_requirement_update,
                         }
                     }
@@ -152,7 +155,7 @@ pub fn Profile(props: ProfileProps) -> Element {
                         class: "nutrient-value__elemental",
 
                         NutrientRequirementInput {
-                            nutrient_requirement: profile.molybdenum(),
+                            nutrient_amount: profile[NutrientAmount::Molybdenum(0.0)],
                             on_update: props.on_requirement_update,
                         }
                     }

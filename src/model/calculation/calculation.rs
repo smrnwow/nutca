@@ -1,13 +1,13 @@
-use super::{Error, FertilizerWeight, NutrientRequirement, Profile, ResultProfile};
-use crate::model::fertilizers::{Fertilizer, Nutrient};
-use ellp::{problem::VariableId, Bound, ConstraintOp, DualSimplexSolver, Problem, SolverResult};
-use std::collections::HashMap;
+use super::{Coefficient, Error, FertilizerWeight, Profile, ResultProfile};
+use crate::model::chemistry::{NitrogenForm, NutrientAmount};
+use crate::model::fertilizers::Fertilizer;
+use ellp::{Bound, ConstraintOp, DualSimplexSolver, Problem, SolverResult};
 
 pub struct Calculation {
     desired_profile: Profile,
     fertilizers: Vec<Fertilizer>,
     problem: Problem,
-    coefficients: HashMap<Nutrient, Vec<(VariableId, f64)>>,
+    coefficients: Vec<Coefficient>,
 }
 
 impl Calculation {
@@ -16,22 +16,7 @@ impl Calculation {
             problem: Problem::new(),
             desired_profile,
             fertilizers: Vec::new(),
-            coefficients: HashMap::from([
-                (Nutrient::Nitrogen, vec![]),
-                (Nutrient::NitrogenNitrate, vec![]),
-                (Nutrient::NitrogenAmmonium, vec![]),
-                (Nutrient::Phosphor, vec![]),
-                (Nutrient::Potassium, vec![]),
-                (Nutrient::Calcium, vec![]),
-                (Nutrient::Magnesium, vec![]),
-                (Nutrient::Sulfur, vec![]),
-                (Nutrient::Iron, vec![]),
-                (Nutrient::Manganese, vec![]),
-                (Nutrient::Copper, vec![]),
-                (Nutrient::Zinc, vec![]),
-                (Nutrient::Boron, vec![]),
-                (Nutrient::Molybdenum, vec![]),
-            ]),
+            coefficients: Vec::new(),
         };
 
         fertilizers.iter().for_each(|fertilizer| {
@@ -39,10 +24,17 @@ impl Calculation {
         });
 
         desired_profile
-            .requirements()
+            .nutrients()
             .iter()
-            .for_each(|requirement| {
-                calculation.add_requirement(*requirement);
+            .for_each(|required_amount| {
+                calculation.add_nutrient_amount_requirement(*required_amount);
+            });
+
+        desired_profile
+            .nitrogen_forms()
+            .iter()
+            .for_each(|nitrogen_form| {
+                calculation.add_nitrogen_form_requirement(*nitrogen_form);
             });
 
         Ok(calculation)
@@ -58,45 +50,76 @@ impl Calculation {
             .add_var(1., Bound::Lower(0.), Some(variable_name))
             .unwrap();
 
+        fertilizer.nutrients().iter().for_each(|nutrient_amount| {
+            self.coefficients
+                .push(Coefficient::NutrientAmount(*nutrient_amount, variable_id));
+        });
+
         fertilizer
-            .nutrient_contents()
-            .nutrients()
+            .nitrogen_forms()
             .iter()
-            .for_each(|nutrient| {
-                if let Some(coefficients) = self.coefficients.get_mut(&nutrient.nutrient()) {
-                    coefficients.push((variable_id, nutrient.value()));
-                }
-            });
+            .for_each(|nitrogen_form| {
+                self.coefficients
+                    .push(Coefficient::NitrogenForm(*nitrogen_form, variable_id));
+            })
     }
 
-    fn add_requirement(&mut self, requirement: NutrientRequirement) {
+    fn add_nutrient_amount_requirement(&mut self, requirement: NutrientAmount) {
         let coefficients = self
             .coefficients
-            .get(&requirement.nutrient())
-            .unwrap()
-            .clone();
+            .iter()
+            .filter(|coefficient| match coefficient {
+                Coefficient::NutrientAmount(nutrient_amount, _) => {
+                    nutrient_amount.index() == requirement.index()
+                }
 
-        match requirement.nutrient() {
-            Nutrient::Nitrogen
-            | Nutrient::Phosphor
-            | Nutrient::Potassium
-            | Nutrient::Magnesium
-            | Nutrient::Calcium
-            | Nutrient::Boron
-            | Nutrient::NitrogenAmmonium
-            | Nutrient::NitrogenNitrate => {
+                _ => false,
+            })
+            .map(|coefficient| coefficient.value())
+            .collect();
+
+        match requirement {
+            NutrientAmount::Nitrogen(required_amount)
+            | NutrientAmount::Phosphorus(required_amount)
+            | NutrientAmount::Potassium(required_amount)
+            | NutrientAmount::Magnesium(required_amount)
+            | NutrientAmount::Calcium(required_amount)
+            | NutrientAmount::Boron(required_amount) => {
                 self.problem
-                    .add_constraint(coefficients, ConstraintOp::Eq, requirement.amount())
+                    .add_constraint(coefficients, ConstraintOp::Eq, required_amount)
                     .unwrap();
             }
-            Nutrient::Sulfur
-            | Nutrient::Iron
-            | Nutrient::Manganese
-            | Nutrient::Zinc
-            | Nutrient::Copper
-            | Nutrient::Molybdenum => {
+            NutrientAmount::Sulfur(_)
+            | NutrientAmount::Iron(_)
+            | NutrientAmount::Manganese(_)
+            | NutrientAmount::Zinc(_)
+            | NutrientAmount::Copper(_)
+            | NutrientAmount::Molybdenum(_) => {
                 self.problem
                     .add_constraint(coefficients, ConstraintOp::Gte, 0.0)
+                    .unwrap();
+            }
+        };
+    }
+
+    fn add_nitrogen_form_requirement(&mut self, requirement: NitrogenForm) {
+        let coefficients = self
+            .coefficients
+            .iter()
+            .filter(|coefficient| match coefficient {
+                Coefficient::NitrogenForm(nitrogen_form, _) => {
+                    nitrogen_form.index() == requirement.index()
+                }
+
+                _ => false,
+            })
+            .map(|coefficient| coefficient.value())
+            .collect();
+
+        match requirement {
+            NitrogenForm::Nitrate(required_amount) | NitrogenForm::Ammonium(required_amount) => {
+                self.problem
+                    .add_constraint(coefficients, ConstraintOp::Eq, required_amount)
                     .unwrap();
             }
         };

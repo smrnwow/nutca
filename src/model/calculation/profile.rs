@@ -1,153 +1,94 @@
-use super::NutrientRequirement;
+use crate::model::chemistry::{NitrogenForm, NutrientAmount};
+use std::ops::Index;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Profile {
-    nutrients: [NutrientRequirement; 14],
+    nutrients: [NutrientAmount; 12],
+    nitrogen_forms: [NitrogenForm; 2],
 }
 
 impl Profile {
     pub fn new() -> Self {
         Self {
             nutrients: [
-                NutrientRequirement::Nitrogen(0.0),
-                NutrientRequirement::NitrogenNitrate(0.0),
-                NutrientRequirement::NitrogenAmmonium(0.0),
-                NutrientRequirement::Phosphor(0.0),
-                NutrientRequirement::Potassium(0.0),
-                NutrientRequirement::Calcium(0.0),
-                NutrientRequirement::Magnesium(0.0),
-                NutrientRequirement::Sulfur(0.0),
-                NutrientRequirement::Iron(0.0),
-                NutrientRequirement::Manganese(0.0),
-                NutrientRequirement::Copper(0.0),
-                NutrientRequirement::Zinc(0.0),
-                NutrientRequirement::Boron(0.0),
-                NutrientRequirement::Molybdenum(0.0),
+                NutrientAmount::Nitrogen(0.0),
+                NutrientAmount::Phosphorus(0.0),
+                NutrientAmount::Potassium(0.0),
+                NutrientAmount::Calcium(0.0),
+                NutrientAmount::Magnesium(0.0),
+                NutrientAmount::Sulfur(0.0),
+                NutrientAmount::Iron(0.0),
+                NutrientAmount::Manganese(0.0),
+                NutrientAmount::Copper(0.0),
+                NutrientAmount::Zinc(0.0),
+                NutrientAmount::Boron(0.0),
+                NutrientAmount::Molybdenum(0.0),
             ],
+            nitrogen_forms: [NitrogenForm::Nitrate(0.0), NitrogenForm::Ammonium(0.0)],
         }
     }
 
-    pub fn requirements(&self) -> Vec<NutrientRequirement> {
-        vec![
-            self.nitrogen(),
-            self.nitrogen_nitrate(),
-            self.nitrogen_ammonium(),
-            self.phosphor(),
-            self.potassium(),
-            self.calcium(),
-            self.magnesium(),
-            self.sulfur(),
-            self.iron(),
-            self.manganese(),
-            self.copper(),
-            self.zinc(),
-            self.boron(),
-            self.molybdenum(),
-        ]
+    pub fn nutrients(&self) -> Vec<NutrientAmount> {
+        Vec::from(self.nutrients)
     }
 
-    pub fn set_nutrient(&mut self, nutrient_requirement: NutrientRequirement) {
-        match nutrient_requirement {
-            NutrientRequirement::Nitrogen(value) => {
-                self.nutrients[nutrient_requirement.index()] = nutrient_requirement;
+    pub fn nitrogen_forms(&self) -> Vec<NitrogenForm> {
+        Vec::from(self.nitrogen_forms)
+    }
 
-                self.nutrients[self.nitrogen_nitrate().index()] =
-                    NutrientRequirement::NitrogenNitrate(value - self.nitrogen_ammonium().amount());
+    pub fn set_nutrient(&mut self, nutrient_requirement: NutrientAmount) {
+        self.nutrients[nutrient_requirement.index()] = nutrient_requirement;
+
+        if let NutrientAmount::Nitrogen(value) = nutrient_requirement {
+            let nitrate_value =
+                value - self.nitrogen_forms[NitrogenForm::Ammonium(0.0).index()].value();
+
+            self.nitrogen_forms[NitrogenForm::Nitrate(0.0).index()] =
+                NitrogenForm::Nitrate(nitrate_value);
+        }
+    }
+
+    pub fn set_nitrogen_form(&mut self, nitrogen_form: NitrogenForm) {
+        self.nitrogen_forms[nitrogen_form.index()] = nitrogen_form;
+
+        match nitrogen_form {
+            NitrogenForm::Nitrate(value) => {
+                let ammonium_value =
+                    self.nutrients[NutrientAmount::Nitrogen(0.0).index()].value() - value;
+
+                self.nitrogen_forms[NitrogenForm::Ammonium(0.0).index()] =
+                    NitrogenForm::Ammonium(ammonium_value);
             }
 
-            NutrientRequirement::NitrogenNitrate(value) => {
-                self.nutrients[nutrient_requirement.index()] = nutrient_requirement;
+            NitrogenForm::Ammonium(value) => {
+                let nitrate_value =
+                    self.nutrients[NutrientAmount::Nitrogen(0.0).index()].value() - value;
 
-                self.nutrients[self.nitrogen().index()] =
-                    NutrientRequirement::Nitrogen(value + self.nitrogen_ammonium().amount());
-            }
-
-            NutrientRequirement::NitrogenAmmonium(value) => {
-                self.nutrients[nutrient_requirement.index()] = nutrient_requirement;
-
-                self.nutrients[self.nitrogen().index()] =
-                    NutrientRequirement::Nitrogen(value + self.nitrogen_nitrate().amount());
-            }
-
-            _ => {
-                self.nutrients[nutrient_requirement.index()] = nutrient_requirement;
+                self.nitrogen_forms[NitrogenForm::Nitrate(0.0).index()] =
+                    NitrogenForm::Nitrate(nitrate_value);
             }
         }
     }
 
-    pub fn update_nutrient(&mut self, nutrient_requirement: NutrientRequirement) {
+    pub fn update_nutrient(&mut self, nutrient_requirement: NutrientAmount) {
         let nutrient = self.nutrients[nutrient_requirement.index()];
 
-        self.nutrients[nutrient_requirement.index()] = nutrient.add(nutrient_requirement.amount());
+        self.nutrients[nutrient_requirement.index()] = nutrient.add(nutrient_requirement.value());
     }
+}
 
-    pub fn nitrogen(&self) -> NutrientRequirement {
-        self.nutrients[0]
-        // NutrientRequirement::Nitrogen(self.nitrogen)
+impl Index<NutrientAmount> for Profile {
+    type Output = NutrientAmount;
+
+    fn index(&self, nutrient_requirement: NutrientAmount) -> &Self::Output {
+        &self.nutrients[nutrient_requirement.index()]
     }
+}
 
-    pub fn nitrogen_nitrate(&self) -> NutrientRequirement {
-        self.nutrients[1]
-        // NutrientRequirement::NitrogenNitrate(self.nitrogen_nitrate)
-    }
+impl Index<NitrogenForm> for Profile {
+    type Output = NitrogenForm;
 
-    pub fn nitrogen_ammonium(&self) -> NutrientRequirement {
-        self.nutrients[2]
-        // NutrientRequirement::NitrogenAmmonium(self.nitrogen_ammonium)
-    }
-
-    pub fn phosphor(&self) -> NutrientRequirement {
-        self.nutrients[3]
-        // NutrientRequirement::Phosphor(self.phosphor)
-    }
-
-    pub fn potassium(&self) -> NutrientRequirement {
-        self.nutrients[4]
-        // NutrientRequirement::Potassium(self.potassium)
-    }
-
-    pub fn calcium(&self) -> NutrientRequirement {
-        self.nutrients[5]
-        // NutrientRequirement::Calcium(self.calcium)
-    }
-
-    pub fn magnesium(&self) -> NutrientRequirement {
-        self.nutrients[6]
-        // NutrientRequirement::Magnesium(self.magnesium)
-    }
-
-    pub fn sulfur(&self) -> NutrientRequirement {
-        self.nutrients[7]
-        // NutrientRequirement::Sulfur(self.sulfur)
-    }
-
-    pub fn iron(&self) -> NutrientRequirement {
-        self.nutrients[8]
-        // NutrientRequirement::Iron(self.iron)
-    }
-
-    pub fn manganese(&self) -> NutrientRequirement {
-        self.nutrients[9]
-        // NutrientRequirement::Manganese(self.manganese)
-    }
-
-    pub fn copper(&self) -> NutrientRequirement {
-        self.nutrients[10]
-        // NutrientRequirement::Copper(self.copper)
-    }
-
-    pub fn zinc(&self) -> NutrientRequirement {
-        self.nutrients[11]
-        // NutrientRequirement::Zinc(self.zinc)
-    }
-
-    pub fn boron(&self) -> NutrientRequirement {
-        self.nutrients[12]
-        // NutrientRequirement::Boron(self.boron)
-    }
-
-    pub fn molybdenum(&self) -> NutrientRequirement {
-        self.nutrients[13]
-        // NutrientRequirement::Molybdenum(self.molybdenum)
+    fn index(&self, nitrogen_form: NitrogenForm) -> &Self::Output {
+        &self.nitrogen_forms[nitrogen_form.index()]
     }
 }

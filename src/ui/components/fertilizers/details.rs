@@ -1,15 +1,17 @@
+use crate::model::fertilizers::Fertilizer;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersDetailsProps {
-    name: Signal<String>,
+    fertilizer: Signal<Fertilizer>,
     on_name_update: EventHandler<String>,
-    vendor: Signal<String>,
     on_vendor_update: EventHandler<String>,
 }
 
 #[component]
 pub fn FertilizersDetails(props: FertilizersDetailsProps) -> Element {
+    let fertilizer = props.fertilizer.read();
+
     rsx! {
             div {
                 class: "fertilizers-details",
@@ -22,7 +24,7 @@ pub fn FertilizersDetails(props: FertilizersDetailsProps) -> Element {
                     input {
                         class: "fertilizers-details__input",
                         r#type: "text",
-                        value: props.name.read().clone(),
+                        value: fertilizer.name(),
                         oninput: move |event| props.on_name_update.call(event.value()),
                     }
                 }
@@ -35,7 +37,7 @@ pub fn FertilizersDetails(props: FertilizersDetailsProps) -> Element {
                     input {
                         class: "fertilizers-details__input",
                         r#type: "text",
-                        value: props.vendor.read().clone(),
+                        value: fertilizer.vendor(),
                         oninput: move |event| props.on_vendor_update.call(event.value()),
                     }
                 }

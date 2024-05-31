@@ -19,5 +19,5 @@ pub use group::Group;
 mod hydrate;
 pub use hydrate::Hydrate;
 
-mod nitrogen_form;
-pub use nitrogen_form::NitrogenForm;
+mod nitrogen_forms;
+pub use nitrogen_forms::NitrogenForms;

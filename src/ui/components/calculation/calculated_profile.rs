@@ -1,5 +1,6 @@
 use crate::model::calculation::ResultProfile;
-use crate::ui::components::calculation::NutrientRequirementInput;
+use crate::model::chemistry::{NitrogenForm, NutrientAmount};
+use crate::ui::components::calculation::{NitrogenFormValue, NutrientRequirementInput};
 use dioxus::prelude::*;
 
 fn round(value: f64) -> String {
@@ -29,8 +30,7 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             class: "nutrient-value__elemental",
 
                             NutrientRequirementInput {
-                                nutrient_requirement: result_profile.profile.nitrogen(),
-                                on_update: move |_| {},
+                                nutrient_amount: result_profile[NutrientAmount::Nitrogen(0.0)],
                             }
                         }
 
@@ -40,8 +40,8 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             div {
                                 class: "nutrient-value__form",
 
-                                NutrientRequirementInput {
-                                    nutrient_requirement: result_profile.profile.nitrogen_nitrate(),
+                                NitrogenFormValue {
+                                    nitrogen_form: result_profile[NitrogenForm::Nitrate(0.0)],
                                     on_update: move |_| {},
                                 }
                             }
@@ -49,8 +49,8 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             div {
                                 class: "nutrient-value__form",
 
-                                NutrientRequirementInput {
-                                    nutrient_requirement: result_profile.profile.nitrogen_ammonium(),
+                                NitrogenFormValue {
+                                    nitrogen_form: result_profile[NitrogenForm::Ammonium(0.0)],
                                     on_update: move |_| {},
                                 }
                             }
@@ -64,8 +64,7 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             class: "nutrient-value__elemental",
 
                             NutrientRequirementInput {
-                                nutrient_requirement: result_profile.profile.phosphor(),
-                                on_update: move |_| {},
+                                nutrient_amount: result_profile[NutrientAmount::Phosphorus(0.0)],
                             }
                         }
                     }
@@ -77,8 +76,7 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             class: "nutrient-value__elemental",
 
                             NutrientRequirementInput {
-                                nutrient_requirement: result_profile.profile.potassium(),
-                                on_update: move |_| {},
+                                nutrient_amount: result_profile[NutrientAmount::Potassium(0.0)],
                             }
                         }
                     }
@@ -90,8 +88,7 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             class: "nutrient-value__elemental",
 
                             NutrientRequirementInput {
-                                nutrient_requirement: result_profile.profile.calcium(),
-                                on_update: move |_| {},
+                                nutrient_amount: result_profile[NutrientAmount::Calcium(0.0)],
                             }
                         }
                     }
@@ -103,8 +100,7 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             class: "nutrient-value__elemental",
 
                             NutrientRequirementInput {
-                                nutrient_requirement: result_profile.profile.magnesium(),
-                                on_update: move |_| {},
+                                nutrient_amount: result_profile[NutrientAmount::Magnesium(0.0)],
                             }
                         }
                     }
@@ -116,8 +112,7 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             class: "nutrient-value__elemental",
 
                             NutrientRequirementInput {
-                                nutrient_requirement: result_profile.profile.sulfur(),
-                                on_update: move |_| {},
+                                nutrient_amount: result_profile[NutrientAmount::Sulfur(0.0)],
                             }
                         }
                     }
@@ -133,8 +128,7 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             class: "nutrient-value__elemental",
 
                             NutrientRequirementInput {
-                                nutrient_requirement: result_profile.profile.iron(),
-                                on_update: move |_| {},
+                                nutrient_amount: result_profile[NutrientAmount::Iron(0.0)],
                             }
                         }
                     }
@@ -146,8 +140,7 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             class: "nutrient-value__elemental",
 
                             NutrientRequirementInput {
-                                nutrient_requirement: result_profile.profile.manganese(),
-                                on_update: move |_| {},
+                                nutrient_amount: result_profile[NutrientAmount::Manganese(0.0)],
                             }
                         }
                     }
@@ -159,8 +152,7 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             class: "nutrient-value__elemental",
 
                             NutrientRequirementInput {
-                                nutrient_requirement: result_profile.profile.copper(),
-                                on_update: move |_| {},
+                                nutrient_amount: result_profile[NutrientAmount::Copper(0.0)],
                             }
                         }
                     }
@@ -172,8 +164,7 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             class: "nutrient-value__elemental",
 
                             NutrientRequirementInput {
-                                nutrient_requirement: result_profile.profile.zinc(),
-                                on_update: move |_| {},
+                                nutrient_amount: result_profile[NutrientAmount::Zinc(0.0)],
                             }
                         }
                     }
@@ -185,8 +176,7 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             class: "nutrient-value__elemental",
 
                             NutrientRequirementInput {
-                                nutrient_requirement: result_profile.profile.boron(),
-                                on_update: move |_| {},
+                                nutrient_amount: result_profile[NutrientAmount::Boron(0.0)],
                             }
                         }
                     }
@@ -198,8 +188,7 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                             class: "nutrient-value__elemental",
 
                             NutrientRequirementInput {
-                                nutrient_requirement: result_profile.profile.molybdenum(),
-                                on_update: move |_| {},
+                                nutrient_amount: result_profile[NutrientAmount::Molybdenum(0.0)],
                             }
                         }
                     }

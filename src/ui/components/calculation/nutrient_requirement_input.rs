@@ -1,20 +1,27 @@
-use crate::model::calculation::NutrientRequirement;
+use crate::model::chemistry::NutrientAmount;
 use crate::ui::components::NutrientValue;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct NutrientRequirementInputProps {
-    nutrient_requirement: NutrientRequirement,
-    on_update: EventHandler<NutrientRequirement>,
+    nutrient_amount: NutrientAmount,
+    on_update: Option<EventHandler<NutrientAmount>>,
 }
 
 #[component]
 pub fn NutrientRequirementInput(props: NutrientRequirementInputProps) -> Element {
     rsx! {
-        NutrientValue {
-            symbol: props.nutrient_requirement.symbol(),
-            value: props.nutrient_requirement.amount(),
-            on_change: move |value| props.on_update.call(props.nutrient_requirement.new(value)),
+        if let Some(on_update) = props.on_update {
+            NutrientValue {
+                symbol: props.nutrient_amount.symbol(),
+                value: props.nutrient_amount.value(),
+                on_change: move |value| on_update.call(props.nutrient_amount.new(value)),
+            }
+        } else {
+            NutrientValue {
+                symbol: props.nutrient_amount.symbol(),
+                value: props.nutrient_amount.value(),
+            }
         }
     }
 }
