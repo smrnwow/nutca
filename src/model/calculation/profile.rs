@@ -47,26 +47,32 @@ impl Profile {
     }
 
     pub fn set_nutrient(&mut self, nutrient_requirement: NutrientRequirement) {
-        self.nutrients[nutrient_requirement.index()] = nutrient_requirement;
-
-        /*
         match nutrient_requirement {
-            NutrientRequirement::Nitrogen(value) => self.nitrogen = value,
-            NutrientRequirement::NitrogenNitrate(value) => self.nitrogen_nitrate = value,
-            NutrientRequirement::NitrogenAmmonium(value) => self.nitrogen_ammonium = value,
-            NutrientRequirement::Phosphor(value) => self.phosphor = value,
-            NutrientRequirement::Potassium(value) => self.potassium = value,
-            NutrientRequirement::Calcium(value) => self.calcium = value,
-            NutrientRequirement::Magnesium(value) => self.magnesium = value,
-            NutrientRequirement::Sulfur(value) => self.sulfur = value,
-            NutrientRequirement::Iron(value) => self.iron = value,
-            NutrientRequirement::Manganese(value) => self.manganese = value,
-            NutrientRequirement::Copper(value) => self.copper = value,
-            NutrientRequirement::Zinc(value) => self.zinc = value,
-            NutrientRequirement::Boron(value) => self.boron = value,
-            NutrientRequirement::Molybdenum(value) => self.molybdenum = value,
+            NutrientRequirement::Nitrogen(value) => {
+                self.nutrients[nutrient_requirement.index()] = nutrient_requirement;
+
+                self.nutrients[self.nitrogen_nitrate().index()] =
+                    NutrientRequirement::NitrogenNitrate(value - self.nitrogen_ammonium().amount());
+            }
+
+            NutrientRequirement::NitrogenNitrate(value) => {
+                self.nutrients[nutrient_requirement.index()] = nutrient_requirement;
+
+                self.nutrients[self.nitrogen().index()] =
+                    NutrientRequirement::Nitrogen(value + self.nitrogen_ammonium().amount());
+            }
+
+            NutrientRequirement::NitrogenAmmonium(value) => {
+                self.nutrients[nutrient_requirement.index()] = nutrient_requirement;
+
+                self.nutrients[self.nitrogen().index()] =
+                    NutrientRequirement::Nitrogen(value + self.nitrogen_nitrate().amount());
+            }
+
+            _ => {
+                self.nutrients[nutrient_requirement.index()] = nutrient_requirement;
+            }
         }
-        */
     }
 
     pub fn update_nutrient(&mut self, nutrient_requirement: NutrientRequirement) {

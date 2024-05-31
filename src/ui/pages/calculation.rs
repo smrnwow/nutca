@@ -13,6 +13,21 @@ fn update_list(mut list: Signal<Vec<(bool, Fertilizer)>>, item_id: String, value
     }
 }
 
+fn calculate(fertilizers: Vec<Fertilizer>, profile: Profile) -> ResultProfile {
+    if fertilizers.len() > 0 {
+        if let Ok(result) = Calculation::new(profile, fertilizers.clone())
+            .unwrap()
+            .solve(1)
+        {
+            return result;
+        } else {
+            return ResultProfile::empty(fertilizers);
+        }
+    } else {
+        return ResultProfile::empty(fertilizers);
+    }
+}
+
 #[component]
 pub fn Calculation() -> Element {
     let mut profile = use_signal(|| Profile::new());
@@ -57,17 +72,9 @@ pub fn Calculation() -> Element {
                     on_requirement_update: move |nutrient_requirement| {
                         profile.write().set_nutrient(nutrient_requirement);
 
-                        if fertilizers_selected.read().len() > 0 {
-                            if let Ok(result) = Calculation::new(profile.read().clone(), fertilizers_selected.read().clone())
-                            .unwrap()
-                            .solve(1) {
-                                *result_profile.write() = result;
-                            } else {
-                                *result_profile.write() = ResultProfile::empty(fertilizers_selected.read().clone());
-                            }
-                        } else {
-                            *result_profile.write() = ResultProfile::empty(fertilizers_selected.read().clone());
-                        }
+                        let result = calculate(fertilizers_selected.read().clone(), profile.read().clone());
+
+                        *result_profile.write() = result;
                     },
                 }
             }
@@ -101,17 +108,9 @@ pub fn Calculation() -> Element {
                                         onchange: move |event| {
                                             update_list(fertilizers_list, fertilizer.id(), event.value());
 
-                                            if fertilizers_selected.read().len() > 0 {
-                                                if let Ok(result) = Calculation::new(profile.read().clone(), fertilizers_selected.read().clone())
-                                                .unwrap()
-                                                .solve(1) {
-                                                    *result_profile.write() = result;
-                                                } else {
-                                                    *result_profile.write() = ResultProfile::empty(fertilizers_selected.read().clone());
-                                                }
-                                            } else {
-                                                *result_profile.write() = ResultProfile::empty(fertilizers_selected.read().clone());
-                                            }
+                                            let result = calculate(fertilizers_selected.read().clone(), profile.read().clone());
+
+                                            *result_profile.write() = result;
                                         },
                                     }
                                 }

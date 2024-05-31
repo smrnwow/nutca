@@ -82,7 +82,9 @@ impl Calculation {
             | Nutrient::Potassium
             | Nutrient::Magnesium
             | Nutrient::Calcium
-            | Nutrient::Boron => {
+            | Nutrient::Boron
+            | Nutrient::NitrogenAmmonium
+            | Nutrient::NitrogenNitrate => {
                 self.problem
                     .add_constraint(coefficients, ConstraintOp::Eq, requirement.amount())
                     .unwrap();
@@ -97,7 +99,6 @@ impl Calculation {
                     .add_constraint(coefficients, ConstraintOp::Gte, 0.0)
                     .unwrap();
             }
-            _ => {}
         };
     }
 

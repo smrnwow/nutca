@@ -22,69 +22,186 @@ pub fn CalculatedProfile(props: CalculatedProfileProps) -> Element {
                 div {
                     class: "calculated-profile__group",
 
-                    NutrientRequirementInput {
-                        nutrient_requirement: result_profile.profile.nitrogen(),
-                        on_update: move |_| {},
+                    div {
+                        class: "nutrient-value__nutrient",
+
+                        div {
+                            class: "nutrient-value__elemental",
+
+                            NutrientRequirementInput {
+                                nutrient_requirement: result_profile.profile.nitrogen(),
+                                on_update: move |_| {},
+                            }
+                        }
+
+                        div {
+                            class: "nutrient-value__forms",
+
+                            div {
+                                class: "nutrient-value__form",
+
+                                NutrientRequirementInput {
+                                    nutrient_requirement: result_profile.profile.nitrogen_nitrate(),
+                                    on_update: move |_| {},
+                                }
+                            }
+
+                            div {
+                                class: "nutrient-value__form",
+
+                                NutrientRequirementInput {
+                                    nutrient_requirement: result_profile.profile.nitrogen_ammonium(),
+                                    on_update: move |_| {},
+                                }
+                            }
+                        }
                     }
 
+                    div {
+                        class: "nutrient-value__nutrient",
 
-                    NutrientRequirementInput {
-                        nutrient_requirement: result_profile.profile.phosphor(),
-                        on_update: move |_| {},
+                        div {
+                            class: "nutrient-value__elemental",
+
+                            NutrientRequirementInput {
+                                nutrient_requirement: result_profile.profile.phosphor(),
+                                on_update: move |_| {},
+                            }
+                        }
                     }
 
-                    NutrientRequirementInput {
-                        nutrient_requirement: result_profile.profile.potassium(),
-                        on_update: move |_| {},
+                    div {
+                        class: "nutrient-value__nutrient",
+
+                        div {
+                            class: "nutrient-value__elemental",
+
+                            NutrientRequirementInput {
+                                nutrient_requirement: result_profile.profile.potassium(),
+                                on_update: move |_| {},
+                            }
+                        }
                     }
 
-                    NutrientRequirementInput {
-                        nutrient_requirement: result_profile.profile.calcium(),
-                        on_update: move |_| {},
+                    div {
+                        class: "nutrient-value__nutrient",
+
+                        div {
+                            class: "nutrient-value__elemental",
+
+                            NutrientRequirementInput {
+                                nutrient_requirement: result_profile.profile.calcium(),
+                                on_update: move |_| {},
+                            }
+                        }
                     }
 
-                    NutrientRequirementInput {
-                        nutrient_requirement: result_profile.profile.magnesium(),
-                        on_update: move |_| {},
+                    div {
+                        class: "nutrient-value__nutrient",
+
+                        div {
+                            class: "nutrient-value__elemental",
+
+                            NutrientRequirementInput {
+                                nutrient_requirement: result_profile.profile.magnesium(),
+                                on_update: move |_| {},
+                            }
+                        }
                     }
 
-                    NutrientRequirementInput {
-                        nutrient_requirement: result_profile.profile.sulfur(),
-                        on_update: move |_| {},
+                    div {
+                        class: "nutrient-value__nutrient",
+
+                        div {
+                            class: "nutrient-value__elemental",
+
+                            NutrientRequirementInput {
+                                nutrient_requirement: result_profile.profile.sulfur(),
+                                on_update: move |_| {},
+                            }
+                        }
                     }
                 }
 
                 div {
                     class: "calculated-profile__group",
 
-                    NutrientRequirementInput {
-                        nutrient_requirement: result_profile.profile.iron(),
-                        on_update: move |_| {},
+                    div {
+                        class: "nutrient-value__nutrient",
+
+                        div {
+                            class: "nutrient-value__elemental",
+
+                            NutrientRequirementInput {
+                                nutrient_requirement: result_profile.profile.iron(),
+                                on_update: move |_| {},
+                            }
+                        }
                     }
 
-                    NutrientRequirementInput {
-                        nutrient_requirement: result_profile.profile.manganese(),
-                        on_update: move |_| {},
+                    div {
+                        class: "nutrient-value__nutrient",
+
+                        div {
+                            class: "nutrient-value__elemental",
+
+                            NutrientRequirementInput {
+                                nutrient_requirement: result_profile.profile.manganese(),
+                                on_update: move |_| {},
+                            }
+                        }
                     }
 
-                    NutrientRequirementInput {
-                        nutrient_requirement: result_profile.profile.copper(),
-                        on_update: move |_| {},
+                    div {
+                        class: "nutrient-value__nutrient",
+
+                        div {
+                            class: "nutrient-value__elemental",
+
+                            NutrientRequirementInput {
+                                nutrient_requirement: result_profile.profile.copper(),
+                                on_update: move |_| {},
+                            }
+                        }
                     }
 
-                    NutrientRequirementInput {
-                        nutrient_requirement: result_profile.profile.zinc(),
-                        on_update: move |_| {},
+                    div {
+                        class: "nutrient-value__nutrient",
+
+                        div {
+                            class: "nutrient-value__elemental",
+
+                            NutrientRequirementInput {
+                                nutrient_requirement: result_profile.profile.zinc(),
+                                on_update: move |_| {},
+                            }
+                        }
                     }
 
-                    NutrientRequirementInput {
-                        nutrient_requirement: result_profile.profile.boron(),
-                        on_update: move |_| {},
+                    div {
+                        class: "nutrient-value__nutrient",
+
+                        div {
+                            class: "nutrient-value__elemental",
+
+                            NutrientRequirementInput {
+                                nutrient_requirement: result_profile.profile.boron(),
+                                on_update: move |_| {},
+                            }
+                        }
                     }
 
-                    NutrientRequirementInput {
-                        nutrient_requirement: result_profile.profile.molybdenum(),
-                        on_update: move |_| {},
+                    div {
+                        class: "nutrient-value__nutrient",
+
+                        div {
+                            class: "nutrient-value__elemental",
+
+                            NutrientRequirementInput {
+                                nutrient_requirement: result_profile.profile.molybdenum(),
+                                on_update: move |_| {},
+                            }
+                        }
                     }
                 }
 
