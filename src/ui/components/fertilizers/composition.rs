@@ -4,6 +4,14 @@ use crate::model::fertilizers::{Composition, Fertilizer};
 use crate::model::labels::{Component, Units};
 use dioxus::prelude::*;
 
+fn tab_active_class(is_active: bool) -> String {
+    if is_active {
+        String::from("fertilizers-source__tab fertilizers-source__tab_active")
+    } else {
+        String::from("fertilizers-source__tab")
+    }
+}
+
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersCompositionProps {
     fertilizer: Signal<Fertilizer>,
@@ -35,13 +43,13 @@ pub fn FertilizersComposition(props: FertilizersCompositionProps) -> Element {
                     class: "fertilizers-source__tabs",
 
                     button {
-                        class: "fertilizers-source__tab",
+                        class: "{tab_active_class(fertilizer.is_label_based())}",
                         onclick: move |_| props.on_label_select.call(()),
                         "С этикетки"
                     }
 
                     button {
-                        class: "fertilizers-source__tab",
+                        class: "{tab_active_class(fertilizer.is_formula_based())}",
                         onclick: move |_| props.on_formula_select.call(()),
                         "По формуле"
                     }

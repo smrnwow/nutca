@@ -147,6 +147,20 @@ impl Fertilizer {
         self.composition.clone()
     }
 
+    pub fn is_label_based(&self) -> bool {
+        match self.composition {
+            Composition::Label(_) => true,
+            Composition::Formula(_) => false,
+        }
+    }
+
+    pub fn is_formula_based(&self) -> bool {
+        match self.composition {
+            Composition::Label(_) => false,
+            Composition::Formula(_) => true,
+        }
+    }
+
     pub fn nutrients(&self) -> Vec<NutrientAmount> {
         self.nutrients
             .iter()

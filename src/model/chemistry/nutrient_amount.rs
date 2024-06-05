@@ -9,10 +9,10 @@ pub enum NutrientAmount {
     Magnesium(f64),
     Sulfur(f64),
     Iron(f64),
-    Zinc(f64),
     Manganese(f64),
-    Boron(f64),
     Copper(f64),
+    Zinc(f64),
+    Boron(f64),
     Molybdenum(f64),
 }
 

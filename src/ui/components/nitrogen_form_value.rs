@@ -15,7 +15,7 @@ pub fn NitrogenFormValue(props: NitrogenFormValueProps) -> Element {
             NutrientValue {
                 symbol: props.nitrogen_form.symbol(),
                 value: props.nitrogen_form.value(),
-                on_change: move |value| props.on_update.unwrap().call(props.nitrogen_form.new(value)),
+                on_change: move |value| props.on_update.call(props.nitrogen_form.new(value)),
             }
         } else {
             NutrientValue {

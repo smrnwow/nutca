@@ -31,9 +31,12 @@ pub fn NutrientValue(props: NutrientValueProps) -> Element {
                     oninput: move |event| props.on_change.unwrap().call(event.value().parse().unwrap_or(0.0)),
                 }
             } else {
-                span {
+                input {
                     class: "nutrient-value__value",
-                    "{round(props.value)}"
+                    r#type: "text",
+                    disabled: true,
+                    size: 1,
+                    value: "{round(props.value)}",
                 }
             }
         }

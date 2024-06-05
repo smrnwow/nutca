@@ -1,4 +1,5 @@
 use crate::storage::FertilizersStorage;
+use crate::ui::components::utils::icons::SearchIcon;
 use crate::ui::components::NutrientValue;
 use crate::ui::router::Route;
 use dioxus::prelude::*;
@@ -15,56 +16,66 @@ pub fn FertilizersIndexPage() -> Element {
             class: "fertilizers-index",
 
             div {
-                class: "fertilizers__summary",
+                class: "fertilizers-index__list",
+
+                h3 {
+                    class: "fertilizers-index__title",
+                    "Список удобрений ({ fertilizers_list.len() })",
+                }
 
                 div {
-                     class: "fertilizers__count",
+                    class: "fertilizers__summary",
 
-                     p {
-                         class: "fertlizers__number",
-                         "{fertilizers_list.len()} удобрений"
-                     }
+                    label {
+                        class: "fertilizers-index__search-label",
+
+                        SearchIcon {}
+
+                        input {
+                            class: "fertilizers-index__search-input",
+                            r#type: "text",
+                            placeholder: "поиск удобрения",
+                        }
+                    }
+
+                    button {
+                         class: "fertilizers-index__button-add",
+                         onclick: |_| {
+                             navigator().push(Route::FertilizersAddPage {});
+                         },
+                         "Добавить удобрение",
+                    }
                 }
 
-                button {
-                     class: "add-fertilizer-button",
-                     onclick: |_| {
-                         navigator().push(Route::FertilizersAddPage {});
-                     },
-                     "+"
-                     /*
-                     img {
-                         class: "add-fertilizer-button__icon",
-                         src: "{icon}"
-                     }
-                     */
+                div {
+                    class: "fertilizers__list",
+
+                    for fertilizer in fertilizers_list {
+                        div {
+                            class: "fertilizers__item",
+
+                            p {
+                                class: "fertilizers__name",
+                                "{fertilizer.name()}"
+                            }
+
+                            div {
+                                class: "fertilizers-index__nutrients",
+
+                                for nutrient in fertilizer.nutrients() {
+                                    div {
+                                        class: "fertilizers-index__nutrient",
+
+                                        span {
+                                            class: "fertilizers-index__nutrient-symbol",
+                                            "{nutrient.symbol()}",
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-             }
-
-             div {
-                 class: "fertilizers__list",
-
-                 for fertilizer in fertilizers_list {
-                     div {
-                         class: "fertilizers__item",
-
-                         p {
-                             class: "fertilizers__name",
-                             "{fertilizer.name()}"
-                         }
-
-                         div {
-                             class: "fertilizers__nutrients",
-
-                             for nutrient in fertilizer.nutrients() {
-                                 NutrientValue {
-                                     symbol: nutrient.symbol(),
-                                     value: nutrient.value(),
-                                 }
-                             }
-                         }
-                     }
-                 }
             }
         }
     }

@@ -1,0 +1,252 @@
+/* calculation index */
+
+.calculation-index__workspace {
+    width: 50%;
+    background-color: #ffffff;
+    border: 1px solid rgba(225, 228, 234, 1);
+    box-shadow: 1px 2px 0px rgba(10, 13, 20, 0.03);
+    border-radius: 16px;
+    box-sizing: border-box;
+}
+
+.calculation-index__profile {
+    border-bottom: 1px solid rgba(154, 168, 188, 0.2);
+}
+
+.calculation-index__result {
+    width: 50%;
+    background-color: #ffffff;
+    /* border: 1px solid rgba(154, 168, 188, 0.2); */
+    border-radius: 16px;
+    box-sizing: border-box;
+    border: 1px solid rgba(225, 228, 234, 1);
+    box-shadow: 1px 2px 0px rgba(10, 13, 20, 0.03);
+}
+
+.calculation-index__title {
+    color: rgba(26, 33, 43, 1);
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0px;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(154, 168, 188, 0.2);
+    box-sizing: border-box;
+}
+
+.calculation-index__step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+}
+
+.calculation-index__step-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    background-color: rgba(92, 23, 229, 1);
+    color: #ffffff;
+    border-radius: 50%;
+}
+
+.calculation-index__subtitle {
+    margin: 0;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.calculation-index__fertilizers {
+    /* border-top: 1px solid rgba(154, 168, 188, 0.2); */
+    box-sizing: border-box;
+    border-top: 1px solid rgba(225, 228, 234, 1)
+}
+
+/* desired profile */
+
+.desired-profile {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0px 16px 12px 16px;
+    box-sizing: border-box;
+}
+
+.desired-profile__group {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+/* calculated profile */ 
+
+.calculated-profile {
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.calculated-profile__group {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.calculated-profile__group:last-child {
+    margin-bottom: 0px;
+}
+
+/* water */
+
+.calculation-index__water-amount {
+    display: flex;
+    gap: 12px;
+    padding: 0px 16px 12px 16px;
+    font-size: 12px;
+}
+
+.calculation-index__water-amount-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    /* border: 1px solid rgba(154, 168, 188, 1); */
+    border-radius: 12px;
+    box-sizing: border-box;
+    border: 1px solid rgba(225, 228, 234, 1);
+    box-shadow: 1px 2px 0px rgba(10, 13, 20, 0.03);
+}
+
+.calculation-index__water-amount-input {
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    outline: none;
+    max-width: 76px;
+}
+
+/* fertilizers browser */
+
+.fertilizers-browser {
+    box-sizing: border-box;
+}
+
+.fertilizers-browser__search {
+    padding: 0px 16px 12px 16px;
+}
+
+.fertilizers-browser__search-label {
+    display: flex;
+    gap: 10px;
+    padding: 8px 10px;
+    align-items: center;
+    /* border: 1px solid rgba(154, 168, 188, 1); */
+    border-radius: 12px;
+    box-sizing: border-box;
+    border: 1px solid rgba(225, 228, 234, 1);
+    box-shadow: 1px 2px 0px rgba(10, 13, 20, 0.03);
+}
+
+.fertilizers-browser__search-input {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.fertilizers-browser__list {
+    max-height: calc(4 * 47px);
+    overflow: scroll;
+    border-top: 1px solid rgba(154, 168, 188, 0.2);    
+    box-sizing: border-box;
+}
+
+.fertilizers-browser__item {
+    display: flex;
+    padding: 8px 16px;
+    border-bottom: 1px solid rgba(154, 168, 188, 0.2);
+}
+
+.fertilizers-browser__info {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    align-items: center;
+}
+
+.fertilizers-browser__item:last-child {
+    border-bottom: none;
+}
+
+.fertilizers-browser__selector {
+    display: flex;
+    align-items: center;
+    padding: 0px 8px 0px 0px;
+}
+
+.fertilizers-browser__button {
+    cursor: pointer;
+}
+
+.fertilizers-browser__name {
+    font-size: 12px;
+    margin: 0px;
+}
+
+.fertilizers-browser__nutrients {
+    display: flex;
+    font-size: 8px;
+    gap: 5px;
+}
+
+.fertilizers-browser__nutrient {
+    padding: 2px 4px;
+    box-sizing: border-box;
+    font-size: 10px;
+    line-height: 14px;
+    background-color: rgba(92, 23, 229, 1);
+    border-radius: 4px;
+    color: #ffffff;
+}
+
+.fertilizers-browser__nutrient-amount {
+    margin-left: 2px;
+    font-size: 8px;
+}
+
+/* fertilizers amount */
+
+.fertilizers-amount {
+    padding: 16px;
+    border-top: 1px solid rgba(154, 168, 188, 0.2);
+    box-sizing: border-box;
+}
+
+.fertilizers-amount__empty {
+    font-size: 12px;
+    margin: 0px;
+}
+
+.fertilizers-amount__fertilizer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    border-bottom: 1px solid rgba(154, 168, 188, 0.2);
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+    box-sizing: border-box;
+}
+
+.fertilizers-amount__fertilizer:last-child {
+    margin-bottom: 0px;
+}
+
+.fertilizers-amount__fertilizer-name {
+    margin: 0px;
+}
+
+.fertilizers-amount__fertilizer-weight {
+    margin: 0px;
+}

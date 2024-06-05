@@ -1,8 +1,8 @@
 use crate::model::calculation::{Calculation, Profile, ResultProfile};
 use crate::model::fertilizers::Fertilizer;
 use crate::storage::FertilizersStorage;
-use crate::ui::components::calculation::{CalculatedProfile, Profile};
-use crate::ui::components::NutrientValue;
+use crate::ui::components::calculation::{CalculatedProfile, DesiredProfile, FertilizersAmount};
+use crate::ui::components::utils::icons::SearchIcon;
 use dioxus::prelude::*;
 
 fn update_list(mut list: Signal<Vec<(bool, Fertilizer)>>, item_id: String, value: String) {
@@ -64,10 +64,24 @@ pub fn Calculation() -> Element {
 
                 h3 {
                     class: "calculation-index__title",
-                    "Профиль"
+                    "Редактор профиля"
                 }
 
-                Profile {
+                div {
+                    class: "calculation-index__step",
+
+                    span {
+                        class: "calculation-index__step-number",
+                        "1"
+                    }
+
+                    h6 {
+                        class: "calculation-index__subtitle",
+                        "Заполните желаемый профиль питания"
+                    }
+                }
+
+                DesiredProfile {
                     profile,
                     on_requirement_update: move |nutrient_requirement| {
                         profile.write().set_nutrient(nutrient_requirement);
@@ -87,15 +101,78 @@ pub fn Calculation() -> Element {
             }
 
             div {
+                class: "calculation-index__water",
+
+                div {
+                    class: "calculation-index__step",
+
+                    span {
+                        class: "calculation-index__step-number",
+                        "2"
+                    }
+
+                    h6 {
+                        class: "calculation-index__subtitle",
+                        "Укажите объем и состав воды"
+                    }
+                }
+
+                div {
+                    class: "calculation-index__water-amount",
+
+                    label {
+                        class: "calculation-index__water-amount-label",
+
+                        input {
+                            class: "calculation-index__water-amount-input",
+                            r#type: "number",
+                            value: 1,
+                        }
+
+                        span {
+                            class: "calculation-index__water-amount-tip",
+                            "литр"
+                        }
+                    }
+
+                }
+            }
+
+            div {
                 class: "calculation-index__fertilizers",
 
-                h3 {
-                    class: "calculation-index__title",
-                    "Удобрения"
+                div {
+                    class: "calculation-index__step",
+
+                    span {
+                        class: "calculation-index__step-number",
+                        "3"
+                    }
+
+                    h6 {
+                        class: "calculation-index__subtitle",
+                        "Выберите удобрения"
+                    }
                 }
 
                 div {
                     class: "fertilizers-browser",
+
+                    div {
+                        class: "fertilizers-browser__search",
+
+                        label {
+                            class: "fertilizers-browser__search-label",
+
+                            SearchIcon {}
+
+                            input {
+                                class: "fertilizers-browser__search-input",
+                                r#type: "text",
+                                placeholder: "поиск удобрения",
+                            }
+                        }
+                    }
 
                     div {
                         class: "fertilizers-browser__list",
@@ -134,9 +211,13 @@ pub fn Calculation() -> Element {
                                         class: "fertilizers-browser__nutrients",
 
                                         for nutrient in fertilizer.nutrients() {
-                                            NutrientValue {
-                                                symbol: nutrient.symbol(),
-                                                value: nutrient.value(),
+                                            div {
+                                                class: "fertilizers-browser__nutrient",
+
+                                                span {
+                                                    class: "fertilizers-browser__nutrient-symbol",
+                                                    "{nutrient.symbol()}",
+                                                }
                                             }
                                         }
                                     }
@@ -157,7 +238,12 @@ pub fn Calculation() -> Element {
             }
 
             CalculatedProfile {
-                result_profile
+                desired_profile: profile,
+                result_profile,
+            }
+
+            FertilizersAmount {
+                result_profile,
             }
         }
     }

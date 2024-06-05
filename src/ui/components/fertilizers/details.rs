@@ -13,34 +13,34 @@ pub fn FertilizersDetails(props: FertilizersDetailsProps) -> Element {
     let fertilizer = props.fertilizer.read();
 
     rsx! {
-            div {
-                class: "fertilizers-details",
+        div {
+            class: "fertilizers-details",
 
-                label {
-                    class: "fertilizers-details__field",
+            label {
+                class: "fertilizers-details__field",
 
-                    "Название: ",
+                "Название",
 
-                    input {
-                        class: "fertilizers-details__input",
-                        r#type: "text",
-                        value: fertilizer.name(),
-                        oninput: move |event| props.on_name_update.call(event.value()),
-                    }
-                }
-
-                label {
-                    class: "fertilizers-details__field",
-
-                    "Производитель: ",
-
-                    input {
-                        class: "fertilizers-details__input",
-                        r#type: "text",
-                        value: fertilizer.vendor(),
-                        oninput: move |event| props.on_vendor_update.call(event.value()),
-                    }
+                input {
+                    class: "fertilizers-details__input",
+                    r#type: "text",
+                    value: fertilizer.name(),
+                    oninput: move |event| props.on_name_update.call(event.value()),
                 }
             }
+
+            label {
+                class: "fertilizers-details__field",
+
+                "Производитель",
+
+                input {
+                    class: "fertilizers-details__input",
+                    r#type: "text",
+                    value: fertilizer.vendor(),
+                    oninput: move |event| props.on_vendor_update.call(event.value()),
+                }
+            }
+        }
     }
 }

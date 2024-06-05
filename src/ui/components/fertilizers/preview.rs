@@ -47,96 +47,60 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                 class: "fertilizers-preview__group",
 
                 div {
-                    class: "nutrient-value__nutrient nutrient-value__nutrient_small",
+                    class: "nutrient-value__nutrient",
 
-                    div {
-                        class: "nutrient-value__elemental",
-
-                        NutrientContentValue {
-                            nutrient_amount: fertilizer[NutrientAmount::Nitrogen(0.0)],
-                        }
+                    NutrientContentValue {
+                        nutrient_amount: fertilizer[NutrientAmount::Nitrogen(0.0)],
                     }
 
-                    div {
-                        class: "nutrient-value__forms",
+                    NitrogenFormValue {
+                        nitrogen_form: fertilizer[NitrogenForm::Nitrate(0.0)],
+                        on_update: move |_| {},
+                    }
 
-                        div {
-                            class: "nutrient-value__form",
-
-                            NitrogenFormValue {
-                                nitrogen_form: fertilizer[NitrogenForm::Nitrate(0.0)],
-                                on_update: move |_| {},
-                            }
-                        }
-
-                        div {
-                            class: "nutrient-value__form",
-
-                            NitrogenFormValue {
-                                nitrogen_form: fertilizer[NitrogenForm::Ammonium(0.0)],
-                                on_update: move |_| {},
-                            }
-                        }
+                    NitrogenFormValue {
+                        nitrogen_form: fertilizer[NitrogenForm::Ammonium(0.0)],
+                        on_update: move |_| {},
                     }
                 }
 
                 div {
-                    class: "nutrient-value__nutrient nutrient-value__nutrient_small",
+                    class: "nutrient-value__nutrient",
 
-                    div {
-                        class: "nutrient-value__elemental",
-
-                        NutrientContentValue {
-                            nutrient_amount: fertilizer[NutrientAmount::Phosphorus(0.0)],
-                        }
+                    NutrientContentValue {
+                        nutrient_amount: fertilizer[NutrientAmount::Phosphorus(0.0)],
                     }
                 }
 
                 div {
-                    class: "nutrient-value__nutrient nutrient-value__nutrient_small",
+                    class: "nutrient-value__nutrient",
 
-                    div {
-                        class: "nutrient-value__elemental",
-
-                        NutrientContentValue {
-                            nutrient_amount: fertilizer[NutrientAmount::Potassium(0.0)],
-                        }
+                    NutrientContentValue {
+                        nutrient_amount: fertilizer[NutrientAmount::Potassium(0.0)],
                     }
                 }
 
                 div {
-                    class: "nutrient-value__nutrient nutrient-value__nutrient_small",
+                    class: "nutrient-value__nutrient",
 
-                    div {
-                        class: "nutrient-value__elemental",
-
-                        NutrientContentValue {
-                            nutrient_amount: fertilizer[NutrientAmount::Calcium(0.0)],
-                        }
+                    NutrientContentValue {
+                        nutrient_amount: fertilizer[NutrientAmount::Calcium(0.0)],
                     }
                 }
 
                 div {
-                    class: "nutrient-value__nutrient nutrient-value__nutrient_small",
+                    class: "nutrient-value__nutrient",
 
-                    div {
-                        class: "nutrient-value__elemental",
-
-                        NutrientContentValue {
-                            nutrient_amount: fertilizer[NutrientAmount::Magnesium(0.0)],
-                        }
+                    NutrientContentValue {
+                        nutrient_amount: fertilizer[NutrientAmount::Magnesium(0.0)],
                     }
                 }
 
                 div {
-                    class: "nutrient-value__nutrient nutrient-value__nutrient_small",
+                    class: "nutrient-value__nutrient",
 
-                    div {
-                        class: "nutrient-value__elemental",
-
-                        NutrientContentValue {
-                            nutrient_amount: fertilizer[NutrientAmount::Sulfur(0.0)],
-                        }
+                    NutrientContentValue {
+                        nutrient_amount: fertilizer[NutrientAmount::Sulfur(0.0)],
                     }
                 }
             }
@@ -145,74 +109,50 @@ pub fn FertilizersPreview(props: FertilizersPreviewProps) -> Element {
                 class: "fertilizers-preview__group",
 
                 div {
-                    class: "nutrient-value__nutrient nutrient-value__nutrient_small",
+                    class: "nutrient-value__nutrient",
 
-                    div {
-                        class: "nutrient-value__elemental",
-
-                        NutrientContentValue {
-                            nutrient_amount: fertilizer[NutrientAmount::Iron(0.0)],
-                        }
+                    NutrientContentValue {
+                        nutrient_amount: fertilizer[NutrientAmount::Iron(0.0)],
                     }
                 }
 
                 div {
-                    class: "nutrient-value__nutrient nutrient-value__nutrient_small",
+                    class: "nutrient-value__nutrient",
 
-                    div {
-                        class: "nutrient-value__elemental",
-
-                        NutrientContentValue {
-                            nutrient_amount: fertilizer[NutrientAmount::Manganese(0.0)],
-                        }
+                    NutrientContentValue {
+                        nutrient_amount: fertilizer[NutrientAmount::Manganese(0.0)],
                     }
                 }
 
                 div {
-                    class: "nutrient-value__nutrient nutrient-value__nutrient_small",
+                    class: "nutrient-value__nutrient",
 
-                    div {
-                        class: "nutrient-value__elemental",
-
-                        NutrientContentValue {
-                            nutrient_amount: fertilizer[NutrientAmount::Copper(0.0)],
-                        }
+                    NutrientContentValue {
+                        nutrient_amount: fertilizer[NutrientAmount::Copper(0.0)],
                     }
                 }
 
                 div {
-                    class: "nutrient-value__nutrient nutrient-value__nutrient_small",
+                    class: "nutrient-value__nutrient",
 
-                    div {
-                        class: "nutrient-value__elemental",
-
-                        NutrientContentValue {
-                            nutrient_amount: fertilizer[NutrientAmount::Zinc(0.0)],
-                        }
+                    NutrientContentValue {
+                        nutrient_amount: fertilizer[NutrientAmount::Zinc(0.0)],
                     }
                 }
 
                 div {
-                    class: "nutrient-value__nutrient nutrient-value__nutrient_small",
+                    class: "nutrient-value__nutrient",
 
-                    div {
-                        class: "nutrient-value__elemental",
-
-                        NutrientContentValue {
-                            nutrient_amount: fertilizer[NutrientAmount::Boron(0.0)],
-                        }
+                    NutrientContentValue {
+                        nutrient_amount: fertilizer[NutrientAmount::Boron(0.0)],
                     }
                 }
 
                 div {
-                    class: "nutrient-value__nutrient nutrient-value__nutrient_small",
+                    class: "nutrient-value__nutrient",
 
-                    div {
-                        class: "nutrient-value__elemental",
-
-                        NutrientContentValue {
-                            nutrient_amount: fertilizer[NutrientAmount::Molybdenum(0.0)],
-                        }
+                    NutrientContentValue {
+                        nutrient_amount: fertilizer[NutrientAmount::Molybdenum(0.0)],
                     }
                 }
             }

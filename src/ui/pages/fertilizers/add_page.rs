@@ -2,9 +2,8 @@ use crate::model::fertilizers::Fertilizer;
 use crate::model::formulas::Formula;
 use crate::model::labels::{Label, Units};
 use crate::storage::FertilizersStorage;
-use crate::ui::components::fertilizers::{
-    FertilizersComposition, FertilizersDetails, FertilizersPreview,
-};
+use crate::ui::components::fertilizers::{FertilizersComposition, FertilizersPreview};
+use crate::ui::components::utils::{Divider, TextField};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
@@ -28,17 +27,31 @@ pub fn FertilizersAddPage() -> Element {
 
                 h3 {
                     class: "calculation-index__title",
-                    "Редактор"
+                    "Редактор удобрения"
                 }
 
-                FertilizersDetails {
-                    fertilizer,
-                    on_name_update: move |name| {
-                        fertilizer.write().with_name(name);
-                    },
-                    on_vendor_update: move |vendor| {
-                        fertilizer.write().with_vendor(vendor);
-                    },
+                div {
+                    class: "fertilizers-add-page__form",
+
+                    div {
+                        class: "fertilizers-add-page__details",
+
+                        TextField {
+                            value: fertilizer.read().name(),
+                            label: "Название",
+                            on_input: move |name| {
+                                fertilizer.write().with_name(name);
+                            },
+                        }
+
+                        TextField {
+                            value: fertilizer.read().vendor(),
+                            label: "Производитель",
+                            on_input: move |vendor| {
+                                fertilizer.write().with_vendor(vendor);
+                            },
+                        }
+                    }
                 }
 
                 FertilizersComposition {
@@ -84,18 +97,22 @@ pub fn FertilizersAddPage() -> Element {
                     fertilizer,
                 }
 
-                button {
-                    class: "fertilizers-add-page__button",
-                    onclick: move |_| {
-                        let storage = fertilizers_storage.read();
+                div {
+                    class: "fertilizers-add-page__action",
 
-                        let fertilizer_id = storage.add(fertilizer.read().clone());
+                    button {
+                        class: "fertilizers-add-page__button",
+                        onclick: move |_| {
+                            let storage = fertilizers_storage.read();
 
-                        println!("{:#?}", fertilizer_id);
+                            let fertilizer_id = storage.add(fertilizer.read().clone());
 
-                        navigator().push(Route::FertilizersIndexPage {});
-                    },
-                    "Добавить",
+                            println!("{:#?}", fertilizer_id);
+
+                            navigator().push(Route::FertilizersIndexPage {});
+                        },
+                        "Добавить",
+                    }
                 }
             }
         }

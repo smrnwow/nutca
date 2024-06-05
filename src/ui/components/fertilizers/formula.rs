@@ -12,7 +12,7 @@ pub fn FertilizersFormula(props: FertilizersFormulaProps) -> Element {
         label {
             class: "fertilizers-formula",
 
-            "Формула: ",
+            "Формула",
 
             input {
                 class: "fertilizers-formula__input",
