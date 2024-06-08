@@ -1,5 +1,5 @@
 use super::provider::Provider;
-use crate::model::fertilizers::{Composition, Fertilizer};
+use crate::model::fertilizers::Fertilizer;
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
 use rusqlite::params;
@@ -52,7 +52,7 @@ impl FertilizersStorage {
             query
                 .unwrap()
                 .query_map([], |row| {
-                    println!("{:#?}", row);
+                    // println!("{:#?}", row);
 
                     let data: String = row.get(1).unwrap();
 

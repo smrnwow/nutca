@@ -1,16 +1,26 @@
-.fertilizers-index__list {
-    border: 1px solid rgba(154, 168, 188, 0.2);
-    border-radius: 16px;
-    background-color: #ffffff;
-    box-sizing: border-box;
+.fertilizers-add-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
 }
+
+.fertilizers-index {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+}
+
 
 .fertilizers-index__title {
     color: rgba(26, 33, 43, 1);
     font-size: 16px;
     font-weight: 500;
     margin: 0px;
-    padding: 12px 16px;
+    padding: 16px 16px;
     border-bottom: 1px solid rgba(154, 168, 188, 0.2);
     box-sizing: border-box;
 }
@@ -30,32 +40,6 @@
     background-color: rgba(54, 0, 144, 1);
 }
 
-.fertilizers__summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(154, 168, 188, 0.2);
-    padding: 12px;
-    box-sizing: border-box;
-}
-
-.fertilizers-index__search-label {
-    display: flex;
-    gap: 12px;
-    padding: 8px 12px;
-    align-items: center;
-    border: 1px solid rgba(154, 168, 188, 1);
-    border-radius: 12px;
-    box-sizing: border-box;
-}
-
-.fertilizers-index__search-input {
-    margin: 0px;
-    padding: 0px;
-    border: none;
-    outline: none;
-    box-sizing: border-box;
-}
 
 .fertilizers__item {
     display: flex;
@@ -73,22 +57,6 @@
 .fertilizers__name {
     font-size: 14px;
     margin: 0px;
-}
-
-.fertilizers-index__nutrients {
-    display: flex;
-    font-size: 8px;
-    gap: 5px;
-}
-
-.fertilizers-index__nutrient {
-    padding: 2px 4px;
-    box-sizing: border-box;
-    font-size: 10px;
-    line-height: 14px;
-    background-color: rgba(92, 23, 229, 1);
-    border-radius: 4px;
-    color: #ffffff;
 }
 
 .fertilizers-source__title {
@@ -126,17 +94,7 @@
     cursor: pointer;
     color: rgba(14, 18, 27, 1);
 }
-
-.fertilizers-add-page__form {
-    padding: 16px;
-    box-sizing: border-box;
-}
-
-.fertilizers-add-page__details {
-    display: flex;
-    gap: 12px;
-}
-
+ 
 .fertilizers-label__units {
     margin-bottom: 12px;
 }
@@ -183,4 +141,69 @@
     border-radius: 6px;
     padding: 4px;
     box-sizing: border-box;
+}
+
+.fertilizer-editor {
+    max-width: 660px;
+    width: 100%;
+}
+
+.fertilizer-editor__details {
+    display: flex;
+    gap: 12px;
+}
+
+.fertilizer-editor__controls {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.fertilizer-listing {
+    max-width: 660px;
+    width: 100%;
+}
+
+.fertilizer-listing__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fertilizers-listing__table {
+    padding: 0px 16px 16px 16px;
+    box-sizing: border-box;
+}
+
+.fertilizer-listing__name {
+    margin: 0px 0px 4px 0px;
+    font-size: 14px;
+    line-height: 20px;
+    color: rgba(14, 18, 27, 1);
+    font-weight: 500;
+}
+
+.fertilizer-listing__vendor {
+    margin: 0px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 400;
+    color: rgba(82, 88, 102, 1);
+}
+
+.fertilizer-listing__nutrients {
+    display: flex;
+    font-size: 8px;
+    gap: 5px;
+    overflow-x: scroll;
+}
+
+.fertilizer-listing__nutrient {
+    padding: 2px 4px;
+    box-sizing: border-box;
+    font-size: 10px;
+    line-height: 14px;
+    background-color: rgba(92, 23, 229, 1);
+    border-radius: 4px;
+    color: #ffffff;
 }

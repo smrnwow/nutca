@@ -55,6 +55,8 @@ impl Label {
             components.push(self.apply_units(*component));
         }
 
+        println!("components {:#?}", components);
+
         components
     }
 

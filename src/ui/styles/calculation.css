@@ -2,11 +2,6 @@
 
 .calculation-index__workspace {
     width: 50%;
-    background-color: #ffffff;
-    border: 1px solid rgba(225, 228, 234, 1);
-    box-shadow: 1px 2px 0px rgba(10, 13, 20, 0.03);
-    border-radius: 16px;
-    box-sizing: border-box;
 }
 
 .calculation-index__profile {
@@ -15,12 +10,11 @@
 
 .calculation-index__result {
     width: 50%;
-    background-color: #ffffff;
-    /* border: 1px solid rgba(154, 168, 188, 0.2); */
-    border-radius: 16px;
-    box-sizing: border-box;
-    border: 1px solid rgba(225, 228, 234, 1);
-    box-shadow: 1px 2px 0px rgba(10, 13, 20, 0.03);
+}
+
+.calculation-index__result-controls {
+    display: flex;
+    gap: 16px;
 }
 
 .calculation-index__title {
@@ -31,24 +25,6 @@
     padding: 12px 16px;
     border-bottom: 1px solid rgba(154, 168, 188, 0.2);
     box-sizing: border-box;
-}
-
-.calculation-index__step {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-}
-
-.calculation-index__step-number {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 25px;
-    height: 25px;
-    background-color: rgba(92, 23, 229, 1);
-    color: #ffffff;
-    border-radius: 50%;
 }
 
 .calculation-index__subtitle {
@@ -68,9 +44,13 @@
 .desired-profile {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 0px 16px 12px 16px;
-    box-sizing: border-box;
+    gap: 12px;
+}
+
+.desired-profile__text {
+    font-size: 12px;
+    margin: 0px;
+    margin-bottom: 4px;
 }
 
 .desired-profile__group {
@@ -80,11 +60,6 @@
 }
 
 /* calculated profile */ 
-
-.calculated-profile {
-    padding: 16px;
-    box-sizing: border-box;
-}
 
 .calculated-profile__group {
     display: flex;
@@ -102,7 +77,6 @@
 .calculation-index__water-amount {
     display: flex;
     gap: 12px;
-    padding: 0px 16px 12px 16px;
     font-size: 12px;
 }
 
@@ -133,7 +107,7 @@
 }
 
 .fertilizers-browser__search {
-    padding: 0px 16px 12px 16px;
+    margin-bottom: 12px;
 }
 
 .fertilizers-browser__search-label {
@@ -156,34 +130,22 @@
     box-sizing: border-box;
 }
 
-.fertilizers-browser__list {
-    max-height: calc(4 * 47px);
+.fertilizers-browser__table {
+    max-height: calc(4 * 40px);
     overflow: scroll;
-    border-top: 1px solid rgba(154, 168, 188, 0.2);    
-    box-sizing: border-box;
 }
 
 .fertilizers-browser__item {
     display: flex;
-    padding: 8px 16px;
-    border-bottom: 1px solid rgba(154, 168, 188, 0.2);
-}
-
-.fertilizers-browser__info {
-    display: flex;
-    justify-content: space-between;
-    flex-grow: 1;
     align-items: center;
-}
-
-.fertilizers-browser__item:last-child {
-    border-bottom: none;
+    padding: 8px 0px;
+    border-bottom: 1px solid rgba(154, 168, 188, 0.2);
+    box-sizing: border-box;
 }
 
 .fertilizers-browser__selector {
     display: flex;
     align-items: center;
-    padding: 0px 8px 0px 0px;
 }
 
 .fertilizers-browser__button {
@@ -193,12 +155,14 @@
 .fertilizers-browser__name {
     font-size: 12px;
     margin: 0px;
+    flex-basis: 50%;
 }
 
 .fertilizers-browser__nutrients {
     display: flex;
     font-size: 8px;
-    gap: 5px;
+    gap: 4px;
+    flex-basis: 50%;
 }
 
 .fertilizers-browser__nutrient {
@@ -217,12 +181,6 @@
 }
 
 /* fertilizers amount */
-
-.fertilizers-amount {
-    padding: 16px;
-    border-top: 1px solid rgba(154, 168, 188, 0.2);
-    box-sizing: border-box;
-}
 
 .fertilizers-amount__empty {
     font-size: 12px;

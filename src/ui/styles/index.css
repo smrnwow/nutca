@@ -65,10 +65,10 @@ body {
     box-sizing: border-box;
     padding: 0px 12px 12px 12px;
     gap: 16px;
-}
-
-.title {
-    margin: 0px;
+    /* max-width: 1120px; */
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
 }
 
 .breadcrumbs {
@@ -77,12 +77,6 @@ body {
     font-size: 10px;
 }
 
-.editor {
-    width: 50%;
-    background-color: #ffffff;
-    border: 1px solid rgba(154, 168, 188, 0.2);
-    border-radius: 16px;
-}
 
 .preview {
     display: flex;
@@ -188,22 +182,6 @@ body {
     margin-top: 20px;
 }
 
-/* fertilizers add page */
-.fertilizers-add-page {
-    display: flex;
-    align-items: flex-start;
-    width: 100%;
-    gap: 16px;
-    box-sizing: border-box;
-}
-
-.fertilizers-add-page__action {
-    display: flex;
-    justify-content: flex-end;
-    padding: 16px;
-    box-sizing: border-box;
-}
-
 /* fertilizers details */
 
 .fertilizers-details {
@@ -212,15 +190,6 @@ body {
     gap: 16px;
     padding: 16px;
     box-sizing: border-box;
-}
-
-
-/* fertilizers composition */
-
-.fertilizers-composition {
-    padding: 16px;
-    box-sizing: border-box;
-    border-top: 1px solid rgba(154, 168, 188, 0.2);
 }
 
 /* fertilizers source */
@@ -314,10 +283,4 @@ body {
 
 .nutrient-value__nutrient .nutrient-value:last-child {
     border-bottom: none;
-}
-
-/* fertilizers index */
-
-.fertilizers-index {
-    width: 100%;
 }

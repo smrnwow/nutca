@@ -23,20 +23,29 @@ pub fn Layout() -> Element {
 
             nav {
                 class: "navigation",
+
                 Link {
                     class: link_class(&current_route, Route::Reference {}),
                     to: Route::Reference {},
-                    "Справка"
+                    "Справка",
                 }
+
                 Link {
-                    class: link_class(&current_route, Route::Calculation {}),
-                    to: Route::Calculation {},
-                    "Расчет"
+                    class: link_class(&current_route, Route::SolutionEditorPage {}),
+                    to: Route::SolutionEditorPage {},
+                    "Растворы",
                 }
+
                 Link {
-                    class: link_class(&current_route, Route::FertilizersIndexPage {}),
-                    to: Route::FertilizersIndexPage {},
-                    "Удобрения"
+                    class: link_class(&current_route, Route::Profiles {}),
+                    to: Route::Profiles {},
+                    "Профили",
+                }
+
+                Link {
+                    class: link_class(&current_route, Route::FertilizersListingPage {}),
+                    to: Route::FertilizersListingPage {},
+                    "Удобрения",
                 }
             }
         }

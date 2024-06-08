@@ -15,3 +15,15 @@ pub use result_profile_value::ResultProfileValue;
 
 mod fertilizers_amount;
 pub use fertilizers_amount::FertilizersAmount;
+
+mod fertilizers_browser;
+pub use fertilizers_browser::FertilizersBrowser;
+
+mod fertilizers_browser_item;
+pub use fertilizers_browser_item::FertilizersBrowserItem;
+
+mod result_solution_preview;
+pub use result_solution_preview::ResultSolutionPreview;
+
+mod solution_editor_workspace;
+pub use solution_editor_workspace::SolutionEditorWorkspace;

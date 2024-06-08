@@ -140,7 +140,11 @@ impl Fertilizer {
     }
 
     pub fn vendor(&self) -> String {
-        self.vendor.clone()
+        if self.vendor.len() > 0 {
+            self.vendor.clone()
+        } else {
+            String::from("Не указан")
+        }
     }
 
     pub fn composition(&self) -> Composition {

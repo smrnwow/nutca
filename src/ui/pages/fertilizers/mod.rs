@@ -1,5 +1,5 @@
-mod add_page;
-pub use add_page::FertilizersAddPage;
+mod fertilizer_editor_page;
+pub use fertilizer_editor_page::FertilizerEditorPage;
 
-mod index_page;
-pub use index_page::FertilizersIndexPage;
+mod fertilizers_listing_page;
+pub use fertilizers_listing_page::FertilizersListingPage;
