@@ -1,7 +1,6 @@
 use super::{DesiredProfile, FertilizersBrowser};
-use crate::model::calculation::Profile;
-use crate::model::chemistry::{NitrogenForm, NutrientAmount};
 use crate::model::fertilizers::Fertilizer;
+use crate::model::profiles::{Component, Profile};
 use crate::ui::components::utils::{Accordion, Block, Card, Divider, Step, Title};
 use dioxus::prelude::*;
 
@@ -9,8 +8,8 @@ use dioxus::prelude::*;
 pub struct SolutionEditorWorkspaceProps {
     profile: Signal<Profile>,
     fertilizers: Signal<Vec<(bool, Fertilizer)>>,
-    on_requirement_update: EventHandler<NutrientAmount>,
-    on_nitrogen_form_update: EventHandler<NitrogenForm>,
+    on_profile_change: EventHandler<Option<Profile>>,
+    on_component_update: EventHandler<Component>,
     on_fertilizer_select: EventHandler<(bool, String)>,
     on_fertilizer_search: EventHandler<String>,
     on_water_amount_change: EventHandler<usize>,
@@ -41,8 +40,8 @@ pub fn SolutionEditorWorkspace(props: SolutionEditorWorkspaceProps) -> Element {
                 body: rsx! {
                     DesiredProfile {
                         profile: props.profile,
-                        on_requirement_update: props.on_requirement_update,
-                        on_nitrogen_form_update: props.on_nitrogen_form_update,
+                        on_component_update: props.on_component_update,
+                        on_profile_change: props.on_profile_change,
                     }
                 }
             }

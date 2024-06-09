@@ -1,6 +1,7 @@
 @import "./src/ui/styles/fonts.css";
 @import "./src/ui/styles/calculation.css";
 @import "./src/ui/styles/fertilizers.css";
+@import "./src/ui/styles/profiles.css";
 @import "./src/ui/styles/utils.css";
 
 
@@ -255,30 +256,28 @@ body {
     align-items: center;
     margin: 0px;
     border-radius: 4px;
-    box-sizing: border-box;
     flex-grow: 1;
     flex-basis: 55%;
     background-color: #ffffff;
     border: none;
     padding: 0px 4px;
     font-size: inherit;
+    box-sizing: border-box;
 }
 
 .nutrient-value__nutrient {
     flex-grow: 1;
     flex-basis: calc(100% / 6);
-    box-sizing: border-box;
-    /* border: 1px solid rgba(154, 168, 188, 1); */
     border-radius: 8px;
     overflow: hidden;
     font-size: 12px;
-    border: 1px solid var(--stroke-soft-200, rgba(225, 228, 234, 1));
+    border: 1px solid rgba(225, 228, 234, 1);
     box-shadow: 0px 1px 2px 0px rgba(10, 13, 20, 0.03);
+    box-sizing: border-box;
 }
 
 .nutrient-value__nutrient .nutrient-value {
-    /* border-bottom: 1px solid rgba(154, 168, 188, 1); */
-    border-bottom: 1px solid var(--stroke-soft-200, rgba(225, 228, 234, 1));
+    border-bottom: 1px solid rgba(225, 228, 234, 1);
 }
 
 .nutrient-value__nutrient .nutrient-value:last-child {

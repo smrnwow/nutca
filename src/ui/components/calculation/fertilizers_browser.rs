@@ -20,7 +20,7 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
                 class: "fertilizers-browser__search",
 
                 Search {
-                    placeholder: "поиск удобрения",
+                    placeholder: "найти удобрение",
                     on_change: props.on_search,
                 }
             }

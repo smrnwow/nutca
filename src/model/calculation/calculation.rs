@@ -1,6 +1,7 @@
-use super::{Coefficient, Error, FertilizerWeight, Profile, ResultProfile};
+use super::{Coefficient, Error, FertilizerWeight, ResultProfile};
 use crate::model::chemistry::{NitrogenForm, NutrientAmount};
 use crate::model::fertilizers::Fertilizer;
+use crate::model::profiles::Profile;
 use ellp::{Bound, ConstraintOp, DualSimplexSolver, Problem, SolverResult};
 
 pub struct Calculation {
@@ -14,7 +15,7 @@ impl Calculation {
     pub fn new(desired_profile: Profile, fertilizers: Vec<Fertilizer>) -> Result<Self, Error> {
         let mut calculation = Self {
             problem: Problem::new(),
-            desired_profile,
+            desired_profile: desired_profile.clone(),
             fertilizers: Vec::new(),
             coefficients: Vec::new(),
         };

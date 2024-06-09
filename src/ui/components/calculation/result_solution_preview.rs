@@ -1,5 +1,6 @@
 use super::{CalculatedProfile, FertilizersAmount};
-use crate::model::calculation::{Profile, ResultProfile};
+use crate::model::calculation::ResultProfile;
+use crate::model::profiles::Profile;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
 use dioxus::prelude::*;
 

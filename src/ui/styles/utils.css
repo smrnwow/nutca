@@ -167,6 +167,7 @@
 .search {
     display: flex;
     align-items: center;
+    flex-grow: 1;
     gap: 8px;
     padding: 8px;
     background-color: #ffffff;
@@ -179,6 +180,7 @@
 .search__input {
     font-size: 14px;
     line-height: 20px;
+    width: 100%;
     margin: 0px;
     padding: 0px;
     border: none;
@@ -266,12 +268,13 @@
 }
 
 .accordion__body {
-    overflow: hidden;
+    display: none;
     height: 0px;
     padding: 0px;
 }
     
 .accordion__body_opened {
+    display: block;
     height: auto;
     padding: 0px 16px 16px 16px;
 }
@@ -285,14 +288,9 @@
 }
 
 .dropdown__search {
+    position: relative;
     display: flex;
-    padding: 8px;
-    gap: 8px;
-    border: 1px solid rgba(225, 228, 234, 1);
-    border-radius: 8px;
-    overflow: hidden;
     box-shadow: 0px 1px 2px 0px rgba(10, 13, 20, 0.03);
-    box-sizing: border-box;
 }
 
 .dropdown__header {
@@ -337,17 +335,30 @@
     box-sizing: border-box;
 }
 
+.dropdown__icon {
+    position: absolute;
+    top: calc(50% - 10px);
+    left: 8px;
+}
+
 .dropdown__input {
     width: 100%;
-    outline: none;
     background-color:  rgba(255, 255, 255, 1);
-    border: none;
-    padding: 0px;
+    outline: none;
+    padding: 8px 8px 8px 36px;
     font-size: 14px;
     line-height: 20px;
     margin: 0px;
     cursor: pointer;
+    border: 1px solid rgba(225, 228, 234, 1);
+    border-radius: 8px;
     box-sizing: border-box;
+}
+
+.dropdown__input:focus {
+    border: 1px solid rgba(14, 18, 27, 1);
+    outline: 2px solid rgba(153, 160, 174, 0.16);
+    outline-offset: 2px;
 }
 
 .dropdown__input::placeholder {

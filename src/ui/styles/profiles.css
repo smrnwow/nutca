@@ -1,0 +1,74 @@
+.profiles-listing-page {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.profiles-listing-page__controls {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.profiles-listing-page__listing {
+    max-width: 660px;
+    width: 100%;
+}
+
+.profile-editor-page {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.profile-editor-page__workspace {
+    max-width: 660px;
+    width: 100%;
+}
+
+.profile-editor-page__controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+/*
+    profile form
+*/
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-form__text {
+    font-size: 12px;
+    margin: 0px;
+    margin-bottom: 4px;
+}
+
+.profile-form__group {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.profile-form__union {
+    flex-grow: 1;
+    flex-basis: calc(100% / 6);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 12px;
+    border: 1px solid rgba(225, 228, 234, 1);
+    box-shadow: 0px 1px 2px 0px rgba(10, 13, 20, 0.03);
+    box-sizing: border-box;
+}
+
+.profile-form__union .nutrient-value {
+    border-bottom: 1px solid rgba(225, 228, 234, 1);
+}
+
+.profile-form__union .nutrient-value:last-child {
+    border-bottom: none;
+}
+

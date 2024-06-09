@@ -2,8 +2,9 @@ use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
 use super::pages::fertilizers::{FertilizerEditorPage, FertilizersListingPage};
+use super::pages::profiles::{ProfileEditorPage, ProfilesListingPage};
 use super::pages::solutions::SolutionEditorPage;
-use super::pages::{Profiles, Reference};
+use super::pages::Reference;
 use super::Layout;
 
 #[derive(Routable, PartialEq, Debug, Clone)]
@@ -15,7 +16,9 @@ pub enum Route {
     #[route("/calculation")]
     SolutionEditorPage {},
     #[route("/profiles")]
-    Profiles {},
+    ProfilesListingPage {},
+    #[route("/profiles/editor")]
+    ProfileEditorPage {},
     #[route("/fertilizers")]
     FertilizersListingPage {},
     #[route("/fertilizers/add")]

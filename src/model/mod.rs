@@ -1,6 +1,6 @@
 pub mod calculation;
 pub mod chemistry;
-pub mod solutions;
+pub mod profiles;
 
 pub mod fertilizers;
 

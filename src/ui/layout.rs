@@ -37,8 +37,8 @@ pub fn Layout() -> Element {
                 }
 
                 Link {
-                    class: link_class(&current_route, Route::Profiles {}),
-                    to: Route::Profiles {},
+                    class: link_class(&current_route, Route::ProfilesListingPage {}),
+                    to: Route::ProfilesListingPage {},
                     "Профили",
                 }
 

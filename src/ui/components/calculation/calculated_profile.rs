@@ -1,6 +1,7 @@
 use super::ResultProfileValue;
-use crate::model::calculation::{Profile, ResultProfile};
+use crate::model::calculation::ResultProfile;
 use crate::model::chemistry::{NitrogenForm, NutrientAmount};
+use crate::model::profiles::Profile;
 use crate::ui::components::calculation::{NitrogenFormValue, NutrientRequirementInput};
 use dioxus::prelude::*;
 

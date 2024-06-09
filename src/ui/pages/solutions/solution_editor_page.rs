@@ -1,5 +1,6 @@
-use crate::model::calculation::{Calculation, Profile, ResultProfile};
+use crate::model::calculation::{Calculation, ResultProfile};
 use crate::model::fertilizers::Fertilizer;
+use crate::model::profiles::Profile;
 use crate::storage::FertilizersStorage;
 use crate::ui::components::calculation::{ResultSolutionPreview, SolutionEditorWorkspace};
 use dioxus::prelude::*;
@@ -59,15 +60,22 @@ pub fn SolutionEditorPage() -> Element {
             SolutionEditorWorkspace {
                 fertilizers: fertilizers_list,
                 profile,
-                on_requirement_update: move |nutrient_amount| {
-                    profile.write().set_nutrient(nutrient_amount);
+                on_component_update: move |component| {
+                    profile.write().set_component(component);
 
                     let result = calculate(fertilizers_selected.read().clone(), profile.read().clone());
 
                     *result_profile.write() = result;
                 },
-                on_nitrogen_form_update: move |nitrogen_form| {
-                    profile.write().set_nitrogen_form(nitrogen_form);
+                on_profile_change: move |new_profile: Option<Profile>| {
+                    match new_profile {
+                        Some(new_profile) => {
+                            *profile.write() = new_profile;
+                        },
+                        None => {
+                            *profile.write() = Profile::new();
+                        }
+                    }
 
                     let result = calculate(fertilizers_selected.read().clone(), profile.read().clone());
 

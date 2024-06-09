@@ -30,7 +30,7 @@ pub fn Listing(props: ListingProps) -> Element {
                     class: "fertilizer-listing__header",
 
                     Search {
-                        placeholder: "поиск удобрения",
+                        placeholder: "найти удобрение",
                         on_change: props.on_search,
                     }
 
