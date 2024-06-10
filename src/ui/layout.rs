@@ -31,8 +31,8 @@ pub fn Layout() -> Element {
                 }
 
                 Link {
-                    class: link_class(&current_route, Route::SolutionEditorPage {}),
-                    to: Route::SolutionEditorPage {},
+                    class: link_class(&current_route, Route::SolutionsListingPage {}),
+                    to: Route::SolutionsListingPage {},
                     "Растворы",
                 }
 

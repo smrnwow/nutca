@@ -1,7 +1,8 @@
-use super::{Coefficient, Error, FertilizerWeight, ResultProfile};
+use super::{Coefficient, Error};
 use crate::model::chemistry::{NitrogenForm, NutrientAmount};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
+use crate::model::solutions::Solution;
 use ellp::{Bound, ConstraintOp, DualSimplexSolver, Problem, SolverResult};
 
 pub struct Calculation {
@@ -126,7 +127,7 @@ impl Calculation {
         };
     }
 
-    pub fn solve(&self, tank_size: i32) -> Result<ResultProfile, Error> {
+    pub fn solve(&self, tank_size: i32) -> Result<Solution, Error> {
         println!("{}", self.problem);
 
         let result = DualSimplexSolver::default()
@@ -136,17 +137,15 @@ impl Calculation {
         if let SolverResult::Optimal(sol) = result {
             let result = sol.x();
 
-            let mut result_profile = ResultProfile::new();
+            let mut solution = Solution::from(self.desired_profile.clone());
 
             result.iter().enumerate().for_each(|(idx, amount)| {
                 if let Some(fertilizer) = self.fertilizers.get(idx) {
-                    let fertilizer_weight = FertilizerWeight::new(fertilizer.clone(), *amount);
-
-                    result_profile.add_fertilizer_weight(fertilizer_weight);
+                    solution.add_fertilizer_weight(fertilizer.clone(), *amount);
                 }
             });
 
-            Ok(result_profile)
+            Ok(solution)
         } else {
             Err(Error::new("impossible profile".to_string()))
         }

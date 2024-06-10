@@ -1,4 +1,4 @@
-use crate::model::calculation::ResultProfile;
+use crate::model::solutions::Solution;
 use dioxus::prelude::*;
 
 fn round(value: f64) -> String {
@@ -7,24 +7,24 @@ fn round(value: f64) -> String {
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersAmountProps {
-    result_profile: Signal<ResultProfile>,
+    solution: Signal<Solution>,
 }
 
 #[component]
 pub fn FertilizersAmount(props: FertilizersAmountProps) -> Element {
-    let result_profile = props.result_profile.read();
+    let solution = props.solution.read();
 
     rsx! {
         div {
             class: "fertilizers-amount",
 
-            if result_profile.fertilizers_weights.len() == 0 {
+            if solution.fertilizers().len() == 0 {
                 p {
                     class: "fertilizers-amount__empty",
                     "Выберите удобрения из списка",
                 }
             } else {
-                for fertilizer_weight in result_profile.fertilizers_weights.clone() {
+                for fertilizer_weight in solution.fertilizers().clone() {
                     div {
                         class: "fertilizers-amount__fertilizer",
 

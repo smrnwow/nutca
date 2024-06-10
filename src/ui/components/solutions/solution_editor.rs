@@ -1,11 +1,13 @@
-use super::{DesiredProfile, FertilizersBrowser};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::{Component, Profile};
+use crate::model::solutions::Solution;
+use crate::ui::components::calculation::{DesiredProfile, FertilizersBrowser};
 use crate::ui::components::utils::{Accordion, Block, Card, Divider, Step, Title};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
-pub struct SolutionEditorWorkspaceProps {
+pub struct SolutionEditorProps {
+    solution: Signal<Solution>,
     profile: Signal<Profile>,
     fertilizers: Signal<Vec<(bool, Fertilizer)>>,
     on_profile_change: EventHandler<Option<Profile>>,
@@ -16,12 +18,12 @@ pub struct SolutionEditorWorkspaceProps {
 }
 
 #[component]
-pub fn SolutionEditorWorkspace(props: SolutionEditorWorkspaceProps) -> Element {
+pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
     rsx! {
         Card {
             Block {
                 Title {
-                    text: "Расчет раствора",
+                    text: "Редактор раствора",
                 }
             }
 
@@ -33,7 +35,7 @@ pub fn SolutionEditorWorkspace(props: SolutionEditorWorkspaceProps) -> Element {
                 header: rsx! {
                     Step {
                         number: 1,
-                        text: "Заполните желаемый профиль питания",
+                        text: "Заполните профиль питания",
                     }
                 },
 

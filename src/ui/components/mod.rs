@@ -1,6 +1,7 @@
 pub mod calculation;
 pub mod fertilizers;
 pub mod profiles;
+pub mod solutions;
 pub mod utils;
 
 mod nutrient_value;

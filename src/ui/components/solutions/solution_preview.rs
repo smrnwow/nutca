@@ -1,18 +1,18 @@
-use super::{CalculatedProfile, FertilizersAmount};
-use crate::model::calculation::ResultProfile;
 use crate::model::profiles::Profile;
+use crate::model::solutions::Solution;
+use crate::ui::components::calculation::{CalculatedProfile, FertilizersAmount};
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
-pub struct ResultSolutionPreviewProps {
+pub struct SolutionPreviewProps {
+    solution: Signal<Solution>,
     profile: Signal<Profile>,
-    result: Signal<ResultProfile>,
     on_save: EventHandler<String>,
 }
 
 #[component]
-pub fn ResultSolutionPreview(props: ResultSolutionPreviewProps) -> Element {
+pub fn SolutionPreview(props: SolutionPreviewProps) -> Element {
     let mut solution_name = use_signal(|| String::new());
 
     rsx! {
@@ -27,8 +27,8 @@ pub fn ResultSolutionPreview(props: ResultSolutionPreviewProps) -> Element {
 
             Block {
                 CalculatedProfile {
-                    desired_profile: props.profile,
-                    result_profile: props.result,
+                    profile: props.profile,
+                    solution: props.solution,
                 }
             }
 
@@ -36,7 +36,7 @@ pub fn ResultSolutionPreview(props: ResultSolutionPreviewProps) -> Element {
 
             Block {
                 FertilizersAmount {
-                    result_profile: props.result,
+                    solution: props.solution,
                 }
             }
 

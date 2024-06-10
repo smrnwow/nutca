@@ -42,27 +42,23 @@ pub fn ProfilesListingPage() -> Element {
                         }
                     }
 
-                    Divider {}
-
                     Block {
-                        div {
-                            class: "profiles-listing-page__table",
+                        exclude_padding: "top",
 
-                            Table {
-                                header: rsx! {
-                                    TableCell {
-                                        width: "100%",
-                                        "Название",
-                                    }
-                                },
-                                body: rsx! {
-                                    for profile in profiles.read().clone() {
-                                        TableRow {
-                                            TableCell {
-                                                p {
-                                                    class: "profiles-listing__name",
-                                                    "{profile.name()}",
-                                                }
+                        Table {
+                            header: rsx! {
+                                TableCell {
+                                    width: "100%",
+                                    "Название",
+                                }
+                            },
+                            body: rsx! {
+                                for profile in profiles.read().clone() {
+                                    TableRow {
+                                        TableCell {
+                                            p {
+                                                class: "profiles-listing__name",
+                                                "{profile.name()}",
                                             }
                                         }
                                     }

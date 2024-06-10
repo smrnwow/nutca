@@ -73,40 +73,58 @@ impl Profile {
         self.name = name;
     }
 
+    pub fn set_nutrient(&mut self, nutrient_amount: NutrientAmount) {
+        self.nutrients[nutrient_amount.index()] = nutrient_amount;
+
+        if let NutrientAmount::Nitrogen(value) = nutrient_amount {
+            let nitrate_value =
+                value - self.nitrogen_forms[NitrogenForm::Ammonium(0.0).index()].value();
+
+            self.nitrogen_forms[NitrogenForm::Nitrate(0.0).index()] =
+                NitrogenForm::Nitrate(nitrate_value);
+        }
+    }
+
+    pub fn add_nutrient(&mut self, nutrient_amount: NutrientAmount) {
+        self.nutrients[nutrient_amount.index()] =
+            self.nutrients[nutrient_amount.index()].add(nutrient_amount.value());
+    }
+
+    pub fn set_nitrogen_form(&mut self, nitrogen_form: NitrogenForm) {
+        self.nitrogen_forms[nitrogen_form.index()] = nitrogen_form;
+
+        match nitrogen_form {
+            NitrogenForm::Nitrate(value) => {
+                let ammonium_value =
+                    self.nutrients[NutrientAmount::Nitrogen(0.0).index()].value() - value;
+
+                self.nitrogen_forms[NitrogenForm::Ammonium(0.0).index()] =
+                    NitrogenForm::Ammonium(ammonium_value);
+            }
+
+            NitrogenForm::Ammonium(value) => {
+                let nitrate_value =
+                    self.nutrients[NutrientAmount::Nitrogen(0.0).index()].value() - value;
+
+                self.nitrogen_forms[NitrogenForm::Nitrate(0.0).index()] =
+                    NitrogenForm::Nitrate(nitrate_value);
+            }
+        }
+    }
+
+    pub fn add_nitrogen_form(&mut self, nitrogen_form: NitrogenForm) {
+        self.nitrogen_forms[nitrogen_form.index()] =
+            self.nitrogen_forms[nitrogen_form.index()].add(nitrogen_form.value());
+    }
+
     pub fn set_component(&mut self, component: Component) {
         match component {
             Component::Nutrient(nutrient_amount) => {
-                self.nutrients[nutrient_amount.index()] = nutrient_amount;
-
-                if let NutrientAmount::Nitrogen(value) = nutrient_amount {
-                    let nitrate_value =
-                        value - self.nitrogen_forms[NitrogenForm::Ammonium(0.0).index()].value();
-
-                    self.nitrogen_forms[NitrogenForm::Nitrate(0.0).index()] =
-                        NitrogenForm::Nitrate(nitrate_value);
-                }
+                self.set_nutrient(nutrient_amount);
             }
 
             Component::NitrogenForm(nitrogen_form) => {
-                self.nitrogen_forms[nitrogen_form.index()] = nitrogen_form;
-
-                match nitrogen_form {
-                    NitrogenForm::Nitrate(value) => {
-                        let ammonium_value =
-                            self.nutrients[NutrientAmount::Nitrogen(0.0).index()].value() - value;
-
-                        self.nitrogen_forms[NitrogenForm::Ammonium(0.0).index()] =
-                            NitrogenForm::Ammonium(ammonium_value);
-                    }
-
-                    NitrogenForm::Ammonium(value) => {
-                        let nitrate_value =
-                            self.nutrients[NutrientAmount::Nitrogen(0.0).index()].value() - value;
-
-                        self.nitrogen_forms[NitrogenForm::Nitrate(0.0).index()] =
-                            NitrogenForm::Nitrate(nitrate_value);
-                    }
-                }
+                self.set_nitrogen_form(nitrogen_form);
             }
         }
     }

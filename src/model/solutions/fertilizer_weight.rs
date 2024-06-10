@@ -2,8 +2,9 @@ use crate::model::{
     chemistry::{NitrogenForm, NutrientAmount},
     fertilizers::Fertilizer,
 };
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct FertilizerWeight {
     pub fertilizer: Fertilizer,
     pub weight: f64,

@@ -31,9 +31,7 @@ pub fn ProfileEditorPage() -> Element {
 
                         profile.write().create_id();
 
-                        let profile_id = storage.add(profile.read().clone());
-
-                        println!("{:#?}", profile_id);
+                        storage.add(profile.read().clone());
 
                         navigator().push(Route::ProfilesListingPage {});
                     },

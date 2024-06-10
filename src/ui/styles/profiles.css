@@ -72,3 +72,10 @@
     border-bottom: none;
 }
 
+/* profiles listing */
+
+.profiles-listing__name {
+    margin: 0px;
+    font-size: 14px;
+    line-height: 20px;
+}

@@ -42,8 +42,8 @@ pub fn Listing(props: ListingProps) -> Element {
                 }
             }
 
-            div {
-                class: "fertilizers-listing__table",
+            Block {
+                exclude_padding: "top",
 
                 Table {
                     header: rsx! {
