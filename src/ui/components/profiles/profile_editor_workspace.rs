@@ -5,7 +5,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ProfileEditorWorkspaceProps {
-    profile: Signal<Profile>,
+    profile: Memo<Profile>,
     on_name_update: EventHandler<String>,
     on_component_update: EventHandler<Component>,
     on_save: EventHandler<()>,

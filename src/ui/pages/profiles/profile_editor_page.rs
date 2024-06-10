@@ -11,6 +11,8 @@ pub fn ProfileEditorPage() -> Element {
 
     let mut profile = use_signal(|| Profile::new());
 
+    let profile_memo = use_memo(move || profile.read().clone());
+
     rsx! {
         div {
             class: "profile-editor-page",
@@ -19,7 +21,7 @@ pub fn ProfileEditorPage() -> Element {
                 class: "profile-editor-page__workspace",
 
                 ProfileEditorWorkspace {
-                    profile,
+                    profile: profile_memo,
                     on_component_update: move |component| {
                         profile.write().set_component(component);
                     },

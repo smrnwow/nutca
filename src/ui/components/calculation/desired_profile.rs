@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct DesiredProfileProps {
-    profile: Signal<Profile>,
+    profile: Memo<Profile>,
     on_profile_change: EventHandler<Option<Profile>>,
     on_component_update: EventHandler<Component>,
 }

@@ -4,7 +4,6 @@ use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
 use serde::{Deserialize, Serialize};
 use std::ops::Index;
-use uuid::Uuid;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Solution {
@@ -63,8 +62,8 @@ impl Solution {
         self.fertilizers_weights.push(fertilizer_weight);
     }
 
-    pub fn create_id(&mut self) {
-        self.id = Uuid::new_v4().to_string();
+    pub fn set_id(&mut self, id: String) {
+        self.id = id;
     }
 
     pub fn set_name(&mut self, name: String) {

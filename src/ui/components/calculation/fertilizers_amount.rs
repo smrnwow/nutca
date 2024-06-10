@@ -7,7 +7,7 @@ fn round(value: f64) -> String {
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersAmountProps {
-    solution: Signal<Solution>,
+    solution: Memo<Solution>,
 }
 
 #[component]

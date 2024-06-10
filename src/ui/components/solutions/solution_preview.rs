@@ -6,14 +6,14 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionPreviewProps {
-    solution: Signal<Solution>,
-    profile: Signal<Profile>,
+    solution: Memo<Solution>,
+    profile: Memo<Profile>,
     on_save: EventHandler<String>,
 }
 
 #[component]
 pub fn SolutionPreview(props: SolutionPreviewProps) -> Element {
-    let mut solution_name = use_signal(|| String::new());
+    let mut solution_name = use_signal(|| props.solution.read().name());
 
     rsx! {
         Card {

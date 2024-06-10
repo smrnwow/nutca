@@ -5,7 +5,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ProfileFormProps {
-    profile: Signal<Profile>,
+    profile: Memo<Profile>,
     on_component_update: EventHandler<Component>,
 }
 

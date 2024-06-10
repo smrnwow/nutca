@@ -7,12 +7,13 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionEditorProps {
-    solution: Signal<Solution>,
-    profile: Signal<Profile>,
-    fertilizers: Signal<Vec<(bool, Fertilizer)>>,
+    solution: Memo<Solution>,
+    profile: Memo<Profile>,
+    fertilizers: Memo<Vec<(bool, Fertilizer)>>,
     on_profile_change: EventHandler<Option<Profile>>,
     on_component_update: EventHandler<Component>,
-    on_fertilizer_select: EventHandler<(bool, String)>,
+    on_fertilizer_add: EventHandler<Fertilizer>,
+    on_fertilizer_remove: EventHandler<String>,
     on_fertilizer_search: EventHandler<String>,
     on_water_amount_change: EventHandler<usize>,
 }
@@ -96,7 +97,8 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
                 body: rsx! {
                     FertilizersBrowser {
                         fertilizers: props.fertilizers,
-                        on_select: props.on_fertilizer_select,
+                        on_add: props.on_fertilizer_add,
+                        on_remove: props.on_fertilizer_remove,
                         on_search: props.on_fertilizer_search,
                     }
                 }

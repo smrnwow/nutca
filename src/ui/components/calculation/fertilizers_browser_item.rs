@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 pub struct FertilizersBrowserItemProps {
     fertilizer: Signal<Fertilizer>,
     selected: bool,
-    on_select: EventHandler<(bool, String)>,
+    on_select: EventHandler<(bool, Fertilizer)>,
 }
 
 #[component]
@@ -22,7 +22,7 @@ pub fn FertilizersBrowserItem(props: FertilizersBrowserItemProps) -> Element {
                     Checkbox {
                         checked: props.selected,
                         on_change: move |event: Event<FormData>| {
-                            props.on_select.call((event.value().parse().unwrap(), props.fertilizer.read().id()));
+                            props.on_select.call((event.value().parse().unwrap(), props.fertilizer.read().clone()));
                         }
                     }
                 }

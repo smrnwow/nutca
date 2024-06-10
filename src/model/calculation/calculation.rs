@@ -127,9 +127,7 @@ impl Calculation {
         };
     }
 
-    pub fn solve(&self, tank_size: i32) -> Result<Solution, Error> {
-        println!("{}", self.problem);
-
+    pub fn solve(&self, _: i32) -> Result<Solution, Error> {
         let result = DualSimplexSolver::default()
             .solve(self.problem.clone())
             .unwrap();

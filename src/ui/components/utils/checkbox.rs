@@ -16,6 +16,7 @@ pub fn Checkbox(props: CheckboxProps) -> Element {
                 class: "checkbox__input",
                 r#type: "checkbox",
                 value: "{props.checked}",
+                checked: "{props.checked}",
                 onchange: move |event| props.on_change.call(event),
             }
         }

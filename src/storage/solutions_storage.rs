@@ -74,6 +74,18 @@ impl SolutionsStorage {
         }
     }
 
+    pub fn update(&self, solution: Solution) {
+        let data = serde_json::to_string(&solution).expect("Failed to serialize");
+
+        let query = "UPDATE solutions SET data = ?2 WHERE id = ?1";
+
+        let mut statement = self.storage.connection().prepare(query).unwrap();
+
+        let response = statement.execute(params![solution.id(), data]).unwrap();
+
+        println!("response {:#?}", response);
+    }
+
     pub fn list(&self) -> Vec<Solution> {
         let query = self.storage.connection().prepare("SELECT * FROM solutions");
 

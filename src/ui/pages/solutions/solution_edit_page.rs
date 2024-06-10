@@ -1,33 +1,11 @@
-use crate::model::calculation::Calculation;
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
-use crate::model::solutions::Solution;
+use crate::model::solutions::SolutionBuilder;
 use crate::storage::{FertilizersStorage, SolutionsStorage};
 use crate::ui::components::solutions::{SolutionEditor, SolutionPreview};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
-
-fn update_list(mut list: Signal<Vec<(bool, Fertilizer)>>, item_id: String, selected: bool) {
-    if let Some(item) = list.write().iter_mut().find(|item| item.1.id() == item_id) {
-        item.0 = selected;
-    }
-}
-
-fn calculate(fertilizers: Vec<Fertilizer>, profile: Profile) -> Solution {
-    if fertilizers.len() > 0 {
-        if let Ok(solution) = Calculation::new(profile, fertilizers.clone())
-            .unwrap()
-            .solve(1)
-        {
-            return solution;
-        } else {
-            return Solution::empty(fertilizers);
-        }
-    } else {
-        return Solution::empty(fertilizers);
-    }
-}
 
 #[component]
 pub fn SolutionEditPage(solution_id: String) -> Element {
@@ -35,31 +13,27 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
 
     let fertilizers_storage = consume_context::<Signal<FertilizersStorage>>();
 
+    let fertilizers_list = fertilizers_storage.read().list();
+
     let selected_solution = solutions_storage.read().get(solution_id);
 
-    println!("selected_solution {:#?}", selected_solution);
+    let mut solution_builder = use_signal(|| SolutionBuilder::from(selected_solution.unwrap()));
 
-    let mut solution = use_signal(|| selected_solution.unwrap());
+    let solution = use_memo(move || solution_builder.read().build());
 
-    let mut profile = use_signal(|| solution.read().profile());
+    let profile = use_memo(move || solution_builder.read().profile());
 
-    let fertilizers_list: Signal<Vec<(bool, Fertilizer)>> = use_signal(|| {
+    let fertilizers: Memo<Vec<(bool, Fertilizer)>> = use_memo(move || {
         let mut list: Vec<(bool, Fertilizer)> = vec![];
 
-        for fertilizer in fertilizers_storage.read().list() {
-            list.push((false, fertilizer));
+        for fertilizer in fertilizers_list.clone() {
+            list.push((
+                solution_builder.read().contains_fertilizer(fertilizer.id()),
+                fertilizer,
+            ));
         }
 
         list
-    });
-
-    let fertilizers_selected: Memo<Vec<Fertilizer>> = use_memo(move || {
-        fertilizers_list
-            .read()
-            .iter()
-            .filter(|(is_selected, _)| *is_selected)
-            .map(|(_, fertilizer)| fertilizer.clone())
-            .collect()
     });
 
     rsx! {
@@ -68,35 +42,26 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
 
             SolutionEditor {
                 solution,
-                fertilizers: fertilizers_list,
+                fertilizers,
                 profile,
                 on_component_update: move |component| {
-                    profile.write().set_component(component);
-
-                    let result = calculate(fertilizers_selected.read().clone(), profile.read().clone());
-
-                    *solution.write() = result;
+                    solution_builder.write().update_profile_component(component);
                 },
                 on_profile_change: move |new_profile: Option<Profile>| {
                     match new_profile {
                         Some(new_profile) => {
-                            *profile.write() = new_profile;
+                            solution_builder.write().update_profile(new_profile);
                         },
                         None => {
-                            *profile.write() = Profile::new();
+                            solution_builder.write().update_profile(Profile::new());
                         }
                     }
-
-                    let result = calculate(fertilizers_selected.read().clone(), profile.read().clone());
-
-                    *solution.write() = result;
                 },
-                on_fertilizer_select: move |(selected, fertilizer_id)| {
-                    update_list(fertilizers_list, fertilizer_id, selected);
-
-                    let result = calculate(fertilizers_selected.read().clone(), profile.read().clone());
-
-                    *solution.write() = result;
+                on_fertilizer_add: move |fertilizer| {
+                    solution_builder.write().add_fertilizer(fertilizer);
+                },
+                on_fertilizer_remove: move |fertilizer_id| {
+                    solution_builder.write().remove_fertilizer(fertilizer_id);
                 },
                 on_fertilizer_search: move |search_query| {
                     println!("on_fertilizer_search {}", search_query);
@@ -114,11 +79,11 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
                 profile,
                 solution,
                 on_save: move |solution_name| {
-                    solution.write().set_name(solution_name);
+                    let mut solution = solution.read().clone();
 
-                    solution.write().create_id();
+                    solution.set_name(solution_name);
 
-                    solutions_storage.read().add(solution.read().clone());
+                    solutions_storage.read().update(solution);
 
                     navigator().push(Route::SolutionsListingPage {});
                 },

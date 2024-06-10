@@ -7,8 +7,8 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct CalculatedProfileProps {
-    profile: Signal<Profile>,
-    solution: Signal<Solution>,
+    profile: Memo<Profile>,
+    solution: Memo<Solution>,
 }
 
 #[component]
