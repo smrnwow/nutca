@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
-use super::pages::fertilizers::{FertilizerEditorPage, FertilizersListingPage};
+use super::pages::fertilizers::{FertilizerAddPage, FertilizerEditPage, FertilizersListingPage};
 use super::pages::profiles::{ProfileAddPage, ProfileEditPage, ProfilesListingPage};
 use super::pages::solutions::{SolutionAddPage, SolutionEditPage, SolutionsListingPage};
 use super::pages::Reference;
@@ -35,6 +35,9 @@ pub enum Route {
     #[route("/fertilizers/listing")]
     FertilizersListingPage {},
 
-    #[route("/fertilizers/editor")]
-    FertilizerEditorPage {},
+    #[route("/fertilizers/add")]
+    FertilizerAddPage {},
+
+    #[route("/fertilizers/edit/:fertilizer_id")]
+    FertilizerEditPage { fertilizer_id: String },
 }

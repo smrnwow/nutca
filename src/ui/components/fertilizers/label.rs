@@ -5,7 +5,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersLabelProps {
-    label: Signal<Label>,
+    label: Memo<Label>,
     on_label_units_update: EventHandler<Units>,
     on_label_component_update: EventHandler<Component>,
     on_label_nitrogen_form_update: EventHandler<NitrogenForm>,

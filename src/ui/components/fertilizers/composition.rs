@@ -1,11 +1,12 @@
 use super::{FertilizersFormula, FertilizersLabel};
 use crate::model::chemistry::NitrogenForm;
-use crate::model::fertilizers::{Composition, Fertilizer};
-use crate::model::labels::{Component, Units};
+use crate::model::fertilizers::SourceType;
+use crate::model::formulas::Formula;
+use crate::model::labels::{Component, Label, Units};
 use dioxus::prelude::*;
 
-fn tab_active_class(is_active: bool) -> String {
-    if is_active {
+fn tab_active_class(source_type: SourceType, tab_value: SourceType) -> String {
+    if source_type == tab_value {
         String::from("fertilizers-source__tab fertilizers-source__tab_active")
     } else {
         String::from("fertilizers-source__tab")
@@ -14,18 +15,19 @@ fn tab_active_class(is_active: bool) -> String {
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersCompositionProps {
-    fertilizer: Signal<Fertilizer>,
-    on_label_select: EventHandler<()>,
+    source_type: Memo<SourceType>,
+    label: Memo<Label>,
+    formula: Memo<Formula>,
+    on_source_type_update: EventHandler<SourceType>,
     on_label_component_update: EventHandler<Component>,
     on_label_nitrogen_form_update: EventHandler<NitrogenForm>,
     on_label_units_update: EventHandler<Units>,
-    on_formula_select: EventHandler<()>,
     on_formula_update: EventHandler<String>,
 }
 
 #[component]
 pub fn FertilizersComposition(props: FertilizersCompositionProps) -> Element {
-    let fertilizer = props.fertilizer.read();
+    let source_type = *props.source_type.read();
 
     rsx! {
         div {
@@ -40,14 +42,14 @@ pub fn FertilizersComposition(props: FertilizersCompositionProps) -> Element {
                 class: "fertilizers-source__tabs",
 
                 button {
-                    class: "{tab_active_class(fertilizer.is_label_based())}",
-                    onclick: move |_| props.on_label_select.call(()),
+                    class: "{tab_active_class(source_type, SourceType::Label)}",
+                    onclick: move |_| props.on_source_type_update.call(SourceType::Label),
                     "С этикетки"
                 }
 
                 button {
-                    class: "{tab_active_class(fertilizer.is_formula_based())}",
-                    onclick: move |_| props.on_formula_select.call(()),
+                    class: "{tab_active_class(source_type, SourceType::Formula)}",
+                    onclick: move |_| props.on_source_type_update.call(SourceType::Formula),
                     "По формуле"
                 }
             }
@@ -56,19 +58,25 @@ pub fn FertilizersComposition(props: FertilizersCompositionProps) -> Element {
         div {
             class: "composition__source",
 
-            if let Composition::Label(label) = fertilizer.composition().clone() {
-                FertilizersLabel {
-                    label: Signal::new(label),
-                    on_label_units_update: props.on_label_units_update,
-                    on_label_component_update: props.on_label_component_update,
-                    on_label_nitrogen_form_update: props.on_label_nitrogen_form_update,
+            match source_type {
+                SourceType::Label => {
+                    rsx! {
+                        FertilizersLabel {
+                            label: props.label,
+                            on_label_units_update: props.on_label_units_update,
+                            on_label_component_update: props.on_label_component_update,
+                            on_label_nitrogen_form_update: props.on_label_nitrogen_form_update,
+                        }
+                    }
                 }
-            }
 
-            if let Composition::Formula(formula) = fertilizer.composition().clone() {
-                FertilizersFormula {
-                    formula: Signal::new(formula.formulation()),
-                    on_formula_update: props.on_formula_update,
+                SourceType::Formula => {
+                    rsx! {
+                        FertilizersFormula {
+                            formula: props.formula,
+                            on_formula_update: props.on_formula_update,
+                        }
+                    }
                 }
             }
         }

@@ -1,8 +1,9 @@
+use crate::model::formulas::Formula;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersFormulaProps {
-    formula: Signal<String>,
+    formula: Memo<Formula>,
     on_formula_update: EventHandler<String>,
 }
 
@@ -17,7 +18,7 @@ pub fn FertilizersFormula(props: FertilizersFormulaProps) -> Element {
             input {
                 class: "fertilizers-formula__input",
                 r#type: "text",
-                value: "{props.formula}",
+                value: "{props.formula.read().formulation()}",
                 oninput: move |event| props.on_formula_update.call(event.value()),
             }
         }

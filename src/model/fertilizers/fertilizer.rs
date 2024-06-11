@@ -43,6 +43,10 @@ impl Fertilizer {
         }
     }
 
+    pub fn with_id(&mut self, id: String) {
+        self.id = id;
+    }
+
     pub fn set_name(mut self, name: String) -> Self {
         self.name = name;
 

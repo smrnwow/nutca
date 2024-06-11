@@ -17,7 +17,7 @@ impl FertilizersStorage {
             .connection()
             .execute(
                 "CREATE TABLE fertilizers (
-                    id INTEGER PRIMARY KEY autoincrement,
+                    id TEXT PRIMARY KEY,
                     data TEXT NOT NULL
                 )",
                 (),
@@ -36,10 +36,57 @@ impl FertilizersStorage {
 
         self.storage
             .connection()
-            .execute("INSERT INTO fertilizers (data) VALUES (?1)", params![data])
+            .execute(
+                "INSERT INTO fertilizers (id, data) VALUES (?1, ?2)",
+                params![fertilizer.id(), data],
+            )
             .unwrap();
 
         self.storage.connection().last_insert_rowid()
+    }
+
+    pub fn get(&self, fertilizer_id: String) -> Option<Fertilizer> {
+        let query = format!("SELECT * FROM fertilizers WHERE id = \"{fertilizer_id}\"");
+
+        let response = self.storage.connection().prepare(query.as_str());
+
+        match response {
+            Ok(mut result) => {
+                let fertilizers: Vec<Fertilizer> = result
+                    .query_map([], |row| {
+                        let data: String = row.get(1).unwrap();
+
+                        Ok(serde_json::from_str::<Fertilizer>(&data)
+                            .expect("Failed to deserialize"))
+                    })
+                    .unwrap()
+                    .map(|fertilizer| fertilizer.unwrap())
+                    .collect();
+
+                if fertilizers.len() > 0 {
+                    return Some(fertilizers.get(0).unwrap().clone());
+                }
+
+                None
+            }
+            Err(error) => {
+                println!("fertilizer get error {:#?}", error);
+
+                None
+            }
+        }
+    }
+
+    pub fn update(&self, fertilizer: Fertilizer) {
+        let data = serde_json::to_string(&fertilizer).expect("Failed to serialize");
+
+        let query = "UPDATE fertilizers SET data = ?2 WHERE id = ?1";
+
+        let mut statement = self.storage.connection().prepare(query).unwrap();
+
+        let response = statement.execute(params![fertilizer.id(), data]).unwrap();
+
+        println!("response {:#?}", response);
     }
 
     pub fn list(&self) -> Vec<Fertilizer> {

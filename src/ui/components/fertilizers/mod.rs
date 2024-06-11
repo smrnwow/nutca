@@ -16,11 +16,11 @@ pub use formula::FertilizersFormula;
 // mod nutrient_content_value;
 // pub use nutrient_content_value::NutrientContentValue;
 
-mod listing;
-pub use listing::Listing;
+mod fertilizer_listing_item;
+pub use fertilizer_listing_item::FertilizerListingItem;
 
 mod nitrogen_form_value;
 pub use nitrogen_form_value::NitrogenFormValue;
 
-mod fertilizer_editor_workspace;
-pub use fertilizer_editor_workspace::FertilizerEditorWorkspace;
+mod fertilizer_editor;
+pub use fertilizer_editor::FertilizerEditor;
