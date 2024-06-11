@@ -1,4 +1,4 @@
-use super::{FertilizersComponent, NitrogenFormValue};
+use super::{FertilizerComponentInput, NitrogenFormValue};
 use crate::model::chemistry::NitrogenForm;
 use crate::model::labels::{Component, Label, Units};
 use dioxus::prelude::*;
@@ -73,7 +73,7 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 div {
                     class: "nutrient-value__nutrient",
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::Nitrogen(0.0)],
                         on_update: props.on_label_component_update,
                     }
@@ -92,12 +92,12 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 div {
                     class: "nutrient-value__nutrient",
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::Phosphor(0.0)],
                         on_update: props.on_label_component_update,
                     }
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::PhosphorPentoxide(0.0)],
                         on_update: props.on_label_component_update,
                     }
@@ -106,12 +106,12 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 div {
                     class: "nutrient-value__nutrient",
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::Potassium(0.0)],
                         on_update: props.on_label_component_update,
                     }
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::PotassiumOxide(0.0)],
                         on_update: props.on_label_component_update,
                     }
@@ -120,12 +120,12 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 div {
                     class: "nutrient-value__nutrient",
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::Calcium(0.0)],
                         on_update: props.on_label_component_update,
                     }
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::CalciumOxide(0.0)],
                         on_update: props.on_label_component_update,
                     }
@@ -134,12 +134,12 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 div {
                     class: "nutrient-value__nutrient",
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::Magnesium(0.0)],
                         on_update: props.on_label_component_update,
                     }
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::MagnesiumOxide(0.0)],
                         on_update: props.on_label_component_update,
                     }
@@ -148,17 +148,17 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 div {
                     class: "nutrient-value__nutrient",
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::Sulfur(0.0)],
                         on_update: props.on_label_component_update,
                     }
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::SulfurTrioxide(0.0)],
                         on_update: props.on_label_component_update,
                     }
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::SulfurTetroxide(0.0)],
                         on_update: props.on_label_component_update,
                     }
@@ -176,7 +176,7 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 div {
                     class: "nutrient-value__nutrient",
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::Iron(0.0)],
                         on_update: props.on_label_component_update,
                     }
@@ -185,7 +185,7 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 div {
                     class: "nutrient-value__nutrient",
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::Manganese(0.0)],
                         on_update: props.on_label_component_update,
                     }
@@ -194,7 +194,7 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 div {
                     class: "nutrient-value__nutrient",
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::Copper(0.0)],
                         on_update: props.on_label_component_update,
                     }
@@ -203,7 +203,7 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 div {
                     class: "nutrient-value__nutrient",
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::Zinc(0.0)],
                         on_update: props.on_label_component_update,
                     }
@@ -212,7 +212,7 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 div {
                     class: "nutrient-value__nutrient",
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::Boron(0.0)],
                         on_update: props.on_label_component_update,
                     }
@@ -221,7 +221,7 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 div {
                     class: "nutrient-value__nutrient",
 
-                    FertilizersComponent {
+                    FertilizerComponentInput {
                         component: label[Component::Molybdenum(0.0)],
                         on_update: props.on_label_component_update,
                     }

@@ -17,8 +17,8 @@ pub enum Route {
     #[route("/solutions/listing")]
     SolutionsListingPage {},
 
-    #[route("/solutions/add")]
-    SolutionAddPage {},
+    #[route("/solutions/add?:profile_id")]
+    SolutionAddPage { profile_id: String },
 
     #[route("/solutions/edit/:solution_id")]
     SolutionEditPage { solution_id: String },

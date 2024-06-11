@@ -33,10 +33,13 @@ pub fn SolutionsListingPage() -> Element {
 
                             Button {
                                 style: "primary",
-                                text: "Добавить раствор",
                                 on_click: move |_| {
-                                    navigator().push(Route::SolutionAddPage {});
+                                    navigator().push(Route::SolutionAddPage {
+                                        profile_id: String::new(),
+                                    });
                                 },
+
+                                "Добавить раствор",
                             }
                         }
                     }

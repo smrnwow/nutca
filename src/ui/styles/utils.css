@@ -128,7 +128,6 @@
     border-radius: 16px;
     border: 1px solid rgba(225, 228, 234, 1);
     box-shadow: 0px 1px 2px 0px rgba(10, 13, 20, 0.03);
-    overflow: hidden;
     box-sizing: border-box;
 }
 
@@ -165,10 +164,10 @@
     padding: 8px 12px;
     font-size: 14px;
     line-height: 20px;
-    cursor: pointer;
     border-radius: 8px;
     border: none;
     transition: .2s ease-out;
+    cursor: pointer;
     box-sizing: border-box;
 }
 
@@ -195,6 +194,25 @@
 .button_stroke:hover {
     background: rgba(245, 247, 250, 1);
     border: 1px solid rgba(245, 247, 250, 1);
+}
+
+.button_compact {
+    display: block;
+    padding: 1px;
+    height: 20px;
+    background-color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0px 1px 2px 0px rgba(10, 13, 20, 0.03);
+}
+
+.button_compact:hover {
+    background-color: rgba(245, 247, 250, 1);
+}
+
+.button_compact .icon {
+    width: 18px;
+    height: 18px;
+    fill: rgba(82, 88, 102, 1);
 }
 
 /*
@@ -334,17 +352,69 @@
     position: relative;
 }
 
-.dropdown__search {
+.dropdown__list {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    right: 0;
+    gap: 4px;
+    padding: 8px;
+    border: 1px solid rgba(225, 228, 234, 1);
+    background-color:  rgba(255, 255, 255, 1);
+    border-radius: 8px;
+    margin: 0px;
+    list-style-type: none;
+    box-sizing: border-box;
+    box-shadow: 0px 16px 32px -12px rgba(14, 18, 27, 0.1);
+}
+
+.dropdown:hover .dropdown__list {
+    display: flex;
+    margin-top: 0px;
+    z-index: 100;
+}
+
+.dropdown__item {
+    position: relative;
+}
+
+.dropdown__button {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    padding: 6px;
+    text-align: start;
+    font-size: 12px;
+    line-height: 16px;
+    color: rgba(14, 18, 27, 1);
+    border-radius: 8px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.dropdown__button:hover {
+    background-color:rgba(245, 247, 250, 1);
+}
+
+/*
+    select
+*/
+
+.select {
+    position: relative;
+}
+
+.select__search {
     position: relative;
     display: flex;
     box-shadow: 0px 1px 2px 0px rgba(10, 13, 20, 0.03);
 }
 
-.dropdown__header {
+.select__header {
     position: relative;
 }
 
-.dropdown__controls {
+.select__controls {
     position: absolute;
     display: flex;
     gap: 8px;
@@ -352,11 +422,11 @@
     right: 8px;
 }
 
-.dropdown__arrow {
+.select__arrow {
     display: flex;
 }
 
-.dropdown__cancel {
+.select__cancel {
     display: flex;
     border: none;
     background: transparent;
@@ -365,7 +435,7 @@
     cursor: pointer;
 }
 
-.dropdown__value {
+.select__value {
     color: rgba(14, 18, 27, 1);
     width: 100%;
     text-align: start;
@@ -382,13 +452,13 @@
     box-sizing: border-box;
 }
 
-.dropdown__icon {
+.select__icon {
     position: absolute;
     top: calc(50% - 10px);
     left: 8px;
 }
 
-.dropdown__input {
+.select__input {
     width: 100%;
     background-color:  rgba(255, 255, 255, 1);
     outline: none;
@@ -402,17 +472,17 @@
     box-sizing: border-box;
 }
 
-.dropdown__input:focus {
+.select__input:focus {
     border: 1px solid rgba(14, 18, 27, 1);
     outline: 2px solid rgba(153, 160, 174, 0.16);
     outline-offset: 2px;
 }
 
-.dropdown__input::placeholder {
+.select__input::placeholder {
     color: rgba(153, 160, 174, 1);
 }
 
-.dropdown__placeholder {
+.select__placeholder {
     display: block;
     width: 100%;
     text-align: start;
@@ -429,7 +499,7 @@
     box-sizing: border-box;
 }
 
-.dropdown__list {
+.select__list {
     position: absolute;
     display: none;
     flex-direction: column;
@@ -445,16 +515,16 @@
     box-shadow: 0px 16px 32px -12px rgba(14, 18, 27, 0.1);
 }
 
-.dropdown__list_opened {
+.select__list_opened {
     display: flex;
     margin-top: 8px;
 }
 
-.dropdown__item {
+.select__item {
     position: relative;
 }
 
-.dropdown__button {
+.select__button {
     width: 100%;
     background-color: transparent;
     border: none;
@@ -468,20 +538,20 @@
     box-sizing: border-box;
 }
 
-.dropdown__button:hover {
+.select__button:hover {
     background-color:rgba(245, 247, 250, 1);
 }
 
-.dropdown__item_selected .dropdown__button {
+.select__item_selected .select__button {
     background-color:rgba(245, 247, 250, 1);
 }
 
-.dropdown__check {
+.select__check {
     position: absolute;
     top: calc(50% - 10px);
     right: 8px;
 }
 
-.dropdown__check .icon {
+.select__check .icon {
     fill: rgba(82, 88, 102, 1);
 }

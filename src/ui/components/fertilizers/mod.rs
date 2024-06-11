@@ -4,8 +4,8 @@ pub use composition::FertilizersComposition;
 mod label;
 pub use label::FertilizersLabel;
 
-mod component;
-pub use component::FertilizersComponent;
+mod fertilizer_component_input;
+pub use fertilizer_component_input::FertilizerComponentInput;
 
 mod formula;
 pub use formula::FertilizersFormula;

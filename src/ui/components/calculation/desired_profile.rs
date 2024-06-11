@@ -1,7 +1,7 @@
 use crate::model::profiles::{Component, Profile};
 use crate::storage::ProfilesStorage;
 use crate::ui::components::profiles::ProfileForm;
-use crate::ui::components::utils::Dropdown;
+use crate::ui::components::utils::Select;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -37,7 +37,7 @@ pub fn DesiredProfile(props: DesiredProfileProps) -> Element {
             div {
                 class: "desired_profile__browser",
 
-                Dropdown {
+                Select {
                     placeholder: "выбрать готовый профиль",
                     value,
                     options: options.read().clone(),

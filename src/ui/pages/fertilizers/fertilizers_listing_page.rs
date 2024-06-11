@@ -40,10 +40,11 @@ pub fn FertilizersListingPage() -> Element {
 
                             Button {
                                 style: "primary",
-                                text: "Добавить удобрение",
                                 on_click: move |_| {
                                     navigator().push(Route::FertilizerAddPage {});
                                 },
+
+                                "Добавить удобрение",
                             }
                         }
                     }

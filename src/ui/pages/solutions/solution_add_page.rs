@@ -1,21 +1,30 @@
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
 use crate::model::solutions::SolutionBuilder;
-use crate::storage::{FertilizersStorage, SolutionsStorage};
+use crate::storage::{FertilizersStorage, ProfilesStorage, SolutionsStorage};
 use crate::ui::components::solutions::{SolutionEditor, SolutionPreview};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
 #[component]
-pub fn SolutionAddPage() -> Element {
+pub fn SolutionAddPage(profile_id: String) -> Element {
     let solutions_storage = consume_context::<Signal<SolutionsStorage>>();
+
+    let profiles_storage = consume_context::<Signal<ProfilesStorage>>();
 
     let fertilizers_storage = consume_context::<Signal<FertilizersStorage>>();
 
     let fertilizers_list = fertilizers_storage.read().list();
 
-    let mut solution_builder = use_signal(|| SolutionBuilder::new());
+    let mut solution_builder = use_signal(|| {
+        let profile = profiles_storage.read().get(profile_id);
+
+        match profile {
+            Some(profile) => SolutionBuilder::base_on(profile),
+            None => SolutionBuilder::new(),
+        }
+    });
 
     let profile = use_memo(move || solution_builder.read().profile());
 

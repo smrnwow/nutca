@@ -21,6 +21,15 @@ impl SolutionBuilder {
         }
     }
 
+    pub fn base_on(profile: Profile) -> Self {
+        Self {
+            id: Uuid::new_v4().to_string(),
+            name: String::new(),
+            profile,
+            fertilizers: Vec::new(),
+        }
+    }
+
     pub fn from(solution: Solution) -> Self {
         Self {
             id: solution.id(),

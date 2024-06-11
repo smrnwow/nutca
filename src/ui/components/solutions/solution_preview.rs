@@ -56,12 +56,13 @@ pub fn SolutionPreview(props: SolutionPreviewProps) -> Element {
 
                     Button {
                         style: "primary",
-                        text: "Сохранить",
                         on_click: move |_| {
                             props.on_save.call(solution_name.read().clone());
 
                             *solution_name.write() = String::new();
                         },
+
+                        "Сохранить",
                     }
                 }
             }

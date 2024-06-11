@@ -10,5 +10,8 @@ pub use check::Check;
 mod close;
 pub use close::Close;
 
+mod more;
+pub use more::More;
+
 mod search_icon;
 pub use search_icon::SearchIcon;

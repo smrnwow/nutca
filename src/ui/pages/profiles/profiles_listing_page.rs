@@ -33,10 +33,11 @@ pub fn ProfilesListingPage() -> Element {
 
                             Button {
                                 style: "primary",
-                                text: "Добавить профиль питания",
                                 on_click: move |_| {
                                     navigator().push(Route::ProfileAddPage {});
                                 },
+
+                                "Добавить профиль питания",
                             }
                         }
                     }
@@ -50,16 +51,28 @@ pub fn ProfilesListingPage() -> Element {
                                     width: "100%",
                                     "Название",
                                 }
+
+                                TableCell {
+                                    width: "1%",
+                                }
                             },
                             body: rsx! {
                                 for profile in profiles.read().clone() {
                                     ProfileListingItem {
                                         profile,
-                                        on_select: move |profile_id| {
+                                        on_open: move |profile_id| {
                                             navigator().push(Route::ProfileEditPage {
                                                 profile_id,
                                             });
-                                        }
+                                        },
+                                        on_use: move |profile_id| {
+                                            navigator().push(Route::SolutionAddPage {
+                                                profile_id,
+                                            });
+                                        },
+                                        on_delete: move |profile_id| {
+                                            println!("delete profile {}", profile_id);
+                                        },
                                     }
                                 }
                             }

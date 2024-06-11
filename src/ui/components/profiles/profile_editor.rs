@@ -53,14 +53,16 @@ pub fn ProfileEditor(props: ProfileEditorProps) -> Element {
 
                     Button {
                         style: "stroke",
-                        text: "Сбросить",
                         on_click: props.on_cancel,
+
+                        "Сбросить",
                     }
 
                     Button {
                         style: "primary",
-                        text: "Сохранить",
                         on_click: props.on_save,
+
+                        "Сохранить",
                     }
                 }
             }

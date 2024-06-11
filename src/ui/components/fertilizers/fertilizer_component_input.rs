@@ -3,13 +3,13 @@ use crate::ui::components::NutrientValue;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
-pub struct FertilizersComponentProps {
+pub struct FertilizerComponentInputProps {
     component: Component,
     on_update: EventHandler<Component>,
 }
 
 #[component]
-pub fn FertilizersComponent(props: FertilizersComponentProps) -> Element {
+pub fn FertilizerComponentInput(props: FertilizerComponentInputProps) -> Element {
     rsx! {
         NutrientValue {
             symbol: props.component.symbol(),

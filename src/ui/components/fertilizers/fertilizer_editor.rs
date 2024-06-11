@@ -76,14 +76,16 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
 
                     Button {
                         style: "stroke",
-                        text: "Сбросить",
                         on_click: props.on_cancel,
+
+                        "Сбросить",
                     }
 
                     Button {
                         style: "primary",
-                        text: "Сохранить",
                         on_click: props.on_save,
+
+                        "Сохранить",
                     }
                 }
             }

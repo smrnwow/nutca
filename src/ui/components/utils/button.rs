@@ -6,18 +6,25 @@ fn button_class(style: String) -> String {
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ButtonProps {
-    text: String,
+    children: Element,
     style: String,
-    on_click: EventHandler<()>,
+    on_click: Option<EventHandler<()>>,
 }
 
 #[component]
 pub fn Button(props: ButtonProps) -> Element {
     rsx! {
-        button {
-            class: button_class(props.style),
-            onclick: move |_| props.on_click.call(()),
-            {props.text},
+        if props.on_click.is_some() {
+            button {
+                class: button_class(props.style),
+                onclick: move |_| props.on_click.unwrap().call(()),
+                {props.children},
+            }
+        } else {
+            button {
+                class: button_class(props.style),
+                {props.children},
+            }
         }
     }
 }

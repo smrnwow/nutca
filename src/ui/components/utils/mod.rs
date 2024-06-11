@@ -21,6 +21,9 @@ pub use divider::Divider;
 mod dropdown;
 pub use dropdown::Dropdown;
 
+mod dropdown_option;
+pub use dropdown_option::DropdownOption;
+
 mod title;
 pub use title::Title;
 
@@ -35,6 +38,9 @@ pub use button::Button;
 
 mod search;
 pub use search::Search;
+
+mod select;
+pub use select::Select;
 
 mod table;
 pub use table::Table;
