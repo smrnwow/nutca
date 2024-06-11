@@ -34,8 +34,11 @@ impl SolutionBuilder {
         }
     }
 
-    pub fn update_profile(&mut self, profile: Profile) {
-        self.profile = profile;
+    pub fn update_profile(&mut self, profile: Option<Profile>) {
+        match profile {
+            Some(profile) => self.profile = profile,
+            None => self.profile = Profile::new(),
+        }
     }
 
     pub fn update_profile_component(&mut self, component: Component) {

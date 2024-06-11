@@ -15,9 +15,14 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
 
     let fertilizers_list = fertilizers_storage.read().list();
 
-    let selected_solution = solutions_storage.read().get(solution_id);
+    let mut solution_builder = use_signal(|| {
+        let solution = solutions_storage.read().get(solution_id);
 
-    let mut solution_builder = use_signal(|| SolutionBuilder::from(selected_solution.unwrap()));
+        match solution {
+            Some(solution) => SolutionBuilder::from(solution),
+            None => SolutionBuilder::new(),
+        }
+    });
 
     let solution = use_memo(move || solution_builder.read().build());
 
@@ -47,15 +52,8 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
                 on_component_update: move |component| {
                     solution_builder.write().update_profile_component(component);
                 },
-                on_profile_change: move |new_profile: Option<Profile>| {
-                    match new_profile {
-                        Some(new_profile) => {
-                            solution_builder.write().update_profile(new_profile);
-                        },
-                        None => {
-                            solution_builder.write().update_profile(Profile::new());
-                        }
-                    }
+                on_profile_change: move |profile: Option<Profile>| {
+                    solution_builder.write().update_profile(profile);
                 },
                 on_fertilizer_add: move |fertilizer| {
                     solution_builder.write().add_fertilizer(fertilizer);

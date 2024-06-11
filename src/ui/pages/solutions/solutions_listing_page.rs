@@ -54,7 +54,7 @@ pub fn SolutionsListingPage() -> Element {
                             body: rsx! {
                                 for solution in solutions.read().clone() {
                                     SolutionListingItem {
-                                        solution: solution.clone(),
+                                        solution,
                                         on_select: move |solution_id| {
                                             navigator().push(Route::SolutionEditPage {
                                                 solution_id: solution_id,

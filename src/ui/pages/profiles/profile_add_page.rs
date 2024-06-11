@@ -1,17 +1,17 @@
-use crate::model::profiles::Profile;
+use crate::model::profiles::ProfileBuilder;
 use crate::storage::ProfilesStorage;
-use crate::ui::components::profiles::ProfileEditorWorkspace;
+use crate::ui::components::profiles::ProfileEditor;
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
 #[component]
-pub fn ProfileEditorPage() -> Element {
+pub fn ProfileAddPage() -> Element {
     let profiles_storage = consume_context::<Signal<ProfilesStorage>>();
 
-    let mut profile = use_signal(|| Profile::new());
+    let mut profile_builder = use_signal(|| ProfileBuilder::new());
 
-    let profile_memo = use_memo(move || profile.read().clone());
+    let profile = use_memo(move || profile_builder.read().build());
 
     rsx! {
         div {
@@ -20,18 +20,16 @@ pub fn ProfileEditorPage() -> Element {
             section {
                 class: "profile-editor-page__workspace",
 
-                ProfileEditorWorkspace {
-                    profile: profile_memo,
+                ProfileEditor {
+                    profile,
                     on_component_update: move |component| {
-                        profile.write().set_component(component);
+                        profile_builder.write().update_component(component);
                     },
                     on_name_update: move |name| {
-                        profile.write().set_name(name);
+                        profile_builder.write().update_name(name);
                     },
                     on_save: move |_| {
                         let storage = profiles_storage.read();
-
-                        profile.write().create_id();
 
                         storage.add(profile.read().clone());
 

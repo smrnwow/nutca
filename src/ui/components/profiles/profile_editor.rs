@@ -4,7 +4,7 @@ use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Titl
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
-pub struct ProfileEditorWorkspaceProps {
+pub struct ProfileEditorProps {
     profile: Memo<Profile>,
     on_name_update: EventHandler<String>,
     on_component_update: EventHandler<Component>,
@@ -13,7 +13,7 @@ pub struct ProfileEditorWorkspaceProps {
 }
 
 #[component]
-pub fn ProfileEditorWorkspace(props: ProfileEditorWorkspaceProps) -> Element {
+pub fn ProfileEditor(props: ProfileEditorProps) -> Element {
     rsx! {
         Card {
             Block {

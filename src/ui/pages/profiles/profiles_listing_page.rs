@@ -1,7 +1,6 @@
 use crate::storage::ProfilesStorage;
-use crate::ui::components::utils::{
-    Block, Button, Card, Divider, Table, TableCell, TableRow, Title,
-};
+use crate::ui::components::profiles::ProfileListingItem;
+use crate::ui::components::utils::{Block, Button, Card, Divider, Table, TableCell, Title};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
@@ -36,7 +35,7 @@ pub fn ProfilesListingPage() -> Element {
                                 style: "primary",
                                 text: "Добавить профиль питания",
                                 on_click: move |_| {
-                                    navigator().push(Route::ProfileEditorPage {});
+                                    navigator().push(Route::ProfileAddPage {});
                                 },
                             }
                         }
@@ -54,12 +53,12 @@ pub fn ProfilesListingPage() -> Element {
                             },
                             body: rsx! {
                                 for profile in profiles.read().clone() {
-                                    TableRow {
-                                        TableCell {
-                                            p {
-                                                class: "profiles-listing__name",
-                                                "{profile.name()}",
-                                            }
+                                    ProfileListingItem {
+                                        profile,
+                                        on_select: move |profile_id| {
+                                            navigator().push(Route::ProfileEditPage {
+                                                profile_id,
+                                            });
                                         }
                                     }
                                 }

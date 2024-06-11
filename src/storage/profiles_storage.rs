@@ -16,7 +16,7 @@ impl ProfilesStorage {
             .connection()
             .execute(
                 "CREATE TABLE profiles (
-                    id INTEGER PRIMARY KEY autoincrement,
+                    id TEXT PRIMARY KEY,
                     data TEXT NOT NULL
                 )",
                 (),
@@ -35,10 +35,56 @@ impl ProfilesStorage {
 
         self.storage
             .connection()
-            .execute("INSERT INTO profiles (data) VALUES (?1)", params![data])
+            .execute(
+                "INSERT INTO profiles (id, data) VALUES (?1, ?2)",
+                params![profile.id(), data],
+            )
             .unwrap();
 
         self.storage.connection().last_insert_rowid()
+    }
+
+    pub fn get(&self, profile_id: String) -> Option<Profile> {
+        let query = format!("SELECT * FROM profiles WHERE id = \"{profile_id}\"");
+
+        let response = self.storage.connection().prepare(query.as_str());
+
+        match response {
+            Ok(mut result) => {
+                let profiles: Vec<Profile> = result
+                    .query_map([], |row| {
+                        let data: String = row.get(1).unwrap();
+
+                        Ok(serde_json::from_str::<Profile>(&data).expect("Failed to deserialize"))
+                    })
+                    .unwrap()
+                    .map(|profile| profile.unwrap())
+                    .collect();
+
+                if profiles.len() > 0 {
+                    return Some(profiles.get(0).unwrap().clone());
+                }
+
+                None
+            }
+            Err(error) => {
+                println!("profile get error {:#?}", error);
+
+                None
+            }
+        }
+    }
+
+    pub fn update(&self, profile: Profile) {
+        let data = serde_json::to_string(&profile).expect("Failed to serialize");
+
+        let query = "UPDATE profiles SET data = ?2 WHERE id = ?1";
+
+        let mut statement = self.storage.connection().prepare(query).unwrap();
+
+        let response = statement.execute(params![profile.id(), data]).unwrap();
+
+        println!("response {:#?}", response);
     }
 
     pub fn list(&self) -> Vec<Profile> {
@@ -48,8 +94,6 @@ impl ProfilesStorage {
             query
                 .unwrap()
                 .query_map([], |row| {
-                    // println!("{:#?}", row);
-
                     let data: String = row.get(1).unwrap();
 
                     Ok(serde_json::from_str::<Profile>(&data).expect("Failed to deserialize"))

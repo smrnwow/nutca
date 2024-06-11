@@ -49,12 +49,24 @@ impl Profile {
         profile
     }
 
+    pub fn set_id(&mut self, id: String) {
+        self.id = id;
+    }
+
     pub fn nutrients(&self) -> Vec<NutrientAmount> {
         Vec::from(self.nutrients)
     }
 
+    pub fn nutrients_array(&self) -> [NutrientAmount; 12] {
+        self.nutrients
+    }
+
     pub fn nitrogen_forms(&self) -> Vec<NitrogenForm> {
         Vec::from(self.nitrogen_forms)
+    }
+
+    pub fn nitrogen_forms_array(&self) -> [NitrogenForm; 2] {
+        self.nitrogen_forms
     }
 
     pub fn id(&self) -> String {
