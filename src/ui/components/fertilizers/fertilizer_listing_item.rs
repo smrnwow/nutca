@@ -1,30 +1,30 @@
 use crate::model::fertilizers::Fertilizer;
-use crate::ui::components::utils::{Badge, TableCell, TableRow};
+use crate::ui::components::utils::icons::More;
+use crate::ui::components::utils::{Badge, Button, Dropdown, DropdownOption, TableCell, TableRow};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerListingItemProps {
     fertilizer: Fertilizer,
-    on_select: EventHandler<String>,
+    on_open: EventHandler<String>,
+    on_delete: EventHandler<String>,
 }
 
 #[component]
 pub fn FertilizerListingItem(props: FertilizerListingItemProps) -> Element {
-    let fertilizer_id = props.fertilizer.id();
+    let fertilizer = use_signal(|| props.fertilizer);
 
     rsx! {
         TableRow {
-            on_click: move |_| props.on_select.call(fertilizer_id.clone()),
-
             TableCell {
                 p {
                     class: "fertilizer-listing__name",
-                    "{props.fertilizer.name()}",
+                    "{fertilizer.read().name()}",
                 }
 
                 p {
                     class: "fertilizer-listing__vendor",
-                    "Производитель: {props.fertilizer.vendor()}",
+                    "Производитель: {fertilizer.read().vendor()}",
                 }
             }
 
@@ -32,9 +32,39 @@ pub fn FertilizerListingItem(props: FertilizerListingItemProps) -> Element {
                 div {
                     class: "fertilizer-listing__nutrients",
 
-                    for nutrient in props.fertilizer.nutrients() {
+                    for nutrient in fertilizer.read().nutrients() {
                         Badge {
                             text: nutrient.symbol(),
+                        }
+                    }
+                }
+            }
+
+            TableCell {
+                Dropdown {
+                    header: rsx! {
+                        Button {
+                            style: "compact",
+
+                            More {}
+                        }
+                    },
+
+                    options: rsx! {
+                        DropdownOption {
+                            on_click: move |_| {
+                                props.on_open.call(fertilizer.read().id());
+                            },
+
+                            "Открыть",
+                        }
+
+                        DropdownOption {
+                            on_click: move |_| {
+                                props.on_delete.call(fertilizer.read().id());
+                            },
+
+                            "Удалить",
                         }
                     }
                 }

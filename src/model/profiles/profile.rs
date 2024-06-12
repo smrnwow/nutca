@@ -35,6 +35,22 @@ impl Profile {
         }
     }
 
+    pub fn from_another(another_profile: Profile) -> Self {
+        let mut profile = Self::new();
+
+        profile.set_name(another_profile.name());
+
+        for nutrient_amount in another_profile.nutrients() {
+            profile.add_nutrient(nutrient_amount);
+        }
+
+        for nitrogen_form in another_profile.nitrogen_forms() {
+            profile.add_nitrogen_form(nitrogen_form);
+        }
+
+        profile
+    }
+
     pub fn from(name: &str, components: Vec<Component>) -> Self {
         let mut profile = Self::new();
 

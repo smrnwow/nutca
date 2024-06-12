@@ -18,10 +18,18 @@ pub fn Dropdown(props: DropdownProps) -> Element {
                 {props.header},
             }
 
-            ul {
+            div {
                 class: "dropdown__list",
 
-                {props.options},
+                div {
+                    class: "dropdown__space",
+                }
+
+                ul {
+                    class: "dropdown__options",
+
+                    {props.options},
+                }
             }
         }
     }

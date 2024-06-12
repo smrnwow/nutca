@@ -23,8 +23,7 @@ pub struct SelectProps {
     value: (String, String),
     options: Vec<(String, String)>,
     on_search: Option<EventHandler<String>>,
-    on_select: EventHandler<String>,
-    on_cancel: EventHandler<()>,
+    on_change: EventHandler<String>,
 }
 
 #[component]
@@ -47,7 +46,7 @@ pub fn Select(props: SelectProps) -> Element {
         div {
             class: "select",
 
-            div {
+            label {
                 class: "select__header",
 
                 if render_value {
@@ -94,14 +93,13 @@ pub fn Select(props: SelectProps) -> Element {
                 }
 
                 if render_placeholder {
-                        button {
-                            class: "select__placeholder",
-                            onclick: move |_| {
-                                *opened.write() = true;
-                            },
+                    button {
+                        class: "select__placeholder",
+                        onclick: move |_| {
+                            *opened.write() = true;
+                        },
 
-                            "{placeholder}"
-                        }
+                        "{placeholder}"
                     }
                 }
 
@@ -111,7 +109,7 @@ pub fn Select(props: SelectProps) -> Element {
                     if value != String::new() {
                         button {
                             class: "select__cancel",
-                            onclick: move |_| props.on_cancel.call(()),
+                            onclick: move |_| props.on_change.call(String::new()),
 
                             Close {}
                         }
@@ -141,7 +139,7 @@ pub fn Select(props: SelectProps) -> Element {
                             onclick: move |_| {
                                 *opened.write() = false;
 
-                                props.on_select.call(option_value.clone());
+                                props.on_change.call(option_value.clone());
                             },
 
                             "{option_text}",
@@ -157,5 +155,6 @@ pub fn Select(props: SelectProps) -> Element {
                     }
                 }
             }
+        }
     }
 }

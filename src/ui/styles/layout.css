@@ -1,0 +1,18 @@
+/* column */
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* row */
+
+.row {
+    display: flex;
+    gap: 16px;
+}
+
+.row_align-end {
+    justify-content: flex-end;
+}

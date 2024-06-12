@@ -1,3 +1,4 @@
+use crate::model::fertilizers::FertilizersListing;
 use crate::storage::FertilizersStorage;
 use crate::ui::components::fertilizers::FertilizerListingItem;
 use crate::ui::components::utils::{Block, Button, Card, Divider, Search, Table, TableCell, Title};
@@ -9,7 +10,13 @@ use dioxus_router::prelude::*;
 pub fn FertilizersListingPage() -> Element {
     let fertilizers_storage = consume_context::<Signal<FertilizersStorage>>();
 
-    let fertilizers = use_memo(move || fertilizers_storage.read().list());
+    let mut fertilizers_listing = use_signal(move || {
+        let fertilizers = fertilizers_storage.read().list();
+
+        FertilizersListing::new(fertilizers)
+    });
+
+    let fertilizers = use_memo(move || fertilizers_listing.read().list());
 
     rsx! {
         div {
@@ -21,7 +28,7 @@ pub fn FertilizersListingPage() -> Element {
                 Card {
                     Block {
                         Title {
-                            text: "Список удобрений ({ fertilizers.len() })",
+                            text: "Список удобрений",
                         }
                     }
 
@@ -33,8 +40,8 @@ pub fn FertilizersListingPage() -> Element {
 
                             Search {
                                 placeholder: "найти удобрение",
-                                on_change: move |search_query| {
-                                    println!("on_search {}", search_query);
+                                on_change: move |query| {
+                                    fertilizers_listing.write().search(query);
                                 },
                             }
 
@@ -63,15 +70,23 @@ pub fn FertilizersListingPage() -> Element {
                                     width: "50%",
                                     "Состав",
                                 }
+
+                                TableCell {
+                                    width: "1%",
+                                }
                             },
                             body: rsx! {
                                 for fertilizer in fertilizers.read().clone() {
                                     FertilizerListingItem {
+                                        key: "{fertilizer.id()}",
                                         fertilizer,
-                                        on_select: move |fertilizer_id| {
+                                        on_open: move |fertilizer_id| {
                                             navigator().push(Route::FertilizerEditPage {
                                                 fertilizer_id
                                             });
+                                        },
+                                        on_delete: move |fertilizer_id| {
+                                            println!("delete fertilizer {}", fertilizer_id);
                                         },
                                     }
                                 }

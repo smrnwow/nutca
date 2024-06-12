@@ -51,6 +51,10 @@ impl SolutionBuilder {
     }
 
     pub fn update_profile_component(&mut self, component: Component) {
+        if self.profile.id().len() > 0 {
+            self.profile = Profile::from_another(self.profile.clone());
+        }
+
         self.profile.set_component(component);
     }
 
@@ -71,14 +75,11 @@ impl SolutionBuilder {
         self.profile.clone()
     }
 
-    pub fn contains_fertilizer(&self, fertilizer_id: String) -> bool {
-        let fertilizers_ids: Vec<String> = self
-            .fertilizers
+    pub fn fertilizers(&self) -> Vec<String> {
+        self.fertilizers
             .iter()
             .map(|fertilizer| fertilizer.id())
-            .collect();
-
-        fertilizers_ids.contains(&fertilizer_id)
+            .collect()
     }
 
     pub fn build(&self) -> Solution {

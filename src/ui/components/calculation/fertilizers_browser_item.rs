@@ -4,17 +4,18 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersBrowserItemProps {
-    fertilizer: Signal<Fertilizer>,
+    fertilizer: Fertilizer,
     selected: bool,
-    on_select: EventHandler<(bool, Fertilizer)>,
+    on_select: EventHandler<Fertilizer>,
+    on_remove: EventHandler<String>,
 }
 
 #[component]
 pub fn FertilizersBrowserItem(props: FertilizersBrowserItemProps) -> Element {
+    let fertilizer = use_signal(|| props.fertilizer);
+
     rsx! {
         TableRow {
-            key: "{props.fertilizer.read().id()}",
-
             TableCell {
                 div {
                     class: "fertilizers-browser__selector",
@@ -22,7 +23,13 @@ pub fn FertilizersBrowserItem(props: FertilizersBrowserItemProps) -> Element {
                     Checkbox {
                         checked: props.selected,
                         on_change: move |event: Event<FormData>| {
-                            props.on_select.call((event.value().parse().unwrap(), props.fertilizer.read().clone()));
+                            let selected: bool = event.value().parse().unwrap();
+
+                            if selected {
+                                props.on_select.call(fertilizer.read().clone());
+                            } else {
+                                props.on_remove.call(fertilizer.read().id());
+                            }
                         }
                     }
                 }
@@ -31,7 +38,7 @@ pub fn FertilizersBrowserItem(props: FertilizersBrowserItemProps) -> Element {
             TableCell {
                 p {
                     class: "fertilizers-browser__name",
-                    "{props.fertilizer.read().name()}",
+                    "{fertilizer.read().name()}",
                 }
             }
 
@@ -39,7 +46,7 @@ pub fn FertilizersBrowserItem(props: FertilizersBrowserItemProps) -> Element {
                 div {
                     class: "fertilizers-browser__nutrients",
 
-                    for nutrient in props.fertilizer.read().nutrients() {
+                    for nutrient in fertilizer.read().nutrients() {
                         Badge {
                             text: nutrient.symbol(),
                         }

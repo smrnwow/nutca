@@ -1,7 +1,7 @@
-use crate::model::fertilizers::Fertilizer;
-use crate::model::profiles::Profile;
+use crate::model::fertilizers::FertilizersListing;
+use crate::model::profiles::ProfilesListing;
 use crate::model::solutions::SolutionBuilder;
-use crate::storage::{FertilizersStorage, SolutionsStorage};
+use crate::storage::{FertilizersStorage, ProfilesStorage, SolutionsStorage};
 use crate::ui::components::solutions::{SolutionEditor, SolutionPreview};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
@@ -13,7 +13,7 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
 
     let fertilizers_storage = consume_context::<Signal<FertilizersStorage>>();
 
-    let fertilizers_list = fertilizers_storage.read().list();
+    let profiles_storage = consume_context::<Signal<ProfilesStorage>>();
 
     let mut solution_builder = use_signal(|| {
         let solution = solutions_storage.read().get(solution_id);
@@ -28,18 +28,23 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
 
     let profile = use_memo(move || solution_builder.read().profile());
 
-    let fertilizers: Memo<Vec<(bool, Fertilizer)>> = use_memo(move || {
-        let mut list: Vec<(bool, Fertilizer)> = vec![];
+    let selected_fertilizers = use_memo(move || solution_builder.read().fertilizers());
 
-        for fertilizer in fertilizers_list.clone() {
-            list.push((
-                solution_builder.read().contains_fertilizer(fertilizer.id()),
-                fertilizer,
-            ));
-        }
+    let mut profiles_listing = use_signal(move || {
+        let profiles_list = profiles_storage.read().list();
 
-        list
+        ProfilesListing::new(profiles_list)
     });
+
+    let profiles = use_memo(move || profiles_listing.read().list());
+
+    let mut fertilizers_listing = use_signal(move || {
+        let fertilizers = fertilizers_storage.read().list();
+
+        FertilizersListing::new(fertilizers)
+    });
+
+    let fertilizers = use_memo(move || fertilizers_listing.read().list());
 
     rsx! {
         section {
@@ -48,21 +53,28 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
             SolutionEditor {
                 solution,
                 fertilizers,
+                selected_fertilizers,
                 profile,
-                on_component_update: move |component| {
+                profiles,
+                on_profile_component_update: move |component| {
                     solution_builder.write().update_profile_component(component);
                 },
-                on_profile_change: move |profile: Option<Profile>| {
+                on_profile_change: move |profile_id: String| {
+                    let profile = profiles_listing.read().find(profile_id);
+
                     solution_builder.write().update_profile(profile);
                 },
-                on_fertilizer_add: move |fertilizer| {
+                on_profile_search: move |search_query| {
+                    profiles_listing.write().search(search_query);
+                },
+                on_fertilizer_select: move |fertilizer| {
                     solution_builder.write().add_fertilizer(fertilizer);
                 },
                 on_fertilizer_remove: move |fertilizer_id| {
                     solution_builder.write().remove_fertilizer(fertilizer_id);
                 },
                 on_fertilizer_search: move |search_query| {
-                    println!("on_fertilizer_search {}", search_query);
+                    fertilizers_listing.write().search(search_query);
                 },
                 on_water_amount_change: move |water_amount| {
                     println!("on_water_amount_change {}", water_amount);

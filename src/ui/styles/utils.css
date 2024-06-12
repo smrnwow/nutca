@@ -288,9 +288,11 @@
     border-top: 1px solid rgba(225, 228, 234, 1);
 }
 
+/*
 .table__row:hover {
     background-color: rgba(245, 247, 250, 1);
 }
+*/
 
 /*
     step
@@ -352,11 +354,24 @@
     position: relative;
 }
 
+.dropdown:focus-within .dropdown__list {
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.dropdown__space {
+    height: 8px;
+}
+
 .dropdown__list {
     position: absolute;
     display: none;
-    flex-direction: column;
     right: 0;
+}
+
+.dropdown__options {
+    flex-direction: column;
     gap: 4px;
     padding: 8px;
     border: 1px solid rgba(225, 228, 234, 1);
@@ -368,11 +383,13 @@
     box-shadow: 0px 16px 32px -12px rgba(14, 18, 27, 0.1);
 }
 
+/*
 .dropdown:hover .dropdown__list {
     display: flex;
-    margin-top: 0px;
+    flex-direction: column;
     z-index: 100;
 }
+*/
 
 .dropdown__item {
     position: relative;
@@ -412,6 +429,7 @@
 
 .select__header {
     position: relative;
+    display: block;
 }
 
 .select__controls {

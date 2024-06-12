@@ -5,8 +5,9 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersBrowserProps {
-    fertilizers: Memo<Vec<(bool, Fertilizer)>>,
-    on_add: EventHandler<Fertilizer>,
+    fertilizers: Memo<Vec<Fertilizer>>,
+    selected_fertilizers: Memo<Vec<String>>,
+    on_select: EventHandler<Fertilizer>,
     on_remove: EventHandler<String>,
     on_search: EventHandler<String>,
 }
@@ -46,17 +47,13 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
                         }
                     },
                     body: rsx! {
-                        for (selected, fertilizer) in props.fertilizers.read().clone() {
+                        for fertilizer in props.fertilizers.read().clone() {
                             FertilizersBrowserItem {
-                                fertilizer: Signal::new(fertilizer),
-                                selected,
-                                on_select: move |(selected, fertilizer)| {
-                                    if selected {
-                                        props.on_add.call(fertilizer);
-                                    } else {
-                                        props.on_remove.call(fertilizer.id());
-                                    }
-                                },
+                                key: "{fertilizer.id()}",
+                                selected: props.selected_fertilizers.read().contains(&fertilizer.id()),
+                                fertilizer,
+                                on_select: props.on_select,
+                                on_remove: props.on_remove,
                             }
                         }
                     },

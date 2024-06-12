@@ -1,8 +1,8 @@
 mod nutrient_requirement_input;
 pub use nutrient_requirement_input::NutrientRequirementInput;
 
-mod desired_profile;
-pub use desired_profile::DesiredProfile;
+// mod desired_profile;
+// pub use desired_profile::DesiredProfile;
 
 mod calculated_profile;
 pub use calculated_profile::CalculatedProfile;

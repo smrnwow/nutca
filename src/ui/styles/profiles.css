@@ -4,11 +4,6 @@
     width: 100%;
 }
 
-.profiles-listing-page__controls {
-    display: flex;
-    justify-content: flex-end;
-}
-
 .profiles-listing-page__listing {
     max-width: 660px;
     width: 100%;
