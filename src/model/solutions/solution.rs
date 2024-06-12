@@ -12,6 +12,7 @@ pub struct Solution {
     profile: Profile,
     value: Profile,
     fertilizers_weights: Vec<FertilizerWeight>,
+    water_amount: usize,
 }
 
 impl Solution {
@@ -22,6 +23,7 @@ impl Solution {
             profile,
             value: Profile::new(),
             fertilizers_weights: Vec::new(),
+            water_amount: 1,
         }
     }
 
@@ -32,6 +34,7 @@ impl Solution {
             profile: Profile::new(),
             value: Profile::new(),
             fertilizers_weights: Vec::new(),
+            water_amount: 1,
         }
     }
 
@@ -70,6 +73,10 @@ impl Solution {
         self.name = name;
     }
 
+    pub fn set_water_amount(&mut self, water_amount: usize) {
+        self.water_amount = water_amount;
+    }
+
     pub fn id(&self) -> String {
         self.id.clone()
     }
@@ -82,8 +89,20 @@ impl Solution {
         self.profile.clone()
     }
 
-    pub fn fertilizers(&self) -> &Vec<FertilizerWeight> {
-        &self.fertilizers_weights
+    pub fn fertilizers(&self) -> Vec<FertilizerWeight> {
+        self.fertilizers_weights
+            .iter()
+            .map(|fertilizer_weight| {
+                FertilizerWeight::new(
+                    fertilizer_weight.fertilizer.clone(),
+                    fertilizer_weight.weight * self.water_amount as f64,
+                )
+            })
+            .collect()
+    }
+
+    pub fn water_amount(&self) -> usize {
+        self.water_amount
     }
 }
 

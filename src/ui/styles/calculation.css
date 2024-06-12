@@ -12,11 +12,6 @@
     width: 50%;
 }
 
-.calculation-index__result-controls {
-    display: flex;
-    gap: 16px;
-}
-
 .calculation-index__title {
     color: rgba(26, 33, 43, 1);
     font-size: 16px;
@@ -39,25 +34,6 @@
     border-top: 1px solid rgba(225, 228, 234, 1)
 }
 
-/* desired profile */
-
-.desired-profile {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.desired-profile__text {
-    font-size: 12px;
-    margin: 0px;
-    margin-bottom: 4px;
-}
-
-.desired-profile__group {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-}
 
 /* calculated profile */ 
 
@@ -70,34 +46,6 @@
 
 .calculated-profile__group:last-child {
     margin-bottom: 0px;
-}
-
-/* water */
-
-.calculation-index__water-amount {
-    display: flex;
-    gap: 12px;
-    font-size: 12px;
-}
-
-.calculation-index__water-amount-label {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 12px;
-    /* border: 1px solid rgba(154, 168, 188, 1); */
-    border-radius: 12px;
-    box-sizing: border-box;
-    border: 1px solid rgba(225, 228, 234, 1);
-    box-shadow: 1px 2px 0px rgba(10, 13, 20, 0.03);
-}
-
-.calculation-index__water-amount-input {
-    padding: 0px;
-    margin: 0px;
-    border: none;
-    outline: none;
-    max-width: 76px;
 }
 
 /* fertilizers browser */

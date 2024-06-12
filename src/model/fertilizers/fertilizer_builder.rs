@@ -19,6 +19,7 @@ impl FertilizerBuilder {
             id: Uuid::new_v4().to_string(),
             name: String::new(),
             vendor: String::new(),
+
             source_type: SourceType::Label,
             label: Label::new(Units::Percent),
             formula: Formula::new(""),

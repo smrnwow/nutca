@@ -9,6 +9,7 @@ pub struct SolutionBuilder {
     name: String,
     profile: Profile,
     fertilizers: Vec<Fertilizer>,
+    water_amount: usize,
 }
 
 impl SolutionBuilder {
@@ -18,6 +19,7 @@ impl SolutionBuilder {
             name: String::new(),
             profile: Profile::new(),
             fertilizers: Vec::new(),
+            water_amount: 1,
         }
     }
 
@@ -27,6 +29,7 @@ impl SolutionBuilder {
             name: String::new(),
             profile,
             fertilizers: Vec::new(),
+            water_amount: 1,
         }
     }
 
@@ -40,6 +43,7 @@ impl SolutionBuilder {
                 .iter()
                 .map(|fertilizer_weight| fertilizer_weight.fertilizer.clone())
                 .collect(),
+            water_amount: 1,
         }
     }
 
@@ -71,6 +75,10 @@ impl SolutionBuilder {
             .collect();
     }
 
+    pub fn update_water_amount(&mut self, water_amount: usize) {
+        self.water_amount = water_amount;
+    }
+
     pub fn profile(&self) -> Profile {
         self.profile.clone()
     }
@@ -87,11 +95,13 @@ impl SolutionBuilder {
             if let Ok(mut solution) =
                 Calculation::new(self.profile.clone(), self.fertilizers.clone())
                     .unwrap()
-                    .solve(1)
+                    .solve()
             {
                 solution.set_id(self.id.clone());
 
                 solution.set_name(self.name.clone());
+
+                solution.set_water_amount(self.water_amount);
 
                 return solution;
             } else {
@@ -101,6 +111,8 @@ impl SolutionBuilder {
 
                 solution.set_name(self.name.clone());
 
+                solution.set_water_amount(self.water_amount);
+
                 solution
             }
         } else {
@@ -109,6 +121,8 @@ impl SolutionBuilder {
             solution.set_id(self.id.clone());
 
             solution.set_name(self.name.clone());
+
+            solution.set_water_amount(self.water_amount);
 
             solution
         }

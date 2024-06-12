@@ -1,6 +1,7 @@
 use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
 use crate::ui::components::calculation::{CalculatedProfile, FertilizersAmount};
+use crate::ui::components::layout::Row;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
 use dioxus::prelude::*;
 
@@ -43,9 +44,7 @@ pub fn SolutionPreview(props: SolutionPreviewProps) -> Element {
             Divider {}
 
             Block {
-                div {
-                    class: "calculation-index__result-controls",
-
+                Row {
                     TextField {
                         placeholder: "название раствора",
                         value: solution_name.read(),

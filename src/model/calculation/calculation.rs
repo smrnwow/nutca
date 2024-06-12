@@ -127,7 +127,7 @@ impl Calculation {
         };
     }
 
-    pub fn solve(&self, _: i32) -> Result<Solution, Error> {
+    pub fn solve(&self) -> Result<Solution, Error> {
         let result = DualSimplexSolver::default()
             .solve(self.problem.clone())
             .unwrap();

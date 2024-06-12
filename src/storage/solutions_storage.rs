@@ -110,7 +110,7 @@ impl SolutionsStorage {
                 SolutionsListing::new(solutions)
             }
 
-            Err(error) => SolutionsListing::new(vec![]),
+            Err(_) => SolutionsListing::new(vec![]),
         }
     }
 

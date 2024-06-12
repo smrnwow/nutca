@@ -573,3 +573,25 @@
 .select__check .icon {
     fill: rgba(82, 88, 102, 1);
 }
+
+/* number field */
+
+.number-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    box-sizing: border-box;
+    border: 1px solid rgba(225, 228, 234, 1);
+    box-shadow: 1px 2px 0px rgba(10, 13, 20, 0.03);
+}
+
+.number-field__input {
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    outline: none;
+    max-width: 76px;
+}

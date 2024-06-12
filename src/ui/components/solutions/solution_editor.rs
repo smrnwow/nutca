@@ -4,7 +4,9 @@ use crate::model::solutions::Solution;
 use crate::ui::components::calculation::FertilizersBrowser;
 use crate::ui::components::layout::Column;
 use crate::ui::components::profiles::ProfileForm;
-use crate::ui::components::utils::{Accordion, Block, Card, Divider, Select, Step, Title};
+use crate::ui::components::utils::{
+    Accordion, Block, Card, Divider, NumberField, Select, Step, Title,
+};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -20,7 +22,7 @@ pub struct SolutionEditorProps {
     on_fertilizer_select: EventHandler<Fertilizer>,
     on_fertilizer_remove: EventHandler<String>,
     on_fertilizer_search: EventHandler<String>,
-    on_water_amount_change: EventHandler<usize>,
+    on_water_amount_update: EventHandler<usize>,
 }
 
 #[component]
@@ -81,26 +83,10 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
                 },
 
                 body: rsx! {
-                    div {
-                        class: "calculation-index__water-amount",
-
-                        label {
-                            class: "calculation-index__water-amount-label",
-
-                            input {
-                                class: "calculation-index__water-amount-input",
-                                r#type: "number",
-                                value: 1,
-                                oninput: move |event| {
-                                    props.on_water_amount_change.call(event.value().parse().unwrap());
-                                },
-                            }
-
-                            span {
-                                class: "calculation-index__water-amount-tip",
-                                "литр"
-                            }
-                        }
+                    NumberField {
+                        value: props.solution.read().water_amount(),
+                        units: "литр",
+                        on_change: props.on_water_amount_update,
                     }
                 }
             }

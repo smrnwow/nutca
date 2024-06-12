@@ -9,6 +9,9 @@ pub use badge::Badge;
 mod checkbox;
 pub use checkbox::Checkbox;
 
+mod number_field;
+pub use number_field::NumberField;
+
 // mod radio_card;
 // pub use radio_card::RadioCard;
 

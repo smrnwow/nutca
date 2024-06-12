@@ -66,8 +66,8 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
                 on_fertilizer_search: move |search_query| {
                     fertilizers_listing.write().search(search_query);
                 },
-                on_water_amount_change: move |water_amount| {
-                    println!("on_water_amount_change {}", water_amount);
+                on_water_amount_update: move |water_amount| {
+                    solution_builder.write().update_water_amount(water_amount);
                 },
             }
         }

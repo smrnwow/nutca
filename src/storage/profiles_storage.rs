@@ -111,7 +111,7 @@ impl ProfilesStorage {
                 ProfilesListing::new(profiles)
             }
 
-            Err(error) => ProfilesListing::new(vec![]),
+            Err(_) => ProfilesListing::new(vec![]),
         }
     }
 
