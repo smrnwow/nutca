@@ -1,4 +1,3 @@
-use crate::model::solutions::SolutionsListing;
 use crate::storage::SolutionsStorage;
 use crate::ui::components::layout::Row;
 use crate::ui::components::solutions::SolutionListingItem;
@@ -11,11 +10,7 @@ use dioxus_router::prelude::*;
 pub fn SolutionsListingPage() -> Element {
     let solutions_storage = consume_context::<Signal<SolutionsStorage>>();
 
-    let mut solutions_listing = use_signal(|| {
-        let solutions = solutions_storage.read().list();
-
-        SolutionsListing::new(solutions)
-    });
+    let mut solutions_listing = use_signal(|| solutions_storage.read().list());
 
     let solutions = use_memo(move || solutions_listing.read().list());
 
@@ -37,8 +32,6 @@ pub fn SolutionsListingPage() -> Element {
 
                     Block {
                         Row {
-                            align: "end",
-
                             Search {
                                 placeholder: "найти раствор",
                                 on_change: move |search_query| {
@@ -84,7 +77,9 @@ pub fn SolutionsListingPage() -> Element {
                                             });
                                         },
                                         on_delete: move |solution_id| {
-                                            println!("delete solution {}", solution_id);
+                                            solutions_storage.read().delete(solution_id);
+
+                                            *solutions_listing.write() = solutions_storage.read().list();
                                         }
                                     }
                                 }

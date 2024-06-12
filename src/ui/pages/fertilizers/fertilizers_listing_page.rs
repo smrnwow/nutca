@@ -1,6 +1,6 @@
-use crate::model::fertilizers::FertilizersListing;
 use crate::storage::FertilizersStorage;
 use crate::ui::components::fertilizers::FertilizerListingItem;
+use crate::ui::components::layout::Row;
 use crate::ui::components::utils::{Block, Button, Card, Divider, Search, Table, TableCell, Title};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
@@ -10,11 +10,7 @@ use dioxus_router::prelude::*;
 pub fn FertilizersListingPage() -> Element {
     let fertilizers_storage = consume_context::<Signal<FertilizersStorage>>();
 
-    let mut fertilizers_listing = use_signal(move || {
-        let fertilizers = fertilizers_storage.read().list();
-
-        FertilizersListing::new(fertilizers)
-    });
+    let mut fertilizers_listing = use_signal(move || fertilizers_storage.read().list());
 
     let fertilizers = use_memo(move || fertilizers_listing.read().list());
 
@@ -35,9 +31,7 @@ pub fn FertilizersListingPage() -> Element {
                     Divider {}
 
                     Block {
-                        div {
-                            class: "fertilizer-listing__header",
-
+                        Row {
                             Search {
                                 placeholder: "найти удобрение",
                                 on_change: move |query| {
@@ -86,7 +80,9 @@ pub fn FertilizersListingPage() -> Element {
                                             });
                                         },
                                         on_delete: move |fertilizer_id| {
-                                            println!("delete fertilizer {}", fertilizer_id);
+                                            fertilizers_storage.read().delete(fertilizer_id);
+
+                                            *fertilizers_listing.write() = fertilizers_storage.read().list();
                                         },
                                     }
                                 }

@@ -1,5 +1,5 @@
 use super::provider::Provider;
-use crate::model::fertilizers::Fertilizer;
+use crate::model::fertilizers::{Fertilizer, FertilizersListing};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
 use rusqlite::params;
@@ -89,27 +89,37 @@ impl FertilizersStorage {
         println!("response {:#?}", response);
     }
 
-    pub fn list(&self) -> Vec<Fertilizer> {
-        let query = self
+    pub fn delete(&self, fertilizer_id: String) {
+        let query = "DELETE FROM fertilizers WHERE id = ?1";
+
+        let mut statement = self.storage.connection().prepare(query).unwrap();
+
+        statement.execute(params![fertilizer_id]).unwrap();
+    }
+
+    pub fn list(&self) -> FertilizersListing {
+        let statement = self
             .storage
             .connection()
             .prepare("SELECT * FROM fertilizers");
 
-        if query.is_ok() {
-            query
-                .unwrap()
-                .query_map([], |row| {
-                    // println!("{:#?}", row);
+        match statement {
+            Ok(mut query) => {
+                let fertilizers = query
+                    .query_map([], |row| {
+                        let data: String = row.get(1).unwrap();
 
-                    let data: String = row.get(1).unwrap();
+                        Ok(serde_json::from_str::<Fertilizer>(&data)
+                            .expect("Failed to deserialize"))
+                    })
+                    .unwrap()
+                    .map(|fertilizer| fertilizer.unwrap())
+                    .collect();
 
-                    Ok(serde_json::from_str::<Fertilizer>(&data).expect("Failed to deserialize"))
-                })
-                .unwrap()
-                .map(|fertilizer| fertilizer.unwrap())
-                .collect()
-        } else {
-            vec![]
+                FertilizersListing::new(fertilizers)
+            }
+
+            Err(_) => FertilizersListing::new(vec![]),
         }
     }
 

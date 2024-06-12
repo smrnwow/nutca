@@ -164,13 +164,6 @@
     width: 100%;
 }
 
-.fertilizer-listing__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-}
-
 .fertilizer-listing__name {
     margin: 0px 0px 4px 0px;
     font-size: 14px;

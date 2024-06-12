@@ -1,6 +1,6 @@
 use super::provider::Provider;
 use crate::model::chemistry::{NitrogenForm, NutrientAmount};
-use crate::model::profiles::{Component, Profile};
+use crate::model::profiles::{Component, Profile, ProfilesListing};
 use rusqlite::params;
 
 #[derive(Debug)]
@@ -82,27 +82,36 @@ impl ProfilesStorage {
 
         let mut statement = self.storage.connection().prepare(query).unwrap();
 
-        let response = statement.execute(params![profile.id(), data]).unwrap();
-
-        println!("response {:#?}", response);
+        statement.execute(params![profile.id(), data]).unwrap();
     }
 
-    pub fn list(&self) -> Vec<Profile> {
-        let query = self.storage.connection().prepare("SELECT * FROM profiles");
+    pub fn delete(&self, profile_id: String) {
+        let query = "DELETE FROM profiles WHERE id = ?1";
 
-        if query.is_ok() {
-            query
-                .unwrap()
-                .query_map([], |row| {
-                    let data: String = row.get(1).unwrap();
+        let mut statement = self.storage.connection().prepare(query).unwrap();
 
-                    Ok(serde_json::from_str::<Profile>(&data).expect("Failed to deserialize"))
-                })
-                .unwrap()
-                .map(|profile| profile.unwrap())
-                .collect()
-        } else {
-            vec![]
+        statement.execute(params![profile_id]).unwrap();
+    }
+
+    pub fn list(&self) -> ProfilesListing {
+        let statement = self.storage.connection().prepare("SELECT * FROM profiles");
+
+        match statement {
+            Ok(mut query) => {
+                let profiles = query
+                    .query_map([], |row| {
+                        let data: String = row.get(1).unwrap();
+
+                        Ok(serde_json::from_str::<Profile>(&data).expect("Failed to deserialize"))
+                    })
+                    .unwrap()
+                    .map(|profile| profile.unwrap())
+                    .collect();
+
+                ProfilesListing::new(profiles)
+            }
+
+            Err(error) => ProfilesListing::new(vec![]),
         }
     }
 

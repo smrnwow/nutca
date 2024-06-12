@@ -1,5 +1,3 @@
-use crate::model::fertilizers::FertilizersListing;
-use crate::model::profiles::ProfilesListing;
 use crate::model::solutions::SolutionBuilder;
 use crate::storage::{FertilizersStorage, ProfilesStorage, SolutionsStorage};
 use crate::ui::components::solutions::{SolutionEditor, SolutionPreview};
@@ -30,19 +28,11 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
 
     let selected_fertilizers = use_memo(move || solution_builder.read().fertilizers());
 
-    let mut profiles_listing = use_signal(move || {
-        let profiles_list = profiles_storage.read().list();
-
-        ProfilesListing::new(profiles_list)
-    });
+    let mut profiles_listing = use_signal(move || profiles_storage.read().list());
 
     let profiles = use_memo(move || profiles_listing.read().list());
 
-    let mut fertilizers_listing = use_signal(move || {
-        let fertilizers = fertilizers_storage.read().list();
-
-        FertilizersListing::new(fertilizers)
-    });
+    let mut fertilizers_listing = use_signal(move || fertilizers_storage.read().list());
 
     let fertilizers = use_memo(move || fertilizers_listing.read().list());
 

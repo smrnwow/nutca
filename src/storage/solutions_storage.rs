@@ -1,5 +1,5 @@
 use super::provider::Provider;
-use crate::model::solutions::Solution;
+use crate::model::solutions::{Solution, SolutionsListing};
 use rusqlite::params;
 
 #[derive(Debug)]
@@ -81,29 +81,36 @@ impl SolutionsStorage {
 
         let mut statement = self.storage.connection().prepare(query).unwrap();
 
-        let response = statement.execute(params![solution.id(), data]).unwrap();
-
-        println!("response {:#?}", response);
+        statement.execute(params![solution.id(), data]).unwrap();
     }
 
-    pub fn list(&self) -> Vec<Solution> {
-        let query = self.storage.connection().prepare("SELECT * FROM solutions");
+    pub fn delete(&self, solution_id: String) {
+        let query = "DELETE FROM solutions WHERE id = ?1";
 
-        if query.is_ok() {
-            query
-                .unwrap()
-                .query_map([], |row| {
-                    // println!("{:#?}", row);
+        let mut statement = self.storage.connection().prepare(query).unwrap();
 
-                    let data: String = row.get(1).unwrap();
+        statement.execute(params![solution_id]).unwrap();
+    }
 
-                    Ok(serde_json::from_str::<Solution>(&data).expect("Failed to deserialize"))
-                })
-                .unwrap()
-                .map(|profile| profile.unwrap())
-                .collect()
-        } else {
-            vec![]
+    pub fn list(&self) -> SolutionsListing {
+        let statement = self.storage.connection().prepare("SELECT * FROM solutions");
+
+        match statement {
+            Ok(mut query) => {
+                let solutions = query
+                    .query_map([], |row| {
+                        let data: String = row.get(1).unwrap();
+
+                        Ok(serde_json::from_str::<Solution>(&data).expect("Failed to deserialize"))
+                    })
+                    .unwrap()
+                    .map(|solution| solution.unwrap())
+                    .collect();
+
+                SolutionsListing::new(solutions)
+            }
+
+            Err(error) => SolutionsListing::new(vec![]),
         }
     }
 

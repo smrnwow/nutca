@@ -1,4 +1,3 @@
-use crate::model::profiles::ProfilesListing;
 use crate::storage::ProfilesStorage;
 use crate::ui::components::layout::Row;
 use crate::ui::components::profiles::ProfileListingItem;
@@ -11,11 +10,7 @@ use dioxus_router::prelude::*;
 pub fn ProfilesListingPage() -> Element {
     let profiles_storage = consume_context::<Signal<ProfilesStorage>>();
 
-    let mut profiles_listing = use_signal(|| {
-        let profiles = profiles_storage.read().list();
-
-        ProfilesListing::new(profiles)
-    });
+    let mut profiles_listing = use_signal(|| profiles_storage.read().list());
 
     let profiles = use_memo(move || profiles_listing.read().list());
 
@@ -37,8 +32,6 @@ pub fn ProfilesListingPage() -> Element {
 
                     Block {
                         Row {
-                            align: "end",
-
                             Search {
                                 placeholder: "найти профиль питания",
                                 on_change: move |search_query| {
@@ -87,7 +80,9 @@ pub fn ProfilesListingPage() -> Element {
                                             });
                                         },
                                         on_delete: move |profile_id| {
-                                            println!("delete profile {}", profile_id);
+                                            profiles_storage.read().delete(profile_id);
+
+                                            *profiles_listing.write() = profiles_storage.read().list();
                                         },
                                     }
                                 }
