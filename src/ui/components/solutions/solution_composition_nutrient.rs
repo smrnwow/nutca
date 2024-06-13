@@ -1,4 +1,4 @@
-use crate::model::chemistry::{NitrogenForm, NutrientAmount};
+use crate::model::chemistry::Nutrient;
 use crate::model::solutions::NutrientResult;
 use crate::ui::components::NutrientValue;
 use dioxus::prelude::*;
@@ -19,10 +19,8 @@ fn nutrient_class(nutrient_result: NutrientResult) -> String {
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionCompositionNutrientProps {
-    nutrient_amount: Option<NutrientAmount>,
-    nitrogen_form: Option<NitrogenForm>,
+    nutrient: Nutrient,
     nutrient_result: NutrientResult,
-    on_update: Option<EventHandler<NutrientAmount>>,
 }
 
 #[component]
@@ -31,18 +29,9 @@ pub fn SolutionCompositionNutrient(props: SolutionCompositionNutrientProps) -> E
         div {
             class: nutrient_class(props.nutrient_result),
 
-            if let Some(nutrient_amount) = props.nutrient_amount {
-                NutrientValue {
-                    symbol: nutrient_amount.symbol(),
-                    value: nutrient_amount.value(),
-                }
-            }
-
-            if let Some(nitrogen_form) = props.nitrogen_form {
-                NutrientValue {
-                    symbol: nitrogen_form.symbol(),
-                    value: nitrogen_form.value(),
-                }
+            NutrientValue {
+                symbol: props.nutrient.symbol(),
+                value: props.nutrient.value(),
             }
         }
     }

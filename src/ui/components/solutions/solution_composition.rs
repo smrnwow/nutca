@@ -1,4 +1,4 @@
-use crate::model::chemistry::{NitrogenForm, NutrientAmount};
+use crate::model::chemistry::Nutrient;
 use crate::model::solutions::Solution;
 use crate::ui::components::solutions::SolutionCompositionNutrient;
 use dioxus::prelude::*;
@@ -23,44 +23,44 @@ pub fn SolutionComposition(props: SolutionCompositionProps) -> Element {
                     class: "solution-composition-union",
 
                     SolutionCompositionNutrient {
-                        nutrient_amount: solution[NutrientAmount::Nitrogen(0.0)],
-                        nutrient_result: solution.nutrient_amount_result(NutrientAmount::Nitrogen(0.0)),
+                        nutrient: solution[Nutrient::Nitrogen(0.0)],
+                        nutrient_result: solution.nutrient_result(Nutrient::Nitrogen(0.0)),
                     }
 
                     SolutionCompositionNutrient {
-                        nitrogen_form: solution[NitrogenForm::Nitrate(0.0)],
-                        nutrient_result: solution.nitrogen_form_result(NitrogenForm::Nitrate(0.0)),
+                        nutrient: solution[Nutrient::NitrogenNitrate(0.0)],
+                        nutrient_result: solution.nutrient_result(Nutrient::NitrogenNitrate(0.0)),
                     }
 
                     SolutionCompositionNutrient {
-                        nitrogen_form: solution[NitrogenForm::Ammonium(0.0)],
-                        nutrient_result: solution.nitrogen_form_result(NitrogenForm::Ammonium(0.0)),
+                        nutrient: solution[Nutrient::NitrogenAmmonium(0.0)],
+                        nutrient_result: solution.nutrient_result(Nutrient::NitrogenAmmonium(0.0)),
                     }
                 }
 
                 SolutionCompositionNutrient {
-                    nutrient_amount: solution[NutrientAmount::Phosphorus(0.0)],
-                    nutrient_result: solution.nutrient_amount_result(NutrientAmount::Phosphorus(0.0)),
+                    nutrient: solution[Nutrient::Phosphorus(0.0)],
+                    nutrient_result: solution.nutrient_result(Nutrient::Phosphorus(0.0)),
                 }
 
                 SolutionCompositionNutrient {
-                    nutrient_amount: solution[NutrientAmount::Potassium(0.0)],
-                    nutrient_result: solution.nutrient_amount_result(NutrientAmount::Potassium(0.0)),
+                    nutrient: solution[Nutrient::Potassium(0.0)],
+                    nutrient_result: solution.nutrient_result(Nutrient::Potassium(0.0)),
                 }
 
                 SolutionCompositionNutrient {
-                    nutrient_amount: solution[NutrientAmount::Calcium(0.0)],
-                    nutrient_result: solution.nutrient_amount_result(NutrientAmount::Calcium(0.0)),
+                    nutrient: solution[Nutrient::Calcium(0.0)],
+                    nutrient_result: solution.nutrient_result(Nutrient::Calcium(0.0)),
                 }
 
                 SolutionCompositionNutrient {
-                    nutrient_amount: solution[NutrientAmount::Magnesium(0.0)],
-                    nutrient_result: solution.nutrient_amount_result(NutrientAmount::Magnesium(0.0)),
+                    nutrient: solution[Nutrient::Magnesium(0.0)],
+                    nutrient_result: solution.nutrient_result(Nutrient::Magnesium(0.0)),
                 }
 
                 SolutionCompositionNutrient {
-                    nutrient_amount: solution[NutrientAmount::Sulfur(0.0)],
-                    nutrient_result: solution.nutrient_amount_result(NutrientAmount::Sulfur(0.0)),
+                    nutrient: solution[Nutrient::Sulfur(0.0)],
+                    nutrient_result: solution.nutrient_result(Nutrient::Sulfur(0.0)),
                 }
             }
 
@@ -68,33 +68,33 @@ pub fn SolutionComposition(props: SolutionCompositionProps) -> Element {
                 class: "calculated-profile__group",
 
                 SolutionCompositionNutrient {
-                    nutrient_amount: solution[NutrientAmount::Iron(0.0)],
-                    nutrient_result: solution.nutrient_amount_result(NutrientAmount::Iron(0.0)),
+                    nutrient: solution[Nutrient::Iron(0.0)],
+                    nutrient_result: solution.nutrient_result(Nutrient::Iron(0.0)),
                 }
 
                 SolutionCompositionNutrient {
-                    nutrient_amount: solution[NutrientAmount::Manganese(0.0)],
-                    nutrient_result: solution.nutrient_amount_result(NutrientAmount::Manganese(0.0)),
+                    nutrient: solution[Nutrient::Manganese(0.0)],
+                    nutrient_result: solution.nutrient_result(Nutrient::Manganese(0.0)),
                 }
 
                 SolutionCompositionNutrient {
-                    nutrient_amount: solution[NutrientAmount::Copper(0.0)],
-                    nutrient_result: solution.nutrient_amount_result(NutrientAmount::Copper(0.0)),
+                    nutrient: solution[Nutrient::Copper(0.0)],
+                    nutrient_result: solution.nutrient_result(Nutrient::Copper(0.0)),
                 }
 
                 SolutionCompositionNutrient {
-                    nutrient_amount: solution[NutrientAmount::Zinc(0.0)],
-                    nutrient_result: solution.nutrient_amount_result(NutrientAmount::Zinc(0.0)),
+                    nutrient: solution[Nutrient::Zinc(0.0)],
+                    nutrient_result: solution.nutrient_result(Nutrient::Zinc(0.0)),
                 }
 
                 SolutionCompositionNutrient {
-                    nutrient_amount: solution[NutrientAmount::Boron(0.0)],
-                    nutrient_result: solution.nutrient_amount_result(NutrientAmount::Boron(0.0)),
+                    nutrient: solution[Nutrient::Boron(0.0)],
+                    nutrient_result: solution.nutrient_result(Nutrient::Boron(0.0)),
                 }
 
                 SolutionCompositionNutrient {
-                    nutrient_amount: solution[NutrientAmount::Molybdenum(0.0)],
-                    nutrient_result: solution.nutrient_amount_result(NutrientAmount::Molybdenum(0.0)),
+                    nutrient: solution[Nutrient::Molybdenum(0.0)],
+                    nutrient_result: solution.nutrient_result(Nutrient::Molybdenum(0.0)),
                 }
             }
         }

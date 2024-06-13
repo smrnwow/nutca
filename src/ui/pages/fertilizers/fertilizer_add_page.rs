@@ -46,9 +46,6 @@ pub fn FertilizerAddPage() -> Element {
                     on_label_component_update: move |component| {
                         fertilizer_builder.write().update_label_component(component);
                     },
-                    on_label_nitrogen_form_update: move |nitrogen_form| {
-                        fertilizer_builder.write().update_label_nitrogen_form(nitrogen_form);
-                    },
                     on_formula_update: move |formula: String| {
                         fertilizer_builder.write().update_formula(formula);
                     },

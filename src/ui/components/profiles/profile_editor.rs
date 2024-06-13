@@ -1,5 +1,6 @@
-use super::ProfileForm;
-use crate::model::profiles::{Component, Profile};
+use crate::model::chemistry::Nutrient;
+use crate::model::profiles::Profile;
+use crate::ui::components::profiles::ProfileForm;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
 use dioxus::prelude::*;
 
@@ -7,7 +8,7 @@ use dioxus::prelude::*;
 pub struct ProfileEditorProps {
     profile: Memo<Profile>,
     on_name_update: EventHandler<String>,
-    on_component_update: EventHandler<Component>,
+    on_nutrient_update: EventHandler<Nutrient>,
     on_save: EventHandler<()>,
     on_cancel: EventHandler<()>,
 }
@@ -41,7 +42,7 @@ pub fn ProfileEditor(props: ProfileEditorProps) -> Element {
             Block {
                 ProfileForm {
                     profile: props.profile,
-                    on_component_update: props.on_component_update,
+                    on_nutrient_update: props.on_nutrient_update,
                 }
             }
 

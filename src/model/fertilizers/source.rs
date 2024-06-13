@@ -3,7 +3,7 @@ use crate::model::labels::Label;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
-pub enum Composition {
+pub enum Source {
     Label(Label),
     Formula(Formula),
 }

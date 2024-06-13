@@ -1,5 +1,5 @@
 use super::{Element, NitrogenForms, Tokenizer};
-use crate::model::chemistry::{NitrogenForm, NutrientAmount, Symbol, Table};
+use crate::model::chemistry::{Nutrient, Symbol, Table};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -7,7 +7,7 @@ use std::collections::HashMap;
 pub struct Formula {
     formulation: String,
     elements: HashMap<Symbol, i32>,
-    nutrients: [NutrientAmount; 12],
+    nutrients: [Nutrient; 14],
     nitrogen_forms: NitrogenForms,
 }
 
@@ -17,31 +17,35 @@ impl Formula {
             formulation: formulation.to_string(),
             elements: HashMap::new(),
             nutrients: [
-                NutrientAmount::Nitrogen(0.0),
-                NutrientAmount::Phosphorus(0.0),
-                NutrientAmount::Potassium(0.0),
-                NutrientAmount::Calcium(0.0),
-                NutrientAmount::Magnesium(0.0),
-                NutrientAmount::Sulfur(0.0),
-                NutrientAmount::Iron(0.0),
-                NutrientAmount::Zinc(0.0),
-                NutrientAmount::Manganese(0.0),
-                NutrientAmount::Boron(0.0),
-                NutrientAmount::Copper(0.0),
-                NutrientAmount::Molybdenum(0.0),
+                Nutrient::Nitrogen(0.0),
+                Nutrient::NitrogenNitrate(0.0),
+                Nutrient::NitrogenAmmonium(0.0),
+                Nutrient::Phosphorus(0.0),
+                Nutrient::Potassium(0.0),
+                Nutrient::Calcium(0.0),
+                Nutrient::Magnesium(0.0),
+                Nutrient::Sulfur(0.0),
+                Nutrient::Iron(0.0),
+                Nutrient::Zinc(0.0),
+                Nutrient::Manganese(0.0),
+                Nutrient::Boron(0.0),
+                Nutrient::Copper(0.0),
+                Nutrient::Molybdenum(0.0),
             ],
             nitrogen_forms: NitrogenForms::new(),
         }
     }
 
-    pub fn nutrients(&self) -> Vec<NutrientAmount> {
-        Vec::from(self.nutrients)
-    }
+    pub fn nutrients(&self) -> Vec<Nutrient> {
+        let mut nutrients = Vec::from(self.nutrients);
 
-    pub fn nitrogen_forms(&self) -> Vec<NitrogenForm> {
-        let nitrogen_percent = self.nutrients[NutrientAmount::Nitrogen(0.0).index()].value();
+        let nitrogen_percent = self.nutrients[Nutrient::Nitrogen(0.0).index()].value();
 
-        self.nitrogen_forms.values(nitrogen_percent)
+        for nitrogen_form in self.nitrogen_forms.values(nitrogen_percent) {
+            nutrients.push(nitrogen_form);
+        }
+
+        nutrients
     }
 
     pub fn formulation(&self) -> String {
@@ -85,18 +89,18 @@ impl Formula {
             let percent = (element.atomic_weight() * atoms_count) / molar_mass * 100.;
 
             if let Some(nutrient_percent) = match element {
-                Symbol::Nitrogen => Some(NutrientAmount::Nitrogen(percent)),
-                Symbol::Phosphorus => Some(NutrientAmount::Phosphorus(percent)),
-                Symbol::Potassium => Some(NutrientAmount::Potassium(percent)),
-                Symbol::Calcium => Some(NutrientAmount::Calcium(percent)),
-                Symbol::Magnesium => Some(NutrientAmount::Magnesium(percent)),
-                Symbol::Sulfur => Some(NutrientAmount::Sulfur(percent)),
-                Symbol::Iron => Some(NutrientAmount::Iron(percent)),
-                Symbol::Zink => Some(NutrientAmount::Zinc(percent)),
-                Symbol::Manganese => Some(NutrientAmount::Manganese(percent)),
-                Symbol::Boron => Some(NutrientAmount::Boron(percent)),
-                Symbol::Copper => Some(NutrientAmount::Copper(percent)),
-                Symbol::Molybdenum => Some(NutrientAmount::Molybdenum(percent)),
+                Symbol::Nitrogen => Some(Nutrient::Nitrogen(percent)),
+                Symbol::Phosphorus => Some(Nutrient::Phosphorus(percent)),
+                Symbol::Potassium => Some(Nutrient::Potassium(percent)),
+                Symbol::Calcium => Some(Nutrient::Calcium(percent)),
+                Symbol::Magnesium => Some(Nutrient::Magnesium(percent)),
+                Symbol::Sulfur => Some(Nutrient::Sulfur(percent)),
+                Symbol::Iron => Some(Nutrient::Iron(percent)),
+                Symbol::Zink => Some(Nutrient::Zinc(percent)),
+                Symbol::Manganese => Some(Nutrient::Manganese(percent)),
+                Symbol::Boron => Some(Nutrient::Boron(percent)),
+                Symbol::Copper => Some(Nutrient::Copper(percent)),
+                Symbol::Molybdenum => Some(Nutrient::Molybdenum(percent)),
                 _ => None,
             } {
                 self.nutrients[nutrient_percent.index()] = nutrient_percent;
@@ -150,6 +154,6 @@ mod tests {
 
         println!("{:#?}", formula);
 
-        println!("{:#?}", formula.nitrogen_forms());
+        println!("{:#?}", formula.nutrients());
     }
 }

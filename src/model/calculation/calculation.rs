@@ -1,5 +1,5 @@
 use super::{Coefficient, Error};
-use crate::model::chemistry::{NitrogenForm, NutrientAmount};
+use crate::model::chemistry::Nutrient;
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
@@ -28,15 +28,8 @@ impl Calculation {
         desired_profile
             .nutrients()
             .iter()
-            .for_each(|required_amount| {
-                calculation.add_nutrient_amount_requirement(*required_amount);
-            });
-
-        desired_profile
-            .nitrogen_forms()
-            .iter()
-            .for_each(|nitrogen_form| {
-                calculation.add_nitrogen_form_requirement(*nitrogen_form);
+            .for_each(|required_nutrient| {
+                calculation.add_nutrient_requirement(*required_nutrient);
             });
 
         Ok(calculation)
@@ -52,76 +45,45 @@ impl Calculation {
             .add_var(1., Bound::Lower(0.), Some(variable_name))
             .unwrap();
 
-        fertilizer.nutrients().iter().for_each(|nutrient_amount| {
+        fertilizer.nutrients().iter().for_each(|nutrient| {
             self.coefficients
-                .push(Coefficient::NutrientAmount(*nutrient_amount, variable_id));
+                .push(Coefficient::Nutrient(*nutrient, variable_id));
         });
-
-        fertilizer
-            .nitrogen_forms()
-            .iter()
-            .for_each(|nitrogen_form| {
-                self.coefficients
-                    .push(Coefficient::NitrogenForm(*nitrogen_form, variable_id));
-            })
     }
 
-    fn add_nutrient_amount_requirement(&mut self, requirement: NutrientAmount) {
+    fn add_nutrient_requirement(&mut self, nutrient: Nutrient) {
         let coefficients = self
             .coefficients
             .iter()
             .filter(|coefficient| match coefficient {
-                Coefficient::NutrientAmount(nutrient_amount, _) => {
-                    nutrient_amount.index() == requirement.index()
+                Coefficient::Nutrient(nutrient_amount, _) => {
+                    nutrient_amount.index() == nutrient.index()
                 }
-
-                _ => false,
             })
             .map(|coefficient| coefficient.value())
             .collect();
 
-        match requirement {
-            NutrientAmount::Nitrogen(required_amount)
-            | NutrientAmount::Phosphorus(required_amount)
-            | NutrientAmount::Potassium(required_amount)
-            | NutrientAmount::Magnesium(required_amount)
-            | NutrientAmount::Calcium(required_amount)
-            | NutrientAmount::Boron(required_amount) => {
+        match nutrient {
+            Nutrient::Nitrogen(required_amount)
+            | Nutrient::NitrogenNitrate(required_amount)
+            | Nutrient::NitrogenAmmonium(required_amount)
+            | Nutrient::Phosphorus(required_amount)
+            | Nutrient::Potassium(required_amount)
+            | Nutrient::Magnesium(required_amount)
+            | Nutrient::Calcium(required_amount)
+            | Nutrient::Boron(required_amount) => {
                 self.problem
                     .add_constraint(coefficients, ConstraintOp::Eq, required_amount)
                     .unwrap();
             }
-            NutrientAmount::Sulfur(_)
-            | NutrientAmount::Iron(_)
-            | NutrientAmount::Manganese(_)
-            | NutrientAmount::Zinc(_)
-            | NutrientAmount::Copper(_)
-            | NutrientAmount::Molybdenum(_) => {
+            Nutrient::Sulfur(_)
+            | Nutrient::Iron(_)
+            | Nutrient::Manganese(_)
+            | Nutrient::Zinc(_)
+            | Nutrient::Copper(_)
+            | Nutrient::Molybdenum(_) => {
                 self.problem
                     .add_constraint(coefficients, ConstraintOp::Gte, 0.0)
-                    .unwrap();
-            }
-        };
-    }
-
-    fn add_nitrogen_form_requirement(&mut self, requirement: NitrogenForm) {
-        let coefficients = self
-            .coefficients
-            .iter()
-            .filter(|coefficient| match coefficient {
-                Coefficient::NitrogenForm(nitrogen_form, _) => {
-                    nitrogen_form.index() == requirement.index()
-                }
-
-                _ => false,
-            })
-            .map(|coefficient| coefficient.value())
-            .collect();
-
-        match requirement {
-            NitrogenForm::Nitrate(required_amount) | NitrogenForm::Ammonium(required_amount) => {
-                self.problem
-                    .add_constraint(coefficients, ConstraintOp::Eq, required_amount)
                     .unwrap();
             }
         };

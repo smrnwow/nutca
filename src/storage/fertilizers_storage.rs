@@ -3,6 +3,7 @@ use crate::model::fertilizers::{Fertilizer, FertilizersListing};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
 use rusqlite::params;
+use uuid::Uuid;
 
 #[derive(Debug)]
 pub struct FertilizersStorage {
@@ -126,27 +127,34 @@ impl FertilizersStorage {
     fn seed(&self) {
         let fertilizers = vec![
             Fertilizer::build()
-                .set_name(String::from("кальциевая селитра"))
-                .set_formula(Formula::from("Ca(NO3)2")),
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("кальциевая селитра"))
+                .with_formula(Formula::from("Ca(NO3)2")),
             Fertilizer::build()
-                .set_name(String::from("калиевая селитра"))
-                .set_formula(Formula::from("KNO3")),
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("калиевая селитра"))
+                .with_formula(Formula::from("KNO3")),
             Fertilizer::build()
-                .set_name(String::from("аммиачная селитра"))
-                .set_formula(Formula::from("NH4NO3")),
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("аммиачная селитра"))
+                .with_formula(Formula::from("NH4NO3")),
             Fertilizer::build()
-                .set_name(String::from("сульфат магния"))
-                .set_formula(Formula::from("MgSO4*7H2O")),
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("сульфат магния"))
+                .with_formula(Formula::from("MgSO4*7H2O")),
             Fertilizer::build()
-                .set_name(String::from("сульфат калия"))
-                .set_formula(Formula::from("K2SO4")),
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("сульфат калия"))
+                .with_formula(Formula::from("K2SO4")),
             Fertilizer::build()
-                .set_name(String::from("монофосфат калия"))
-                .set_formula(Formula::from("KH2PO4")),
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("монофосфат калия"))
+                .with_formula(Formula::from("KH2PO4")),
             Fertilizer::build()
-                .set_name(String::from("кристалон цветочный"))
-                .set_vendor(String::from("fertika"))
-                .set_label(Label::from(
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("кристалон цветочный"))
+                .with_vendor(String::from("fertika"))
+                .with_label(Label::from(
                     Units::Percent,
                     vec![
                         Component::Nitrogen(19.),
@@ -164,8 +172,9 @@ impl FertilizersStorage {
                     ],
                 )),
             Fertilizer::build()
-                .set_name(String::from("унифлор микро"))
-                .set_label(Label::from(
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("унифлор микро"))
+                .with_label(Label::from(
                     Units::WeightVolume,
                     vec![
                         Component::Magnesium(15000.),
@@ -178,23 +187,29 @@ impl FertilizersStorage {
                     ],
                 )),
             Fertilizer::build()
-                .set_name(String::from("хелат железа"))
-                .set_formula(Formula::from("C14H18N3O10Fe(NH4)2")),
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("хелат железа"))
+                .with_formula(Formula::from("C14H18N3O10Fe(NH4)2")),
             Fertilizer::build()
-                .set_name(String::from("сульфат марганца"))
-                .set_formula(Formula::from("MnSO4*H2O")),
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("сульфат марганца"))
+                .with_formula(Formula::from("MnSO4*H2O")),
             Fertilizer::build()
-                .set_name(String::from("борная кислота"))
-                .set_formula(Formula::from("H3BO3")),
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("борная кислота"))
+                .with_formula(Formula::from("H3BO3")),
             Fertilizer::build()
-                .set_name(String::from("молибденовая кислота"))
-                .set_formula(Formula::from("Na2MoO4*2H2O")),
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("молибденовая кислота"))
+                .with_formula(Formula::from("Na2MoO4*2H2O")),
             Fertilizer::build()
-                .set_name(String::from("сульфат цинка"))
-                .set_formula(Formula::from("ZnSO4*7H2O")),
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("сульфат цинка"))
+                .with_formula(Formula::from("ZnSO4*7H2O")),
             Fertilizer::build()
-                .set_name(String::from("сульфат меди"))
-                .set_formula(Formula::from("CuSO4*5H2O")),
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("сульфат меди"))
+                .with_formula(Formula::from("CuSO4*5H2O")),
         ];
 
         for fertilizer in fertilizers {

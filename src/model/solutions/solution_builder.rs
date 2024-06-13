@@ -1,6 +1,7 @@
 use crate::model::calculation::Calculation;
+use crate::model::chemistry::Nutrient;
 use crate::model::fertilizers::Fertilizer;
-use crate::model::profiles::{Component, Profile};
+use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
 use uuid::Uuid;
 
@@ -54,12 +55,12 @@ impl SolutionBuilder {
         }
     }
 
-    pub fn update_profile_component(&mut self, component: Component) {
+    pub fn update_profile_nutrient(&mut self, nutrient: Nutrient) {
         if self.profile.id().len() > 0 {
             self.profile = Profile::from_another(self.profile.clone());
         }
 
-        self.profile.set_component(component);
+        self.profile.set_nutrient(nutrient);
     }
 
     pub fn add_fertilizer(&mut self, fertilizer: Fertilizer) {

@@ -1,5 +1,5 @@
-mod profile_component_input;
-pub use profile_component_input::ProfileComponentInput;
+mod profile_nutrient_input;
+pub use profile_nutrient_input::ProfileNutrientInput;
 
 mod profile_editor;
 pub use profile_editor::ProfileEditor;

@@ -1,5 +1,6 @@
+use crate::model::chemistry::Nutrient;
 use crate::model::fertilizers::Fertilizer;
-use crate::model::profiles::{Component, Profile};
+use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
 use crate::ui::components::layout::Column;
 use crate::ui::components::profiles::ProfileForm;
@@ -18,7 +19,7 @@ pub struct SolutionEditorProps {
     selected_fertilizers: Memo<Vec<String>>,
     on_profile_change: EventHandler<String>,
     on_profile_search: EventHandler<String>,
-    on_profile_component_update: EventHandler<Component>,
+    on_profile_nutrient_update: EventHandler<Nutrient>,
     on_fertilizer_select: EventHandler<Fertilizer>,
     on_fertilizer_remove: EventHandler<String>,
     on_fertilizer_search: EventHandler<String>,
@@ -66,7 +67,7 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
 
                         ProfileForm {
                             profile: props.profile,
-                            on_component_update: props.on_profile_component_update,
+                            on_nutrient_update: props.on_profile_nutrient_update,
                         }
                     }
                 }

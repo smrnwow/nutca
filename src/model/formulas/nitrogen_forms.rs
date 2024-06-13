@@ -1,5 +1,5 @@
 use super::Element;
-use crate::model::chemistry::{NitrogenForm, Symbol};
+use crate::model::chemistry::{Nutrient, Symbol};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
@@ -62,21 +62,24 @@ impl NitrogenForms {
         (self.ammonium_form as f64) / (self.nitrogen_atoms as f64) * 100.
     }
 
-    pub fn values(&self, total_nitrogen_percent: f64) -> Vec<NitrogenForm> {
+    pub fn values(&self, total_nitrogen_percent: f64) -> Vec<Nutrient> {
         if total_nitrogen_percent > 0. {
             let mut nitrogen_forms = vec![];
 
-            nitrogen_forms.push(NitrogenForm::Nitrate(
+            nitrogen_forms.push(Nutrient::NitrogenNitrate(
                 total_nitrogen_percent * (self.nitrate() / 100.),
             ));
 
-            nitrogen_forms.push(NitrogenForm::Ammonium(
+            nitrogen_forms.push(Nutrient::NitrogenAmmonium(
                 total_nitrogen_percent * (self.ammonium() / 100.),
             ));
 
             nitrogen_forms
         } else {
-            vec![NitrogenForm::Nitrate(0.0), NitrogenForm::Ammonium(0.0)]
+            vec![
+                Nutrient::NitrogenNitrate(0.0),
+                Nutrient::NitrogenAmmonium(0.0),
+            ]
         }
     }
 }

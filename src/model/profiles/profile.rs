@@ -1,5 +1,4 @@
-use super::Component;
-use crate::model::chemistry::{NitrogenForm, NutrientAmount};
+use crate::model::chemistry::Nutrient;
 use serde::{Deserialize, Serialize};
 use std::ops::Index;
 use uuid::Uuid;
@@ -8,8 +7,7 @@ use uuid::Uuid;
 pub struct Profile {
     id: String,
     name: String,
-    nutrients: [NutrientAmount; 12],
-    nitrogen_forms: [NitrogenForm; 2],
+    nutrients: [Nutrient; 14],
 }
 
 impl Profile {
@@ -18,20 +16,21 @@ impl Profile {
             id: String::new(),
             name: String::new(),
             nutrients: [
-                NutrientAmount::Nitrogen(0.0),
-                NutrientAmount::Phosphorus(0.0),
-                NutrientAmount::Potassium(0.0),
-                NutrientAmount::Calcium(0.0),
-                NutrientAmount::Magnesium(0.0),
-                NutrientAmount::Sulfur(0.0),
-                NutrientAmount::Iron(0.0),
-                NutrientAmount::Manganese(0.0),
-                NutrientAmount::Copper(0.0),
-                NutrientAmount::Zinc(0.0),
-                NutrientAmount::Boron(0.0),
-                NutrientAmount::Molybdenum(0.0),
+                Nutrient::Nitrogen(0.0),
+                Nutrient::NitrogenNitrate(0.0),
+                Nutrient::NitrogenAmmonium(0.0),
+                Nutrient::Phosphorus(0.0),
+                Nutrient::Potassium(0.0),
+                Nutrient::Calcium(0.0),
+                Nutrient::Magnesium(0.0),
+                Nutrient::Sulfur(0.0),
+                Nutrient::Iron(0.0),
+                Nutrient::Manganese(0.0),
+                Nutrient::Copper(0.0),
+                Nutrient::Zinc(0.0),
+                Nutrient::Boron(0.0),
+                Nutrient::Molybdenum(0.0),
             ],
-            nitrogen_forms: [NitrogenForm::Nitrate(0.0), NitrogenForm::Ammonium(0.0)],
         }
     }
 
@@ -44,20 +43,16 @@ impl Profile {
             profile.add_nutrient(nutrient_amount);
         }
 
-        for nitrogen_form in another_profile.nitrogen_forms() {
-            profile.add_nitrogen_form(nitrogen_form);
-        }
-
         profile
     }
 
-    pub fn from(name: &str, components: Vec<Component>) -> Self {
+    pub fn from(name: &str, nutrients: Vec<Nutrient>) -> Self {
         let mut profile = Self::new();
 
         profile.set_name(name.to_string());
 
-        for component in components {
-            profile.set_component(component);
+        for nutrient in nutrients {
+            profile.set_nutrient(nutrient);
         }
 
         profile.create_id();
@@ -69,20 +64,12 @@ impl Profile {
         self.id = id;
     }
 
-    pub fn nutrients(&self) -> Vec<NutrientAmount> {
+    pub fn nutrients(&self) -> Vec<Nutrient> {
         Vec::from(self.nutrients)
     }
 
-    pub fn nutrients_array(&self) -> [NutrientAmount; 12] {
+    pub fn nutrients_array(&self) -> [Nutrient; 14] {
         self.nutrients
-    }
-
-    pub fn nitrogen_forms(&self) -> Vec<NitrogenForm> {
-        Vec::from(self.nitrogen_forms)
-    }
-
-    pub fn nitrogen_forms_array(&self) -> [NitrogenForm; 2] {
-        self.nitrogen_forms
     }
 
     pub fn id(&self) -> String {
@@ -101,75 +88,46 @@ impl Profile {
         self.name = name;
     }
 
-    pub fn set_nutrient(&mut self, nutrient_amount: NutrientAmount) {
-        self.nutrients[nutrient_amount.index()] = nutrient_amount;
+    pub fn set_nutrient(&mut self, nutrient: Nutrient) {
+        self.nutrients[nutrient.index()] = nutrient;
 
-        if let NutrientAmount::Nitrogen(value) = nutrient_amount {
-            let nitrate_value =
-                value - self.nitrogen_forms[NitrogenForm::Ammonium(0.0).index()].value();
-
-            self.nitrogen_forms[NitrogenForm::Nitrate(0.0).index()] =
-                NitrogenForm::Nitrate(nitrate_value);
-        }
-    }
-
-    pub fn add_nutrient(&mut self, nutrient_amount: NutrientAmount) {
-        self.nutrients[nutrient_amount.index()] =
-            self.nutrients[nutrient_amount.index()].add(nutrient_amount.value());
-    }
-
-    pub fn set_nitrogen_form(&mut self, nitrogen_form: NitrogenForm) {
-        self.nitrogen_forms[nitrogen_form.index()] = nitrogen_form;
-
-        match nitrogen_form {
-            NitrogenForm::Nitrate(value) => {
-                let ammonium_value =
-                    self.nutrients[NutrientAmount::Nitrogen(0.0).index()].value() - value;
-
-                self.nitrogen_forms[NitrogenForm::Ammonium(0.0).index()] =
-                    NitrogenForm::Ammonium(ammonium_value);
-            }
-
-            NitrogenForm::Ammonium(value) => {
+        match nutrient {
+            Nutrient::Nitrogen(value) => {
                 let nitrate_value =
-                    self.nutrients[NutrientAmount::Nitrogen(0.0).index()].value() - value;
+                    value - self.nutrients[Nutrient::NitrogenAmmonium(0.0).index()].value();
 
-                self.nitrogen_forms[NitrogenForm::Nitrate(0.0).index()] =
-                    NitrogenForm::Nitrate(nitrate_value);
+                self.nutrients[Nutrient::NitrogenNitrate(0.0).index()] =
+                    Nutrient::NitrogenNitrate(nitrate_value);
             }
+
+            Nutrient::NitrogenNitrate(value) => {
+                let ammonium_value =
+                    self.nutrients[Nutrient::Nitrogen(0.0).index()].value() - value;
+
+                self.nutrients[Nutrient::NitrogenAmmonium(0.0).index()] =
+                    Nutrient::NitrogenAmmonium(ammonium_value);
+            }
+
+            Nutrient::NitrogenAmmonium(value) => {
+                let nitrate_value = self.nutrients[Nutrient::Nitrogen(0.0).index()].value() - value;
+
+                self.nutrients[Nutrient::NitrogenNitrate(0.0).index()] =
+                    Nutrient::NitrogenNitrate(nitrate_value);
+            }
+
+            _ => {}
         }
     }
 
-    pub fn add_nitrogen_form(&mut self, nitrogen_form: NitrogenForm) {
-        self.nitrogen_forms[nitrogen_form.index()] =
-            self.nitrogen_forms[nitrogen_form.index()].add(nitrogen_form.value());
-    }
-
-    pub fn set_component(&mut self, component: Component) {
-        match component {
-            Component::Nutrient(nutrient_amount) => {
-                self.set_nutrient(nutrient_amount);
-            }
-
-            Component::NitrogenForm(nitrogen_form) => {
-                self.set_nitrogen_form(nitrogen_form);
-            }
-        }
+    pub fn add_nutrient(&mut self, nutrient: Nutrient) {
+        self.nutrients[nutrient.index()] = self.nutrients[nutrient.index()].add(nutrient.value());
     }
 }
 
-impl Index<NutrientAmount> for Profile {
-    type Output = NutrientAmount;
+impl Index<Nutrient> for Profile {
+    type Output = Nutrient;
 
-    fn index(&self, nutrient_amount: NutrientAmount) -> &Self::Output {
-        &self.nutrients[nutrient_amount.index()]
-    }
-}
-
-impl Index<NitrogenForm> for Profile {
-    type Output = NitrogenForm;
-
-    fn index(&self, nitrogen_form: NitrogenForm) -> &Self::Output {
-        &self.nitrogen_forms[nitrogen_form.index()]
+    fn index(&self, nutrient: Nutrient) -> &Self::Output {
+        &self.nutrients[nutrient.index()]
     }
 }

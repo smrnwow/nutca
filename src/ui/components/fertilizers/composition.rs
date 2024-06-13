@@ -1,5 +1,4 @@
 use super::{FertilizersFormula, FertilizersLabel};
-use crate::model::chemistry::NitrogenForm;
 use crate::model::fertilizers::SourceType;
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
@@ -20,7 +19,6 @@ pub struct FertilizersCompositionProps {
     formula: Memo<Formula>,
     on_source_type_update: EventHandler<SourceType>,
     on_label_component_update: EventHandler<Component>,
-    on_label_nitrogen_form_update: EventHandler<NitrogenForm>,
     on_label_units_update: EventHandler<Units>,
     on_formula_update: EventHandler<String>,
 }
@@ -65,7 +63,6 @@ pub fn FertilizersComposition(props: FertilizersCompositionProps) -> Element {
                             label: props.label,
                             on_label_units_update: props.on_label_units_update,
                             on_label_component_update: props.on_label_component_update,
-                            on_label_nitrogen_form_update: props.on_label_nitrogen_form_update,
                         }
                     }
                 }

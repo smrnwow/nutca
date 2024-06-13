@@ -1,8 +1,7 @@
-use super::FertilizerWeight;
-use crate::model::chemistry::{NitrogenForm, NutrientAmount};
+use crate::model::chemistry::Nutrient;
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
-use crate::model::solutions::NutrientResult;
+use crate::model::solutions::{FertilizerWeight, NutrientResult};
 use serde::{Deserialize, Serialize};
 use std::ops::Index;
 
@@ -56,28 +55,11 @@ impl Solution {
             self.value.add_nutrient(*nutrient);
         });
 
-        fertilizer_weight
-            .nitrogen_forms()
-            .iter()
-            .for_each(|nitrogen_form| {
-                self.value.add_nitrogen_form(*nitrogen_form);
-            });
-
         self.fertilizers_weights.push(fertilizer_weight);
     }
 
-    pub fn nutrient_amount_result(&self, nutrient_amount: NutrientAmount) -> NutrientResult {
-        NutrientResult::new(
-            self.profile[nutrient_amount].value(),
-            self.value[nutrient_amount].value(),
-        )
-    }
-
-    pub fn nitrogen_form_result(&self, nitrogen_form: NitrogenForm) -> NutrientResult {
-        NutrientResult::new(
-            self.profile[nitrogen_form].value(),
-            self.value[nitrogen_form].value(),
-        )
+    pub fn nutrient_result(&self, nutrient: Nutrient) -> NutrientResult {
+        NutrientResult::new(self.profile[nutrient].value(), self.value[nutrient].value())
     }
 
     pub fn set_id(&mut self, id: String) {
@@ -121,18 +103,10 @@ impl Solution {
     }
 }
 
-impl Index<NutrientAmount> for Solution {
-    type Output = NutrientAmount;
+impl Index<Nutrient> for Solution {
+    type Output = Nutrient;
 
-    fn index(&self, nutrient_amount: NutrientAmount) -> &Self::Output {
-        &self.value[nutrient_amount]
-    }
-}
-
-impl Index<NitrogenForm> for Solution {
-    type Output = NitrogenForm;
-
-    fn index(&self, nitrogen_form: NitrogenForm) -> &Self::Output {
-        &self.value[nitrogen_form]
+    fn index(&self, nutrient: Nutrient) -> &Self::Output {
+        &self.value[nutrient]
     }
 }

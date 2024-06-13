@@ -22,8 +22,8 @@ pub fn ProfileAddPage() -> Element {
 
                 ProfileEditor {
                     profile,
-                    on_component_update: move |component| {
-                        profile_builder.write().update_component(component);
+                    on_nutrient_update: move |nutrient| {
+                        profile_builder.write().update_nutrient(nutrient);
                     },
                     on_name_update: move |name| {
                         profile_builder.write().update_name(name);

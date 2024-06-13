@@ -1,6 +1,5 @@
-use super::{FertilizerComponentInput, NitrogenFormValue};
-use crate::model::chemistry::NitrogenForm;
 use crate::model::labels::{Component, Label, Units};
+use crate::ui::components::fertilizers::FertilizerComponentInput;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -8,7 +7,6 @@ pub struct FertilizersLabelProps {
     label: Memo<Label>,
     on_label_units_update: EventHandler<Units>,
     on_label_component_update: EventHandler<Component>,
-    on_label_nitrogen_form_update: EventHandler<NitrogenForm>,
 }
 
 #[component]
@@ -78,14 +76,14 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                         on_update: props.on_label_component_update,
                     }
 
-                    NitrogenFormValue {
-                        nitrogen_form: label[NitrogenForm::Nitrate(0.0)],
-                        on_update: props.on_label_nitrogen_form_update,
+                    FertilizerComponentInput {
+                        component: label[Component::NitrogenNitrate(0.0)],
+                        on_update: props.on_label_component_update,
                     }
 
-                    NitrogenFormValue {
-                        nitrogen_form: label[NitrogenForm::Ammonium(0.0)],
-                        on_update: props.on_label_nitrogen_form_update,
+                    FertilizerComponentInput {
+                        component: label[Component::NitrogenAmmonium(0.0)],
+                        on_update: props.on_label_component_update,
                     }
                 }
 

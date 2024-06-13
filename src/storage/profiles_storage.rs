@@ -1,6 +1,6 @@
 use super::provider::Provider;
-use crate::model::chemistry::{NitrogenForm, NutrientAmount};
-use crate::model::profiles::{Component, Profile, ProfilesListing};
+use crate::model::chemistry::Nutrient;
+use crate::model::profiles::{Profile, ProfilesListing};
 use rusqlite::params;
 
 #[derive(Debug)]
@@ -120,39 +120,39 @@ impl ProfilesStorage {
             Profile::from(
                 "grow",
                 vec![
-                    Component::Nutrient(NutrientAmount::Nitrogen(189.0)),
-                    Component::Nutrient(NutrientAmount::Phosphorus(39.0)),
-                    Component::Nutrient(NutrientAmount::Potassium(341.0)),
-                    Component::Nutrient(NutrientAmount::Calcium(170.0)),
-                    Component::Nutrient(NutrientAmount::Magnesium(48.0)),
-                    Component::Nutrient(NutrientAmount::Sulfur(150.0)),
-                    Component::Nutrient(NutrientAmount::Iron(2.0)),
-                    Component::Nutrient(NutrientAmount::Manganese(0.55)),
-                    Component::Nutrient(NutrientAmount::Copper(0.05)),
-                    Component::Nutrient(NutrientAmount::Zinc(0.33)),
-                    Component::Nutrient(NutrientAmount::Boron(0.28)),
-                    Component::Nutrient(NutrientAmount::Molybdenum(0.05)),
-                    Component::NitrogenForm(NitrogenForm::Nitrate(170.0)),
-                    Component::NitrogenForm(NitrogenForm::Ammonium(19.0)),
+                    Nutrient::Nitrogen(189.0),
+                    Nutrient::NitrogenNitrate(170.0),
+                    Nutrient::NitrogenAmmonium(19.0),
+                    Nutrient::Phosphorus(39.0),
+                    Nutrient::Potassium(341.0),
+                    Nutrient::Calcium(170.0),
+                    Nutrient::Magnesium(48.0),
+                    Nutrient::Sulfur(150.0),
+                    Nutrient::Iron(2.0),
+                    Nutrient::Manganese(0.55),
+                    Nutrient::Copper(0.05),
+                    Nutrient::Zinc(0.33),
+                    Nutrient::Boron(0.28),
+                    Nutrient::Molybdenum(0.05),
                 ],
             ),
             Profile::from(
                 "bloom",
                 vec![
-                    Component::Nutrient(NutrientAmount::Nitrogen(140.0)),
-                    Component::Nutrient(NutrientAmount::Phosphorus(39.0)),
-                    Component::Nutrient(NutrientAmount::Potassium(400.0)),
-                    Component::Nutrient(NutrientAmount::Calcium(190.0)),
-                    Component::Nutrient(NutrientAmount::Magnesium(60.0)),
-                    Component::Nutrient(NutrientAmount::Sulfur(150.0)),
-                    Component::Nutrient(NutrientAmount::Iron(2.0)),
-                    Component::Nutrient(NutrientAmount::Manganese(0.55)),
-                    Component::Nutrient(NutrientAmount::Copper(0.05)),
-                    Component::Nutrient(NutrientAmount::Zinc(0.33)),
-                    Component::Nutrient(NutrientAmount::Boron(0.28)),
-                    Component::Nutrient(NutrientAmount::Molybdenum(0.05)),
-                    Component::NitrogenForm(NitrogenForm::Nitrate(170.0)),
-                    Component::NitrogenForm(NitrogenForm::Ammonium(19.0)),
+                    Nutrient::Nitrogen(140.0),
+                    Nutrient::NitrogenNitrate(121.0),
+                    Nutrient::NitrogenAmmonium(19.0),
+                    Nutrient::Phosphorus(39.0),
+                    Nutrient::Potassium(400.0),
+                    Nutrient::Calcium(190.0),
+                    Nutrient::Magnesium(60.0),
+                    Nutrient::Sulfur(150.0),
+                    Nutrient::Iron(2.0),
+                    Nutrient::Manganese(0.55),
+                    Nutrient::Copper(0.05),
+                    Nutrient::Zinc(0.33),
+                    Nutrient::Boron(0.28),
+                    Nutrient::Molybdenum(0.05),
                 ],
             ),
         ];

@@ -1,8 +1,10 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, Copy, Clone, PartialEq)]
-pub enum NutrientAmount {
+pub enum Nutrient {
     Nitrogen(f64),
+    NitrogenNitrate(f64),
+    NitrogenAmmonium(f64),
     Phosphorus(f64),
     Potassium(f64),
     Calcium(f64),
@@ -16,27 +18,31 @@ pub enum NutrientAmount {
     Molybdenum(f64),
 }
 
-impl NutrientAmount {
+impl Nutrient {
     pub fn index(&self) -> usize {
         match self {
             Self::Nitrogen(_) => 0,
-            Self::Phosphorus(_) => 1,
-            Self::Potassium(_) => 2,
-            Self::Calcium(_) => 3,
-            Self::Magnesium(_) => 4,
-            Self::Sulfur(_) => 5,
-            Self::Iron(_) => 6,
-            Self::Manganese(_) => 7,
-            Self::Copper(_) => 8,
-            Self::Zinc(_) => 9,
-            Self::Boron(_) => 10,
-            Self::Molybdenum(_) => 11,
+            Self::NitrogenNitrate(_) => 1,
+            Self::NitrogenAmmonium(_) => 2,
+            Self::Phosphorus(_) => 3,
+            Self::Potassium(_) => 4,
+            Self::Calcium(_) => 5,
+            Self::Magnesium(_) => 6,
+            Self::Sulfur(_) => 7,
+            Self::Iron(_) => 8,
+            Self::Manganese(_) => 9,
+            Self::Copper(_) => 10,
+            Self::Zinc(_) => 11,
+            Self::Boron(_) => 12,
+            Self::Molybdenum(_) => 13,
         }
     }
 
     pub fn symbol(&self) -> &str {
         match self {
             Self::Nitrogen(_) => "N",
+            Self::NitrogenNitrate(_) => "NO3",
+            Self::NitrogenAmmonium(_) => "NH4",
             Self::Phosphorus(_) => "P",
             Self::Potassium(_) => "K",
             Self::Calcium(_) => "Ca",
@@ -54,6 +60,8 @@ impl NutrientAmount {
     pub fn value(&self) -> f64 {
         match self {
             Self::Nitrogen(value) => *value,
+            Self::NitrogenNitrate(value) => *value,
+            Self::NitrogenAmmonium(value) => *value,
             Self::Phosphorus(value) => *value,
             Self::Potassium(value) => *value,
             Self::Calcium(value) => *value,
@@ -71,6 +79,8 @@ impl NutrientAmount {
     pub fn new(&self, value: f64) -> Self {
         match self {
             Self::Nitrogen(_) => Self::Nitrogen(value),
+            Self::NitrogenNitrate(_) => Self::NitrogenNitrate(value),
+            Self::NitrogenAmmonium(_) => Self::NitrogenAmmonium(value),
             Self::Phosphorus(_) => Self::Phosphorus(value),
             Self::Potassium(_) => Self::Potassium(value),
             Self::Calcium(_) => Self::Calcium(value),
@@ -88,6 +98,8 @@ impl NutrientAmount {
     pub fn add(&self, amount: f64) -> Self {
         match self {
             Self::Nitrogen(value) => Self::Nitrogen(value + amount),
+            Self::NitrogenNitrate(value) => Self::NitrogenNitrate(value + amount),
+            Self::NitrogenAmmonium(value) => Self::NitrogenAmmonium(value + amount),
             Self::Phosphorus(value) => Self::Phosphorus(value + amount),
             Self::Potassium(value) => Self::Potassium(value + amount),
             Self::Calcium(value) => Self::Calcium(value + amount),

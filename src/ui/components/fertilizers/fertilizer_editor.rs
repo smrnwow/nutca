@@ -1,4 +1,3 @@
-use crate::model::chemistry::NitrogenForm;
 use crate::model::fertilizers::{Fertilizer, SourceType};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
@@ -17,7 +16,6 @@ pub struct FertilizerEditorProps {
     on_source_type_update: EventHandler<SourceType>,
     on_label_units_update: EventHandler<Units>,
     on_label_component_update: EventHandler<Component>,
-    on_label_nitrogen_form_update: EventHandler<NitrogenForm>,
     on_formula_update: EventHandler<String>,
     on_save: EventHandler<()>,
     on_cancel: EventHandler<()>,
@@ -63,7 +61,6 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
                     on_source_type_update: props.on_source_type_update,
                     on_label_units_update: props.on_label_units_update,
                     on_label_component_update: props.on_label_component_update,
-                    on_label_nitrogen_form_update: props.on_label_nitrogen_form_update,
                     on_formula_update: props.on_formula_update,
                 }
             }

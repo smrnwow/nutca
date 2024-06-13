@@ -46,8 +46,8 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
                 selected_fertilizers,
                 profile,
                 profiles,
-                on_profile_component_update: move |component| {
-                    solution_builder.write().update_profile_component(component);
+                on_profile_nutrient_update: move |nutrient| {
+                    solution_builder.write().update_profile_nutrient(nutrient);
                 },
                 on_profile_change: move |profile_id: String| {
                     let profile = profiles_listing.read().find(profile_id);

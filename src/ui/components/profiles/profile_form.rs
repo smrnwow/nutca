@@ -1,12 +1,12 @@
-use super::ProfileComponentInput;
-use crate::model::chemistry::{NitrogenForm, NutrientAmount};
-use crate::model::profiles::{Component, Profile};
+use crate::model::chemistry::Nutrient;
+use crate::model::profiles::Profile;
+use crate::ui::components::profiles::ProfileNutrientInput;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ProfileFormProps {
     profile: Memo<Profile>,
-    on_component_update: EventHandler<Component>,
+    on_nutrient_update: EventHandler<Nutrient>,
 }
 
 #[component]
@@ -31,64 +31,64 @@ pub fn ProfileForm(props: ProfileFormProps) -> Element {
                     div {
                         class: "profile-form__union",
 
-                        ProfileComponentInput {
-                            component: Component::Nutrient(profile[NutrientAmount::Nitrogen(0.0)]),
-                            on_update: props.on_component_update,
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::Nitrogen(0.0)],
+                            on_update: props.on_nutrient_update,
                         }
 
-                        ProfileComponentInput {
-                            component: Component::NitrogenForm(profile[NitrogenForm::Nitrate(0.0)]),
-                            on_update: props.on_component_update,
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::NitrogenNitrate(0.0)],
+                            on_update: props.on_nutrient_update,
                         }
 
-                        ProfileComponentInput {
-                            component: Component::NitrogenForm(profile[NitrogenForm::Ammonium(0.0)]),
-                            on_update: props.on_component_update,
-                        }
-                    }
-
-                    div {
-                        class: "profile-form__union",
-
-                        ProfileComponentInput {
-                            component: Component::Nutrient(profile[NutrientAmount::Phosphorus(0.0)]),
-                            on_update: props.on_component_update,
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::NitrogenAmmonium(0.0)],
+                            on_update: props.on_nutrient_update,
                         }
                     }
 
                     div {
                         class: "profile-form__union",
 
-                        ProfileComponentInput {
-                            component: Component::Nutrient(profile[NutrientAmount::Potassium(0.0)]),
-                            on_update: props.on_component_update,
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::Phosphorus(0.0)],
+                            on_update: props.on_nutrient_update,
                         }
                     }
 
                     div {
                         class: "profile-form__union",
 
-                        ProfileComponentInput {
-                            component: Component::Nutrient(profile[NutrientAmount::Calcium(0.0)]),
-                            on_update: props.on_component_update,
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::Potassium(0.0)],
+                            on_update: props.on_nutrient_update,
                         }
                     }
 
                     div {
                         class: "profile-form__union",
 
-                        ProfileComponentInput {
-                            component: Component::Nutrient(profile[NutrientAmount::Magnesium(0.0)]),
-                            on_update: props.on_component_update,
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::Calcium(0.0)],
+                            on_update: props.on_nutrient_update,
                         }
                     }
 
                     div {
                         class: "profile-form__union",
 
-                        ProfileComponentInput {
-                            component: Component::Nutrient(profile[NutrientAmount::Sulfur(0.0)]),
-                            on_update: props.on_component_update,
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::Magnesium(0.0)],
+                            on_update: props.on_nutrient_update,
+                        }
+                    }
+
+                    div {
+                        class: "profile-form__union",
+
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::Sulfur(0.0)],
+                            on_update: props.on_nutrient_update,
                         }
                     }
                 }
@@ -108,54 +108,54 @@ pub fn ProfileForm(props: ProfileFormProps) -> Element {
                     div {
                         class: "profile-form__union",
 
-                        ProfileComponentInput {
-                            component: Component::Nutrient(profile[NutrientAmount::Iron(0.0)]),
-                            on_update: props.on_component_update,
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::Iron(0.0)],
+                            on_update: props.on_nutrient_update,
                         }
                     }
 
                     div {
                         class: "profile-form__union",
 
-                        ProfileComponentInput {
-                            component: Component::Nutrient(profile[NutrientAmount::Manganese(0.0)]),
-                            on_update: props.on_component_update,
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::Manganese(0.0)],
+                            on_update: props.on_nutrient_update,
                         }
                     }
 
                     div {
                         class: "profile-form__union",
 
-                        ProfileComponentInput {
-                            component: Component::Nutrient(profile[NutrientAmount::Copper(0.0)]),
-                            on_update: props.on_component_update,
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::Copper(0.0)],
+                            on_update: props.on_nutrient_update,
                         }
                     }
 
                     div {
                         class: "profile-form__union",
 
-                        ProfileComponentInput {
-                            component: Component::Nutrient(profile[NutrientAmount::Zinc(0.0)]),
-                            on_update: props.on_component_update,
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::Zinc(0.0)],
+                            on_update: props.on_nutrient_update,
                         }
                     }
 
                     div {
                         class: "profile-form__union",
 
-                        ProfileComponentInput {
-                            component: Component::Nutrient(profile[NutrientAmount::Boron(0.0)]),
-                            on_update: props.on_component_update,
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::Boron(0.0)],
+                            on_update: props.on_nutrient_update,
                         }
                     }
 
                     div {
                         class: "profile-form__union",
 
-                        ProfileComponentInput {
-                            component: Component::Nutrient(profile[NutrientAmount::Molybdenum(0.0)]),
-                            on_update: props.on_component_update,
+                        ProfileNutrientInput {
+                            nutrient: profile[Nutrient::Molybdenum(0.0)],
+                            on_update: props.on_nutrient_update,
                         }
                     }
                 }
