@@ -2,6 +2,7 @@ use super::FertilizerWeight;
 use crate::model::chemistry::{NitrogenForm, NutrientAmount};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
+use crate::model::solutions::NutrientResult;
 use serde::{Deserialize, Serialize};
 use std::ops::Index;
 
@@ -63,6 +64,20 @@ impl Solution {
             });
 
         self.fertilizers_weights.push(fertilizer_weight);
+    }
+
+    pub fn nutrient_amount_result(&self, nutrient_amount: NutrientAmount) -> NutrientResult {
+        NutrientResult::new(
+            self.profile[nutrient_amount].value(),
+            self.value[nutrient_amount].value(),
+        )
+    }
+
+    pub fn nitrogen_form_result(&self, nitrogen_form: NitrogenForm) -> NutrientResult {
+        NutrientResult::new(
+            self.profile[nitrogen_form].value(),
+            self.value[nitrogen_form].value(),
+        )
     }
 
     pub fn set_id(&mut self, id: String) {

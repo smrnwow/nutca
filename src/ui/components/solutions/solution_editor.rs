@@ -1,9 +1,9 @@
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::{Component, Profile};
 use crate::model::solutions::Solution;
-use crate::ui::components::calculation::FertilizersBrowser;
 use crate::ui::components::layout::Column;
 use crate::ui::components::profiles::ProfileForm;
+use crate::ui::components::solutions::FertilizersBrowser;
 use crate::ui::components::utils::{
     Accordion, Block, Card, Divider, NumberField, Select, Step, Title,
 };

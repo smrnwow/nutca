@@ -6,12 +6,12 @@ fn round(value: f64) -> String {
 }
 
 #[derive(Props, PartialEq, Clone)]
-pub struct FertilizersAmountProps {
+pub struct SolutionFertilizersProps {
     solution: Memo<Solution>,
 }
 
 #[component]
-pub fn FertilizersAmount(props: FertilizersAmountProps) -> Element {
+pub fn SolutionFertilizers(props: SolutionFertilizersProps) -> Element {
     let solution = props.solution.read();
 
     rsx! {

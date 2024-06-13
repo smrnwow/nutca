@@ -1,4 +1,3 @@
-pub mod calculation;
 pub mod fertilizers;
 pub mod layout;
 pub mod profiles;

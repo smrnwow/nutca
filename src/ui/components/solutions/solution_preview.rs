@@ -1,7 +1,7 @@
 use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
-use crate::ui::components::calculation::{CalculatedProfile, FertilizersAmount};
 use crate::ui::components::layout::Row;
+use crate::ui::components::solutions::{SolutionComposition, SolutionFertilizers};
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
 use dioxus::prelude::*;
 
@@ -27,8 +27,7 @@ pub fn SolutionPreview(props: SolutionPreviewProps) -> Element {
             Divider {}
 
             Block {
-                CalculatedProfile {
-                    profile: props.profile,
+                SolutionComposition {
                     solution: props.solution,
                 }
             }
@@ -36,7 +35,7 @@ pub fn SolutionPreview(props: SolutionPreviewProps) -> Element {
             Divider {}
 
             Block {
-                FertilizersAmount {
+                SolutionFertilizers {
                     solution: props.solution,
                 }
             }

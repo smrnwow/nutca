@@ -8,6 +8,7 @@ fn round(value: f64) -> String {
 pub struct NutrientValueProps {
     symbol: String,
     value: f64,
+    color: Option<String>,
     on_change: Option<EventHandler<f64>>,
 }
 
