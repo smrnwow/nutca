@@ -145,14 +145,16 @@
     box-sizing: border-box;
 }
 
-.fertilizers-amount__fertilizer:last-child {
-    margin-bottom: 0px;
-}
-
 .fertilizers-amount__fertilizer-name {
     margin: 0px;
 }
 
 .fertilizers-amount__fertilizer-weight {
     margin: 0px;
+}
+
+.fertilizers-amount__total {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 12px;
 }

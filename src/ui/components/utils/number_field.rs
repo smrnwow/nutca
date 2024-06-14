@@ -18,7 +18,7 @@ pub fn NumberField(props: NumberFieldProps) -> Element {
                 r#type: "number",
                 value: "{props.value}",
                 oninput: move |event| {
-                    props.on_change.call(event.value().parse().unwrap());
+                    props.on_change.call(event.value().parse().unwrap_or(1));
                 },
             }
 

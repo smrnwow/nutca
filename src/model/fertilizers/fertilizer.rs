@@ -118,6 +118,10 @@ impl Fertilizer {
             .map(|nutrient_amount| *nutrient_amount)
             .collect()
     }
+
+    pub fn is_complex(&self) -> bool {
+        self.nutrients.len() > 3
+    }
 }
 
 impl Index<Nutrient> for Fertilizer {

@@ -49,6 +49,14 @@ impl Solution {
     }
 
     pub fn add_fertilizer_weight(&mut self, fertilizer: Fertilizer, amount: f64) {
+        let amount = {
+            if amount < 0. {
+                0.
+            } else {
+                amount
+            }
+        };
+
         let fertilizer_weight = FertilizerWeight::new(fertilizer, amount);
 
         fertilizer_weight.nutrients().iter().for_each(|nutrient| {
@@ -59,7 +67,11 @@ impl Solution {
     }
 
     pub fn nutrient_result(&self, nutrient: Nutrient) -> NutrientResult {
-        NutrientResult::new(self.profile[nutrient].value(), self.value[nutrient].value())
+        let result_value = format!("{:.3}", self.value[nutrient].value())
+            .parse()
+            .unwrap();
+
+        NutrientResult::new(self.profile[nutrient].value(), result_value)
     }
 
     pub fn set_id(&mut self, id: String) {

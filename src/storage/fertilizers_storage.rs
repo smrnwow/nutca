@@ -128,31 +128,35 @@ impl FertilizersStorage {
         let fertilizers = vec![
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("кальциевая селитра"))
-                .with_formula(Formula::from("Ca(NO3)2")),
+                .with_name(String::from("Кальциевая селитра (3-х водная)"))
+                .with_formula(Formula::from("Ca(NO3)2*3H20")),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("калиевая селитра"))
+                .with_name(String::from("Кальциевая селитра (4-х водная)"))
+                .with_formula(Formula::from("Ca(NO3)2*4H20")),
+            Fertilizer::build()
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(String::from("Калиевая селитра"))
                 .with_formula(Formula::from("KNO3")),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("аммиачная селитра"))
+                .with_name(String::from("Аммиачная селитра"))
                 .with_formula(Formula::from("NH4NO3")),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("сульфат магния"))
+                .with_name(String::from("Сульфат магния"))
                 .with_formula(Formula::from("MgSO4*7H2O")),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("сульфат калия"))
+                .with_name(String::from("Сульфат калия"))
                 .with_formula(Formula::from("K2SO4")),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("монофосфат калия"))
+                .with_name(String::from("Монофосфат калия"))
                 .with_formula(Formula::from("KH2PO4")),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("кристалон цветочный"))
+                .with_name(String::from("Кристалон цветочный"))
                 .with_vendor(String::from("fertika"))
                 .with_label(Label::from(
                     Units::Percent,
@@ -173,7 +177,7 @@ impl FertilizersStorage {
                 )),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("унифлор микро"))
+                .with_name(String::from("Унифлор микро"))
                 .with_label(Label::from(
                     Units::WeightVolume,
                     vec![
@@ -188,27 +192,27 @@ impl FertilizersStorage {
                 )),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("хелат железа"))
-                .with_formula(Formula::from("C14H18N3O10Fe(NH4)2")),
+                .with_name(String::from("Хелат железа DTPA"))
+                .with_label(Label::from(Units::Percent, vec![Component::Iron(10.)])),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("сульфат марганца"))
+                .with_name(String::from("Сульфат марганца"))
                 .with_formula(Formula::from("MnSO4*H2O")),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("борная кислота"))
+                .with_name(String::from("Борная кислота"))
                 .with_formula(Formula::from("H3BO3")),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("молибденовая кислота"))
+                .with_name(String::from("Молибденовая кислота"))
                 .with_formula(Formula::from("Na2MoO4*2H2O")),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("сульфат цинка"))
+                .with_name(String::from("Сульфат цинка"))
                 .with_formula(Formula::from("ZnSO4*7H2O")),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("сульфат меди"))
+                .with_name(String::from("Сульфат меди"))
                 .with_formula(Formula::from("CuSO4*5H2O")),
         ];
 

@@ -1,4 +1,4 @@
-use crate::model::calculation::{Calculation, Solver};
+use crate::model::calculation::Solver;
 use crate::model::chemistry::Nutrient;
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
@@ -93,35 +93,17 @@ impl SolutionBuilder {
 
     pub fn build(&self) -> Solution {
         if self.fertilizers.len() > 0 {
-            let solution = Solver::new(self.profile.clone(), self.fertilizers.clone())
-                .unwrap()
-                .solve();
+            let mut solution = Solver::new(self.profile.clone(), self.fertilizers.clone())
+                .solve()
+                .unwrap();
 
-            // println!("solution {:#?}", solution);
+            solution.set_id(self.id.clone());
 
-            if let Ok(mut solution) =
-                Calculation::new(self.profile.clone(), self.fertilizers.clone())
-                    .unwrap()
-                    .solve()
-            {
-                solution.set_id(self.id.clone());
+            solution.set_name(self.name.clone());
 
-                solution.set_name(self.name.clone());
+            solution.set_water_amount(self.water_amount);
 
-                solution.set_water_amount(self.water_amount);
-
-                return solution;
-            } else {
-                let mut solution = Solution::empty(self.fertilizers.clone());
-
-                solution.set_id(self.id.clone());
-
-                solution.set_name(self.name.clone());
-
-                solution.set_water_amount(self.water_amount);
-
-                solution
-            }
+            return solution;
         } else {
             let mut solution = Solution::empty(self.fertilizers.clone());
 

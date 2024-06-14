@@ -58,7 +58,7 @@ impl Calculation {
 
         let variable_id = self
             .problem
-            .add_var(1., Bound::Lower(0.), Some(variable_name))
+            .add_var(1., Bound::Lower(0.0), Some(variable_name))
             .unwrap();
 
         fertilizer.nutrients().iter().for_each(|nutrient| {
@@ -78,17 +78,17 @@ impl Calculation {
                 | Nutrient::Potassium(required_amount)
                 | Nutrient::Magnesium(required_amount)
                 | Nutrient::Calcium(required_amount)
-                | Nutrient::Boron(required_amount) => {
+                | Nutrient::Iron(required_amount)
+                | Nutrient::Manganese(required_amount)
+                | Nutrient::Zinc(required_amount)
+                | Nutrient::Copper(required_amount)
+                | Nutrient::Boron(required_amount)
+                | Nutrient::Molybdenum(required_amount) => {
                     self.problem
                         .add_constraint(coefficients, ConstraintOp::Eq, required_amount)
                         .unwrap();
                 }
-                Nutrient::Sulfur(_)
-                | Nutrient::Iron(_)
-                | Nutrient::Manganese(_)
-                | Nutrient::Zinc(_)
-                | Nutrient::Copper(_)
-                | Nutrient::Molybdenum(_) => {
+                Nutrient::Sulfur(_) => {
                     self.problem
                         .add_constraint(coefficients, ConstraintOp::Gte, 0.0)
                         .unwrap();
@@ -98,7 +98,7 @@ impl Calculation {
     }
 
     pub fn solve(&self) -> Result<Solution, Error> {
-        // println!("{}", self.problem);
+        println!("{}", self.problem);
 
         let result = DualSimplexSolver::default()
             .solve(self.problem.clone())

@@ -1,8 +1,18 @@
-use crate::model::solutions::Solution;
+use crate::model::solutions::{FertilizerWeight, Solution};
 use dioxus::prelude::*;
 
 fn round(value: f64) -> String {
     format!("{:.3}", value)
+}
+
+fn total_weight(fertilizers: &Vec<FertilizerWeight>) -> String {
+    let mut total_weight = 0.0;
+
+    fertilizers.iter().for_each(|fertilizer_weight| {
+        total_weight += fertilizer_weight.weight;
+    });
+
+    round(total_weight)
 }
 
 #[derive(Props, PartialEq, Clone)]
@@ -38,6 +48,12 @@ pub fn SolutionFertilizers(props: SolutionFertilizersProps) -> Element {
                             "{round(fertilizer_weight.weight)} г",
                         }
                     }
+                }
+
+                div {
+                    class: "fertilizers-amount__total",
+
+                    "Общий объем удобрений: {total_weight(&solution.fertilizers())}",
                 }
             }
         }
