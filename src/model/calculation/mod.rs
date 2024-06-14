@@ -1,8 +1,7 @@
 mod calculation;
-pub use calculation::Calculation;
-
-mod coefficient;
-pub use coefficient::Coefficient;
-
 mod error;
+mod solver;
+
+pub use calculation::Calculation;
 pub use error::Error;
+pub use solver::Solver;

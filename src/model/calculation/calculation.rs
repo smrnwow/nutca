@@ -1,31 +1,47 @@
-use super::{Coefficient, Error};
+use crate::model::calculation::Error;
 use crate::model::chemistry::Nutrient;
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
-use ellp::{Bound, ConstraintOp, DualSimplexSolver, Problem, SolverResult};
+use ellp::{problem::VariableId, Bound, ConstraintOp, DualSimplexSolver, Problem, SolverResult};
 
 pub struct Calculation {
     desired_profile: Profile,
     fertilizers: Vec<Fertilizer>,
     problem: Problem,
-    coefficients: Vec<Coefficient>,
+    coefficients: Vec<Vec<(VariableId, f64)>>,
 }
 
 impl Calculation {
     pub fn new(desired_profile: Profile, fertilizers: Vec<Fertilizer>) -> Result<Self, Error> {
         let mut calculation = Self {
             problem: Problem::new(),
-            desired_profile: desired_profile.clone(),
+            desired_profile,
             fertilizers: Vec::new(),
-            coefficients: Vec::new(),
+            coefficients: Vec::from([
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+            ]),
         };
 
         fertilizers.iter().for_each(|fertilizer| {
             calculation.add_fertilizer(fertilizer);
         });
 
-        desired_profile
+        calculation
+            .desired_profile
             .nutrients()
             .iter()
             .for_each(|required_nutrient| {
@@ -46,50 +62,44 @@ impl Calculation {
             .unwrap();
 
         fertilizer.nutrients().iter().for_each(|nutrient| {
-            self.coefficients
-                .push(Coefficient::Nutrient(*nutrient, variable_id));
+            self.coefficients[nutrient.index()].push((variable_id, nutrient.value()));
         });
     }
 
     fn add_nutrient_requirement(&mut self, nutrient: Nutrient) {
-        let coefficients = self
-            .coefficients
-            .iter()
-            .filter(|coefficient| match coefficient {
-                Coefficient::Nutrient(nutrient_amount, _) => {
-                    nutrient_amount.index() == nutrient.index()
-                }
-            })
-            .map(|coefficient| coefficient.value())
-            .collect();
+        let coefficients = self.coefficients[nutrient.index()].clone();
 
-        match nutrient {
-            Nutrient::Nitrogen(required_amount)
-            | Nutrient::NitrogenNitrate(required_amount)
-            | Nutrient::NitrogenAmmonium(required_amount)
-            | Nutrient::Phosphorus(required_amount)
-            | Nutrient::Potassium(required_amount)
-            | Nutrient::Magnesium(required_amount)
-            | Nutrient::Calcium(required_amount)
-            | Nutrient::Boron(required_amount) => {
-                self.problem
-                    .add_constraint(coefficients, ConstraintOp::Eq, required_amount)
-                    .unwrap();
-            }
-            Nutrient::Sulfur(_)
-            | Nutrient::Iron(_)
-            | Nutrient::Manganese(_)
-            | Nutrient::Zinc(_)
-            | Nutrient::Copper(_)
-            | Nutrient::Molybdenum(_) => {
-                self.problem
-                    .add_constraint(coefficients, ConstraintOp::Gte, 0.0)
-                    .unwrap();
-            }
-        };
+        if coefficients.len() > 0 {
+            match nutrient {
+                Nutrient::Nitrogen(required_amount)
+                | Nutrient::NitrogenNitrate(required_amount)
+                | Nutrient::NitrogenAmmonium(required_amount)
+                | Nutrient::Phosphorus(required_amount)
+                | Nutrient::Potassium(required_amount)
+                | Nutrient::Magnesium(required_amount)
+                | Nutrient::Calcium(required_amount)
+                | Nutrient::Boron(required_amount) => {
+                    self.problem
+                        .add_constraint(coefficients, ConstraintOp::Eq, required_amount)
+                        .unwrap();
+                }
+                Nutrient::Sulfur(_)
+                | Nutrient::Iron(_)
+                | Nutrient::Manganese(_)
+                | Nutrient::Zinc(_)
+                | Nutrient::Copper(_)
+                | Nutrient::Molybdenum(_) => {
+                    self.problem
+                        .add_constraint(coefficients, ConstraintOp::Gte, 0.0)
+                        .unwrap();
+                }
+            };
+        }
     }
 
     pub fn solve(&self) -> Result<Solution, Error> {
+        // println!("{}", self.problem);
+
         let result = DualSimplexSolver::default()
             .solve(self.problem.clone())
             .unwrap();
@@ -113,99 +123,4 @@ impl Calculation {
 }
 
 #[cfg(test)]
-mod tests {
-    /*
-    use super::Calculation;
-    use crate::calculation::desired_profile::DesiredProfile;
-    use crate::calculation::requirement::Requirement;
-    use crate::chemistry::Nutrient;
-    use crate::fertilizers::{Component, FertilizerBuilder, Units};
-
-    #[test]
-    fn basic_nutrient_profile() {
-        let fertilizer_builder = FertilizerBuilder::new();
-
-        let desired_profile = DesiredProfile::new(vec![
-            Requirement::new(Nutrient::Nitrogen, 189.),
-            Requirement::new(Nutrient::Phosphorus, 39.),
-            Requirement::new(Nutrient::Potassium, 341.),
-            Requirement::new(Nutrient::Calcium, 170.),
-            Requirement::new(Nutrient::Magnesium, 48.),
-            Requirement::new(Nutrient::Sulfur, 150.),
-            Requirement::new(Nutrient::Iron, 2.),
-            Requirement::new(Nutrient::Manganese, 0.55),
-            Requirement::new(Nutrient::Zink, 0.33),
-            Requirement::new(Nutrient::Boron, 0.28),
-            Requirement::new(Nutrient::Copper, 0.05),
-            Requirement::new(Nutrient::Molybdenum, 0.05),
-        ]);
-
-        let fertilizers = vec![
-            fertilizer_builder
-                .from_formula("Ca(NO3)2")
-                .name("calcium nitrate"),
-            fertilizer_builder
-                .from_formula("KNO3")
-                .name("potassium nitrate"),
-            fertilizer_builder
-                .from_formula("NH4NO3")
-                .name("ammonium nitrate"),
-            fertilizer_builder
-                .from_formula("MgSO4*7H2O")
-                .name("magnesium sulfate"),
-            fertilizer_builder
-                .from_formula("K2SO4")
-                .name("potassium sulfate"),
-            fertilizer_builder
-                .from_formula("KH2PO4")
-                .name("monopotassium phosphate"),
-            fertilizer_builder
-                .from_label(
-                    Units::WeightVolume,
-                    vec![
-                        Component::Magnesium(Some(15000.), None),
-                        Component::Iron(Some(3200.)),
-                        Component::Manganese(Some(1600.)),
-                        Component::Boron(Some(1200.)),
-                        Component::Zink(Some(360.)),
-                        Component::Copper(Some(320.)),
-                        Component::Molybdenum(Some(102.)),
-                    ],
-                )
-                .name("uniflor micro"),
-            /*
-            fertilizer_builder
-                .from_formula("C14H18N3O10Fe(NH4)2")
-                .name("iron chelate"),
-            fertilizer_builder
-                .from_formula("MnSO4*H2O")
-                .name("manganese sulfate"),
-            fertilizer_builder.from_formula("H3BO3").name("boric acid"),
-            fertilizer_builder
-                .from_formula("Na2MoO4*2H2O")
-                .name("molybdenum acid"),
-            fertilizer_builder
-                .from_formula("ZnSO4*7H2O")
-                .name("zink sulfate"),
-            fertilizer_builder
-                .from_formula("CuSO4*5H2O")
-                .name("copper sulfate"),
-            */
-        ];
-
-        match Calculation::new(desired_profile, fertilizers) {
-            Ok(solver) => match solver.solve(1) {
-                Ok(_) => {
-                    println!("solved");
-                }
-                Err(error) => {
-                    println!("{:#?}", error);
-                }
-            },
-            Err(errors) => {
-                println!("{:#?}", errors);
-            }
-        }
-    }
-    */
-}
+mod tests {}

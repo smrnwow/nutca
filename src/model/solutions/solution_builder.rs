@@ -1,4 +1,4 @@
-use crate::model::calculation::Calculation;
+use crate::model::calculation::{Calculation, Solver};
 use crate::model::chemistry::Nutrient;
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
@@ -93,6 +93,12 @@ impl SolutionBuilder {
 
     pub fn build(&self) -> Solution {
         if self.fertilizers.len() > 0 {
+            let solution = Solver::new(self.profile.clone(), self.fertilizers.clone())
+                .unwrap()
+                .solve();
+
+            // println!("solution {:#?}", solution);
+
             if let Ok(mut solution) =
                 Calculation::new(self.profile.clone(), self.fertilizers.clone())
                     .unwrap()
