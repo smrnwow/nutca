@@ -595,3 +595,18 @@
     outline: none;
     max-width: 76px;
 }
+
+/* text */
+
+.text {
+    margin: 0px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 400;
+}
+
+/* checkbox */
+
+.checkbox__input {
+    margin: 0px;
+}

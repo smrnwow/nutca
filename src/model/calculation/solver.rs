@@ -7,7 +7,7 @@ use crate::model::solutions::Solution;
 pub struct Solver {
     profile: Profile,
     fertilizers: Vec<Fertilizer>,
-    redurant_complex_fertilizers: Vec<Fertilizer>,
+    redurant_fertilizers: Vec<Fertilizer>,
 }
 
 impl Solver {
@@ -23,7 +23,7 @@ impl Solver {
         Self {
             profile,
             fertilizers,
-            redurant_complex_fertilizers: Vec::new(),
+            redurant_fertilizers: Vec::new(),
         }
     }
 
@@ -34,26 +34,24 @@ impl Solver {
             let calculation = Calculation::new(self.profile.clone(), self.fertilizers.clone());
 
             if let Ok(mut solution) = calculation.unwrap().solve() {
-                let zero_complex_fetilizer = self.has_zero_complex_fertilizer(&solution);
-
-                match zero_complex_fetilizer {
+                match self.has_zero_complex_fertilizer(&solution) {
                     Some(fertilizer) => {
-                        self.exclude_zero_complex_fertilizer(fertilizer);
+                        self.exclude_fertilizer(fertilizer);
                     }
 
                     None => {
-                        self.redurant_complex_fertilizers
-                            .iter()
-                            .for_each(|fertilizer| {
-                                solution.add_fertilizer_weight(fertilizer.clone(), 0.)
-                            });
+                        self.redurant_fertilizers.iter().for_each(|fertilizer| {
+                            solution.add_fertilizer_weight(fertilizer.clone(), 0.)
+                        });
 
                         return Ok(solution);
                     }
                 }
             } else {
-                if !self.exclude_redurant_fertilizers() {
-                    break;
+                if let Some(fertilizer) = self.fertilizers.last() {
+                    if fertilizer.is_complex() {
+                        self.exclude_fertilizer(fertilizer.clone());
+                    }
                 }
             }
 
@@ -63,27 +61,8 @@ impl Solver {
         Ok(Solution::empty(self.fertilizers.clone()))
     }
 
-    fn exclude_redurant_fertilizers(&mut self) -> bool {
-        if let Some(fertilizer) = self.fertilizers.last() {
-            if fertilizer.is_complex() {
-                self.redurant_complex_fertilizers.push(fertilizer.clone());
-
-                self.fertilizers = self
-                    .fertilizers
-                    .iter()
-                    .filter(|f| f.id() != fertilizer.id())
-                    .map(|fertilizer| fertilizer.clone())
-                    .collect();
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    fn exclude_zero_complex_fertilizer(&mut self, fertilizer: Fertilizer) {
-        self.redurant_complex_fertilizers.push(fertilizer.clone());
+    fn exclude_fertilizer(&mut self, fertilizer: Fertilizer) {
+        self.redurant_fertilizers.push(fertilizer.clone());
 
         self.fertilizers = self
             .fertilizers

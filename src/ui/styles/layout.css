@@ -11,8 +11,17 @@
 .row {
     display: flex;
     gap: 16px;
+    align-items: center;
+}
+
+.row_gap-small {
+    gap: 8px;
 }
 
 .row_align-end {
     justify-content: flex-end;
+}
+
+.row_align-space-between {
+    justify-content: space-between;
 }

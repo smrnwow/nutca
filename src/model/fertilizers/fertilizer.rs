@@ -13,6 +13,7 @@ pub struct Fertilizer {
     name: String,
     vendor: String,
     source: Source,
+    liquid: bool,
     nutrients: [Nutrient; 14],
 }
 
@@ -23,6 +24,7 @@ impl Fertilizer {
             name: String::new(),
             vendor: String::new(),
             source: Source::Label(Label::new(Units::Percent)),
+            liquid: false,
             nutrients: [
                 Nutrient::Nitrogen(0.0),
                 Nutrient::NitrogenNitrate(0.0),
@@ -80,6 +82,12 @@ impl Fertilizer {
         self
     }
 
+    pub fn with_liquid(mut self, liquid: bool) -> Self {
+        self.liquid = liquid;
+
+        self
+    }
+
     fn add_nutrient(&mut self, nutrient: Nutrient) {
         self.nutrients[nutrient.index()] = self.nutrients[nutrient.index()].add(nutrient.value());
     }
@@ -109,6 +117,10 @@ impl Fertilizer {
             Source::Label(_) => SourceType::Label,
             Source::Formula(_) => SourceType::Formula,
         }
+    }
+
+    pub fn liquid(&self) -> bool {
+        self.liquid
     }
 
     pub fn nutrients(&self) -> Vec<Nutrient> {

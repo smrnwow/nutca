@@ -8,6 +8,7 @@ pub struct FertilizerBuilder {
     name: String,
     vendor: String,
     source_type: SourceType,
+    liquid: bool,
     label: Label,
     formula: Formula,
 }
@@ -19,6 +20,7 @@ impl FertilizerBuilder {
             name: String::new(),
             vendor: String::new(),
             source_type: SourceType::Label,
+            liquid: false,
             label: Label::new(Units::Percent),
             formula: Formula::new(""),
         }
@@ -30,6 +32,7 @@ impl FertilizerBuilder {
             name: fertilizer.name(),
             vendor: fertilizer.vendor(),
             source_type: fertilizer.source_type(),
+            liquid: fertilizer.liquid(),
             label: {
                 if let Source::Label(label) = fertilizer.source() {
                     label
@@ -61,6 +64,10 @@ impl FertilizerBuilder {
 
     pub fn update_label_units(&mut self, units: Units) {
         self.label.update_units(units);
+
+        if let Units::WeightVolume = units {
+            self.liquid = true;
+        }
     }
 
     pub fn update_label_component(&mut self, component: Component) {
@@ -69,6 +76,10 @@ impl FertilizerBuilder {
 
     pub fn update_formula(&mut self, formula: String) {
         self.formula = Formula::from(formula);
+    }
+
+    pub fn update_liquid(&mut self, liquid: bool) {
+        self.liquid = liquid;
     }
 
     pub fn source_type(&self) -> SourceType {
@@ -87,7 +98,8 @@ impl FertilizerBuilder {
         let fertilizer = Fertilizer::build()
             .with_id(self.id.clone())
             .with_name(self.name.clone())
-            .with_vendor(self.vendor.clone());
+            .with_vendor(self.vendor.clone())
+            .with_liquid(self.liquid);
 
         match self.source_type {
             SourceType::Label => fertilizer.with_label(self.label),

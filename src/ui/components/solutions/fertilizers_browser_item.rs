@@ -21,11 +21,9 @@ pub fn FertilizersBrowserItem(props: FertilizersBrowserItemProps) -> Element {
                     class: "fertilizers-browser__selector",
 
                     Checkbox {
-                        checked: props.selected,
-                        on_change: move |event: Event<FormData>| {
-                            let selected: bool = event.value().parse().unwrap();
-
-                            if selected {
+                        value: props.selected,
+                        on_change: move |checked| {
+                            if checked {
                                 props.on_select.call(fertilizer.read().clone());
                             } else {
                                 props.on_remove.call(fertilizer.read().id());

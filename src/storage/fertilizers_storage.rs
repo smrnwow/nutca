@@ -189,7 +189,8 @@ impl FertilizersStorage {
                         Component::Copper(320.),
                         Component::Molybdenum(102.),
                     ],
-                )),
+                ))
+                .with_liquid(true),
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
                 .with_name(String::from("Хелат железа DTPA"))

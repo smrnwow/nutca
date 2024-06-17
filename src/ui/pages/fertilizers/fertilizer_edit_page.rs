@@ -47,6 +47,9 @@ pub fn FertilizerEditPage(fertilizer_id: String) -> Element {
                     on_source_type_update: move |source_type| {
                         fertilizer_builder.write().update_source_type(source_type);
                     },
+                    on_liquid_update: move |liquid| {
+                        fertilizer_builder.write().update_liquid(liquid);
+                    },
                     on_label_units_update: move |units| {
                         fertilizer_builder.write().update_label_units(units);
                     },

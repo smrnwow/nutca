@@ -2,8 +2,8 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct CheckboxProps {
-    checked: bool,
-    on_change: EventHandler<Event<FormData>>,
+    value: bool,
+    on_change: EventHandler<bool>,
 }
 
 #[component]
@@ -15,9 +15,11 @@ pub fn Checkbox(props: CheckboxProps) -> Element {
             input {
                 class: "checkbox__input",
                 r#type: "checkbox",
-                value: "{props.checked}",
-                checked: "{props.checked}",
-                onchange: move |event| props.on_change.call(event),
+                value: "{props.value}",
+                checked: "{props.value}",
+                onchange: move |event| {
+                    props.on_change.call(event.value().parse().unwrap());
+                },
             }
         }
     }

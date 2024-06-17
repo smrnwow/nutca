@@ -57,5 +57,8 @@ pub use table_row::TableRow;
 mod step;
 pub use step::Step;
 
+mod text;
+pub use text::Text;
+
 // mod switch_toggle;
 // pub use switch_toggle::SwitchToggle;
