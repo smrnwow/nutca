@@ -209,15 +209,9 @@ body {
 
 /* fertilizers preview */
 
-.fertilizers-preview {
-    padding: 16px;
-    box-sizing: border-box;
-}
-
 .fertilizers-preview__group {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 8px;
     gap: 8px;
 }
 

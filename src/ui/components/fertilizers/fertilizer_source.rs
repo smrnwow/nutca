@@ -1,5 +1,5 @@
 use super::{FertilizersFormula, FertilizersLabel};
-use crate::model::fertilizers::SourceType;
+use crate::model::fertilizers::{Fertilizer, SourceType};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
 use dioxus::prelude::*;
@@ -13,8 +13,9 @@ fn tab_active_class(source_type: SourceType, tab_value: SourceType) -> String {
 }
 
 #[derive(Props, PartialEq, Clone)]
-pub struct FertilizersCompositionProps {
+pub struct FertilizerSourceProps {
     source_type: Memo<SourceType>,
+    fertilizer: Memo<Fertilizer>,
     label: Memo<Label>,
     formula: Memo<Formula>,
     on_source_type_update: EventHandler<SourceType>,
@@ -24,7 +25,7 @@ pub struct FertilizersCompositionProps {
 }
 
 #[component]
-pub fn FertilizersComposition(props: FertilizersCompositionProps) -> Element {
+pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
     let source_type = *props.source_type.read();
 
     rsx! {
@@ -70,6 +71,7 @@ pub fn FertilizersComposition(props: FertilizersCompositionProps) -> Element {
                 SourceType::Formula => {
                     rsx! {
                         FertilizersFormula {
+                            fertilizer: props.fertilizer,
                             formula: props.formula,
                             on_formula_update: props.on_formula_update,
                         }

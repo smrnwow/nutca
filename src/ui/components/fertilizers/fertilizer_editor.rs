@@ -1,7 +1,7 @@
 use crate::model::fertilizers::{Fertilizer, SourceType};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
-use crate::ui::components::fertilizers::FertilizersComposition;
+use crate::ui::components::fertilizers::FertilizerSource;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
 use dioxus::prelude::*;
 
@@ -54,7 +54,8 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
             Divider {}
 
             Block {
-                FertilizersComposition {
+                FertilizerSource {
+                    fertilizer: props.fertilizer,
                     source_type: props.source_type,
                     label: props.label,
                     formula: props.formula,

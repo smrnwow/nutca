@@ -1,5 +1,11 @@
-mod composition;
-pub use composition::FertilizersComposition;
+mod fertilizer_composition;
+pub use fertilizer_composition::FertilizerComposition;
+
+mod nutrient_content_value;
+pub use nutrient_content_value::NutrientContentValue;
+
+mod fertilizer_source;
+pub use fertilizer_source::FertilizerSource;
 
 mod label;
 pub use label::FertilizersLabel;
