@@ -7,6 +7,7 @@ use dioxus::prelude::*;
 pub struct SolutionListingItemProps {
     solution: Solution,
     on_open: EventHandler<String>,
+    on_stock: EventHandler<String>,
     on_delete: EventHandler<String>,
 }
 
@@ -40,6 +41,14 @@ pub fn SolutionListingItem(props: SolutionListingItemProps) -> Element {
                             },
 
                             "Открыть",
+                        }
+
+                        DropdownOption {
+                            on_click: move |_| {
+                                props.on_stock.call(solution.read().id());
+                            },
+
+                            "Рассчитать рабочий раствор",
                         }
 
                         DropdownOption {

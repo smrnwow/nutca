@@ -20,6 +20,7 @@ fn select_item_class(selected: bool) -> String {
 #[derive(Props, PartialEq, Clone)]
 pub struct SelectProps {
     placeholder: Option<String>,
+    label: Option<String>,
     value: (String, String),
     options: Vec<(String, String)>,
     on_search: Option<EventHandler<String>>,
@@ -45,6 +46,14 @@ pub fn Select(props: SelectProps) -> Element {
     rsx! {
         div {
             class: "select",
+
+            if let Some(label) = props.label {
+                span {
+                    class: "select__label",
+
+                    "{label}",
+                }
+            }
 
             label {
                 class: "select__header",

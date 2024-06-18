@@ -98,7 +98,7 @@ impl Calculation {
     }
 
     pub fn solve(&self) -> Result<Solution, Error> {
-        println!("{}", self.problem);
+        // println!("{}", self.problem);
 
         let result = DualSimplexSolver::default()
             .solve(self.problem.clone())

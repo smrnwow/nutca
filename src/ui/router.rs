@@ -3,7 +3,9 @@ use dioxus_router::prelude::*;
 
 use super::pages::fertilizers::{FertilizerAddPage, FertilizerEditPage, FertilizersListingPage};
 use super::pages::profiles::{ProfileAddPage, ProfileEditPage, ProfilesListingPage};
-use super::pages::solutions::{SolutionAddPage, SolutionEditPage, SolutionsListingPage};
+use super::pages::solutions::{
+    SolutionAddPage, SolutionEditPage, SolutionsListingPage, StockSolutionPage,
+};
 use super::pages::Reference;
 use super::Layout;
 
@@ -22,6 +24,9 @@ pub enum Route {
 
     #[route("/solutions/edit/:solution_id")]
     SolutionEditPage { solution_id: String },
+
+    #[route("/solutions/stock?:solution_id")]
+    StockSolutionPage { solution_id: String },
 
     #[route("/profiles/listing")]
     ProfilesListingPage {},

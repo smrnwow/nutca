@@ -2,16 +2,19 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct TextProps {
-    text: String,
+    size: Option<String>,
+    children: Element,
 }
 
 #[component]
 pub fn Text(props: TextProps) -> Element {
+    let size = props.size.unwrap_or("small".to_string());
+
     rsx! {
         p {
-            class: "text",
+            class: "text text_{size}",
 
-            "{props.text}",
+            {props.children},
         }
     }
 }

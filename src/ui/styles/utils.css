@@ -419,6 +419,15 @@
 
 .select {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.select__label {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
 }
 
 .select__search {
@@ -536,6 +545,8 @@
 .select__list_opened {
     display: flex;
     margin-top: 8px;
+    z-index: 100;
+    bottom: -100%;
 }
 
 .select__item {
@@ -578,6 +589,19 @@
 
 .number-field {
     display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+}
+
+.number-field__label {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+}
+
+.number-field__value {
+    display: flex;
     align-items: center;
     gap: 12px;
     font-size: 12px;
@@ -600,8 +624,40 @@
 
 .text {
     margin: 0px;
+}
+
+.text_x-large {
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -1.5%;
+    font-weight: 400;
+}
+
+.text_large {
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: -1.5%;
+    font-weight: 400;
+}
+
+.text_medium {
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -1.1%;
+    font-weight: 400;
+}
+
+.text_small {
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -0.6%;
+    font-weight: 400;
+}
+
+.text_x-small {
     font-size: 12px;
     line-height: 16px;
+    letter-spacing: 0%;
     font-weight: 400;
 }
 

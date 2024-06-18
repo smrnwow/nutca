@@ -62,7 +62,8 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
                         }
 
                         Text {
-                            text: "жидкое удобрение",
+                            size: "x-small",
+                            "жидкое удобрение",
                         }
                     }
                 }

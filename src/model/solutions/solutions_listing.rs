@@ -18,6 +18,18 @@ impl SolutionsListing {
         self.search_query = search_query.to_lowercase();
     }
 
+    pub fn find(&self, solution_id: String) -> Option<Solution> {
+        let solution = self
+            .solutions
+            .iter()
+            .find(|solution| solution.id() == solution_id);
+
+        match solution {
+            Some(solution) => Some(solution.clone()),
+            None => None,
+        }
+    }
+
     pub fn list(&self) -> Vec<Solution> {
         if self.search_query.len() == 0 {
             self.solutions.clone()

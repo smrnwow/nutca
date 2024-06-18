@@ -12,3 +12,6 @@ pub use solution::Solution;
 
 mod solutions_listing;
 pub use solutions_listing::SolutionsListing;
+
+mod stock_solution_builder;
+pub use stock_solution_builder::StockSolutionBuilder;

@@ -29,7 +29,7 @@ pub fn SolutionFertilizers(props: SolutionFertilizersProps) -> Element {
 
             if solution.fertilizers().len() == 0 {
                 Text {
-                    text: "Выберите удобрения из списка",
+                    "Выберите удобрения из списка",
                 }
             } else {
                 for fertilizer in solution.fertilizers().clone() {
@@ -37,11 +37,11 @@ pub fn SolutionFertilizers(props: SolutionFertilizersProps) -> Element {
                         align: "space-between",
 
                         Text {
-                            text: "{fertilizer.fertilizer.name()}",
+                            "{fertilizer.fertilizer.name()}",
                         }
 
                         Text {
-                            text: "{round(fertilizer.weight)} {units(fertilizer.fertilizer.liquid())}",
+                            "{round(fertilizer.weight)} {units(fertilizer.fertilizer.liquid())}",
                         }
                     }
                 }

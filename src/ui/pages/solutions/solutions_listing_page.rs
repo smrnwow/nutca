@@ -76,6 +76,11 @@ pub fn SolutionsListingPage() -> Element {
                                                 solution_id,
                                             });
                                         },
+                                        on_stock: move |solution_id| {
+                                            navigator().push(Route::StockSolutionPage {
+                                                solution_id,
+                                            });
+                                        },
                                         on_delete: move |solution_id| {
                                             solutions_storage.read().delete(solution_id);
 
