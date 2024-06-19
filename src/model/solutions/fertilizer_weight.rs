@@ -17,7 +17,7 @@ impl FertilizerWeight {
         self.fertilizer
             .nutrients()
             .iter()
-            .map(|nutrient| nutrient.new(nutrient.value() * self.weight))
+            .map(|nutrient| nutrient.new(nutrient.value() * self.weight * 10.))
             .collect()
     }
 }

@@ -546,7 +546,7 @@
     display: flex;
     margin-top: 8px;
     z-index: 100;
-    bottom: -100%;
+    top: 100%;
 }
 
 .select__item {

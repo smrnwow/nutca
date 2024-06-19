@@ -16,7 +16,7 @@ impl StockSolutionBuilder {
             part_a: Vec::new(),
             part_b: Vec::new(),
             concentration_factor: 100,
-            volume: 100,
+            volume: 1,
         }
     }
 

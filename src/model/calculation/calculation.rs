@@ -111,7 +111,7 @@ impl Calculation {
 
             result.iter().enumerate().for_each(|(idx, amount)| {
                 if let Some(fertilizer) = self.fertilizers.get(idx) {
-                    solution.add_fertilizer_weight(fertilizer.clone(), *amount);
+                    solution.add_fertilizer_weight(fertilizer.clone(), *amount / 10.);
                 }
             });
 
