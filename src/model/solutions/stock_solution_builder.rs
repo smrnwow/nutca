@@ -39,24 +39,45 @@ impl StockSolutionBuilder {
         };
 
         solution.fertilizers().iter().for_each(|fertilizer_weight| {
-            let mut is_b_part = false;
+            let mut has_calcium = false;
+
+            let mut has_sulfur_or_phosphorus = false;
+
+            let mut micros_count = 0;
 
             for nutrient in fertilizer_weight.fertilizer.nutrients() {
                 match nutrient {
-                    Nutrient::Sulfur(_) | Nutrient::Phosphorus(_) => {
-                        is_b_part = true;
+                    Nutrient::Calcium(_) => {
+                        has_calcium = true;
+                    }
 
-                        break;
+                    Nutrient::Sulfur(_) | Nutrient::Phosphorus(_) => {
+                        has_sulfur_or_phosphorus = true;
+                    }
+
+                    Nutrient::Iron(_)
+                    | Nutrient::Manganese(_)
+                    | Nutrient::Copper(_)
+                    | Nutrient::Zinc(_)
+                    | Nutrient::Boron(_)
+                    | Nutrient::Molybdenum(_) => {
+                        micros_count += 1;
                     }
 
                     _ => {}
                 }
             }
 
-            if is_b_part {
-                self.part_b.push(fertilizer_weight.clone());
-            } else {
+            if has_calcium && has_sulfur_or_phosphorus {
+                println!("fertilizer contains both calcium and sulfur/phosphorus");
+            }
+
+            if has_calcium || (!has_sulfur_or_phosphorus && micros_count < 3) {
                 self.part_a.push(fertilizer_weight.clone());
+            }
+
+            if has_sulfur_or_phosphorus || micros_count > 3 {
+                self.part_b.push(fertilizer_weight.clone());
             }
         });
 

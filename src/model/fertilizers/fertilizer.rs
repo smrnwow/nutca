@@ -132,7 +132,7 @@ impl Fertilizer {
     }
 
     pub fn is_complex(&self) -> bool {
-        self.nutrients.len() > 3
+        self.nutrients().len() > 3
     }
 }
 

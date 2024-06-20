@@ -21,26 +21,29 @@ pub struct SolutionFertilizersProps {
 
 #[component]
 pub fn SolutionFertilizers(props: SolutionFertilizersProps) -> Element {
-    let solution = props.solution.read();
+    let fertilizers = props.solution.read().fertilizers();
 
     rsx! {
         div {
             class: "fertilizers-amount",
 
-            if solution.fertilizers().len() == 0 {
+            if fertilizers.len() == 0 {
                 Text {
+                    size: "x-small",
                     "Выберите удобрения из списка",
                 }
             } else {
-                for fertilizer in solution.fertilizers().clone() {
+                for fertilizer in fertilizers {
                     Row {
                         align: "space-between",
 
                         Text {
+                            size: "x-small",
                             "{fertilizer.fertilizer.name()}",
                         }
 
                         Text {
+                            size: "x-small",
                             "{round(fertilizer.weight)} {units(fertilizer.fertilizer.liquid())}",
                         }
                     }

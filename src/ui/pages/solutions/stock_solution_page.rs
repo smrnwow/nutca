@@ -4,8 +4,13 @@ use crate::ui::components::layout::{Column, Page, Row, Section};
 use crate::ui::components::utils::{Block, Card, Divider, NumberField, Select, Text, Title};
 use dioxus::prelude::*;
 
-fn round(value: f64) -> String {
-    format!("{:.3}", value)
+fn render_fertilizer_weight(weight: f64, liquid: bool) -> String {
+    let units = match liquid {
+        true => String::from("мл"),
+        false => String::from("г"),
+    };
+
+    format!("{:.3} {}", weight, units)
 }
 
 #[component]
@@ -114,7 +119,7 @@ pub fn StockSolutionPage(solution_id: String) -> Element {
 
                                             Text {
                                                 size: "x-small",
-                                                "{round(fertilizer.weight)}",
+                                                "{render_fertilizer_weight(fertilizer.weight, fertilizer.fertilizer.liquid())}",
                                             }
                                         }
                                     }
@@ -144,7 +149,7 @@ pub fn StockSolutionPage(solution_id: String) -> Element {
 
                                             Text {
                                                 size: "x-small",
-                                                "{round(fertilizer.weight)}",
+                                                "{render_fertilizer_weight(fertilizer.weight, fertilizer.fertilizer.liquid())}",
                                             }
                                         }
                                     }

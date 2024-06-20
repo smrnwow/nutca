@@ -49,13 +49,7 @@ impl Solution {
     }
 
     pub fn add_fertilizer_weight(&mut self, fertilizer: Fertilizer, amount: f64) {
-        let amount = {
-            if amount < 0. {
-                0.
-            } else {
-                amount
-            }
-        };
+        println!("amount {} = {}", fertilizer.name(), amount);
 
         let fertilizer_weight = FertilizerWeight::new(fertilizer, amount);
 
@@ -99,7 +93,8 @@ impl Solution {
     }
 
     pub fn fertilizers(&self) -> Vec<FertilizerWeight> {
-        self.fertilizers_weights
+        let mut fertilizers = self
+            .fertilizers_weights
             .iter()
             .map(|fertilizer_weight| {
                 FertilizerWeight::new(
@@ -107,7 +102,11 @@ impl Solution {
                     fertilizer_weight.weight * self.water_amount as f64,
                 )
             })
-            .collect()
+            .collect::<Vec<FertilizerWeight>>();
+
+        fertilizers.sort_by(|a, b| b.weight.partial_cmp(&a.weight).unwrap());
+
+        fertilizers
     }
 
     pub fn water_amount(&self) -> usize {
