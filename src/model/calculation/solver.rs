@@ -28,22 +28,15 @@ impl Solver {
     }
 
     pub fn solve(&mut self) -> Result<Solution, Error> {
-        println!("calculation");
-
         let mut try_count = 0;
 
         while try_count < 4 {
-            if try_count > 0 {
-                println!("calculation try {}", try_count);
-            }
-
             let calculation =
                 Calculation::new(self.profile.clone(), self.fertilizers.clone()).unwrap();
 
             if let Ok(mut solution) = calculation.solve() {
                 match self.has_negative_fertilizer(&solution) {
                     Some(fertilizer) => {
-                        println!("found negative fertilizer {}", fertilizer.name());
                         self.exclude_fertilizer(fertilizer);
                     }
 
@@ -69,21 +62,19 @@ impl Solver {
         Ok(Solution::empty(self.fertilizers.clone()))
     }
 
-    fn exclude_fertilizer(&mut self, fertilizer: Fertilizer) {
-        self.redurant_fertilizers.push(fertilizer.clone());
-
+    fn exclude_fertilizer(&mut self, excluded_fertilizer: Fertilizer) {
         self.fertilizers = self
             .fertilizers
             .iter()
-            .filter(|f| f.id() != fertilizer.id())
-            .map(|fertilizer| fertilizer.clone())
+            .cloned()
+            .filter(|f| f.id() != excluded_fertilizer.id())
             .collect();
+
+        self.redurant_fertilizers.push(excluded_fertilizer);
     }
 
     fn has_negative_fertilizer(&self, solution: &Solution) -> Option<Fertilizer> {
-        let mut solution_fertilizers = solution.fertilizers();
-
-        if let Some(fertilizer) = solution_fertilizers.last() {
+        if let Some(fertilizer) = solution.fertilizers().last() {
             if fertilizer.weight < 0. {
                 return Some(fertilizer.fertilizer.clone());
             }

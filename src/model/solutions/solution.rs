@@ -49,8 +49,6 @@ impl Solution {
     }
 
     pub fn add_fertilizer_weight(&mut self, fertilizer: Fertilizer, amount: f64) {
-        println!("amount {} = {}", fertilizer.name(), amount);
-
         let fertilizer_weight = FertilizerWeight::new(fertilizer, amount);
 
         fertilizer_weight.nutrients().iter().for_each(|nutrient| {
@@ -111,6 +109,17 @@ impl Solution {
 
     pub fn water_amount(&self) -> usize {
         self.water_amount
+    }
+
+    pub fn ec(&self) -> f64 {
+        let total_ppms: f64 = self
+            .value
+            .nutrients()
+            .iter()
+            .map(|nutrient| nutrient.value())
+            .sum();
+
+        (total_ppms / 1000.) * 0.7
     }
 }
 
