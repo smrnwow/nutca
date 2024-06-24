@@ -3,6 +3,7 @@ use dioxus::prelude::*;
 #[derive(Props, PartialEq, Clone)]
 pub struct TextProps {
     size: Option<String>,
+    nowrap: Option<bool>,
     children: Element,
 }
 
@@ -10,9 +11,11 @@ pub struct TextProps {
 pub fn Text(props: TextProps) -> Element {
     let size = props.size.unwrap_or("small".to_string());
 
+    let nowrap = props.nowrap.unwrap_or(false);
+
     rsx! {
         p {
-            class: "text text_{size}",
+            class: "text text_{size} text_nowrap-{nowrap}",
 
             {props.children},
         }

@@ -37,6 +37,18 @@
 
 /* calculated profile */ 
 
+.calculated-profile {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.calculated-profile__text {
+    font-size: 12px;
+    margin: 0px;
+    margin-bottom: 4px;
+}
+
 .calculated-profile__group {
     display: flex;
     align-items: flex-start;
@@ -54,41 +66,25 @@
     box-sizing: border-box;
 }
 
-.fertilizers-browser__search {
-    margin-bottom: 12px;
-}
-
-.fertilizers-browser__search-label {
-    display: flex;
-    gap: 10px;
-    padding: 8px 10px;
-    align-items: center;
-    /* border: 1px solid rgba(154, 168, 188, 1); */
-    border-radius: 12px;
-    box-sizing: border-box;
-    border: 1px solid rgba(225, 228, 234, 1);
-    box-shadow: 1px 2px 0px rgba(10, 13, 20, 0.03);
-}
-
-.fertilizers-browser__search-input {
-    margin: 0px;
-    padding: 0px;
-    border: none;
-    outline: none;
-    box-sizing: border-box;
-}
-
 .fertilizers-browser__table {
-    max-height: calc(4 * 40px);
-    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-height: calc(8 * 34px);
+    max-height: calc(8 * 34px);
+    overflow: hidden;
+    /* border: 1px solid rgba(154, 168, 188, 0.2); */
 }
 
 .fertilizers-browser__item {
     display: flex;
     align-items: center;
-    padding: 8px 0px;
-    border-bottom: 1px solid rgba(154, 168, 188, 0.2);
+    padding: 6px;
+    /* border-bottom: 1px solid rgba(154, 168, 188, 0.2); */
     box-sizing: border-box;
+    cursor: pointer;
+    background: var(--bg-weak-50, rgba(245, 247, 250, 1));
+    border-radius: 8px;
 }
 
 .fertilizers-browser__selector {
@@ -126,6 +122,36 @@
 .fertilizers-browser__nutrient-amount {
     margin-left: 2px;
     font-size: 8px;
+}
+
+/* fertilizers used */
+
+.fertilizers-used__table {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;    
+    min-height: calc(8 * 34px);
+    max-height: calc(8 * 34px);
+    overflow: hidden;
+}
+
+.fertilizers-used__stub {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(8 * 34px);
+    max-height: calc(8 * 34px);
+}
+
+.fertilizers-used__item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+    cursor: pointer;
+    background: var(--bg-weak-50, rgba(245, 247, 250, 1));
+    border-radius: 8px;
 }
 
 /* fertilizers amount */

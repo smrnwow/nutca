@@ -1,24 +1,35 @@
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct NutrientResult {
-    amount: f64,
-    diff_percentage: f64,
+    desired_amount: f64,
+    result_amount: f64,
 }
 
 impl NutrientResult {
     pub fn new(desired_amount: f64, result_amount: f64) -> Self {
         Self {
-            amount: result_amount,
-            diff_percentage: Self::diff_percentage(desired_amount, result_amount),
+            desired_amount,
+            result_amount,
         }
     }
 
-    fn diff_percentage(desired: f64, result: f64) -> f64 {
-        let diff = (result - desired).abs();
-
-        (diff / desired) * 100.
-    }
-
     pub fn diff(&self) -> f64 {
-        self.diff_percentage
+        println!(
+            "result {} desired {}",
+            self.result_amount, self.desired_amount
+        );
+
+        let diff = (self.result_amount - self.desired_amount).abs();
+
+        println!("diff {}", diff);
+
+        if diff == 0. {
+            println!("0 result {} ", diff);
+
+            diff
+        } else {
+            println!("1 result {} ", (diff / self.desired_amount) * 100.);
+
+            (diff / self.desired_amount) * 100.
+        }
     }
 }

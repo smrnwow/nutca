@@ -1,13 +1,13 @@
 use crate::model::fertilizers::Fertilizer;
-use crate::ui::components::utils::{Badge, Checkbox, TableCell, TableRow};
+use crate::ui::components::layout::Row;
+use crate::ui::components::utils::icons::ArrowRight;
+use crate::ui::components::utils::Text;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersBrowserItemProps {
     fertilizer: Fertilizer,
-    selected: bool,
-    on_select: EventHandler<Fertilizer>,
-    on_remove: EventHandler<String>,
+    on_select: EventHandler<String>,
 }
 
 #[component]
@@ -15,41 +15,23 @@ pub fn FertilizersBrowserItem(props: FertilizersBrowserItemProps) -> Element {
     let fertilizer = use_signal(|| props.fertilizer);
 
     rsx! {
-        TableRow {
-            TableCell {
-                div {
-                    class: "fertilizers-browser__selector",
+        div {
+            class: "fertilizers-browser__item",
+            onclick: move |_| {
+                props.on_select.call(fertilizer.read().id());
+            },
 
-                    Checkbox {
-                        value: props.selected,
-                        on_change: move |checked| {
-                            if checked {
-                                props.on_select.call(fertilizer.read().clone());
-                            } else {
-                                props.on_remove.call(fertilizer.read().id());
-                            }
-                        }
-                    }
+            Row {
+                gap: "medium",
+                horizontal: "space-between",
+                vertical: "center",
+
+                Text {
+                    size: "x-small",
+                    {fertilizer.read().name()},
                 }
-            }
 
-            TableCell {
-                p {
-                    class: "fertilizers-browser__name",
-                    "{fertilizer.read().name()}",
-                }
-            }
-
-            TableCell {
-                div {
-                    class: "fertilizers-browser__nutrients",
-
-                    for nutrient in fertilizer.read().nutrients() {
-                        Badge {
-                            text: nutrient.symbol(),
-                        }
-                    }
-                }
+                ArrowRight {}
             }
         }
     }

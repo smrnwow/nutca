@@ -60,5 +60,8 @@ pub use step::Step;
 mod text;
 pub use text::Text;
 
+mod tooltip;
+pub use tooltip::Tooltip;
+
 // mod switch_toggle;
 // pub use switch_toggle::SwitchToggle;

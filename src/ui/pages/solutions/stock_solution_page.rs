@@ -110,7 +110,7 @@ pub fn StockSolutionPage(solution_id: String) -> Element {
 
                                     for fertilizer in part_a.read().clone() {
                                         Row {
-                                            align: "space-between",
+                                            horizontal: "space-between",
 
                                             Text {
                                                 size: "x-small",
@@ -140,7 +140,7 @@ pub fn StockSolutionPage(solution_id: String) -> Element {
 
                                     for fertilizer in part_b.read().clone() {
                                         Row {
-                                            align: "space-between",
+                                            horizontal: "space-between",
 
                                             Text {
                                                 size: "x-small",

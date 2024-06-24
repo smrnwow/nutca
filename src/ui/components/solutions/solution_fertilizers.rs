@@ -35,7 +35,7 @@ pub fn SolutionFertilizers(props: SolutionFertilizersProps) -> Element {
             } else {
                 for fertilizer in fertilizers {
                     Row {
-                        align: "space-between",
+                        horizontal: "space-between",
 
                         Text {
                             size: "x-small",

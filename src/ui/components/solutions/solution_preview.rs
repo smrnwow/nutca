@@ -2,7 +2,9 @@ use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::solutions::{SolutionComposition, SolutionFertilizers};
-use crate::ui::components::utils::{Block, Button, Card, Divider, Text, TextField, Title};
+use crate::ui::components::utils::{
+    Block, Button, Card, Divider, NumberField, Text, TextField, Title,
+};
 use dioxus::prelude::*;
 
 fn round(value: f64) -> String {
@@ -13,6 +15,7 @@ fn round(value: f64) -> String {
 pub struct SolutionPreviewProps {
     solution: Memo<Solution>,
     profile: Memo<Profile>,
+    on_volume_update: EventHandler<usize>,
     on_save: EventHandler<String>,
 }
 
@@ -47,16 +50,24 @@ pub fn SolutionPreview(props: SolutionPreviewProps) -> Element {
                     Divider {}
 
                     Row {
-                        align: "space-between",
-
-                        Text {
-                            size: "x-small",
-                            "EC",
+                        NumberField {
+                            value: props.solution.read().water_amount(),
+                            units: "литр",
+                            on_change: props.on_volume_update,
                         }
 
-                        Text {
-                            size: "x-small",
-                            "{round(props.solution.read().ec())}",
+                        Row {
+                            horizontal: "space-between",
+
+                            Text {
+                                size: "x-small",
+                                "EC",
+                            }
+
+                            Text {
+                                size: "x-small",
+                                "{round(props.solution.read().ec())}",
+                            }
                         }
                     }
                 }
