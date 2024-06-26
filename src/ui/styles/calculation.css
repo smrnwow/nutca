@@ -34,32 +34,6 @@
     border-top: 1px solid rgba(225, 228, 234, 1)
 }
 
-
-/* calculated profile */ 
-
-.calculated-profile {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.calculated-profile__text {
-    font-size: 12px;
-    margin: 0px;
-    margin-bottom: 4px;
-}
-
-.calculated-profile__group {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.calculated-profile__group:last-child {
-    margin-bottom: 0px;
-}
-
 /* fertilizers browser */
 
 .fertilizers-browser {
@@ -70,9 +44,8 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    min-height: calc(8 * 34px);
+    min-height: calc(calc(8 * 34px) - 2px);
     max-height: calc(8 * 34px);
-    overflow: hidden;
     /* border: 1px solid rgba(154, 168, 188, 0.2); */
 }
 
@@ -132,7 +105,6 @@
     gap: 2px;    
     min-height: calc(8 * 34px);
     max-height: calc(8 * 34px);
-    overflow: hidden;
 }
 
 .fertilizers-used__stub {
@@ -150,8 +122,12 @@
     padding: 6px;
     box-sizing: border-box;
     cursor: pointer;
-    background: var(--bg-weak-50, rgba(245, 247, 250, 1));
+    background-color: var(--bg-weak-50, rgba(245, 247, 250, 1));
     border-radius: 8px;
+}
+
+.fertilizers-used__item_redurant {
+    background-color: var(--state-warning-lighter, rgba(255, 241, 235, 1));
 }
 
 /* fertilizers amount */

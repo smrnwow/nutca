@@ -26,6 +26,14 @@
     gap: 4px;
 }
 
+.column_gap-xx-small {
+    gap: 2px;
+}
+
+.column_gap-none {
+    gap: 0px;
+}
+
 .column_horizontal-start {
     align-items: flex-start;
 }
@@ -81,6 +89,14 @@
 
 .row_gap-x-small {
     gap: 4px;
+}
+
+.row_gap-xx-small {
+    gap: 2px;
+}
+
+.row_gap-none {
+    gap: 0px;
 }
 
 .row_horizontal-start {

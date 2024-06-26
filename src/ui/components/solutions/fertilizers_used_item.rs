@@ -1,55 +1,83 @@
 use crate::model::chemistry::Nutrient;
-use crate::model::fertilizers::Fertilizer;
+use crate::model::solutions::FertilizerWeight;
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::utils::icons::ArrowRight;
+use crate::ui::components::utils::icons::ArrowLeft;
 use crate::ui::components::utils::{Tag, Text, Tooltip};
 use dioxus::prelude::*;
+
+fn round(value: f64) -> String {
+    format!("{:.3}", value)
+}
+
+fn units(liquid: bool) -> String {
+    match liquid {
+        true => String::from("мл"),
+        false => String::from("г"),
+    }
+}
 
 fn tag_text(nutrient: Nutrient) -> Vec<String> {
     vec![
         nutrient.symbol().to_string(),
-        format!("{:.1}%", nutrient.value()),
+        format!("{:.1}PPM", nutrient.value()),
     ]
 }
 
+fn item_class(is_redurant: bool) -> String {
+    if is_redurant {
+        String::from("fertilizers-used__item fertilizers-used__item_redurant")
+    } else {
+        String::from("fertilizers-used__item")
+    }
+}
+
 #[derive(Props, PartialEq, Clone)]
-pub struct FertilizersBrowserItemProps {
-    fertilizer: Fertilizer,
-    on_select: EventHandler<String>,
+pub struct FertilizersUsedItemProps {
+    fertilizer: FertilizerWeight,
+    on_exclude: EventHandler<String>,
 }
 
 #[component]
-pub fn FertilizersBrowserItem(props: FertilizersBrowserItemProps) -> Element {
+pub fn FertilizersUsedItem(props: FertilizersUsedItemProps) -> Element {
     let macro_nutrients = props.fertilizer.macro_nutrients();
 
     let nitrogen_forms = props.fertilizer.nitrogen_forms();
 
     let micro_nutrients = props.fertilizer.micro_nutrients();
 
-    let fertilizer = use_signal(|| props.fertilizer);
+    let fertilizer = use_signal(|| props.fertilizer.fertilizer.clone());
 
     rsx! {
         Tooltip {
-            position: "top-right",
-
+            position: "top-left",
             target: rsx! {
                 div {
-                    class: "fertilizers-browser__item",
+                    class: item_class(props.fertilizer.is_redurant()),
                     onclick: move |_| {
-                        props.on_select.call(fertilizer.read().id());
+                        props.on_exclude.call(fertilizer.read().id());
                     },
 
                     Row {
-                        gap: "medium",
                         horizontal: "space-between",
                         vertical: "center",
 
-                        Text {
-                            size: "x-small",
-                            {fertilizer.read().name()},
+                        Row {
+                            gap: "x-small",
+                            vertical: "center",
+
+                            ArrowLeft {}
+
+                            Text {
+                                size: "x-small",
+                                "{fertilizer.read().name()}",
+                            }
                         }
 
-                        ArrowRight {}
+                        Text {
+                            size: "x-small",
+                            nowrap: true,
+                            "{round(props.fertilizer.weight)} {units(fertilizer.read().liquid())}",
+                        }
                     }
                 }
             },
@@ -57,11 +85,18 @@ pub fn FertilizersBrowserItem(props: FertilizersBrowserItemProps) -> Element {
                 Column {
                     gap: "medium",
 
+                    if props.fertilizer.is_redurant() {
+                        Text {
+                            size: "x-small",
+                            "Удобрение не вносит питательных веществ в раствор и исключено из расчета",
+                        }
+                    }
+
                     Text {
                         size: "x-small",
                         nowrap: true,
                         bold: true,
-                        "Использовать: {fertilizer.read().name()}",
+                        "Исключить: {fertilizer.read().name()}",
                     }
 
                     Column {
@@ -78,7 +113,7 @@ pub fn FertilizersBrowserItem(props: FertilizersBrowserItemProps) -> Element {
 
                                 Row {
                                     gap: "x-small",
-                                    for nutrient in fertilizer.read().macro_nutrients() {
+                                    for nutrient in macro_nutrients {
                                         Tag {
                                             multiple_text: tag_text(nutrient),
                                         }
@@ -98,7 +133,7 @@ pub fn FertilizersBrowserItem(props: FertilizersBrowserItemProps) -> Element {
 
                                 Row {
                                     gap: "x-small",
-                                    for nutrient in fertilizer.read().nitrogen_forms() {
+                                    for nutrient in nitrogen_forms {
                                         Tag {
                                             multiple_text: tag_text(nutrient),
                                         }
@@ -118,7 +153,7 @@ pub fn FertilizersBrowserItem(props: FertilizersBrowserItemProps) -> Element {
 
                                 Row {
                                     gap: "x-small",
-                                    for nutrient in fertilizer.read().micro_nutrients() {
+                                    for nutrient in micro_nutrients {
                                         Tag {
                                             multiple_text: tag_text(nutrient),
                                         }

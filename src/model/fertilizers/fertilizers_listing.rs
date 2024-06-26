@@ -5,6 +5,8 @@ pub struct FertilizersListing {
     fertilizers: Vec<Fertilizer>,
     excluded_fertilizers_ids: Vec<String>,
     search_query: String,
+    page_index: usize,
+    limit: usize,
 }
 
 impl FertilizersListing {
@@ -13,6 +15,8 @@ impl FertilizersListing {
             fertilizers,
             excluded_fertilizers_ids: Vec::new(),
             search_query: String::new(),
+            page_index: 1,
+            limit: 8,
         }
     }
 
@@ -21,7 +25,8 @@ impl FertilizersListing {
     }
 
     pub fn list(&self) -> Vec<Fertilizer> {
-        self.fertilizers
+        let fertilizers: Vec<Fertilizer> = self
+            .fertilizers
             .iter()
             .cloned()
             .filter(|fertilizer| {
@@ -34,7 +39,17 @@ impl FertilizersListing {
 
                 search_filter && exclusion_filter
             })
-            .collect()
+            .collect();
+
+        let start = (self.page_index - 1) * self.limit;
+
+        let end = (self.page_index * self.limit) - 1;
+
+        if end < fertilizers.len() {
+            Vec::from(&fertilizers[start..=end])
+        } else {
+            Vec::from(&fertilizers[start..])
+        }
     }
 
     pub fn find(&self, fertilizer_id: String) -> Option<Fertilizer> {
@@ -62,5 +77,30 @@ impl FertilizersListing {
             .cloned()
             .filter(|excluded_fertilizer_id| *excluded_fertilizer_id != fertilizer_id)
             .collect();
+    }
+
+    pub fn paginate(&mut self, page_index: usize) {
+        self.page_index = page_index;
+    }
+
+    pub fn page_index(&self) -> usize {
+        self.page_index
+    }
+
+    pub fn total(&self) -> usize {
+        self.fertilizers
+            .iter()
+            .filter(|fertilizer| {
+                let search_filter = fertilizer
+                    .name()
+                    .to_lowercase()
+                    .contains(self.search_query.as_str());
+
+                let exclusion_filter = !self.excluded_fertilizers_ids.contains(&fertilizer.id());
+
+                search_filter && exclusion_filter
+            })
+            .collect::<Vec<&Fertilizer>>()
+            .len()
     }
 }

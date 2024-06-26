@@ -9,17 +9,29 @@
 }
 
 /*
-    badge
+    tag
 */
 
-.badge {
-    padding: 2px 4px;
-    font-size: 10px;
-    line-height: 14px;
+.tag {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
     background-color: rgba(92, 23, 229, 1);
     border-radius: 4px;
-    color: #ffffff;
     box-sizing: border-box;
+}
+
+.tag__text {
+    padding-right: 4px;
+    font-size: 8px;
+    line-height: 7px;
+    color: #ffffff;
+    border-right: 1px solid #ffffff;
+}
+
+.tag__text:last-child {
+    padding-right: 0px;
+    border-right: none;
 }
 
 /* radio card */
@@ -670,45 +682,51 @@
 
 .text {
     margin: 0px;
+    font-weight: 400;
 }
 
 .text_nowrap-true {
     white-space: nowrap;
 }
 
+.text_bold-true {
+    font-weight: 500;
+}
+
 .text_x-large {
     font-size: 24px;
     line-height: 32px;
     letter-spacing: -1.5%;
-    font-weight: 400;
 }
 
 .text_large {
     font-size: 18px;
     line-height: 24px;
     letter-spacing: -1.5%;
-    font-weight: 400;
 }
 
 .text_medium {
     font-size: 16px;
     line-height: 24px;
     letter-spacing: -1.1%;
-    font-weight: 400;
 }
 
 .text_small {
     font-size: 14px;
     line-height: 20px;
     letter-spacing: -0.6%;
-    font-weight: 400;
 }
 
 .text_x-small {
     font-size: 12px;
     line-height: 16px;
     letter-spacing: 0%;
-    font-weight: 400;
+}
+
+.text_xx-small {
+    font-size: 10px;
+    line-height: 16px;
+    letter-spacing: 0%;
 }
 
 /* checkbox */
@@ -764,28 +782,115 @@
     opacity: 0;
     visibility: hidden;
     background-color: #ffffff;
-    padding: 2px 6px;
+    padding: 12px;
     box-sizing: border-box;
     border: 1px solid rgba(225, 228, 234, 1);
     box-shadow: 0px 1px 2px 0px rgba(14, 18, 27, 0.03), 0px 12px 24px 0px rgba(14, 18, 27, 0.06);
     border-radius: 4px;
     color: rgba(14, 18, 27, 1);
-    transition-delay: .1s;
+    transition-delay: .2s;
+    transition: .1s ease-out;
+    z-index: 101;
 }
 
-.tooltip_top .tooltip__body {
+.tooltip_top-left .tooltip__body {
+    left: 0px;
+    bottom: calc(100% + 5px);
+}
+
+.tooltip_top-center .tooltip__body {
     left: 50%;
-    top: -100%;
-    transform: translate(-50%, -50%);
+    bottom: calc(100% + 5px);
+    transform: translateX(-50%);
 }
 
-.tooltip_bottom .tooltip_body {
+.tooltip_top-right .tooltip__body {
+    right: 0px;
+    bottom: calc(100% + 5px);
+}
+
+.tooltip_bottom-center .tooltip__body {
     left: 50%;
     bottom: -100%;
     transform: translate(-50%, 50%);
 }
 
+.tooltip__body::before,
+.tooltip__body::after {
+  content: "";
+  position: absolute;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  top: 100%;
+  margin-left: -5px;
+}
+
+.tooltip__body::before {
+  border-top: 5px solid rgba(225, 228, 234, 1);
+  z-index: 100;
+}
+
+.tooltip__body::after {
+  border-top: 5px solid #ffffff;
+  margin-top: -1px;
+  z-index: 101;
+}
+
+.tooltip_top-left .tooltip__body::after, .tooltip_top-left .tooltip__body::before {
+    left: 12px;
+}
+
+.tooltip_top-center .tooltip__body::after, .tooltip_top-center .tooltip__body::before {
+    left: 50%;
+}
+
+.tooltip_top-right .tooltip__body::after, .tooltip_top-right .tooltip__body::before {
+    right: 12px;
+}
+
 .tooltip:hover .tooltip__body {
     opacity: 1;
     visibility: visible;
+}
+
+/* pagination */
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.pagination__cell {
+    display: block;
+    border-radius: 8px;
+    background-color: var(--bg-white-0, rgba(255, 255, 255, 1));
+    width: 34px;
+    height: 34px;
+    padding: 6px;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: .1s ease-out;
+    cursor: pointer;
+    border: 1px solid var(--stroke-soft-200, rgba(225, 228, 234, 1));
+    color: rgba(82, 88, 102, 1);
+}
+
+.pagination__cell_active {
+    color: rgba(14, 18, 27, 1);
+    border: 1px solid rgba(92, 23, 229, 1);
+}
+
+.pagination__cell_disabled {
+    color: rgba(202, 207, 216, 1);
+    cursor: default;
+}
+
+.pagination__cell_disabled .icon {
+    fill: rgba(202, 207, 216, 1);
+}
+
+.pagination__cell_default:hover {
+    background-color: var(--stroke-soft-200, rgba(225, 228, 234, 1));
 }

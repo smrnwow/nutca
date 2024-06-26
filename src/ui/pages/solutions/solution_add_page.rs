@@ -27,23 +27,18 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
 
     let profile = use_memo(move || solution_builder.read().profile());
 
-    let selected_fertilizers = use_memo(move || solution_builder.read().fertilizers());
-
     let mut profiles_listing = use_signal(move || profiles_storage.read().list());
 
     let profiles = use_memo(move || profiles_listing.read().list());
 
     let mut fertilizers_listing = use_signal(move || fertilizers_storage.read().list());
 
-    let fertilizers = use_memo(move || fertilizers_listing.read().list());
-
     rsx! {
         Page {
             Section {
                 SolutionEditor {
                     solution,
-                    fertilizers,
-                    selected_fertilizers,
+                    fertilizers_listing,
                     profile,
                     profiles,
                     on_profile_nutrient_update: move |nutrient| {
@@ -62,13 +57,16 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
                             solution_builder.write().add_fertilizer(fertilizer);
                         }
                     },
-                    on_fertilizer_remove: move |fertilizer_id: String| {
+                    on_fertilizer_exclude: move |fertilizer_id: String| {
                         fertilizers_listing.write().include(fertilizer_id.clone());
 
                         solution_builder.write().remove_fertilizer(fertilizer_id);
                     },
                     on_fertilizer_search: move |search_query| {
                         fertilizers_listing.write().search(search_query);
+                    },
+                    on_fertilizers_paginate: move |page_index| {
+                        fertilizers_listing.write().paginate(page_index);
                     },
                     on_volume_update: move |water_amount| {
                         solution_builder.write().update_water_amount(water_amount);

@@ -1,30 +1,28 @@
-use crate::model::solutions::{FertilizerWeight, Solution};
+use crate::model::solutions::Solution;
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::utils::icons::ArrowLeft;
-use crate::ui::components::utils::{Divider, NumberField, Text, Title};
+use crate::ui::components::solutions::FertilizersUsedItem;
+use crate::ui::components::utils::{NumberField, Pagination, Text, Title};
 use dioxus::prelude::*;
-
-fn round(value: f64) -> String {
-    format!("{:.3}", value)
-}
-
-fn units(liquid: bool) -> String {
-    match liquid {
-        true => String::from("мл"),
-        false => String::from("г"),
-    }
-}
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersUsedProps {
-    fertilizers_used: Memo<Vec<FertilizerWeight>>,
     solution: Memo<Solution>,
     on_volume_update: EventHandler<usize>,
-    on_remove: EventHandler<String>,
+    on_exclude: EventHandler<String>,
 }
 
 #[component]
 pub fn FertilizersUsed(props: FertilizersUsedProps) -> Element {
+    let mut page_index = use_signal(|| 1);
+
+    let fertilizers_set = use_memo(move || {
+        let mut fertilizers_set = props.solution.read().fertilizers_set();
+
+        fertilizers_set.paginate(*page_index.read());
+
+        fertilizers_set
+    });
+
     rsx! {
         Column {
             Title {
@@ -49,7 +47,7 @@ pub fn FertilizersUsed(props: FertilizersUsedProps) -> Element {
                 }
             }
 
-            if props.fertilizers_used.read().len() == 0 {
+            if fertilizers_set.read().is_empty() {
                 div {
                     class: "fertilizers-used__stub",
 
@@ -62,37 +60,25 @@ pub fn FertilizersUsed(props: FertilizersUsedProps) -> Element {
                 div {
                     class: "fertilizers-used__table",
 
-                    for fertilizer in props.fertilizers_used.read().clone() {
-                        div {
-                            class: "fertilizers-used__item",
+                    for fertilizer in fertilizers_set.read().items() {
+                        FertilizersUsedItem {
                             key: "{fertilizer.fertilizer.id()}",
-                            onclick: move |_| {
-                                props.on_remove.call(fertilizer.fertilizer.id());
-                            },
-
-                            Row {
-                                horizontal: "space-between",
-                                vertical: "center",
-
-                                Row {
-                                    gap: "x-small",
-                                    vertical: "center",
-
-                                    ArrowLeft {}
-
-                                    Text {
-                                        size: "x-small",
-                                        "{fertilizer.fertilizer.name()}",
-                                    }
-                                }
-
-                                Text {
-                                    size: "x-small",
-                                    nowrap: true,
-                                    "{round(fertilizer.weight)} {units(fertilizer.fertilizer.liquid())}",
-                                }
-                            }
+                            fertilizer,
+                            on_exclude: props.on_exclude,
                         }
+                    }
+                }
+
+                div {
+                    class: "fertilizers-browser__pagination",
+
+                    Pagination {
+                        page_index: fertilizers_set.read().page_index(),
+                        limit: 8,
+                        total: fertilizers_set.read().total(),
+                        on_change: move |next_page| {
+                            *page_index.write() = next_page;
+                        },
                     }
                 }
             }

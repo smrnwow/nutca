@@ -126,8 +126,51 @@ impl Fertilizer {
     pub fn nutrients(&self) -> Vec<Nutrient> {
         self.nutrients
             .iter()
-            .filter(|nutrient_amount| nutrient_amount.value() > 0.)
-            .map(|nutrient_amount| *nutrient_amount)
+            .filter(|nutrient| nutrient.value() > 0.)
+            .map(|nutrient| *nutrient)
+            .collect()
+    }
+
+    pub fn macro_nutrients(&self) -> Vec<Nutrient> {
+        self.nutrients()
+            .iter()
+            .filter(|nutrient| match nutrient {
+                Nutrient::Nitrogen(_)
+                | Nutrient::Phosphorus(_)
+                | Nutrient::Potassium(_)
+                | Nutrient::Calcium(_)
+                | Nutrient::Magnesium(_)
+                | Nutrient::Sulfur(_) => true,
+                _ => false,
+            })
+            .map(|nutrient| *nutrient)
+            .collect()
+    }
+
+    pub fn nitrogen_forms(&self) -> Vec<Nutrient> {
+        self.nutrients()
+            .iter()
+            .filter(|nutrient| match nutrient {
+                Nutrient::NitrogenNitrate(_) | Nutrient::NitrogenAmmonium(_) => true,
+                _ => false,
+            })
+            .map(|nutrient| *nutrient)
+            .collect()
+    }
+
+    pub fn micro_nutrients(&self) -> Vec<Nutrient> {
+        self.nutrients()
+            .iter()
+            .filter(|nutrient| match nutrient {
+                Nutrient::Iron(_)
+                | Nutrient::Manganese(_)
+                | Nutrient::Copper(_)
+                | Nutrient::Zinc(_)
+                | Nutrient::Boron(_)
+                | Nutrient::Molybdenum(_) => true,
+                _ => false,
+            })
+            .map(|nutrient| *nutrient)
             .collect()
     }
 

@@ -1,7 +1,7 @@
 use crate::model::chemistry::Nutrient;
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
-use crate::model::solutions::{FertilizerWeight, NutrientResult};
+use crate::model::solutions::{FertilizerWeight, FertilizersSet, NutrientResult};
 use serde::{Deserialize, Serialize};
 use std::ops::Index;
 
@@ -12,6 +12,7 @@ pub struct Solution {
     profile: Profile,
     value: Profile,
     fertilizers_weights: Vec<FertilizerWeight>,
+    redurant_fertilizers: Vec<Fertilizer>,
     water_amount: usize,
 }
 
@@ -23,6 +24,7 @@ impl Solution {
             profile,
             value: Profile::new(),
             fertilizers_weights: Vec::new(),
+            redurant_fertilizers: Vec::new(),
             water_amount: 1,
         }
     }
@@ -34,28 +36,37 @@ impl Solution {
             profile: Profile::new(),
             value: Profile::new(),
             fertilizers_weights: Vec::new(),
+            redurant_fertilizers: Vec::new(),
             water_amount: 1,
         }
     }
 
     pub fn empty(fertilizers: Vec<Fertilizer>) -> Self {
-        let mut result_profile = Self::new();
+        let mut solution = Self::new();
 
         for fertilizer in fertilizers {
-            result_profile.add_fertilizer_weight(fertilizer, 0.0);
+            solution.add_fertilizer_weight(fertilizer, 0.0);
         }
 
-        result_profile
+        solution
     }
 
     pub fn add_fertilizer_weight(&mut self, fertilizer: Fertilizer, amount: f64) {
-        let fertilizer_weight = FertilizerWeight::new(fertilizer, amount);
+        if amount <= 0.0 {
+            self.add_redurant_fertilizer(fertilizer);
+        } else {
+            let fertilizer_weight = FertilizerWeight::new(fertilizer, amount);
 
-        fertilizer_weight.nutrients().iter().for_each(|nutrient| {
-            self.value.add_nutrient(*nutrient);
-        });
+            fertilizer_weight.nutrients().iter().for_each(|nutrient| {
+                self.value.add_nutrient(*nutrient);
+            });
 
-        self.fertilizers_weights.push(fertilizer_weight);
+            self.fertilizers_weights.push(fertilizer_weight);
+        }
+    }
+
+    pub fn add_redurant_fertilizer(&mut self, fertilizer: Fertilizer) {
+        self.redurant_fertilizers.push(fertilizer);
     }
 
     pub fn nutrient_result(&self, nutrient: Nutrient) -> NutrientResult {
@@ -90,8 +101,20 @@ impl Solution {
         self.profile.clone()
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.fertilizers_weights.len() == 0
+    }
+
+    pub fn fertilizers_set(&self) -> FertilizersSet {
+        FertilizersSet::new(
+            self.water_amount,
+            self.fertilizers_weights.clone(),
+            self.redurant_fertilizers.clone(),
+        )
+    }
+
     pub fn fertilizers(&self) -> Vec<FertilizerWeight> {
-        let mut fertilizers = self
+        let mut fertilizers_weights = self
             .fertilizers_weights
             .iter()
             .map(|fertilizer_weight| {
@@ -102,9 +125,17 @@ impl Solution {
             })
             .collect::<Vec<FertilizerWeight>>();
 
-        fertilizers.sort_by(|a, b| b.weight.partial_cmp(&a.weight).unwrap());
+        fertilizers_weights.sort_by(|a, b| b.weight.partial_cmp(&a.weight).unwrap());
 
-        fertilizers
+        let mut redurant_fertilizers = self
+            .redurant_fertilizers
+            .iter()
+            .map(|fertilizer| FertilizerWeight::new(fertilizer.clone(), 0.0))
+            .collect::<Vec<FertilizerWeight>>();
+
+        redurant_fertilizers.extend(fertilizers_weights.into_iter());
+
+        redurant_fertilizers
     }
 
     pub fn water_amount(&self) -> usize {

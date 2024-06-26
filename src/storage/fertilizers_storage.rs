@@ -220,5 +220,14 @@ impl FertilizersStorage {
         for fertilizer in fertilizers {
             self.add(fertilizer);
         }
+
+        for index in 0..=100 {
+            let fertilizer = Fertilizer::build()
+                .with_id(Uuid::new_v4().to_string())
+                .with_name(format!("Монофосфат калия {}", index))
+                .with_formula(Formula::from("KH2PO4"));
+
+            self.add(fertilizer);
+        }
     }
 }

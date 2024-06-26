@@ -1,15 +1,11 @@
 use crate::model::chemistry::Nutrient;
-use crate::model::fertilizers::Fertilizer;
+use crate::model::fertilizers::FertilizersListing;
 use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfileForm;
-use crate::ui::components::solutions::{
-    FertilizersBrowser, FertilizersUsed, SolutionComposition, SolutionFertilizers,
-};
-use crate::ui::components::utils::{
-    Block, Button, Card, Divider, NumberField, Select, Text, TextField, Title,
-};
+use crate::ui::components::solutions::{FertilizersBrowser, FertilizersUsed, SolutionComposition};
+use crate::ui::components::utils::{Block, Button, Card, Divider, Select, Text, TextField, Title};
 use dioxus::prelude::*;
 
 fn round(value: f64) -> String {
@@ -29,14 +25,14 @@ pub struct SolutionEditorProps {
     solution: Memo<Solution>,
     profile: Memo<Profile>,
     profiles: Memo<Vec<Profile>>,
-    fertilizers: Memo<Vec<Fertilizer>>,
-    selected_fertilizers: Memo<Vec<String>>,
+    fertilizers_listing: Signal<FertilizersListing>,
     on_profile_change: EventHandler<String>,
     on_profile_search: EventHandler<String>,
     on_profile_nutrient_update: EventHandler<Nutrient>,
     on_fertilizer_select: EventHandler<String>,
-    on_fertilizer_remove: EventHandler<String>,
+    on_fertilizer_exclude: EventHandler<String>,
     on_fertilizer_search: EventHandler<String>,
+    on_fertilizers_paginate: EventHandler<usize>,
     on_volume_update: EventHandler<usize>,
     on_save: EventHandler<String>,
 }
@@ -47,8 +43,6 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
 
     let mut solution_name = use_signal(|| props.solution.read().name());
 
-    let selected_fertilizers = use_memo(move || props.solution.read().fertilizers());
-
     rsx! {
         Card {
             Block {
@@ -58,32 +52,6 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
             }
 
             Divider {}
-
-            /*
-            Block {
-                exclude_padding: "vertical",
-
-                div {
-                    class: "tabs",
-
-                    div {
-                        class: tab_class(String::from("profile"), active_tab.read().clone()),
-                        onclick: move |_| {
-                            *active_tab.write() = String::from("profile");
-                        },
-                        "Заполните профиль питания",
-                    }
-
-                    div {
-                        class: tab_class(String::from("fertilizers"), active_tab.read().clone()),
-                        onclick: move |_| {
-                            *active_tab.write() = String::from("fertilizers");
-                        },
-                        "Выберите удобрения",
-                    }
-                }
-            }
-            */
 
             Block {
                 exclude_padding: "bottom",
@@ -100,6 +68,7 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
                     }
 
                     Row {
+                        horizontal: "end",
                         vertical: "center",
 
                         Text {
@@ -111,19 +80,26 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
                             class: "fertilizers-source__tabs",
 
                             button {
-                                class: {tab_class(String::from("profile"), profile_tab.read().clone())},
+                                class: tab_class(String::from("profile"), profile_tab.read().clone()),
                                 onclick: move |_| {
                                     *profile_tab.write() = String::from("profile");
                                 },
-                                "Желаемый"
+                                "Желаемый",
                             }
 
                             button {
-                                class: {tab_class(String::from("solution-composition"), profile_tab.read().clone())},
+                                class: tab_class(String::from("solution-composition"), profile_tab.read().clone()),
                                 onclick: move |_| {
                                     *profile_tab.write() = String::from("solution-composition");
                                 },
-                                "Рассчитанный"
+                                "Рассчитанный",
+
+                                if !props.solution.read().is_empty() {
+                                    span {
+                                        class: "fertilizers-source__badge",
+                                        "!",
+                                    }
+                                }
                             }
                         }
                     }
@@ -167,15 +143,15 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
             Block {
                 Row {
                     FertilizersBrowser {
-                        fertilizers: props.fertilizers,
+                        fertilizers_listing: props.fertilizers_listing,
                         on_select: props.on_fertilizer_select,
                         on_search: props.on_fertilizer_search,
+                        on_paginate: props.on_fertilizers_paginate,
                     }
 
                     FertilizersUsed {
-                        fertilizers_used: selected_fertilizers,
                         solution: props.solution,
-                        on_remove: props.on_fertilizer_remove,
+                        on_exclude: props.on_fertilizer_exclude,
                         on_volume_update: props.on_volume_update,
                     }
                 }

@@ -13,23 +13,30 @@ impl NutrientResult {
     }
 
     pub fn diff(&self) -> f64 {
-        println!(
-            "result {} desired {}",
-            self.result_amount, self.desired_amount
-        );
+        self.desired_amount - self.result_amount
+    }
 
-        let diff = (self.result_amount - self.desired_amount).abs();
-
-        println!("diff {}", diff);
+    pub fn diff_percent(&self) -> f64 {
+        let diff = self.diff().abs();
 
         if diff == 0. {
-            println!("0 result {} ", diff);
-
             diff
         } else {
-            println!("1 result {} ", (diff / self.desired_amount) * 100.);
-
             (diff / self.desired_amount) * 100.
         }
+    }
+
+    pub fn diff_color(&self) -> String {
+        let diff_percent = self.diff_percent();
+
+        if diff_percent < 2. {
+            return String::from("green");
+        }
+
+        if diff_percent < 10. {
+            return String::from("yellow");
+        }
+
+        String::from("red")
     }
 }

@@ -42,7 +42,7 @@ impl Solver {
 
                     None => {
                         self.redurant_fertilizers.iter().for_each(|fertilizer| {
-                            solution.add_fertilizer_weight(fertilizer.clone(), 0.)
+                            solution.add_redurant_fertilizer(fertilizer.clone());
                         });
 
                         return Ok(solution);

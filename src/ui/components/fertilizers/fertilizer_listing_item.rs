@@ -1,6 +1,6 @@
 use crate::model::fertilizers::Fertilizer;
 use crate::ui::components::utils::icons::More;
-use crate::ui::components::utils::{Badge, Button, Dropdown, DropdownOption, TableCell, TableRow};
+use crate::ui::components::utils::{Button, Dropdown, DropdownOption, TableCell, TableRow, Tag};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -33,7 +33,7 @@ pub fn FertilizerListingItem(props: FertilizerListingItemProps) -> Element {
                     class: "fertilizer-listing__nutrients",
 
                     for nutrient in fertilizer.read().nutrients() {
-                        Badge {
+                        Tag {
                             text: nutrient.symbol(),
                         }
                     }

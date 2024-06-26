@@ -3,8 +3,8 @@ pub mod icons;
 mod accordion;
 pub use accordion::Accordion;
 
-mod badge;
-pub use badge::Badge;
+mod tag;
+pub use tag::Tag;
 
 mod checkbox;
 pub use checkbox::Checkbox;
@@ -65,3 +65,6 @@ pub use tooltip::Tooltip;
 
 // mod switch_toggle;
 // pub use switch_toggle::SwitchToggle;
+
+mod pagination;
+pub use pagination::Pagination;

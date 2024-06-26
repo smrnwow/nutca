@@ -5,6 +5,10 @@ use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
 use ellp::{problem::VariableId, Bound, ConstraintOp, DualSimplexSolver, Problem, SolverResult};
 
+fn round(value: f64) -> f64 {
+    format!("{:.6}", value).parse().unwrap()
+}
+
 pub struct Calculation {
     desired_profile: Profile,
     fertilizers: Vec<Fertilizer>,
@@ -111,7 +115,7 @@ impl Calculation {
 
             result.iter().enumerate().for_each(|(idx, amount)| {
                 if let Some(fertilizer) = self.fertilizers.get(idx) {
-                    solution.add_fertilizer_weight(fertilizer.clone(), *amount / 10.);
+                    solution.add_fertilizer_weight(fertilizer.clone(), round(*amount / 10.));
                 }
             });
 

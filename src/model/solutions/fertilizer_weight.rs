@@ -20,4 +20,32 @@ impl FertilizerWeight {
             .map(|nutrient| nutrient.new(nutrient.value() * self.weight * 10.))
             .collect()
     }
+
+    pub fn is_redurant(&self) -> bool {
+        self.weight == 0.
+    }
+
+    pub fn macro_nutrients(&self) -> Vec<Nutrient> {
+        self.fertilizer
+            .macro_nutrients()
+            .iter()
+            .map(|nutrient| nutrient.new(nutrient.value() * self.weight * 10.))
+            .collect()
+    }
+
+    pub fn nitrogen_forms(&self) -> Vec<Nutrient> {
+        self.fertilizer
+            .nitrogen_forms()
+            .iter()
+            .map(|nutrient| nutrient.new(nutrient.value() * self.weight * 10.))
+            .collect()
+    }
+
+    pub fn micro_nutrients(&self) -> Vec<Nutrient> {
+        self.fertilizer
+            .micro_nutrients()
+            .iter()
+            .map(|nutrient| nutrient.new(nutrient.value() * self.weight * 10.))
+            .collect()
+    }
 }

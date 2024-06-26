@@ -11,18 +11,22 @@ pub struct ProfileNutrientInputProps {
 #[component]
 pub fn ProfileNutrientInput(props: ProfileNutrientInputProps) -> Element {
     rsx! {
-        if let Some(on_update) = props.on_update {
-            NutrientValue {
-                symbol: props.nutrient.symbol(),
-                value: props.nutrient.value(),
-                on_change: move |value| {
-                    on_update.call(props.nutrient.new(value));
-                },
-            }
-        } else {
-            NutrientValue {
-                symbol: props.nutrient.symbol(),
-                value: props.nutrient.value(),
+        div {
+            class: "profile-nutrient-input",
+
+            if let Some(on_update) = props.on_update {
+                NutrientValue {
+                    symbol: props.nutrient.symbol(),
+                    value: props.nutrient.value(),
+                    on_change: move |value| {
+                        on_update.call(props.nutrient.new(value));
+                    },
+                }
+            } else {
+                NutrientValue {
+                    symbol: props.nutrient.symbol(),
+                    value: props.nutrient.value(),
+                }
             }
         }
     }

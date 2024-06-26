@@ -113,4 +113,23 @@ impl Nutrient {
             Self::Molybdenum(value) => Self::Molybdenum(value + amount),
         }
     }
+
+    pub fn name(&self) -> String {
+        match self {
+            Self::Nitrogen(_) => String::from("Азот (N) - макроэлемент"),
+            Self::NitrogenNitrate(_) => String::from("Нитратная форма азота (NO3)"),
+            Self::NitrogenAmmonium(_) => String::from("Аммонийная форма азота (NH4)"),
+            Self::Phosphorus(_) => String::from("Фосфор (P) - макроэлемен"),
+            Self::Potassium(_) => String::from("Калий (K) - макроэлемент"),
+            Self::Calcium(_) => String::from("Кальций (Ca) - макроэлемент"),
+            Self::Magnesium(_) => String::from("Магний (Mg) - макроэлемент"),
+            Self::Sulfur(_) => String::from("Сера (S) - макроэлемент"),
+            Self::Iron(_) => String::from("Железо (Fe) - микроэлемент"),
+            Self::Manganese(_) => String::from("Марганец (Mn) - микроэлемент"),
+            Self::Copper(_) => String::from("Медь (Cu) - микроэлемент"),
+            Self::Zinc(_) => String::from("Цинк (Zn) - микроэлемент"),
+            Self::Boron(_) => String::from("Бор (B) - микроэлемент"),
+            Self::Molybdenum(_) => String::from("Молибден (Mo) - микроэлемент"),
+        }
+    }
 }
