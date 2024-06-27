@@ -1,6 +1,7 @@
 use crate::model::solutions::Solution;
+use crate::ui::components::layout::Row;
 use crate::ui::components::utils::icons::More;
-use crate::ui::components::utils::{Button, Dropdown, DropdownOption, TableCell, TableRow};
+use crate::ui::components::utils::{Button, Dropdown, DropdownOption, Text};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -12,19 +13,22 @@ pub struct SolutionListingItemProps {
 }
 
 #[component]
-pub fn SolutionListingItem(props: SolutionListingItemProps) -> Element {
+pub fn SolutionsListingItem(props: SolutionListingItemProps) -> Element {
     let solution = use_signal(|| props.solution);
 
     rsx! {
-        TableRow {
-            TableCell {
-                p {
-                    class: "solutions-listing__name",
-                    "{solution.read().name()}",
-                }
-            }
+        div {
+            class: "solutions-listing-item",
 
-            TableCell {
+            Row {
+                horizontal: "space-between",
+                vertical: "center",
+
+                Text {
+                    size: "x-small",
+                    {solution.read().name()},
+                }
+
                 Dropdown {
                     header: rsx! {
                         Button {

@@ -27,8 +27,6 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
 
     let profile = use_memo(move || solution_builder.read().profile());
 
-    let selected_fertilizers = use_memo(move || solution_builder.read().fertilizers());
-
     let mut profiles_listing = use_signal(move || profiles_storage.read().list());
 
     let profiles = use_memo(move || profiles_listing.read().list());

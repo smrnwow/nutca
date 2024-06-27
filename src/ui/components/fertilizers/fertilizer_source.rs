@@ -2,13 +2,17 @@ use super::{FertilizersFormula, FertilizersLabel};
 use crate::model::fertilizers::{Fertilizer, SourceType};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
+use crate::ui::components::layout::{Column, Row};
+use crate::ui::components::utils::{ButtonsGroup, Title};
 use dioxus::prelude::*;
 
-fn tab_active_class(source_type: SourceType, tab_value: SourceType) -> String {
+fn tab_class(source_type: SourceType, tab_value: SourceType) -> String {
     if source_type == tab_value {
-        String::from("fertilizers-source__tab fertilizers-source__tab_active")
+        String::from(
+            "buttons-group__button buttons-group__button_size-small buttons-group__button_active",
+        )
     } else {
-        String::from("fertilizers-source__tab")
+        String::from("buttons-group__button buttons-group__button_size-small")
     }
 }
 
@@ -29,33 +33,32 @@ pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
     let source_type = *props.source_type.read();
 
     rsx! {
-        div {
-            class: "fertilizers-source",
+        Column {
+            gap: "medium",
 
-            div {
-                class: "fertilizers-source__title",
-                "Состав"
-            }
+            Row {
+                horizontal: "space-between",
+                vertical: "center",
 
-            div {
-                class: "fertilizers-source__tabs",
-
-                button {
-                    class: "{tab_active_class(source_type, SourceType::Label)}",
-                    onclick: move |_| props.on_source_type_update.call(SourceType::Label),
-                    "С этикетки"
+                Title {
+                    size: "small",
+                    text: "Состав",
                 }
 
-                button {
-                    class: "{tab_active_class(source_type, SourceType::Formula)}",
-                    onclick: move |_| props.on_source_type_update.call(SourceType::Formula),
-                    "По формуле"
+                ButtonsGroup {
+                    button {
+                        class: tab_class(source_type, SourceType::Label),
+                        onclick: move |_| props.on_source_type_update.call(SourceType::Label),
+                        "С этикетки",
+                    }
+
+                    button {
+                        class: tab_class(source_type, SourceType::Formula),
+                        onclick: move |_| props.on_source_type_update.call(SourceType::Formula),
+                        "По формуле",
+                    }
                 }
             }
-        }
-
-        div {
-            class: "composition__source",
 
             match source_type {
                 SourceType::Label => {

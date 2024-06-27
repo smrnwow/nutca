@@ -25,6 +25,8 @@ pub fn FertilizersUsed(props: FertilizersUsedProps) -> Element {
 
     rsx! {
         Column {
+            gap: "medium",
+
             Title {
                 size: "small",
                 text: "Используемые удобрения",
@@ -36,7 +38,6 @@ pub fn FertilizersUsed(props: FertilizersUsedProps) -> Element {
 
                 Text {
                     nowrap: true,
-
                     "Объем раствора: ",
                 }
 
@@ -74,7 +75,7 @@ pub fn FertilizersUsed(props: FertilizersUsedProps) -> Element {
 
                     Pagination {
                         page_index: fertilizers_set.read().page_index(),
-                        limit: 8,
+                        limit: fertilizers_set.read().limit(),
                         total: fertilizers_set.read().total(),
                         on_change: move |next_page| {
                             *page_index.write() = next_page;

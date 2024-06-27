@@ -53,6 +53,10 @@ impl FertilizersSet {
         self.page_index
     }
 
+    pub fn limit(&self) -> usize {
+        self.limit
+    }
+
     pub fn paginate(&mut self, page_index: usize) {
         self.page_index = page_index;
     }

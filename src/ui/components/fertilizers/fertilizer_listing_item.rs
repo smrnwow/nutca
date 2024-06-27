@@ -1,6 +1,7 @@
 use crate::model::fertilizers::Fertilizer;
+use crate::ui::components::layout::Row;
 use crate::ui::components::utils::icons::More;
-use crate::ui::components::utils::{Button, Dropdown, DropdownOption, TableCell, TableRow, Tag};
+use crate::ui::components::utils::{Button, Dropdown, DropdownOption, Text};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -15,32 +16,18 @@ pub fn FertilizerListingItem(props: FertilizerListingItemProps) -> Element {
     let fertilizer = use_signal(|| props.fertilizer);
 
     rsx! {
-        TableRow {
-            TableCell {
-                p {
-                    class: "fertilizer-listing__name",
+        div {
+            class: "fertilizers-listing-item",
+
+            Row {
+                horizontal: "space-between",
+                vertical: "center",
+
+                Text {
+                    size: "x-small",
                     "{fertilizer.read().name()}",
                 }
 
-                p {
-                    class: "fertilizer-listing__vendor",
-                    "Производитель: {fertilizer.read().vendor()}",
-                }
-            }
-
-            TableCell {
-                div {
-                    class: "fertilizer-listing__nutrients",
-
-                    for nutrient in fertilizer.read().nutrients() {
-                        Tag {
-                            text: nutrient.symbol(),
-                        }
-                    }
-                }
-            }
-
-            TableCell {
                 Dropdown {
                     header: rsx! {
                         Button {

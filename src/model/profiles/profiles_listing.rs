@@ -4,6 +4,8 @@ use crate::model::profiles::Profile;
 pub struct ProfilesListing {
     profiles: Vec<Profile>,
     search_query: String,
+    page_index: usize,
+    limit: Option<usize>,
 }
 
 impl ProfilesListing {
@@ -11,6 +13,8 @@ impl ProfilesListing {
         Self {
             profiles,
             search_query: String::new(),
+            page_index: 1,
+            limit: None,
         }
     }
 
@@ -31,19 +35,66 @@ impl ProfilesListing {
     }
 
     pub fn list(&self) -> Vec<Profile> {
-        if self.search_query.len() == 0 {
-            self.profiles.clone()
+        let profiles: Vec<Profile> = self
+            .profiles
+            .iter()
+            .filter(|profile| {
+                profile
+                    .name()
+                    .to_lowercase()
+                    .contains(self.search_query.as_str())
+            })
+            .map(|profile| profile.clone())
+            .collect();
+
+        if let Some(limit) = self.limit {
+            let start = (self.page_index - 1) * limit;
+
+            let end = (self.page_index * limit) - 1;
+
+            if end < profiles.len() {
+                Vec::from(&profiles[start..=end])
+            } else {
+                Vec::from(&profiles[start..])
+            }
         } else {
-            self.profiles
-                .iter()
-                .filter(|profile| {
-                    profile
-                        .name()
-                        .to_lowercase()
-                        .contains(self.search_query.as_str())
-                })
-                .map(|profile| profile.clone())
-                .collect()
+            profiles
         }
+    }
+
+    pub fn paginate(&mut self, page_index: usize) {
+        self.page_index = page_index;
+    }
+
+    pub fn update_limit(&mut self, limit: Option<usize>) {
+        self.limit = limit;
+    }
+
+    pub fn total(&self) -> usize {
+        self.profiles
+            .iter()
+            .filter(|profile| {
+                profile
+                    .name()
+                    .to_lowercase()
+                    .contains(self.search_query.as_str())
+            })
+            .collect::<Vec<&Profile>>()
+            .len()
+    }
+
+    pub fn page_index(&self) -> usize {
+        self.page_index
+    }
+
+    pub fn limit(&self) -> usize {
+        match self.limit {
+            Some(limit) => limit,
+            None => self.total(),
+        }
+    }
+
+    pub fn search_query(&self) -> String {
+        self.search_query.clone()
     }
 }

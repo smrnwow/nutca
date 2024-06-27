@@ -1,7 +1,8 @@
 use super::FertilizersBrowserItem;
 use crate::model::fertilizers::FertilizersListing;
 use crate::ui::components::layout::Column;
-use crate::ui::components::utils::{Pagination, Search, Title};
+use crate::ui::components::utils::icons::SearchIcon;
+use crate::ui::components::utils::{Pagination, TextField, Title};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -18,14 +19,20 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
 
     rsx! {
         Column {
+            gap: "medium",
+
             Title {
                 size: "small",
                 text: "Выбор удобрений",
             }
 
-            Search {
+            TextField {
+                value: fertilizers_listing.read().search_query(),
                 placeholder: "найти удобрение",
-                on_change: props.on_search,
+                on_input: props.on_search,
+                icon_left: rsx! {
+                    SearchIcon {}
+                }
             }
 
             div {
@@ -45,7 +52,7 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
 
                 Pagination {
                     page_index: fertilizers_listing.read().page_index(),
-                    limit: 8,
+                    limit: fertilizers_listing.read().limit(),
                     total: fertilizers_listing.read().total(),
                     on_change: move |next_page| {
                         props.on_paginate.call(next_page);

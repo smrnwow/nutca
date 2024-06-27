@@ -83,8 +83,16 @@ impl FertilizersListing {
         self.page_index = page_index;
     }
 
+    pub fn update_limit(&mut self, limit: usize) {
+        self.limit = limit;
+    }
+
     pub fn page_index(&self) -> usize {
         self.page_index
+    }
+
+    pub fn limit(&self) -> usize {
+        self.limit
     }
 
     pub fn total(&self) -> usize {
@@ -102,5 +110,9 @@ impl FertilizersListing {
             })
             .collect::<Vec<&Fertilizer>>()
             .len()
+    }
+
+    pub fn search_query(&self) -> String {
+        self.search_query.clone()
     }
 }

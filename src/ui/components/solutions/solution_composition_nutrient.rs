@@ -1,21 +1,9 @@
 use crate::model::chemistry::Nutrient;
 use crate::model::solutions::NutrientResult;
 use crate::ui::components::layout::Column;
-use crate::ui::components::utils::{Text, Tooltip};
+use crate::ui::components::utils::{Badge, Text, Tooltip};
 use crate::ui::components::NutrientValue;
 use dioxus::prelude::*;
-
-fn nutrient_class(badge: bool, nutrient_result: NutrientResult) -> String {
-    let diff_color = nutrient_result.diff_color();
-
-    let class = String::from("solution-composition-nutrient");
-
-    if badge {
-        return format!("{class} solution-composition-nutrient_{diff_color}");
-    }
-
-    class
-}
 
 fn tooltip_text(nutrient_result: NutrientResult) -> String {
     let diff_percent = nutrient_result.diff_percent();
@@ -48,22 +36,24 @@ pub struct SolutionCompositionNutrientProps {
 
 #[component]
 pub fn SolutionCompositionNutrient(props: SolutionCompositionNutrientProps) -> Element {
-    let diff_color = props.nutrient_result.diff_color();
+    let diff_state = props.nutrient_result.diff_state();
 
     rsx! {
         div {
-            class: nutrient_class(!props.badge, props.nutrient_result),
+            class: "solution-composition-nutrient",
 
             if !props.badge {
-                span {
-                    class: "solution-composition-nutrient__badge solution-composition-nutrient__badge_{diff_color}",
-                    "!",
+                Badge {
+                    size: "small",
+                    state: diff_state.clone(),
+                    text: "!"
                 }
             }
 
             Tooltip {
                 target: rsx! {
                     NutrientValue {
+                        state: diff_state,
                         symbol: props.nutrient.symbol(),
                         value: props.nutrient.value(),
                     }

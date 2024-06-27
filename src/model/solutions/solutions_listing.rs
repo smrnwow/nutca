@@ -4,6 +4,8 @@ use crate::model::solutions::Solution;
 pub struct SolutionsListing {
     solutions: Vec<Solution>,
     search_query: String,
+    page_index: usize,
+    limit: usize,
 }
 
 impl SolutionsListing {
@@ -11,6 +13,8 @@ impl SolutionsListing {
         Self {
             solutions,
             search_query: String::new(),
+            page_index: 1,
+            limit: 10,
         }
     }
 
@@ -45,5 +49,34 @@ impl SolutionsListing {
                 .map(|solution| solution.clone())
                 .collect()
         }
+    }
+
+    pub fn paginate(&mut self, page_index: usize) {
+        self.page_index = page_index;
+    }
+
+    pub fn page_index(&self) -> usize {
+        self.page_index
+    }
+
+    pub fn limit(&self) -> usize {
+        self.limit
+    }
+
+    pub fn total(&self) -> usize {
+        self.solutions
+            .iter()
+            .filter(|solution| {
+                solution
+                    .name()
+                    .to_lowercase()
+                    .contains(self.search_query.as_str())
+            })
+            .collect::<Vec<&Solution>>()
+            .len()
+    }
+
+    pub fn search_query(&self) -> String {
+        self.search_query.clone()
     }
 }

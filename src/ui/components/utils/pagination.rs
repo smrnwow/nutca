@@ -77,6 +77,7 @@ fn cells(page_index: usize, total: usize, limit: usize) -> Vec<String> {
 
 #[derive(Props, PartialEq, Clone)]
 pub struct PaginationProps {
+    size: Option<String>,
     page_index: usize,
     limit: usize,
     total: usize,
@@ -85,6 +86,8 @@ pub struct PaginationProps {
 
 #[component]
 pub fn Pagination(props: PaginationProps) -> Element {
+    let size = props.size.unwrap_or(String::from("small"));
+
     let page_index = props.page_index;
 
     let pages_count = (props.total as f32 / props.limit as f32).ceil() as usize;
@@ -95,7 +98,7 @@ pub fn Pagination(props: PaginationProps) -> Element {
 
     rsx! {
         div {
-            class: "pagination",
+            class: "pagination pagination_size-{size}",
 
             button {
                 class: disabled_cell_class(is_first_page),

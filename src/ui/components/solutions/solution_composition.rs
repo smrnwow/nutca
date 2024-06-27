@@ -16,7 +16,7 @@ pub fn SolutionComposition(props: SolutionCompositionProps) -> Element {
 
     rsx! {
         Column {
-            gap: "small",
+            gap: "medium",
 
             Column {
                 gap: "x-small",

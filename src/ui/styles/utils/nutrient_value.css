@@ -1,0 +1,78 @@
+.nutrient-value {
+    display: flex;
+    position: relative;
+    max-width: 98px;
+    width: 100%;
+}
+
+.nutrient-value__symbol {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 0px;
+    top: 0px;
+    width: 40%;
+    height: 100%;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.nutrient-value__value {
+    display: flex;
+    align-items: center;
+    margin: 0px;
+    border-radius: 8px;
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid rgba(225, 228, 234, 1);
+    padding: 4px 4px 4px calc(40% + 4px);
+    box-shadow: 0px 1px 2px 0px rgba(10, 13, 20, 0.03);
+    font-size: 12px;
+    line-height: 16px;
+    transition: .1s ease-out;
+    box-sizing: border-box;
+}
+
+.nutrient-value::after {
+    content: "";
+    position: absolute;
+    left: 40%;
+    height: 100%;
+    width: 1px;
+    background-color: rgba(225, 228, 234, 1);
+}
+
+.nutrient-value__value:focus {
+    border: 1px solid rgba(14, 18, 27, 1);
+    outline: 2px solid rgba(153, 160, 174, 0.16);
+    outline-offset: 2px;
+}
+
+.nutrient-value:focus-within::after {
+    background-color: rgba(14, 18, 27, 1);
+}
+
+.nutrient-value_state-success .nutrient-value__value {
+    border: 1px solid rgba(31, 193, 107, 1);
+}
+
+.nutrient-value_state-success::after {
+    background-color: rgba(31, 193, 107, 1);
+}
+
+.nutrient-value_state-warn .nutrient-value__value {
+    border: 1px solid rgba(246, 181, 30, 1);
+}
+
+.nutrient-value_state-warn::after {
+    background-color: rgba(246, 181, 30, 1);
+}
+
+.nutrient-value_state-error .nutrient-value__value {
+    border: 1px solid rgba(251, 55, 72, 1);
+}
+
+.nutrient-value_state-error::after {
+    background-color: rgba(251, 55, 72, 1);
+}

@@ -1,0 +1,96 @@
+.number-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+}
+
+.number-field__label {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+}
+
+.number-field__button {
+    position: absolute;
+    background: transparent;
+    transform: translateY(-50%);
+    top: 50%;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0px;
+}
+
+.number-field_size-small .number-field__button_left {
+    left: 6px;
+}
+
+.number-field_size-medium .number-field__button_left {
+    left: 8px;
+}
+
+.number-field_size-big .number-field__button_left {
+    left: 10px;
+}
+
+.number-field_size-small .number-field__button_right {
+    right: 6px;
+}
+
+.number-field_size-medium .number-field__button_right {
+    right: 8px;
+}
+
+.number-field_size-big .number-field__button_right {
+    right: 10px;
+}
+
+.number-field__button .icon {
+    display: block;
+}
+
+.number-field__value {
+    position: relative;
+}
+
+.number-field__input {
+    width: 100%;
+    font-size: 14px;
+    line-height: 20px;
+    flex-grow: 1;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+    outline: none;
+    border-radius: 8px;
+    box-sizing: border-box;
+    border: 1px solid rgba(225, 228, 234, 1);
+    box-shadow: 1px 2px 0px rgba(10, 13, 20, 0.03);
+    transition: .1s ease-out;
+}
+
+.number-field_size-small .number-field__input {
+    padding: 6px 32px;
+    max-height: 32px;
+}
+
+.number-field_size-medium .number-field__input {
+    padding: 8px 36px;
+    max-height: 36px;
+}
+
+.number-field_size-big .number-field__input {
+    padding: 10px 40px;
+    max-height: 40px;
+}
+
+.number-field__value:focus-within .number-field__input, 
+.number-field__input:focus {
+    border: 1px solid rgba(14, 18, 27, 1);
+    outline: 2px solid rgba(153, 160, 174, 0.16);
+    outline-offset: 2px;
+}

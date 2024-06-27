@@ -1,5 +1,7 @@
 use crate::model::labels::{Component, Label, Units};
 use crate::ui::components::fertilizers::FertilizerComponentInput;
+use crate::ui::components::layout::{Column, Row};
+use crate::ui::components::utils::Text;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -14,62 +16,14 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
     let label = props.label.read();
 
     rsx! {
-        div {
-            class: "fertilizers-label",
+        Column {
+            gap: "medium",
 
-            div {
-                class: "fertilizers-label__units",
+            Row {
+                gap: "small",
 
-                p {
-                    class: "fertilizers-label__text",
-                    "Единицы измерения",
-                }
-
-                div {
-                    class: "fertilizers-label__units-controls",
-
-                    label {
-                        class: "fertilizers-label__unit",
-
-                        input {
-                            class: "fertilizers-label__input",
-                            r#type: "radio",
-                            name: "units",
-                            value: "percent",
-                            checked: "{label.units() == Units::Percent}",
-                            onchange: move |_| props.on_label_units_update.call(Units::Percent),
-                        },
-
-                        "Проценты",
-                    }
-
-                    label {
-                        class: "fertilizers-label__unit",
-
-                        input {
-                            class: "fertilizers-label__input",
-                            r#type: "radio",
-                            name: "units",
-                            value: "weight_volume",
-                            checked: "{label.units() == Units::WeightVolume}",
-                            onchange: move |_| props.on_label_units_update.call(Units::WeightVolume),
-                        },
-
-                        "мг/л",
-                    }
-                }
-            }
-
-            p {
-                class: "fertilizers-label__text",
-                "Макроэлементы"
-            }
-
-            div {
-                class: "fertilizers-label__group",
-
-                div {
-                    class: "nutrient-value__nutrient",
+                Column {
+                    gap: "x-small",
 
                     FertilizerComponentInput {
                         component: label[Component::Nitrogen(0.0)],
@@ -87,8 +41,8 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                     }
                 }
 
-                div {
-                    class: "nutrient-value__nutrient",
+                Column {
+                    gap: "x-small",
 
                     FertilizerComponentInput {
                         component: label[Component::Phosphor(0.0)],
@@ -101,8 +55,8 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                     }
                 }
 
-                div {
-                    class: "nutrient-value__nutrient",
+                Column {
+                    gap: "x-small",
 
                     FertilizerComponentInput {
                         component: label[Component::Potassium(0.0)],
@@ -115,8 +69,8 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                     }
                 }
 
-                div {
-                    class: "nutrient-value__nutrient",
+                Column {
+                    gap: "x-small",
 
                     FertilizerComponentInput {
                         component: label[Component::Calcium(0.0)],
@@ -129,8 +83,8 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                     }
                 }
 
-                div {
-                    class: "nutrient-value__nutrient",
+                Column {
+                    gap: "x-small",
 
                     FertilizerComponentInput {
                         component: label[Component::Magnesium(0.0)],
@@ -143,8 +97,8 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                     }
                 }
 
-                div {
-                    class: "nutrient-value__nutrient",
+                Column {
+                    gap: "x-small",
 
                     FertilizerComponentInput {
                         component: label[Component::Sulfur(0.0)],
@@ -163,65 +117,98 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 }
             }
 
-            p {
-                class: "fertilizers-label__text",
-                "Микроэлементы"
-            }
+            Row {
+                gap: "small",
 
-            div {
-                class: "fertilizers-label__group",
-
-                div {
-                    class: "nutrient-value__nutrient",
-
+                Column {
                     FertilizerComponentInput {
                         component: label[Component::Iron(0.0)],
                         on_update: props.on_label_component_update,
                     }
                 }
 
-                div {
-                    class: "nutrient-value__nutrient",
-
+                Column {
                     FertilizerComponentInput {
                         component: label[Component::Manganese(0.0)],
                         on_update: props.on_label_component_update,
                     }
                 }
 
-                div {
-                    class: "nutrient-value__nutrient",
-
+                Column {
                     FertilizerComponentInput {
                         component: label[Component::Copper(0.0)],
                         on_update: props.on_label_component_update,
                     }
                 }
 
-                div {
-                    class: "nutrient-value__nutrient",
-
+                Column {
                     FertilizerComponentInput {
                         component: label[Component::Zinc(0.0)],
                         on_update: props.on_label_component_update,
                     }
                 }
 
-                div {
-                    class: "nutrient-value__nutrient",
-
+                Column {
                     FertilizerComponentInput {
                         component: label[Component::Boron(0.0)],
                         on_update: props.on_label_component_update,
                     }
                 }
 
-                div {
-                    class: "nutrient-value__nutrient",
-
+                Column {
                     FertilizerComponentInput {
                         component: label[Component::Molybdenum(0.0)],
                         on_update: props.on_label_component_update,
+                    }
+                }
+            }
+
+            Row {
+                gap: "medium",
+
+                Text {
+                    size: "x-small",
+                    nowrap: true,
+                    "Единицы измерения",
+                }
+
+                Row {
+                    gap: "medium",
+
+                    Row {
+                        gap: "x-small",
+
+                        input {
+                            class: "fertilizers-label__input",
+                            r#type: "radio",
+                            name: "units",
+                            value: "percent",
+                            checked: "{label.units() == Units::Percent}",
+                            onchange: move |_| props.on_label_units_update.call(Units::Percent),
+                        },
+
+                        Text {
+                            size: "x-small",
+                            "Проценты",
+                        }
+                    }
+
+                    Row {
+                        gap: "x-small",
+
+                        input {
+                            class: "fertilizers-label__input",
+                            r#type: "radio",
+                            name: "units",
+                            value: "weight_volume",
+                            checked: "{label.units() == Units::WeightVolume}",
+                            onchange: move |_| props.on_label_units_update.call(Units::WeightVolume),
+                        },
+
+                        Text {
+                            size: "x-small",
+                            "мг/л",
+                        }
                     }
                 }
             }

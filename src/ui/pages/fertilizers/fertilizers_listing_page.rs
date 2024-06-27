@@ -1,7 +1,8 @@
 use crate::storage::FertilizersStorage;
 use crate::ui::components::fertilizers::FertilizerListingItem;
-use crate::ui::components::layout::Row;
-use crate::ui::components::utils::{Block, Button, Card, Divider, Search, Table, TableCell, Title};
+use crate::ui::components::layout::{Column, Page, Row, Section};
+use crate::ui::components::utils::icons::SearchIcon;
+use crate::ui::components::utils::{Block, Button, Card, Divider, Pagination, TextField, Title};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
@@ -10,17 +11,19 @@ use dioxus_router::prelude::*;
 pub fn FertilizersListingPage() -> Element {
     let fertilizers_storage = consume_context::<Signal<FertilizersStorage>>();
 
-    let mut fertilizers_listing = use_signal(move || fertilizers_storage.read().list());
+    let mut fertilizers_listing = use_signal(move || {
+        let mut listing = fertilizers_storage.read().list();
+
+        listing.update_limit(10);
+
+        listing
+    });
 
     let fertilizers = use_memo(move || fertilizers_listing.read().list());
 
     rsx! {
-        div {
-            class: "fertilizers-index",
-
-            section {
-                class: "fertilizer-listing",
-
+        Page {
+            Section {
                 Card {
                     Block {
                         Title {
@@ -32,10 +35,14 @@ pub fn FertilizersListingPage() -> Element {
 
                     Block {
                         Row {
-                            Search {
+                            TextField {
+                                value: fertilizers_listing.read().search_query(),
                                 placeholder: "найти удобрение",
-                                on_change: move |query| {
+                                on_input: move |query| {
                                     fertilizers_listing.write().search(query);
+                                },
+                                icon_left: rsx! {
+                                    SearchIcon {}
                                 },
                             }
 
@@ -53,23 +60,10 @@ pub fn FertilizersListingPage() -> Element {
                     Block {
                         exclude_padding: "top",
 
-                        Table {
-                            header: rsx! {
-                                TableCell {
-                                    width: "50%",
-                                    "Название",
-                                }
+                        Column {
+                            div {
+                                class: "fertilizers-listing-table",
 
-                                TableCell {
-                                    width: "50%",
-                                    "Состав",
-                                }
-
-                                TableCell {
-                                    width: "1%",
-                                }
-                            },
-                            body: rsx! {
                                 for fertilizer in fertilizers.read().clone() {
                                     FertilizerListingItem {
                                         key: "{fertilizer.id()}",
@@ -86,6 +80,15 @@ pub fn FertilizersListingPage() -> Element {
                                         },
                                     }
                                 }
+                            }
+
+                            Pagination {
+                                page_index: fertilizers_listing.read().page_index(),
+                                limit: fertilizers_listing.read().limit(),
+                                total: fertilizers_listing.read().total(),
+                                on_change: move |next_page| {
+                                    fertilizers_listing.write().paginate(next_page);
+                                },
                             }
                         }
                     }

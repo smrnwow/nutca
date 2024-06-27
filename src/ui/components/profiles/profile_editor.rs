@@ -1,5 +1,6 @@
 use crate::model::chemistry::Nutrient;
 use crate::model::profiles::Profile;
+use crate::ui::components::layout::Row;
 use crate::ui::components::profiles::ProfileForm;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
 use dioxus::prelude::*;
@@ -49,8 +50,8 @@ pub fn ProfileEditor(props: ProfileEditorProps) -> Element {
             Divider {}
 
             Block {
-                div {
-                    class: "profile-editor-page__controls",
+                Row {
+                    horizontal: "end",
 
                     Button {
                         style: "stroke",

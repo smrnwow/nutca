@@ -1,0 +1,61 @@
+.buttons-group {
+    display: flex;
+}
+
+.buttons-group__button {
+    position: relative;
+    border: 1px solid rgba(225, 228, 234, 1);
+    border-right: none;
+    background: transparent;
+    color: rgba(82, 88, 102, 1);
+    box-sizing: border-box;
+    transition: .1s ease-out;
+    cursor: pointer;
+}
+
+.buttons-group__button:hover {
+    background: rgba(245, 247, 250, 1);
+}
+
+/*
+.buttons-group__button:focus {
+    outline: 2px solid rgba(153, 160, 174, 0.16);
+    outline-offset: 2px;
+}
+*/
+
+.buttons-group__button_active {
+    background: rgba(245, 247, 250, 1);
+    color: rgba(14, 18, 27, 1);
+}
+
+.buttons-group__button_disabled {
+    background: rgba(245, 247, 250, 1);
+    color: rgba(202, 207, 216, 1);
+    cursor: default;
+}
+
+.buttons-group__button:first-child {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.buttons-group__button:last-child {
+    border-right: 1px solid rgba(225, 228, 234, 1);
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.buttons-group__button_size-small {
+    padding: 4px 12px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+}
+
+.buttons-group__button_size-medium {
+    padding: 4px 12px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+}

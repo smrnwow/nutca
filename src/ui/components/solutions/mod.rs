@@ -5,7 +5,9 @@ mod fertilizers_used_item;
 mod solution_composition;
 mod solution_composition_nutrient;
 mod solution_editor;
-mod solution_listing_item;
+mod solutions_listing_controls;
+mod solutions_listing_item;
+mod solutions_listing_table;
 
 pub use fertilizers_browser::FertilizersBrowser;
 pub use fertilizers_browser_item::FertilizersBrowserItem;
@@ -14,4 +16,6 @@ pub use fertilizers_used_item::FertilizersUsedItem;
 pub use solution_composition::SolutionComposition;
 pub use solution_composition_nutrient::SolutionCompositionNutrient;
 pub use solution_editor::SolutionEditor;
-pub use solution_listing_item::SolutionListingItem;
+pub use solutions_listing_controls::SolutionsListingControls;
+pub use solutions_listing_item::SolutionsListingItem;
+pub use solutions_listing_table::SolutionsListingTable;

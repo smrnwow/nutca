@@ -17,7 +17,7 @@ pub fn ProfileForm(props: ProfileFormProps) -> Element {
 
     rsx! {
         Column {
-            gap: "small",
+            gap: "medium",
 
             Column {
                 gap: "x-small",

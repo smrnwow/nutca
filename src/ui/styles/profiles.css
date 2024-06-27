@@ -1,29 +1,18 @@
-.profiles-listing-page {
+.profiles-listing-table {
     display: flex;
-    justify-content: center;
-    width: 100%;
+    flex-direction: column;
+    gap: 2px;
+    height: calc(calc(38px * 10) - 2px);    
 }
 
-.profiles-listing-page__listing {
-    max-width: 660px;
-    width: 100%;
-}
-
-.profile-editor-page {
+.profiles-listing-item {
     display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-.profile-editor-page__workspace {
-    max-width: 660px;
-    width: 100%;
-}
-
-.profile-editor-page__controls {
-    display: flex;
-    justify-content: flex-end;
-    gap: 16px;
+    align-items: center;
+    padding: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+    background: var(--bg-weak-50, rgba(245, 247, 250, 1));
+    border-radius: 8px;
 }
 
 /*
@@ -33,19 +22,5 @@
 .profile-nutrient-input {
     flex-grow: 1;
     flex-basis: calc(100% / 6);
-    border-radius: 8px;
-    overflow: hidden;
-    font-size: 12px;
     max-width: 98px;
-    border: 1px solid rgba(225, 228, 234, 1);
-    box-shadow: 0px 1px 2px 0px rgba(10, 13, 20, 0.03);
-    box-sizing: border-box;
-}
-
-/* profiles listing */
-
-.profiles-listing__name {
-    margin: 0px;
-    font-size: 14px;
-    line-height: 20px;
 }

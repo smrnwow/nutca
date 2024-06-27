@@ -1,6 +1,7 @@
 use crate::model::profiles::Profile;
+use crate::ui::components::layout::Row;
 use crate::ui::components::utils::icons::More;
-use crate::ui::components::utils::{Button, Dropdown, DropdownOption, TableCell, TableRow};
+use crate::ui::components::utils::{Button, Dropdown, DropdownOption, Text};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -16,15 +17,18 @@ pub fn ProfileListingItem(props: ProfileListingItemProps) -> Element {
     let profile = use_signal(|| props.profile);
 
     rsx! {
-        TableRow {
-            TableCell {
-                p {
-                    class: "profiles-listing__name",
-                    "{profile.read().name()}",
-                }
-            }
+        div {
+            class: "profiles-listing-item",
 
-            TableCell {
+            Row {
+                horizontal: "space-between",
+                vertical: "center",
+
+                Text {
+                    size: "x-small",
+                    {profile.read().name()},
+                }
+
                 Dropdown {
                     header: rsx! {
                         Button {
@@ -38,7 +42,6 @@ pub fn ProfileListingItem(props: ProfileListingItemProps) -> Element {
                         DropdownOption {
                             on_click: move |_| {
                                 props.on_open.call(profile.read().id());
-                                // println!("open profile {}", profile.read().id());
                             },
 
                             "Открыть",
@@ -49,7 +52,7 @@ pub fn ProfileListingItem(props: ProfileListingItemProps) -> Element {
                                 props.on_use.call(profile.read().id());
                             },
 
-                            "Использовать в растворе",
+                            "Рассчитать раствор",
                         }
 
                         DropdownOption {

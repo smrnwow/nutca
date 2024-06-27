@@ -1,70 +1,54 @@
-pub mod icons;
-
 mod accordion;
-pub use accordion::Accordion;
-
-mod tag;
-pub use tag::Tag;
-
+mod badge;
+mod block;
+mod button;
+mod buttons_group;
+mod card;
 mod checkbox;
-pub use checkbox::Checkbox;
-
+mod divider;
+mod dropdown;
+mod dropdown_option;
+pub mod icons;
 mod number_field;
+mod pagination;
+mod search;
+mod select;
+mod step;
+mod table;
+mod table_cell;
+mod table_row;
+mod tag;
+mod text;
+mod text_field;
+mod title;
+mod tooltip;
+
+pub use accordion::Accordion;
+pub use badge::Badge;
+pub use block::Block;
+pub use button::Button;
+pub use buttons_group::ButtonsGroup;
+pub use card::Card;
+pub use checkbox::Checkbox;
+pub use divider::Divider;
+pub use dropdown::Dropdown;
+pub use dropdown_option::DropdownOption;
 pub use number_field::NumberField;
+pub use pagination::Pagination;
+pub use search::Search;
+pub use select::Select;
+pub use step::Step;
+pub use table::Table;
+pub use table_cell::TableCell;
+pub use table_row::TableRow;
+pub use tag::Tag;
+pub use text::Text;
+pub use text_field::TextField;
+pub use title::Title;
+pub use tooltip::Tooltip;
 
 // mod radio_card;
 // pub use radio_card::RadioCard;
 
-mod text_field;
-pub use text_field::TextField;
-
-mod divider;
-pub use divider::Divider;
-
-mod dropdown;
-pub use dropdown::Dropdown;
-
-mod dropdown_option;
-pub use dropdown_option::DropdownOption;
-
-mod title;
-pub use title::Title;
-
-mod card;
-pub use card::Card;
-
-mod block;
-pub use block::Block;
-
-mod button;
-pub use button::Button;
-
-mod search;
-pub use search::Search;
-
-mod select;
-pub use select::Select;
-
-mod table;
-pub use table::Table;
-
-mod table_cell;
-pub use table_cell::TableCell;
-
-mod table_row;
-pub use table_row::TableRow;
-
-mod step;
-pub use step::Step;
-
-mod text;
-pub use text::Text;
-
-mod tooltip;
-pub use tooltip::Tooltip;
-
 // mod switch_toggle;
 // pub use switch_toggle::SwitchToggle;
-
-mod pagination;
-pub use pagination::Pagination;

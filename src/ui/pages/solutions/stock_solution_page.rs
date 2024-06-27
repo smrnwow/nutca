@@ -41,6 +41,8 @@ pub fn StockSolutionPage(solution_id: String) -> Element {
 
     let part_b = use_memo(move || stock_solution_builder.read().part_b().clone());
 
+    let solution_select_value = use_memo(move || (solution.read().id(), solution.read().name()));
+
     rsx! {
         Page {
             Section {
@@ -58,7 +60,7 @@ pub fn StockSolutionPage(solution_id: String) -> Element {
                             Select {
                                 label: "Питательный раствор",
                                 placeholder: "выбрать раствор",
-                                value: (solution.read().id(), solution.read().name()),
+                                value: solution_select_value,
                                 options: solutions.read()
                                     .iter()
                                     .map(|solution| (solution.id(), solution.name()))

@@ -1,7 +1,7 @@
 use crate::model::fertilizers::{Fertilizer, SourceType};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
-use crate::ui::components::fertilizers::FertilizerSource;
+use crate::ui::components::fertilizers::{FertilizerComposition, FertilizerSource};
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{
     Block, Button, Card, Checkbox, Divider, Text, TextField, Title,
@@ -87,8 +87,16 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
             Divider {}
 
             Block {
-                div {
-                    class: "fertilizer-editor__controls",
+                FertilizerComposition {
+                    fertilizer: props.fertilizer
+                }
+            }
+
+            Divider {}
+
+            Block {
+                Row {
+                    horizontal: "end",
 
                     Button {
                         style: "stroke",

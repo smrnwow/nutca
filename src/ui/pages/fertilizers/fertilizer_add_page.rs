@@ -1,6 +1,7 @@
 use crate::model::fertilizers::FertilizerBuilder;
 use crate::storage::FertilizersStorage;
 use crate::ui::components::fertilizers::FertilizerEditor;
+use crate::ui::components::layout::{Page, Section};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
@@ -20,12 +21,8 @@ pub fn FertilizerAddPage() -> Element {
     let formula = use_memo(move || fertilizer_builder.read().formula());
 
     rsx! {
-        div {
-            class: "fertilizers-add-page",
-
-            section {
-                class: "fertilizer-editor",
-
+        Page {
+            Section {
                 FertilizerEditor {
                     fertilizer,
                     source_type,

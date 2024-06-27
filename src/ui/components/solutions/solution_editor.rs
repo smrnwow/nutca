@@ -5,7 +5,9 @@ use crate::model::solutions::Solution;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfileForm;
 use crate::ui::components::solutions::{FertilizersBrowser, FertilizersUsed, SolutionComposition};
-use crate::ui::components::utils::{Block, Button, Card, Divider, Select, Text, TextField, Title};
+use crate::ui::components::utils::{
+    Badge, Block, Button, ButtonsGroup, Card, Divider, Select, Text, TextField, Title,
+};
 use dioxus::prelude::*;
 
 fn round(value: f64) -> String {
@@ -14,9 +16,9 @@ fn round(value: f64) -> String {
 
 fn tab_class(tab_value: String, active_tab: String) -> String {
     if tab_value == active_tab {
-        String::from("fertilizers-source__tab fertilizers-source__tab_active")
+        String::from("buttons-group__button buttons-group__button_size-small buttons-group__button buttons-group__button_size-small buttons-group__button_active")
     } else {
-        String::from("fertilizers-source__tab")
+        String::from("buttons-group__button buttons-group__button_size-small ")
     }
 }
 
@@ -43,6 +45,9 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
 
     let mut solution_name = use_signal(|| props.solution.read().name());
 
+    let profile_select_value =
+        use_memo(move || (props.profile.read().id(), props.profile.read().name()));
+
     rsx! {
         Card {
             Block {
@@ -54,63 +59,61 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
             Divider {}
 
             Block {
-                exclude_padding: "bottom",
-
-                Row {
-                    horizontal: "space-between",
-                    vertical: "center",
+                Column {
+                    gap: "medium",
 
                     Row {
-                        Title {
-                            size: "small",
-                            text: "Профиль питания",
-                        }
-                    }
-
-                    Row {
-                        horizontal: "end",
+                        horizontal: "space-between",
                         vertical: "center",
 
-                        Text {
-                            size: "x-small",
-                            "~EC {round(props.solution.read().ec())}",
+                        Row {
+                            Title {
+                                size: "small",
+                                text: "Профиль питания",
+                            }
                         }
 
-                        div {
-                            class: "fertilizers-source__tabs",
+                        Row {
+                            horizontal: "end",
+                            vertical: "center",
 
-                            button {
-                                class: tab_class(String::from("profile"), profile_tab.read().clone()),
-                                onclick: move |_| {
-                                    *profile_tab.write() = String::from("profile");
-                                },
-                                "Желаемый",
+                            Text {
+                                size: "x-small",
+                                "~EC {round(props.solution.read().ec())}",
                             }
 
-                            button {
-                                class: tab_class(String::from("solution-composition"), profile_tab.read().clone()),
-                                onclick: move |_| {
-                                    *profile_tab.write() = String::from("solution-composition");
-                                },
-                                "Рассчитанный",
+                            ButtonsGroup {
+                                button {
+                                    class: tab_class(String::from("profile"), profile_tab.read().clone()),
+                                    onclick: move |_| {
+                                        *profile_tab.write() = String::from("profile");
+                                    },
+                                    "Желаемый",
+                                }
 
-                                if !props.solution.read().is_empty() {
-                                    span {
-                                        class: "fertilizers-source__badge",
-                                        "!",
+
+                                button {
+                                    class: tab_class(String::from("solution-composition"), profile_tab.read().clone()),
+                                    onclick: move |_| {
+                                        *profile_tab.write() = String::from("solution-composition");
+                                    },
+                                    "Рассчитанный",
+
+                                    if !props.solution.read().is_empty() {
+                                        Badge {
+                                            size: "small",
+                                            text: "!",
+                                            state: "error",
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
-            }
 
-            Block {
-                Column {
                     Select {
                         placeholder: "выбрать готовый профиль",
-                        value: (props.profile.read().id(), props.profile.read().name()),
+                        value: profile_select_value,
                         options: props.profiles.read()
                             .iter()
                             .map(|profile| (profile.id(), profile.name()))

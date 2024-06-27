@@ -8,15 +8,17 @@ fn round(value: f64) -> String {
 pub struct NutrientValueProps {
     symbol: String,
     value: f64,
-    color: Option<String>,
+    state: Option<String>,
     on_change: Option<EventHandler<f64>>,
 }
 
 #[component]
 pub fn NutrientValue(props: NutrientValueProps) -> Element {
+    let state = props.state.unwrap_or(String::from("default"));
+
     rsx! {
         div {
-            class: "nutrient-value",
+            class: "nutrient-value nutrient-value_state-{state}",
 
             span {
                 class: "nutrient-value__symbol",

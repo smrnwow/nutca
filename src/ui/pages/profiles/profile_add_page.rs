@@ -1,5 +1,6 @@
 use crate::model::profiles::ProfileBuilder;
 use crate::storage::ProfilesStorage;
+use crate::ui::components::layout::{Page, Section};
 use crate::ui::components::profiles::ProfileEditor;
 use crate::ui::router::Route;
 use dioxus::prelude::*;
@@ -14,12 +15,8 @@ pub fn ProfileAddPage() -> Element {
     let profile = use_memo(move || profile_builder.read().build());
 
     rsx! {
-        div {
-            class: "profile-editor-page",
-
-            section {
-                class: "profile-editor-page__workspace",
-
+        Page {
+            Section {
                 ProfileEditor {
                     profile,
                     on_nutrient_update: move |nutrient| {
