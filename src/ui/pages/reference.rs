@@ -10,7 +10,7 @@ pub fn Reference() -> Element {
                 Card {
                     Block {
                         Title {
-                            text: "Справка",
+                            "Справка",
                         }
                     }
 
@@ -19,30 +19,30 @@ pub fn Reference() -> Element {
                     Block {
                         Title {
                             size: "small",
-                            text: "Интерфейс",
+                            "Интерфейс",
                         }
 
                         Block {
                             Title {
                                 size: "small",
-                                text: "Растворы",
+                                "Растворы",
                             }
 
                             Block {
                                 Title {
                                     size: "small",
-                                    text: "Список растворов",
+                                    "Список растворов",
                                 }
 
                                 Title {
                                     size: "small",
-                                    text: "Редактор раствора",
+                                    "Редактор раствора",
                                 }
 
                                 Block {
                                     Title {
                                         size: "x-small",
-                                        text: "Выбор профиля питания",
+                                        "Выбор профиля питания",
                                     }
 
                                     Text {
@@ -54,7 +54,7 @@ pub fn Reference() -> Element {
                                 Block {
                                     Title {
                                         size: "x-small",
-                                        text: "Выбор удобрений",
+                                        "Выбор удобрений",
                                     }
 
                                     Text {
@@ -70,24 +70,24 @@ pub fn Reference() -> Element {
                         Title {
                             id: "theory",
                             size: "small",
-                            text: "Теория",
+                            "Теория",
                         }
 
                         Block {
                             Title {
                                 size: "small",
-                                text: "Раствор",
+                                "Раствор",
                             }
 
                             Block {
                                 Title {
                                     size: "small",
-                                    text: "Электропроводность (EC) раствора",
+                                    "Электропроводность (EC) раствора",
                                 }
 
                                 Title {
                                     size: "small",
-                                    text: "Формы азота",
+                                    "Формы азота",
                                 }
                             }
                         }
@@ -95,69 +95,50 @@ pub fn Reference() -> Element {
                         Block {
                             Title {
                                 size: "small",
-                                text: "Профиль питания",
+                                "Профиль питания",
                             }
 
                             Block {
                                 Title {
                                     size: "small",
-                                    text: "Состав",
+                                    "Состав",
                                 }
 
                                 Block {
                                     Title {
                                         size: "small",
-                                        text: "Макроэлементы",
+                                        "Макроэлементы",
                                     }
 
                                     Block {
                                         Title {
                                             size: "x-small",
-                                            text: "Азот (N)",
+                                            "Азот (N)",
                                         }
 
                                         Title {
                                             size: "x-small",
-                                            text: "Фосфор (P)",
+                                            "Фосфор (P)",
                                         }
 
                                         Title {
                                             size: "x-small",
-                                            text: "Калий (K)",
+                                            "Калий (K)",
                                         }
 
                                         Title {
                                             size: "x-small",
-                                            text: "Кальций (Ca)",
+                                            "Кальций (Ca)",
                                         }
 
                                         Title {
                                             size: "x-small",
-                                            text: "Магний (Mg)",
+                                            "Магний (Mg)",
                                         }
 
                                         Title {
                                             size: "x-small",
-                                            text: "Сера (S)",
-                                        }
-                                    }
-                                }
-
-                                Block {
-                                    Title {
-                                        size: "small",
-                                        text: "Формы азота",
-                                    }
-
-                                    Block {
-                                        Title {
-                                            size: "x-small",
-                                            text: "Нитратная форма азота (NO3)",
-                                        }
-
-                                        Title {
-                                            size: "x-small",
-                                            text: "Аммонийная форма азота (NH4)",
+                                            "Сера (S)",
                                         }
                                     }
                                 }
@@ -165,38 +146,57 @@ pub fn Reference() -> Element {
                                 Block {
                                     Title {
                                         size: "small",
-                                        text: "Микроэлементы",
+                                        "Формы азота",
                                     }
 
                                     Block {
                                         Title {
                                             size: "x-small",
-                                            text: "Железо (Fe)",
+                                            "Нитратная форма азота (NO3)",
                                         }
 
                                         Title {
                                             size: "x-small",
-                                            text: "Марганец (Mn)",
+                                            "Аммонийная форма азота (NH4)",
+                                        }
+                                    }
+                                }
+
+                                Block {
+                                    Title {
+                                        size: "small",
+                                        "Микроэлементы",
+                                    }
+
+                                    Block {
+                                        Title {
+                                            size: "x-small",
+                                            "Железо (Fe)",
                                         }
 
                                         Title {
                                             size: "x-small",
-                                            text: "Медь (Cu)",
+                                            "Марганец (Mn)",
                                         }
 
                                         Title {
                                             size: "x-small",
-                                            text: "Цинк (Zn)",
+                                            "Медь (Cu)",
                                         }
 
                                         Title {
                                             size: "x-small",
-                                            text: "Бор (B)",
+                                            "Цинк (Zn)",
                                         }
 
                                         Title {
                                             size: "x-small",
-                                            text: "Молибден (Mo)",
+                                            "Бор (B)",
+                                        }
+
+                                        Title {
+                                            size: "x-small",
+                                            "Молибден (Mo)",
                                         }
                                     }
                                 }

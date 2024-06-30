@@ -1,8 +1,8 @@
 use super::FertilizersBrowserItem;
 use crate::model::fertilizers::FertilizersListing;
-use crate::ui::components::layout::Column;
+use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::SearchIcon;
-use crate::ui::components::utils::{Pagination, TextField, Title};
+use crate::ui::components::utils::{Label, List, Pagination, Reference, Text, TextField, Title};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -17,26 +17,55 @@ pub struct FertilizersBrowserProps {
 pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
     let fertilizers_listing = use_memo(move || props.fertilizers_listing.read().clone());
 
+    let mut show_reference = use_signal(|| false);
+
     rsx! {
         Column {
             gap: "medium",
+            on_hover: move |hovered| show_reference.set(hovered),
 
-            Title {
-                size: "small",
-                text: "Выбор удобрений",
-            }
+            Row {
+                Title {
+                    size: "small",
 
-            TextField {
-                value: fertilizers_listing.read().search_query(),
-                placeholder: "найти удобрение",
-                on_input: props.on_search,
-                icon_left: rsx! {
-                    SearchIcon {}
+                    "Выбор удобрений",
+
+                    Reference {
+                        display: show_reference,
+                        style: "badge",
+                        tooltip: rsx! {
+                            Title {
+                                size: "x-small",
+                                "Пока не придуманый заголовок",
+                            }
+
+                            Text {
+                                size: "x-small",
+                                "Еще не придуманный текст. Еще не придуманный текст. Еще не придуманный текст.",
+                            }
+                        },
+                        tooltip_position: "top-center",
+                    },
                 }
             }
 
-            div {
-                class: "fertilizers-browser__table",
+            Label {
+                text: "Поиск",
+
+                TextField {
+                    value: fertilizers_listing.read().search_query(),
+                    placeholder: "название удобрения",
+                    on_input: props.on_search,
+                    icon_left: rsx! {
+                        SearchIcon {}
+                    }
+                }
+            }
+
+            List {
+                limit: 8,
+                empty: fertilizers_listing.read().is_empty(),
+                stub_text: "Удобрений не найдено",
 
                 for fertilizer in fertilizers_listing.read().list() {
                     FertilizersBrowserItem {
@@ -47,17 +76,13 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
                 }
             }
 
-            div {
-                class: "fertilizers-browser__pagination",
-
-                Pagination {
-                    page_index: fertilizers_listing.read().page_index(),
-                    limit: fertilizers_listing.read().limit(),
-                    total: fertilizers_listing.read().total(),
-                    on_change: move |next_page| {
-                        props.on_paginate.call(next_page);
-                    },
-                }
+            Pagination {
+                page_index: fertilizers_listing.read().page_index(),
+                limit: fertilizers_listing.read().limit(),
+                total: fertilizers_listing.read().total(),
+                on_change: move |next_page| {
+                    props.on_paginate.call(next_page);
+                },
             }
         }
     }

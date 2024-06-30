@@ -1,11 +1,10 @@
 use crate::model::profiles::Profile;
-use crate::ui::components::layout::Row;
 use crate::ui::components::utils::icons::More;
-use crate::ui::components::utils::{Button, Dropdown, DropdownOption, Text};
+use crate::ui::components::utils::{Button, Dropdown, DropdownOption, QuickAction, Text};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
-pub struct ProfileListingItemProps {
+pub struct ProfilesListingItemProps {
     profile: Profile,
     on_open: EventHandler<String>,
     on_use: EventHandler<String>,
@@ -13,28 +12,17 @@ pub struct ProfileListingItemProps {
 }
 
 #[component]
-pub fn ProfileListingItem(props: ProfileListingItemProps) -> Element {
+pub fn ProfilesListingItem(props: ProfilesListingItemProps) -> Element {
     let profile = use_signal(|| props.profile);
 
     rsx! {
-        div {
-            class: "profiles-listing-item",
-
-            Row {
-                horizontal: "space-between",
-                vertical: "center",
-
-                Text {
-                    size: "x-small",
-                    {profile.read().name()},
-                }
-
+        QuickAction {
+            action_right: rsx! {
                 Dropdown {
                     header: rsx! {
                         Button {
                             style: "compact",
-
-                            More {}
+                            More {},
                         }
                     },
 
@@ -43,7 +31,6 @@ pub fn ProfileListingItem(props: ProfileListingItemProps) -> Element {
                             on_click: move |_| {
                                 props.on_open.call(profile.read().id());
                             },
-
                             "Открыть",
                         }
 
@@ -51,7 +38,6 @@ pub fn ProfileListingItem(props: ProfileListingItemProps) -> Element {
                             on_click: move |_| {
                                 props.on_use.call(profile.read().id());
                             },
-
                             "Рассчитать раствор",
                         }
 
@@ -59,11 +45,15 @@ pub fn ProfileListingItem(props: ProfileListingItemProps) -> Element {
                             on_click: move |_| {
                                 props.on_delete.call(profile.read().id());
                             },
-
                             "Удалить",
                         }
                     }
                 }
+            },
+
+            Text {
+                size: "x-small",
+                {profile.read().name()},
             }
         }
     }

@@ -5,6 +5,7 @@ pub struct ColumnProps {
     gap: Option<String>,
     horizontal: Option<String>,
     vertical: Option<String>,
+    on_hover: Option<EventHandler<bool>>,
     children: Element,
 }
 
@@ -16,10 +17,21 @@ pub fn Column(props: ColumnProps) -> Element {
 
     let vertical = props.vertical.unwrap_or("start".to_string());
 
-    rsx! {
-        div {
-            class: "column column_gap-{gap} column_horizontal-{horizontal} column_vertical-{vertical}",
-            {props.children},
-        }
+    match props.on_hover {
+        Some(on_hover) => rsx! {
+            div {
+                class: "column column_gap-{gap} column_horizontal-{horizontal} column_vertical-{vertical}",
+                onmouseover: move |_| on_hover.call(true),
+                onmouseout: move |_| on_hover.call(false),
+                {props.children},
+            }
+        },
+
+        None => rsx! {
+            div {
+                class: "column column_gap-{gap} column_horizontal-{horizontal} column_vertical-{vertical}",
+                {props.children},
+            }
+        },
     }
 }

@@ -91,6 +91,7 @@
 */
 
 .title {
+    position: relative;
     color: rgba(14, 18, 27, 1);
     margin: 0px;
 }
@@ -147,6 +148,7 @@
 */
 
 .block {
+    position: relative;
     padding: 16px;
     box-sizing: border-box;
 }
@@ -429,11 +431,6 @@
     letter-spacing: 0%;
 }
 
-/* checkbox */
-
-.checkbox__input {
-    margin: 0px;
-}
 
 /* tabs */
 
@@ -467,90 +464,6 @@
     background: rgba(92, 23, 229, 1);
     bottom: -1px;
     left: 0px;
-}
-
-/* tooltip */
-
-.tooltip {
-    position: relative;
-}
-
-.tooltip__target {}
-
-.tooltip__body {
-    position: absolute;
-    opacity: 0;
-    visibility: hidden;
-    background-color: #ffffff;
-    padding: 12px;
-    box-sizing: border-box;
-    border: 1px solid rgba(225, 228, 234, 1);
-    box-shadow: 0px 1px 2px 0px rgba(14, 18, 27, 0.03), 0px 12px 24px 0px rgba(14, 18, 27, 0.06);
-    border-radius: 4px;
-    color: rgba(14, 18, 27, 1);
-    transition-delay: .2s;
-    transition: .1s ease-out;
-    z-index: 101;
-}
-
-.tooltip_top-left .tooltip__body {
-    left: 0px;
-    bottom: calc(100% + 5px);
-}
-
-.tooltip_top-center .tooltip__body {
-    left: 50%;
-    bottom: calc(100% + 5px);
-    transform: translateX(-50%);
-}
-
-.tooltip_top-right .tooltip__body {
-    right: 0px;
-    bottom: calc(100% + 5px);
-}
-
-.tooltip_bottom-center .tooltip__body {
-    left: 50%;
-    bottom: -100%;
-    transform: translate(-50%, 50%);
-}
-
-.tooltip__body::before,
-.tooltip__body::after {
-  content: "";
-  position: absolute;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  top: 100%;
-  margin-left: -5px;
-}
-
-.tooltip__body::before {
-  border-top: 5px solid rgba(225, 228, 234, 1);
-  z-index: 100;
-}
-
-.tooltip__body::after {
-  border-top: 5px solid #ffffff;
-  margin-top: -1px;
-  z-index: 101;
-}
-
-.tooltip_top-left .tooltip__body::after, .tooltip_top-left .tooltip__body::before {
-    left: 12px;
-}
-
-.tooltip_top-center .tooltip__body::after, .tooltip_top-center .tooltip__body::before {
-    left: 50%;
-}
-
-.tooltip_top-right .tooltip__body::after, .tooltip_top-right .tooltip__body::before {
-    right: 12px;
-}
-
-.tooltip:hover .tooltip__body {
-    opacity: 1;
-    visibility: visible;
 }
 
 /* pagination */

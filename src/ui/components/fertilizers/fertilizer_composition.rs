@@ -20,7 +20,7 @@ pub fn FertilizerComposition(props: FertilizerCompositionProps) -> Element {
 
             Title {
                 size: "small",
-                text: "Уровень питательных веществ",
+                "Питательные вещества",
             }
 
             Column {

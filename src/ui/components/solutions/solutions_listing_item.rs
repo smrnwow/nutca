@@ -1,7 +1,6 @@
 use crate::model::solutions::Solution;
-use crate::ui::components::layout::Row;
 use crate::ui::components::utils::icons::More;
-use crate::ui::components::utils::{Button, Dropdown, DropdownOption, Text};
+use crate::ui::components::utils::{Button, Dropdown, DropdownOption, QuickAction, Text};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -17,24 +16,13 @@ pub fn SolutionsListingItem(props: SolutionListingItemProps) -> Element {
     let solution = use_signal(|| props.solution);
 
     rsx! {
-        div {
-            class: "solutions-listing-item",
-
-            Row {
-                horizontal: "space-between",
-                vertical: "center",
-
-                Text {
-                    size: "x-small",
-                    {solution.read().name()},
-                }
-
+        QuickAction {
+            action_right: rsx! {
                 Dropdown {
                     header: rsx! {
                         Button {
                             style: "compact",
-
-                            More {}
+                            More {},
                         }
                     },
 
@@ -43,7 +31,6 @@ pub fn SolutionsListingItem(props: SolutionListingItemProps) -> Element {
                             on_click: move |_| {
                                 props.on_open.call(solution.read().id());
                             },
-
                             "Открыть",
                         }
 
@@ -51,7 +38,6 @@ pub fn SolutionsListingItem(props: SolutionListingItemProps) -> Element {
                             on_click: move |_| {
                                 props.on_stock.call(solution.read().id());
                             },
-
                             "Рассчитать рабочий раствор",
                         }
 
@@ -59,11 +45,15 @@ pub fn SolutionsListingItem(props: SolutionListingItemProps) -> Element {
                             on_click: move |_| {
                                 props.on_delete.call(solution.read().id());
                             },
-
                             "Удалить",
                         }
                     }
                 }
+            },
+
+            Text {
+                size: "x-small",
+                {solution.read().name()},
             }
         }
     }

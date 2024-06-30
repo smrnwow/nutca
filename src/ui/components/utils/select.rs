@@ -29,7 +29,7 @@ pub fn Select(props: SelectProps) -> Element {
 
     let search_query = use_signal(|| props.search_query.unwrap_or(String::new()));
 
-    let placeholder = use_signal(|| props.placeholder.unwrap_or(String::new()));
+    let placeholder = use_signal(|| props.placeholder.unwrap_or(String::from("выберите")));
 
     let value = use_memo(move || props.value.read().0.clone());
 
@@ -37,7 +37,7 @@ pub fn Select(props: SelectProps) -> Element {
 
     let show_value = use_memo(move || value.read().len() > 0 && !*is_opened.read());
 
-    let show_cancel = use_memo(move || value.read().len() > 0);
+    let show_cancel = use_memo(move || props.on_search.is_some() && value.read().len() > 0);
 
     let show_search = use_memo(move || props.on_search.is_some() && *is_opened.read());
 
@@ -46,6 +46,9 @@ pub fn Select(props: SelectProps) -> Element {
     rsx! {
         div {
             class: "select select_size-{size}",
+            onfocusout: move |_| {
+                // *is_opened.write() = false;
+            },
 
             if let Some(label) = props.label {
                 span {
@@ -65,12 +68,12 @@ pub fn Select(props: SelectProps) -> Element {
                 placeholder,
                 on_change: props.on_change,
                 on_open: move |_| {
-                    *is_opened.write() = true;
+                    is_opened.set(true);
                 },
                 on_cancel: move |_| {
-                    *is_opened.write() = true;
-
                     props.on_change.call(String::new());
+
+                    is_opened.set(true);
                 },
                 on_search: move |search_query| {
                     if let Some(on_search) = props.on_search {
@@ -82,11 +85,13 @@ pub fn Select(props: SelectProps) -> Element {
             SelectList {
                 is_opened,
                 options: props.options,
-                value: value,
-                on_select: move |value| {
-                    *is_opened.write() = false;
+                value,
+                on_select: move |new_value| {
+                    if new_value != *value.read() {
+                        props.on_change.call(new_value);
+                    }
 
-                    props.on_change.call(value);
+                    is_opened.set(false);
                 },
             }
         }
@@ -116,6 +121,7 @@ fn SelectHead(
                 button {
                     class: "select__value",
                     onclick: move |_| on_open.call(()),
+                    onfocusin: move |_| on_open.call(()),
                     {text},
                 }
             }
@@ -133,6 +139,7 @@ fn SelectHead(
                 button {
                     class: "select__placeholder",
                     onclick: move |_| on_open.call(()),
+                    onfocusin: move |_| on_open.call(()),
                     {placeholder},
                 }
             }
@@ -168,11 +175,15 @@ fn SelectSearch(
             input {
                 class: "select__input",
                 r#type: "text",
-                placeholder: "{placeholder}",
-                value: "{search_query}",
-                autofocus: true,
+                placeholder: placeholder,
+                value: search_query,
                 oninput: move |event| {
                     on_search.call(event.value());
+                },
+                onmounted: move |event| {
+                    async move {
+                        event.as_ref().set_focus(true).await.unwrap();
+                    }
                 },
             }
         }
@@ -249,11 +260,7 @@ fn SelectListItem(text: String, is_selected: bool, on_select: EventHandler<()>) 
 
             button {
                 class: "select__button",
-                onclick: move |_| {
-                    if !is_selected {
-                        on_select.call(());
-                    }
-                },
+                onclick: move |_| on_select.call(()),
                 {text},
             }
 

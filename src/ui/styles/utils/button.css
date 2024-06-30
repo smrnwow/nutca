@@ -21,6 +21,12 @@
     padding: 10px;
 }
 
+.button_hidden-true {
+    display: none !important;
+    opacity: 0;
+    visibility: none;
+}
+
 .button:focus {
     outline: 2px solid rgba(153, 160, 174, 0.16);
     outline-offset: 2px;   

@@ -21,6 +21,15 @@ impl FertilizerWeight {
             .collect()
     }
 
+    pub fn display_amount(&self) -> String {
+        let units = match self.fertilizer.liquid() {
+            true => String::from("мл"),
+            false => String::from("г"),
+        };
+
+        format!("{:.3} {}", self.weight, units)
+    }
+
     pub fn is_redurant(&self) -> bool {
         self.weight == 0.
     }

@@ -16,7 +16,7 @@ pub enum Route {
     #[route("/reference")]
     Reference {},
 
-    #[route("/solutions/listing")]
+    #[route("/solutions")]
     SolutionsListingPage {},
 
     #[route("/solutions/add?:profile_id")]
@@ -28,7 +28,7 @@ pub enum Route {
     #[route("/solutions/stock?:solution_id")]
     StockSolutionPage { solution_id: String },
 
-    #[route("/profiles/listing")]
+    #[route("/profiles")]
     ProfilesListingPage {},
 
     #[route("/profiles/add")]
@@ -37,7 +37,7 @@ pub enum Route {
     #[route("/profiles/edit/:profile_id")]
     ProfileEditPage { profile_id: String },
 
-    #[route("/fertilizers/listing")]
+    #[route("/fertilizers")]
     FertilizersListingPage {},
 
     #[route("/fertilizers/add")]

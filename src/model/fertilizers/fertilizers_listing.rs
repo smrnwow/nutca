@@ -112,6 +112,10 @@ impl FertilizersListing {
             .len()
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.total() == 0
+    }
+
     pub fn search_query(&self) -> String {
         self.search_query.clone()
     }

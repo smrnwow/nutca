@@ -131,6 +131,10 @@
     align-items: stretch;
 }
 
+.row_wrap-true {
+    flex-wrap: wrap;
+}
+
 /* section */
 
 .page {

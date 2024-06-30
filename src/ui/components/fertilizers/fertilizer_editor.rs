@@ -3,9 +3,7 @@ use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
 use crate::ui::components::fertilizers::{FertilizerComposition, FertilizerSource};
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::utils::{
-    Block, Button, Card, Checkbox, Divider, Text, TextField, Title,
-};
+use crate::ui::components::utils::{Block, Button, Card, Checkbox, Divider, TextField, Title};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -31,7 +29,7 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
         Card {
             Block {
                 Title {
-                    text: "Редактор удобрения",
+                    "Редактор удобрения",
                 }
             }
 
@@ -54,16 +52,10 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
                     }
 
                     Row {
-                        gap: "small",
-
                         Checkbox {
+                            text: "жидкое удобрение",
                             value: props.fertilizer.read().liquid(),
                             on_change: props.on_liquid_update,
-                        }
-
-                        Text {
-                            size: "x-small",
-                            "жидкое удобрение",
                         }
                     }
                 }
@@ -101,14 +93,12 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
                     Button {
                         style: "stroke",
                         on_click: props.on_cancel,
-
                         "Сбросить",
                     }
 
                     Button {
                         style: "primary",
                         on_click: props.on_save,
-
                         "Сохранить",
                     }
                 }

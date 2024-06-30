@@ -1,7 +1,10 @@
 use crate::model::solutions::StockSolutionBuilder;
 use crate::storage::SolutionsStorage;
 use crate::ui::components::layout::{Column, Page, Row, Section};
-use crate::ui::components::utils::{Block, Card, Divider, NumberField, Select, Text, Title};
+use crate::ui::components::utils::{
+    Block, Card, Divider, NumberField, QuickAction, Select, Text, Title,
+};
+use crate::ui::components::UnitsSelect;
 use dioxus::prelude::*;
 
 fn render_fertilizer_weight(weight: f64, liquid: bool) -> String {
@@ -49,7 +52,7 @@ pub fn StockSolutionPage(solution_id: String) -> Element {
                 Card {
                     Block {
                         Title {
-                            text: "Рабочий раствор (A + B)",
+                            "Редактор рабочего раствора",
                         }
                     }
 
@@ -84,13 +87,24 @@ pub fn StockSolutionPage(solution_id: String) -> Element {
                                     },
                                 }
 
-                                NumberField {
-                                    label: "Объем",
-                                    value: *volume.read(),
-                                    units: "литр",
-                                    on_change: move |value| {
-                                        stock_solution_builder.write().update_volume(value);
-                                    },
+                                Row {
+                                    gap: "small",
+                                    vertical: "end",
+
+                                    NumberField {
+                                        label: "Объем",
+                                        value: *volume.read(),
+                                        units: "литр",
+                                        on_change: move |value| {
+                                            stock_solution_builder.write().update_volume(value);
+                                        },
+                                    }
+
+                                    UnitsSelect {
+                                        on_change: move |units| {
+                                            println!("units change {}", units);
+                                        },
+                                    }
                                 }
                             }
                         }
@@ -99,59 +113,59 @@ pub fn StockSolutionPage(solution_id: String) -> Element {
                     Divider {}
 
                     Block {
-                        Column {
+                        Row {
                             Column {
                                 gap: "medium",
 
                                 Title {
-                                    text: "Часть A",
+                                    size: "small",
+                                    "Часть A",
                                 }
 
                                 Column {
                                     gap: "x-small",
 
                                     for fertilizer in part_a.read().clone() {
-                                        Row {
-                                            horizontal: "space-between",
+                                        QuickAction {
+                                            key: "{fertilizer.fertilizer.id()}",
 
                                             Text {
                                                 size: "x-small",
-                                                "{fertilizer.fertilizer.name()}",
+                                                {fertilizer.fertilizer.name()},
                                             }
 
                                             Text {
                                                 size: "x-small",
-                                                "{render_fertilizer_weight(fertilizer.weight, fertilizer.fertilizer.liquid())}",
+                                                {render_fertilizer_weight(fertilizer.weight, fertilizer.fertilizer.liquid())},
                                             }
                                         }
                                     }
                                 }
                             }
 
-                            Divider {}
-
                             Column {
                                 gap: "medium",
 
                                 Title {
-                                    text: "Часть B",
+                                    size: "small",
+                                    "Часть B",
                                 }
 
                                 Column {
                                     gap: "x-small",
 
                                     for fertilizer in part_b.read().clone() {
-                                        Row {
-                                            horizontal: "space-between",
+                                        QuickAction {
+                                            key: "{fertilizer.fertilizer.id()}",
 
                                             Text {
                                                 size: "x-small",
-                                                "{fertilizer.fertilizer.name()}",
+                                                {fertilizer.fertilizer.name()},
                                             }
 
                                             Text {
                                                 size: "x-small",
-                                                "{render_fertilizer_weight(fertilizer.weight, fertilizer.fertilizer.liquid())}",
+                                                {render_fertilizer_weight(fertilizer.weight, fertilizer.fertilizer.liquid())},
                                             }
                                         }
                                     }

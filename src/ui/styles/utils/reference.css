@@ -1,0 +1,46 @@
+.reference {
+    display: block;
+    transition: .1s ease-out;
+    cursor: pointer;
+}
+
+.reference_style-badge {
+    position: absolute;
+    top: calc(50% - 6px);
+    right: -16px;
+}
+
+.reference_display-true {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0px);
+}
+
+.reference_display-false {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+}
+
+.reference__icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(54, 0, 144, 1);
+    color: #ffffff;
+}
+
+.reference_style-badge .reference__icon {
+    font-size: 9px;
+    line-height: 12px;
+    min-width: 12px;
+    font-weight: 500;
+    border-radius: 50%;
+}
+
+.reference_style-button .reference__icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+}

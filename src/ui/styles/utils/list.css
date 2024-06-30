@@ -1,0 +1,35 @@
+:root {
+    --list-gap-small: 2px;
+    --list-gap-medium: 4px;
+    --list-gap-big: 8px;
+}
+
+.list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--list-gap-small);
+}
+
+.list_limit-8 {
+    min-height: calc(8 * 34px);
+    max-height: calc(8 * 34px);
+}
+
+.list_limit-10 {
+    min-height: calc(10 * 34px);
+    max-height: calc(10 * 34px);
+}
+
+.list_limit-12 {
+    min-height: calc(12 * 34px);
+    max-height: calc(12 * 34px);
+}
+
+.list__stub {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: auto 0px;
+    font-size: 12px;
+}

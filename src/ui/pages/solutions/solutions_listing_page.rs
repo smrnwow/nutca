@@ -18,7 +18,7 @@ pub fn SolutionsListingPage() -> Element {
                 Card {
                     Block {
                         Title {
-                            text: "Список растворов",
+                            "Список растворов",
                         }
                     }
 

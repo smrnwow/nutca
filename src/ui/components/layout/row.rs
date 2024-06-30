@@ -5,6 +5,7 @@ pub struct RowProps {
     horizontal: Option<String>,
     vertical: Option<String>,
     gap: Option<String>,
+    wrap: Option<bool>,
     children: Element,
 }
 
@@ -16,9 +17,11 @@ pub fn Row(props: RowProps) -> Element {
 
     let gap = props.gap.unwrap_or("large".to_string());
 
+    let wrap = props.wrap.unwrap_or(false);
+
     rsx! {
         div {
-            class: "row row_gap-{gap} row_horizontal-{horizontal} row_vertical-{vertical}",
+            class: "row row_gap-{gap} row_horizontal-{horizontal} row_vertical-{vertical} row_wrap-{wrap}",
             {props.children},
         }
     }

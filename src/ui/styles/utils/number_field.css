@@ -73,24 +73,28 @@
     transition: .1s ease-out;
 }
 
-.number-field_size-small .number-field__input {
-    padding: 6px 32px;
-    max-height: 32px;
-}
-
-.number-field_size-medium .number-field__input {
-    padding: 8px 36px;
-    max-height: 36px;
-}
-
-.number-field_size-big .number-field__input {
-    padding: 10px 40px;
-    max-height: 40px;
-}
-
 .number-field__value:focus-within .number-field__input, 
 .number-field__input:focus {
     border: 1px solid rgba(14, 18, 27, 1);
     outline: 2px solid rgba(153, 160, 174, 0.16);
     outline-offset: 2px;
+}
+
+.number-field__input:hover {
+    background-color: rgba(245, 247, 250, 1);
+}
+
+.number-field_size-small .number-field__input {
+    padding: 6px 32px;
+    max-height: 34px;
+}
+
+.number-field_size-medium .number-field__input {
+    padding: 8px 36px;
+    max-height: 38px;
+}
+
+.number-field_size-big .number-field__input {
+    padding: 10px 40px;
+    max-height: 42px;
 }

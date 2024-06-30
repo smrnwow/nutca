@@ -12,10 +12,14 @@
     align-items: center;
     left: 0px;
     top: 0px;
-    width: 40%;
-    height: 100%;
+    width: calc(40% - 1px);
+    height: calc(100% - 2px);
     font-size: 12px;
     line-height: 16px;
+    background-color: rgba(245, 247, 250, 1);
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    margin: 1px 0px 1px 1px;
 }
 
 .nutrient-value__value {
@@ -33,6 +37,10 @@
     transition: .1s ease-out;
     box-sizing: border-box;
 }
+
+.nutrient-value__value:hover {
+    background-color: rgba(245, 247, 250, 1);
+} 
 
 .nutrient-value::after {
     content: "";

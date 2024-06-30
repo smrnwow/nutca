@@ -1,18 +1,18 @@
 use crate::model::labels::{Component, Label, Units};
 use crate::ui::components::fertilizers::FertilizerComponentInput;
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::utils::Text;
+use crate::ui::components::utils::{Label, Radio};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
-pub struct FertilizersLabelProps {
+pub struct FertilizerLabelProps {
     label: Memo<Label>,
     on_label_units_update: EventHandler<Units>,
     on_label_component_update: EventHandler<Component>,
 }
 
 #[component]
-pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
+pub fn FertilizerLabel(props: FertilizerLabelProps) -> Element {
     let label = props.label.read();
 
     rsx! {
@@ -163,52 +163,26 @@ pub fn FertilizersLabel(props: FertilizersLabelProps) -> Element {
                 }
             }
 
-            Row {
-                gap: "medium",
-
-                Text {
-                    size: "x-small",
-                    nowrap: true,
-                    "Единицы измерения",
-                }
+            Label {
+                text: "Единицы измерения",
 
                 Row {
                     gap: "medium",
 
-                    Row {
-                        gap: "x-small",
-
-                        input {
-                            class: "fertilizers-label__input",
-                            r#type: "radio",
-                            name: "units",
-                            value: "percent",
-                            checked: "{label.units() == Units::Percent}",
-                            onchange: move |_| props.on_label_units_update.call(Units::Percent),
-                        },
-
-                        Text {
-                            size: "x-small",
-                            "Проценты",
-                        }
+                    Radio {
+                        text: "Проценты",
+                        name: "units",
+                        value: "percent",
+                        checked: label.units() == Units::Percent,
+                        on_change: move |_| props.on_label_units_update.call(Units::Percent),
                     }
 
-                    Row {
-                        gap: "x-small",
-
-                        input {
-                            class: "fertilizers-label__input",
-                            r#type: "radio",
-                            name: "units",
-                            value: "weight_volume",
-                            checked: "{label.units() == Units::WeightVolume}",
-                            onchange: move |_| props.on_label_units_update.call(Units::WeightVolume),
-                        },
-
-                        Text {
-                            size: "x-small",
-                            "мг/л",
-                        }
+                    Radio {
+                        text: "мг/л",
+                        name: "units",
+                        value: "weight_volume",
+                        checked: label.units() == Units::WeightVolume,
+                        on_change: move |_| props.on_label_units_update.call(Units::WeightVolume),
                     }
                 }
             }

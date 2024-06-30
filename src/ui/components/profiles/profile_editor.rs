@@ -20,21 +20,17 @@ pub fn ProfileEditor(props: ProfileEditorProps) -> Element {
         Card {
             Block {
                 Title {
-                    text: "Редактор профиля питания",
+                    "Редактор профиля питания",
                 }
             }
 
             Divider {}
 
             Block {
-                div {
-                    class: "profile-editor-page__name",
-
-                    TextField {
-                        value: props.profile.read().name(),
-                        label: "Название",
-                        on_input: props.on_name_update,
-                    }
+                TextField {
+                    value: props.profile.read().name(),
+                    label: "Название",
+                    on_input: props.on_name_update,
                 }
             }
 
@@ -56,14 +52,12 @@ pub fn ProfileEditor(props: ProfileEditorProps) -> Element {
                     Button {
                         style: "stroke",
                         on_click: props.on_cancel,
-
                         "Сбросить",
                     }
 
                     Button {
                         style: "primary",
                         on_click: props.on_save,
-
                         "Сохранить",
                     }
                 }

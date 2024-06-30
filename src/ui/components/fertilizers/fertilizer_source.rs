@@ -1,4 +1,4 @@
-use super::{FertilizersFormula, FertilizersLabel};
+use super::{FertilizerFormula, FertilizerLabel};
 use crate::model::fertilizers::{Fertilizer, SourceType};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
@@ -42,7 +42,7 @@ pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
 
                 Title {
                     size: "small",
-                    text: "Состав",
+                    "Состав",
                 }
 
                 ButtonsGroup {
@@ -63,7 +63,7 @@ pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
             match source_type {
                 SourceType::Label => {
                     rsx! {
-                        FertilizersLabel {
+                        FertilizerLabel {
                             label: props.label,
                             on_label_units_update: props.on_label_units_update,
                             on_label_component_update: props.on_label_component_update,
@@ -73,7 +73,7 @@ pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
 
                 SourceType::Formula => {
                     rsx! {
-                        FertilizersFormula {
+                        FertilizerFormula {
                             fertilizer: props.fertilizer,
                             formula: props.formula,
                             on_formula_update: props.on_formula_update,
