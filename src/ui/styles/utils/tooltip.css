@@ -18,13 +18,13 @@
     min-width: 200px;
     z-index: 110;
     transition: .1s ease-out;
-    transform: translateY(4px);
+    /* transform: translateY(4px); */
 }
 
 .tooltip:hover .tooltip__body {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0px);
+    /* transform: translateY(0px); */
 }
 
 .tooltip_top-left .tooltip__body {

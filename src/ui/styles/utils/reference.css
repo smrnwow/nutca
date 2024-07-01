@@ -23,6 +23,18 @@
     transform: translateY(-4px);
 }
 
+.reference a {
+    font-size: 12px;
+    line-height: 16px;
+    color: rgba(54, 0, 144, 1);
+}
+
+.reference-subject:hover .reference {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0px);
+}
+
 .reference__icon {
     display: flex;
     justify-content: center;

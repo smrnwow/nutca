@@ -4,6 +4,7 @@ use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{ButtonsGroup, Title};
+use crate::ui::components::ReferencePreview;
 use dioxus::prelude::*;
 
 fn tab_class(source_type: SourceType, tab_value: SourceType) -> String {
@@ -43,6 +44,10 @@ pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
                 Title {
                     size: "small",
                     "Состав",
+                    ReferencePreview {
+                        show_reference: Signal::new(false),
+                        article_id: "fertilizer-editor-composition-source",
+                    },
                 }
 
                 ButtonsGroup {

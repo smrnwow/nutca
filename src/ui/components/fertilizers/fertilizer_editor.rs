@@ -4,6 +4,7 @@ use crate::model::labels::{Component, Label, Units};
 use crate::ui::components::fertilizers::{FertilizerComposition, FertilizerSource};
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{Block, Button, Card, Checkbox, Divider, TextField, Title};
+use crate::ui::components::ReferenceSubject;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -63,24 +64,28 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
 
             Divider {}
 
-            Block {
-                FertilizerSource {
-                    fertilizer: props.fertilizer,
-                    source_type: props.source_type,
-                    label: props.label,
-                    formula: props.formula,
-                    on_source_type_update: props.on_source_type_update,
-                    on_label_units_update: props.on_label_units_update,
-                    on_label_component_update: props.on_label_component_update,
-                    on_formula_update: props.on_formula_update,
+            ReferenceSubject {
+                Block {
+                    FertilizerSource {
+                        fertilizer: props.fertilizer,
+                        source_type: props.source_type,
+                        label: props.label,
+                        formula: props.formula,
+                        on_source_type_update: props.on_source_type_update,
+                        on_label_units_update: props.on_label_units_update,
+                        on_label_component_update: props.on_label_component_update,
+                        on_formula_update: props.on_formula_update,
+                    }
                 }
             }
 
             Divider {}
 
-            Block {
-                FertilizerComposition {
-                    fertilizer: props.fertilizer
+            ReferenceSubject {
+                Block {
+                    FertilizerComposition {
+                        fertilizer: props.fertilizer
+                    }
                 }
             }
 

@@ -1,8 +1,9 @@
 use crate::model::chemistry::Nutrient;
 use crate::model::profiles::Profile;
 use crate::ui::components::layout::Row;
-use crate::ui::components::profiles::ProfileForm;
+use crate::ui::components::profiles::ProfileNutrients;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
+use crate::ui::components::ReferenceSubject;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -36,10 +37,12 @@ pub fn ProfileEditor(props: ProfileEditorProps) -> Element {
 
             Divider {}
 
-            Block {
-                ProfileForm {
-                    profile: props.profile,
-                    on_nutrient_update: props.on_nutrient_update,
+            ReferenceSubject {
+                Block {
+                    ProfileNutrients {
+                        profile: props.profile,
+                        on_nutrient_update: props.on_nutrient_update,
+                    }
                 }
             }
 

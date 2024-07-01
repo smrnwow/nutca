@@ -2,7 +2,8 @@ use super::FertilizersBrowserItem;
 use crate::model::fertilizers::FertilizersListing;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::SearchIcon;
-use crate::ui::components::utils::{Label, List, Pagination, Reference, Text, TextField, Title};
+use crate::ui::components::utils::{Label, List, Pagination, TextField, Title};
+use crate::ui::components::ReferencePreview;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -30,22 +31,10 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
 
                     "Выбор удобрений",
 
-                    Reference {
-                        display: show_reference,
-                        style: "badge",
-                        tooltip: rsx! {
-                            Title {
-                                size: "x-small",
-                                "Пока не придуманый заголовок",
-                            }
-
-                            Text {
-                                size: "x-small",
-                                "Еще не придуманный текст. Еще не придуманный текст. Еще не придуманный текст.",
-                            }
-                        },
-                        tooltip_position: "top-center",
-                    },
+                    ReferencePreview {
+                        show_reference,
+                        article_id: "solution-editor-fertilizers-browser",
+                    }
                 }
             }
 

@@ -25,8 +25,8 @@ pub fn Layout() -> Element {
                 class: "navigation",
 
                 Link {
-                    class: link_class(&current_route, Route::Reference {}),
-                    to: Route::Reference {},
+                    class: link_class(&current_route, Route::ReferenceMainPage {}),
+                    to: Route::ReferenceMainPage {},
                     "Справка",
                 }
 

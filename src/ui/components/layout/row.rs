@@ -6,6 +6,7 @@ pub struct RowProps {
     vertical: Option<String>,
     gap: Option<String>,
     wrap: Option<bool>,
+    on_hover: Option<EventHandler<bool>>,
     children: Element,
 }
 
@@ -19,10 +20,21 @@ pub fn Row(props: RowProps) -> Element {
 
     let wrap = props.wrap.unwrap_or(false);
 
-    rsx! {
-        div {
-            class: "row row_gap-{gap} row_horizontal-{horizontal} row_vertical-{vertical} row_wrap-{wrap}",
-            {props.children},
-        }
+    match props.on_hover {
+        Some(on_hover) => rsx! {
+            div {
+                class: "row row_gap-{gap} row_horizontal-{horizontal} row_vertical-{vertical} row_wrap-{wrap}",
+                onmouseover: move |_| on_hover.call(true),
+                onmouseout: move |_| on_hover.call(false),
+                {props.children},
+            }
+        },
+
+        None => rsx! {
+            div {
+                class: "row row_gap-{gap} row_horizontal-{horizontal} row_vertical-{vertical} row_wrap-{wrap}",
+                {props.children},
+            }
+        },
     }
 }

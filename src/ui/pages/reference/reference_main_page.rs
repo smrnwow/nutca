@@ -3,7 +3,7 @@ use crate::ui::components::utils::{Block, Card, Divider, Text, Title};
 use dioxus::prelude::*;
 
 #[component]
-pub fn Reference() -> Element {
+pub fn ReferenceMainPage() -> Element {
     rsx! {
         Page {
             Section {

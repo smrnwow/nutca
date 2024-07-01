@@ -3,6 +3,7 @@ use crate::model::fertilizers::Fertilizer;
 use crate::ui::components::fertilizers::NutrientContentValue;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{Text, Title};
+use crate::ui::components::ReferencePreview;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -18,9 +19,15 @@ pub fn FertilizerComposition(props: FertilizerCompositionProps) -> Element {
         Column {
             gap: "medium",
 
-            Title {
-                size: "small",
-                "Питательные вещества",
+            Row {
+                Title {
+                    size: "small",
+                    "Питательные вещества",
+                    ReferencePreview {
+                        show_reference: Signal::new(false),
+                        article_id: "fertilizer-editor-nutrients",
+                    }
+                }
             }
 
             Column {
