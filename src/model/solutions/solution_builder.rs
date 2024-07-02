@@ -2,7 +2,7 @@ use crate::model::calculation::Solver;
 use crate::model::chemistry::Nutrient;
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
-use crate::model::solutions::Solution;
+use crate::model::solutions::{Solution, SolutionError};
 use uuid::Uuid;
 
 pub struct SolutionBuilder {
@@ -10,7 +10,8 @@ pub struct SolutionBuilder {
     name: String,
     profile: Profile,
     fertilizers: Vec<Fertilizer>,
-    water_amount: usize,
+    volume: usize,
+    saved: bool,
 }
 
 impl SolutionBuilder {
@@ -20,7 +21,8 @@ impl SolutionBuilder {
             name: String::new(),
             profile: Profile::new(),
             fertilizers: Vec::new(),
-            water_amount: 1,
+            volume: 1,
+            saved: false,
         }
     }
 
@@ -30,7 +32,8 @@ impl SolutionBuilder {
             name: String::new(),
             profile,
             fertilizers: Vec::new(),
-            water_amount: 1,
+            volume: 1,
+            saved: false,
         }
     }
 
@@ -44,8 +47,17 @@ impl SolutionBuilder {
                 .iter()
                 .map(|fertilizer_weight| fertilizer_weight.fertilizer.clone())
                 .collect(),
-            water_amount: 1,
+            volume: 1,
+            saved: false,
         }
+    }
+
+    pub fn update_name(&mut self, name: String) {
+        self.name = name;
+    }
+
+    pub fn update_volume(&mut self, volume: usize) {
+        self.volume = volume;
     }
 
     pub fn update_profile(&mut self, profile: Option<Profile>) {
@@ -76,10 +88,6 @@ impl SolutionBuilder {
             .collect();
     }
 
-    pub fn update_water_amount(&mut self, water_amount: usize) {
-        self.water_amount = water_amount;
-    }
-
     pub fn profile(&self) -> Profile {
         self.profile.clone()
     }
@@ -91,29 +99,39 @@ impl SolutionBuilder {
             .collect()
     }
 
-    pub fn build(&self) -> Solution {
-        if self.fertilizers.len() > 0 {
-            let mut solution = Solver::new(self.profile.clone(), self.fertilizers.clone())
-                .solve()
-                .unwrap();
+    pub fn validate(&self) -> SolutionError {
+        let mut solution_error = SolutionError::new();
 
-            solution.set_id(self.id.clone());
-
-            solution.set_name(self.name.clone());
-
-            solution.set_water_amount(self.water_amount);
-
-            return solution;
-        } else {
-            let mut solution = Solution::empty(self.fertilizers.clone());
-
-            solution.set_id(self.id.clone());
-
-            solution.set_name(self.name.clone());
-
-            solution.set_water_amount(self.water_amount);
-
-            solution
+        if self.saved {
+            if self.name.len() == 0 {
+                solution_error.set_name("не заполнено");
+            }
         }
+
+        solution_error
+    }
+
+    pub fn save(&mut self) {
+        self.saved = true;
+    }
+
+    pub fn build(&self) -> Solution {
+        let mut solution = {
+            if self.fertilizers.len() > 0 {
+                Solver::new(self.profile.clone(), self.fertilizers.clone())
+                    .solve()
+                    .unwrap()
+            } else {
+                Solution::empty(self.fertilizers.clone())
+            }
+        };
+
+        solution.set_id(self.id.clone());
+
+        solution.set_name(self.name.clone());
+
+        solution.set_water_amount(self.volume);
+
+        return solution;
     }
 }

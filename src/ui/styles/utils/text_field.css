@@ -44,6 +44,14 @@
     background-color: rgba(245, 247, 250, 1);
 }
 
+.text-field_error-true .text-field__input {
+    border: 1px solid rgba(251, 55, 72, 1);
+}
+
+.text-field_error-true .text-field__input:focus {
+    outline: 2px solid rgba(251, 55, 72, 0.1);
+}
+
 .text-field_size-small .text-field__input {
     padding: 6px;
     max-height: 34px;
@@ -92,3 +100,10 @@
     transform: translateY(-50%);
     left: 8px;
 }
+
+.text-field__error {
+    font-size: 12px;
+    line-height: 16px;
+    color: rgba(251, 55, 72, 1);
+}
+

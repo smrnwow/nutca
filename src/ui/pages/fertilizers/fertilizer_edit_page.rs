@@ -21,6 +21,8 @@ pub fn FertilizerEditPage(fertilizer_id: String) -> Element {
 
     let fertilizer = use_memo(move || fertilizer_builder.read().build());
 
+    let fertilizer_error = use_memo(move || fertilizer_builder.read().validate());
+
     let source_type = use_memo(move || fertilizer_builder.read().source_type());
 
     let label = use_memo(move || fertilizer_builder.read().label());
@@ -32,6 +34,7 @@ pub fn FertilizerEditPage(fertilizer_id: String) -> Element {
             Section {
                 FertilizerEditor {
                     fertilizer,
+                    fertilizer_error,
                     source_type,
                     label,
                     formula,
@@ -57,11 +60,15 @@ pub fn FertilizerEditPage(fertilizer_id: String) -> Element {
                         fertilizer_builder.write().update_formula(formula);
                     },
                     on_save: move |_| {
-                        let storage = fertilizers_storage.read();
+                        fertilizer_builder.write().save();
 
-                        storage.update(fertilizer.read().clone());
+                        if fertilizer_error.read().is_empty() {
+                            let storage = fertilizers_storage.read();
 
-                        navigator().push(Route::FertilizersListingPage {});
+                            storage.update(fertilizer.read().clone());
+
+                            navigator().push(Route::FertilizersListingPage {});
+                        }
                     },
                     on_cancel: move |_| {
                         navigator().push(Route::FertilizersListingPage {});

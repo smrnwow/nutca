@@ -1,5 +1,5 @@
 use crate::model::chemistry::Nutrient;
-use crate::model::profiles::Profile;
+use crate::model::profiles::{Profile, ProfileError};
 use crate::ui::components::layout::Row;
 use crate::ui::components::profiles::ProfileNutrients;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
@@ -9,6 +9,7 @@ use dioxus::prelude::*;
 #[derive(Props, PartialEq, Clone)]
 pub struct ProfileEditorProps {
     profile: Memo<Profile>,
+    profile_error: Memo<ProfileError>,
     on_name_update: EventHandler<String>,
     on_nutrient_update: EventHandler<Nutrient>,
     on_save: EventHandler<()>,
@@ -29,8 +30,9 @@ pub fn ProfileEditor(props: ProfileEditorProps) -> Element {
 
             Block {
                 TextField {
-                    value: props.profile.read().name(),
                     label: "Название",
+                    value: props.profile.read().name(),
+                    error: props.profile_error.read().name(),
                     on_input: props.on_name_update,
                 }
             }

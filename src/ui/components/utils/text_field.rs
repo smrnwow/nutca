@@ -30,6 +30,7 @@ pub struct TextFieldProps {
     label: Option<String>,
     icon_left: Option<Element>,
     icon_right: Option<Element>,
+    error: Option<String>,
     on_input: EventHandler<String>,
 }
 
@@ -39,9 +40,11 @@ pub fn TextField(props: TextFieldProps) -> Element {
 
     let size = props.size.unwrap_or(String::from("small"));
 
+    let errored = props.error.is_some();
+
     rsx! {
         div {
-            class: "text-field text-field_size-{size}",
+            class: "text-field text-field_size-{size} text-field_error-{errored}",
 
             if let Some(label) = props.label {
                 {label}
@@ -72,6 +75,13 @@ pub fn TextField(props: TextFieldProps) -> Element {
                     if let Some(icon_right) = props.icon_right {
                         {icon_right}
                     }
+                }
+            }
+
+            if let Some(error) = props.error {
+                div {
+                    class: "text-field__error",
+                    {error},
                 }
             }
         }

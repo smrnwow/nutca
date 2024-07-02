@@ -25,6 +25,8 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
 
     let solution = use_memo(move || solution_builder.read().build());
 
+    let solution_error = use_memo(move || solution_builder.read().validate());
+
     let profile = use_memo(move || solution_builder.read().profile());
 
     let mut profiles_listing = use_signal(move || profiles_storage.read().list());
@@ -38,9 +40,16 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
             Section {
                 SolutionEditor {
                     solution,
+                    solution_error,
                     fertilizers_listing,
                     profile,
                     profiles,
+                    on_name_update: move |name| {
+                        solution_builder.write().update_name(name);
+                    },
+                    on_volume_update: move |volume| {
+                        solution_builder.write().update_volume(volume);
+                    },
                     on_profile_nutrient_update: move |nutrient| {
                         solution_builder.write().update_profile_nutrient(nutrient);
                     },
@@ -68,17 +77,16 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
                     on_fertilizers_paginate: move |page_index| {
                         fertilizers_listing.write().paginate(page_index);
                     },
-                    on_volume_update: move |water_amount| {
-                        solution_builder.write().update_water_amount(water_amount);
-                    },
-                    on_save: move |solution_name| {
-                        let mut solution = solution.read().clone();
+                    on_save: move |_| {
+                        solution_builder.write().save();
 
-                        solution.set_name(solution_name);
+                        if solution_error.read().is_empty() {
+                            let solution = solution.read().clone();
 
-                        solutions_storage.read().update(solution);
+                            solutions_storage.read().update(solution);
 
-                        navigator().push(Route::SolutionsListingPage {});
+                            navigator().push(Route::SolutionsListingPage {});
+                        }
                     },
                 }
             }

@@ -70,3 +70,11 @@
     height: 18px;
     fill: rgba(82, 88, 102, 1);
 }
+
+/*
+.quick-action:hover .quick-action__right-action_has-reference-true .button_compact {
+    display: none !important;
+    opacity: 0;
+    visibility: none;
+}
+*/

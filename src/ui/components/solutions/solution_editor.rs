@@ -1,7 +1,7 @@
 use crate::model::chemistry::Nutrient;
 use crate::model::fertilizers::FertilizersListing;
 use crate::model::profiles::Profile;
-use crate::model::solutions::Solution;
+use crate::model::solutions::{Solution, SolutionError};
 use crate::ui::components::layout::Row;
 use crate::ui::components::solutions::{FertilizersBrowser, FertilizersSet, SolutionProfile};
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
@@ -11,9 +11,12 @@ use dioxus::prelude::*;
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionEditorProps {
     solution: Memo<Solution>,
+    solution_error: Memo<SolutionError>,
     profile: Memo<Profile>,
     profiles: Memo<Vec<Profile>>,
     fertilizers_listing: Signal<FertilizersListing>,
+    on_name_update: EventHandler<String>,
+    on_volume_update: EventHandler<usize>,
     on_profile_change: EventHandler<String>,
     on_profile_search: EventHandler<String>,
     on_profile_nutrient_update: EventHandler<Nutrient>,
@@ -21,14 +24,11 @@ pub struct SolutionEditorProps {
     on_fertilizer_exclude: EventHandler<String>,
     on_fertilizer_search: EventHandler<String>,
     on_fertilizers_paginate: EventHandler<usize>,
-    on_volume_update: EventHandler<usize>,
-    on_save: EventHandler<String>,
+    on_save: EventHandler<()>,
 }
 
 #[component]
 pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
-    let mut solution_name = use_signal(|| props.solution.read().name());
-
     rsx! {
         Card {
             Block {
@@ -47,10 +47,9 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
             Block {
                 TextField {
                     label: "Название",
-                    value: solution_name.read(),
-                    on_input: move |event| {
-                        *solution_name.write() = event;
-                    },
+                    value: props.solution.read().name(),
+                    error: props.solution_error.read().name(),
+                    on_input: props.on_name_update,
                 }
             }
 
@@ -100,11 +99,7 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
 
                     Button {
                         style: "primary",
-                        on_click: move |_| {
-                            props.on_save.call(solution_name.read().clone());
-
-                            *solution_name.write() = String::new();
-                        },
+                        on_click: props.on_save,
                         "Сохранить",
                     }
                 }

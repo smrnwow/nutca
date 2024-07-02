@@ -10,6 +10,10 @@
     right: -16px;
 }
 
+.reference_style-button {
+    position: relative;
+}
+
 .reference_display-true {
     opacity: 1;
     visibility: visible;
@@ -29,7 +33,7 @@
     color: rgba(54, 0, 144, 1);
 }
 
-.reference-subject:hover .reference {
+.reference-subject:hover .title .reference {
     opacity: 1;
     visibility: visible;
     transform: translateY(0px);
@@ -55,4 +59,18 @@
     width: 20px;
     height: 20px;
     border-radius: 6px;
+}
+
+.quick-action__left-action_has-reference-true .reference_style-button,
+.quick-action__right-action_has-reference-true .reference_style-button {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.quick-action:hover .quick-action__left-action_has-reference-true .reference_style-button,
+.quick-action:hover .quick-action__right-action_has-reference-true .reference_style-button {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0px);
 }

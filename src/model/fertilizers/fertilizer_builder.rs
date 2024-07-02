@@ -1,4 +1,4 @@
-use crate::model::fertilizers::{Fertilizer, Source, SourceType};
+use crate::model::fertilizers::{Fertilizer, FertilizerError, Source, SourceType};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
 use uuid::Uuid;
@@ -11,6 +11,7 @@ pub struct FertilizerBuilder {
     liquid: bool,
     label: Label,
     formula: Formula,
+    saved: bool,
 }
 
 impl FertilizerBuilder {
@@ -23,6 +24,7 @@ impl FertilizerBuilder {
             liquid: false,
             label: Label::new(Units::Percent),
             formula: Formula::new(""),
+            saved: false,
         }
     }
 
@@ -47,6 +49,7 @@ impl FertilizerBuilder {
                     Formula::new("")
                 }
             },
+            saved: false,
         }
     }
 
@@ -92,6 +95,22 @@ impl FertilizerBuilder {
 
     pub fn formula(&self) -> Formula {
         self.formula.clone()
+    }
+
+    pub fn save(&mut self) {
+        self.saved = true;
+    }
+
+    pub fn validate(&self) -> FertilizerError {
+        let mut fertilizer_error = FertilizerError::new();
+
+        if self.saved {
+            if self.name.len() == 0 {
+                fertilizer_error.set_name("не заполнено");
+            }
+        }
+
+        fertilizer_error
     }
 
     pub fn build(&self) -> Fertilizer {

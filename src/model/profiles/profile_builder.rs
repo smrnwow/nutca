@@ -1,11 +1,12 @@
 use crate::model::chemistry::Nutrient;
-use crate::model::profiles::Profile;
+use crate::model::profiles::{Profile, ProfileError};
 use uuid::Uuid;
 
 pub struct ProfileBuilder {
     id: String,
     name: String,
     nutrients: [Nutrient; 14],
+    saved: bool,
 }
 
 impl ProfileBuilder {
@@ -29,6 +30,7 @@ impl ProfileBuilder {
                 Nutrient::Boron(0.0),
                 Nutrient::Molybdenum(0.0),
             ],
+            saved: false,
         }
     }
 
@@ -37,6 +39,7 @@ impl ProfileBuilder {
             id: profile.id(),
             name: profile.name(),
             nutrients: profile.nutrients_array(),
+            saved: false,
         }
     }
 
@@ -75,12 +78,24 @@ impl ProfileBuilder {
         }
     }
 
-    pub fn build(&self) -> Profile {
-        let mut nutrients: Vec<Nutrient> = vec![];
+    pub fn save(&mut self) {
+        self.saved = true;
+    }
 
-        self.nutrients
-            .iter()
-            .for_each(|nutrient| nutrients.push(*nutrient));
+    pub fn validate(&self) -> ProfileError {
+        let mut profile_error = ProfileError::new();
+
+        if self.saved {
+            if self.name.len() == 0 {
+                profile_error.set_name("не заполнено");
+            }
+        }
+
+        profile_error
+    }
+
+    pub fn build(&self) -> Profile {
+        let nutrients: Vec<Nutrient> = self.nutrients.iter().map(|nutrient| *nutrient).collect();
 
         let mut profile = Profile::from(self.name.as_str(), nutrients);
 

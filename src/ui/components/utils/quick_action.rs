@@ -78,38 +78,42 @@ pub fn QuickAction(props: QuickActionProps) -> Element {
             },
 
             if let Some(action_left) = props.action_left {
-                Button {
-                    hidden: action_hidden,
-                    style: "compact",
-                    {action_left},
-                }
+                div {
+                    class: "quick-action__left-action quick-action__left-action_has-reference-{*has_reference.read()}",
 
-                if let Some(reference) = props.reference.clone() {
-                    Reference {
-                        display: show_reference,
-                        style: "button",
-                        tooltip: reference,
-                        tooltip_position: "top-left",
+                    Button {
+                        style: "compact",
+                        {action_left},
+                    }
+
+                    if let Some(reference) = props.reference.clone() {
+                        Reference {
+                            display: Signal::new(false),
+                            style: "button",
+                            tooltip: reference,
+                            tooltip_position: "top-left",
+                        }
                     }
                 }
             }
 
             div {
-                class: "quick-action__text",
+                class: "quick-action__text quick-action",
                 {props.children},
             }
 
             if let Some(action_right) = props.action_right {
-                Button {
-                    hidden: action_hidden,
-                    style: "compact",
-                    {action_right},
-                }
+                div {
+                    class: "quick-action__right-action quick-action__right-action_has-reference-{*has_reference.read()}",
 
-                if let Some(reference) = props.reference.clone() {
-                    if *show_reference.read() {
+                    Button {
+                        style: "compact",
+                        {action_right},
+                    }
+
+                    if let Some(reference) = props.reference.clone() {
                         Reference {
-                            display: show_reference,
+                            display: Signal::new(false),
                             style: "button",
                             tooltip: reference,
                             tooltip_position: "top-right",

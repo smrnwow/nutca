@@ -21,11 +21,14 @@ pub fn ProfileEditPage(profile_id: String) -> Element {
 
     let profile = use_memo(move || profile_builder.read().build());
 
+    let profile_error = use_memo(move || profile_builder.read().validate());
+
     rsx! {
         Page {
             Section {
                 ProfileEditor {
                     profile,
+                    profile_error,
                     on_nutrient_update: move |nutrient| {
                         profile_builder.write().update_nutrient(nutrient);
                     },
@@ -33,11 +36,15 @@ pub fn ProfileEditPage(profile_id: String) -> Element {
                         profile_builder.write().update_name(name);
                     },
                     on_save: move |_| {
-                        let storage = profiles_storage.read();
+                        profile_builder.write().save();
 
-                        storage.update(profile.read().clone());
+                        if profile_error.read().is_empty() {
+                            let storage = profiles_storage.read();
 
-                        navigator().push(Route::ProfilesListingPage {});
+                            storage.update(profile.read().clone());
+
+                            navigator().push(Route::ProfilesListingPage {});
+                        }
                     },
                     on_cancel: move |_| {
                         navigator().push(Route::ProfilesListingPage {});

@@ -1,14 +1,13 @@
-mod fertilizer_builder;
-pub use fertilizer_builder::FertilizerBuilder;
-
 mod fertilizer;
-pub use fertilizer::Fertilizer;
-
+mod fertilizer_builder;
+mod fertilizer_error;
 mod fertilizers_listing;
-pub use fertilizers_listing::FertilizersListing;
-
-mod source_type;
-pub use source_type::SourceType;
-
 mod source;
+mod source_type;
+
+pub use fertilizer::Fertilizer;
+pub use fertilizer_builder::FertilizerBuilder;
+pub use fertilizer_error::FertilizerError;
+pub use fertilizers_listing::FertilizersListing;
 pub use source::Source;
+pub use source_type::SourceType;

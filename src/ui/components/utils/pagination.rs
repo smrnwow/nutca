@@ -94,7 +94,7 @@ pub fn Pagination(props: PaginationProps) -> Element {
 
     let is_first_page = page_index == 1;
 
-    let is_last_page = (page_index - 1) == pages_count;
+    let is_last_page = pages_count == 0 || page_index == pages_count;
 
     rsx! {
         div {

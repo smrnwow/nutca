@@ -1,4 +1,4 @@
-use crate::model::fertilizers::{Fertilizer, SourceType};
+use crate::model::fertilizers::{Fertilizer, FertilizerError, SourceType};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
 use crate::ui::components::fertilizers::{FertilizerComposition, FertilizerSource};
@@ -10,6 +10,7 @@ use dioxus::prelude::*;
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerEditorProps {
     fertilizer: Memo<Fertilizer>,
+    fertilizer_error: Memo<FertilizerError>,
     source_type: Memo<SourceType>,
     label: Memo<Label>,
     formula: Memo<Formula>,
@@ -40,8 +41,9 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
                 Column {
                     Row {
                         TextField {
-                            value: props.fertilizer.read().name(),
                             label: "Название",
+                            value: props.fertilizer.read().name(),
+                            error: props.fertilizer_error.read().name(),
                             on_input: props.on_name_update,
                         }
 
