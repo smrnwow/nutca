@@ -1,44 +1,45 @@
 use crate::model::calculation::Solver;
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::{Nutrient, Volume};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
 use crate::model::solutions::{Solution, SolutionError};
 use uuid::Uuid;
 
 pub struct SolutionBuilder {
+    saved: bool,
     id: String,
     name: String,
     profile: Profile,
     fertilizers: Vec<Fertilizer>,
-    volume: usize,
-    saved: bool,
+    volume: Volume,
 }
 
 impl SolutionBuilder {
     pub fn new() -> Self {
         Self {
+            saved: false,
             id: Uuid::new_v4().to_string(),
             name: String::new(),
             profile: Profile::new(),
             fertilizers: Vec::new(),
-            volume: 1,
-            saved: false,
+            volume: Volume::default(),
         }
     }
 
     pub fn base_on(profile: Profile) -> Self {
         Self {
+            saved: false,
             id: Uuid::new_v4().to_string(),
             name: String::new(),
             profile,
             fertilizers: Vec::new(),
-            volume: 1,
-            saved: false,
+            volume: Volume::default(),
         }
     }
 
     pub fn from(solution: Solution) -> Self {
         Self {
+            saved: false,
             id: solution.id(),
             name: solution.name(),
             profile: solution.profile(),
@@ -47,8 +48,7 @@ impl SolutionBuilder {
                 .iter()
                 .map(|fertilizer_weight| fertilizer_weight.fertilizer.clone())
                 .collect(),
-            volume: 1,
-            saved: false,
+            volume: Volume::default(),
         }
     }
 
@@ -56,7 +56,7 @@ impl SolutionBuilder {
         self.name = name;
     }
 
-    pub fn update_volume(&mut self, volume: usize) {
+    pub fn update_volume(&mut self, volume: Volume) {
         self.volume = volume;
     }
 
@@ -130,7 +130,7 @@ impl SolutionBuilder {
 
         solution.set_name(self.name.clone());
 
-        solution.set_water_amount(self.volume);
+        solution.set_volume(self.volume);
 
         return solution;
     }

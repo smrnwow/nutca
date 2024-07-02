@@ -1,4 +1,4 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::{Nutrient, Volume};
 use crate::model::solutions::{FertilizerWeight, Solution};
 
 pub struct StockSolutionBuilder {
@@ -6,7 +6,7 @@ pub struct StockSolutionBuilder {
     part_a: Vec<FertilizerWeight>,
     part_b: Vec<FertilizerWeight>,
     concentration_factor: usize,
-    volume: usize,
+    volume: Volume,
 }
 
 impl StockSolutionBuilder {
@@ -16,7 +16,7 @@ impl StockSolutionBuilder {
             part_a: Vec::new(),
             part_b: Vec::new(),
             concentration_factor: 100,
-            volume: 1,
+            volume: Volume::default(),
         }
     }
 
@@ -88,7 +88,7 @@ impl StockSolutionBuilder {
         self.concentration_factor = concentration_factor;
     }
 
-    pub fn update_volume(&mut self, volume: usize) {
+    pub fn update_volume(&mut self, volume: Volume) {
         self.volume = volume;
     }
 
@@ -102,7 +102,7 @@ impl StockSolutionBuilder {
             .map(|fertilizer_weight| {
                 let stock_weight = fertilizer_weight.weight
                     * self.concentration_factor as f64
-                    * self.volume as f64;
+                    * self.volume.to_litres();
 
                 FertilizerWeight::new(fertilizer_weight.fertilizer.clone(), stock_weight)
             })
@@ -115,7 +115,7 @@ impl StockSolutionBuilder {
             .map(|fertilizer_weight| {
                 let stock_weight = fertilizer_weight.weight
                     * self.concentration_factor as f64
-                    * self.volume as f64;
+                    * self.volume.to_litres();
 
                 FertilizerWeight::new(fertilizer_weight.fertilizer.clone(), stock_weight)
             })
@@ -126,7 +126,7 @@ impl StockSolutionBuilder {
         self.concentration_factor
     }
 
-    pub fn volume(&self) -> usize {
+    pub fn volume(&self) -> Volume {
         self.volume
     }
 }

@@ -1,3 +1,4 @@
+use crate::model::chemistry::Volume;
 use crate::model::fertilizers::Fertilizer;
 use crate::model::solutions::FertilizerWeight;
 use serde::{Deserialize, Serialize};
@@ -11,7 +12,7 @@ pub struct FertilizersSet {
 
 impl FertilizersSet {
     pub fn new(
-        water_amount: usize,
+        volume: Volume,
         fertilizers_weights: Vec<FertilizerWeight>,
         redurant_fertilizers: Vec<Fertilizer>,
     ) -> Self {
@@ -25,7 +26,7 @@ impl FertilizersSet {
             .map(|fertilizer_weight| {
                 FertilizerWeight::new(
                     fertilizer_weight.fertilizer.clone(),
-                    fertilizer_weight.weight * water_amount as f64,
+                    fertilizer_weight.weight * volume.to_litres(),
                 )
             })
             .collect();

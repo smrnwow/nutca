@@ -1,14 +1,15 @@
+use crate::model::chemistry::Volume;
 use crate::model::solutions::Solution;
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::solutions::{FertilizersSetItem, SolutionVolume};
+use crate::ui::components::solutions::FertilizersSetItem;
 use crate::ui::components::utils::{List, Pagination, Title};
-use crate::ui::components::ReferencePreview;
+use crate::ui::components::{ReferencePreview, VolumeField};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersSetProps {
     solution: Memo<Solution>,
-    on_volume_update: EventHandler<usize>,
+    on_volume_update: EventHandler<Volume>,
     on_exclude: EventHandler<String>,
 }
 
@@ -24,7 +25,7 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
         fertilizers_set
     });
 
-    let volume = use_memo(move || props.solution.read().water_amount());
+    let volume = use_memo(move || props.solution.read().volume());
 
     let mut show_reference = use_signal(|| false);
 
@@ -50,12 +51,10 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
                 }
             }
 
-            SolutionVolume {
+            VolumeField {
+                label: "Объем раствора",
                 volume,
-                on_volume_update: props.on_volume_update,
-                on_units_change: move |units| {
-                    println!("units change {}", units);
-                },
+                on_change: props.on_volume_update,
             }
 
             List {
@@ -63,10 +62,10 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
                 empty: fertilizers_set.read().is_empty(),
                 stub_text: "Выберите удобрения из списка",
 
-                for fertilizer in fertilizers_set.read().items() {
+                for fertilizer_weight in fertilizers_set.read().items() {
                     FertilizersSetItem {
-                        key: "{fertilizer.fertilizer.id()}",
-                        fertilizer,
+                        key: "{fertilizer_weight.fertilizer.id()}",
+                        fertilizer_weight: Signal::new(fertilizer_weight),
                         on_exclude: props.on_exclude,
                     }
                 }

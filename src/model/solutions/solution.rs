@@ -1,4 +1,4 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::{Nutrient, Volume};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
 use crate::model::solutions::{FertilizerWeight, FertilizersSet, NutrientResult};
@@ -13,7 +13,7 @@ pub struct Solution {
     value: Profile,
     fertilizers_weights: Vec<FertilizerWeight>,
     redurant_fertilizers: Vec<Fertilizer>,
-    water_amount: usize,
+    volume: Volume,
 }
 
 impl Solution {
@@ -25,7 +25,7 @@ impl Solution {
             value: Profile::new(),
             fertilizers_weights: Vec::new(),
             redurant_fertilizers: Vec::new(),
-            water_amount: 1,
+            volume: Volume::default(),
         }
     }
 
@@ -37,7 +37,7 @@ impl Solution {
             value: Profile::new(),
             fertilizers_weights: Vec::new(),
             redurant_fertilizers: Vec::new(),
-            water_amount: 1,
+            volume: Volume::default(),
         }
     }
 
@@ -85,8 +85,8 @@ impl Solution {
         self.name = name;
     }
 
-    pub fn set_water_amount(&mut self, water_amount: usize) {
-        self.water_amount = water_amount;
+    pub fn set_volume(&mut self, volume: Volume) {
+        self.volume = volume;
     }
 
     pub fn id(&self) -> String {
@@ -107,7 +107,7 @@ impl Solution {
 
     pub fn fertilizers_set(&self) -> FertilizersSet {
         FertilizersSet::new(
-            self.water_amount,
+            self.volume,
             self.fertilizers_weights.clone(),
             self.redurant_fertilizers.clone(),
         )
@@ -120,7 +120,7 @@ impl Solution {
             .map(|fertilizer_weight| {
                 FertilizerWeight::new(
                     fertilizer_weight.fertilizer.clone(),
-                    fertilizer_weight.weight * self.water_amount as f64,
+                    fertilizer_weight.weight * self.volume.value() as f64,
                 )
             })
             .collect::<Vec<FertilizerWeight>>();
@@ -138,8 +138,8 @@ impl Solution {
         redurant_fertilizers
     }
 
-    pub fn water_amount(&self) -> usize {
-        self.water_amount
+    pub fn volume(&self) -> Volume {
+        self.volume
     }
 
     pub fn ec(&self) -> f64 {

@@ -4,7 +4,7 @@ use crate::ui::components::layout::{Column, Page, Row, Section};
 use crate::ui::components::utils::{
     Block, Card, Divider, NumberField, QuickAction, Select, Text, Title,
 };
-use crate::ui::components::UnitsSelect;
+use crate::ui::components::VolumeField;
 use dioxus::prelude::*;
 
 fn render_fertilizer_weight(weight: f64, liquid: bool) -> String {
@@ -87,24 +87,12 @@ pub fn StockSolutionPage(solution_id: String) -> Element {
                                     },
                                 }
 
-                                Row {
-                                    gap: "small",
-                                    vertical: "end",
-
-                                    NumberField {
-                                        label: "Объем",
-                                        value: *volume.read(),
-                                        units: "литр",
-                                        on_change: move |value| {
-                                            stock_solution_builder.write().update_volume(value);
-                                        },
-                                    }
-
-                                    UnitsSelect {
-                                        on_change: move |units| {
-                                            println!("units change {}", units);
-                                        },
-                                    }
+                                VolumeField {
+                                    label: "Объем",
+                                    volume,
+                                    on_change: move |volume| {
+                                        stock_solution_builder.write().update_volume(volume);
+                                    },
                                 }
                             }
                         }

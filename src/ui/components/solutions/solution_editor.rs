@@ -1,4 +1,4 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::{Nutrient, Volume};
 use crate::model::fertilizers::FertilizersListing;
 use crate::model::profiles::Profile;
 use crate::model::solutions::{Solution, SolutionError};
@@ -16,7 +16,7 @@ pub struct SolutionEditorProps {
     profiles: Memo<Vec<Profile>>,
     fertilizers_listing: Signal<FertilizersListing>,
     on_name_update: EventHandler<String>,
-    on_volume_update: EventHandler<usize>,
+    on_volume_update: EventHandler<Volume>,
     on_profile_change: EventHandler<String>,
     on_profile_search: EventHandler<String>,
     on_profile_nutrient_update: EventHandler<Nutrient>,

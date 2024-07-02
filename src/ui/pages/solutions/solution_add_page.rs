@@ -86,8 +86,6 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
                             solutions_storage.read().add(solution);
 
                             navigator().push(Route::SolutionsListingPage {});
-                        } else {
-                            println!("solution_error {:#?}", solution_error);
                         }
                     },
                 }
