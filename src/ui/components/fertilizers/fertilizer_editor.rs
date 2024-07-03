@@ -1,9 +1,11 @@
 use crate::model::fertilizers::{Fertilizer, FertilizerError, SourceType};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
-use crate::ui::components::fertilizers::{FertilizerComposition, FertilizerSource};
-use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::utils::{Block, Button, Card, Checkbox, Divider, TextField, Title};
+use crate::ui::components::fertilizers::{
+    FertilizerComposition, FertilizerDetails, FertilizerSource,
+};
+use crate::ui::components::layout::Row;
+use crate::ui::components::utils::{Block, Button, Card, Divider, Title};
 use crate::ui::components::ReferenceSubject;
 use dioxus::prelude::*;
 
@@ -38,29 +40,12 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
             Divider {}
 
             Block {
-                Column {
-                    Row {
-                        TextField {
-                            label: "Название",
-                            value: props.fertilizer.read().name(),
-                            error: props.fertilizer_error.read().name(),
-                            on_input: props.on_name_update,
-                        }
-
-                        TextField {
-                            value: props.fertilizer.read().vendor(),
-                            label: "Производитель",
-                            on_input: props.on_vendor_update,
-                        }
-                    }
-
-                    Row {
-                        Checkbox {
-                            text: "жидкое удобрение",
-                            value: props.fertilizer.read().liquid(),
-                            on_change: props.on_liquid_update,
-                        }
-                    }
+                FertilizerDetails {
+                    fertilizer: props.fertilizer,
+                    fertilizer_error: props.fertilizer_error,
+                    on_name_update: props.on_name_update,
+                    on_vendor_update: props.on_vendor_update,
+                    on_liquid_update: props.on_liquid_update,
                 }
             }
 

@@ -9,12 +9,13 @@ pub struct Formula {
     elements: HashMap<Symbol, i32>,
     nutrients: [Nutrient; 14],
     nitrogen_forms: NitrogenForms,
+    error: Option<String>,
 }
 
 impl Formula {
-    pub fn new(formulation: &str) -> Self {
+    pub fn new(formulation: impl Into<String>) -> Self {
         Self {
-            formulation: formulation.to_string(),
+            formulation: formulation.into(),
             elements: HashMap::new(),
             nutrients: [
                 Nutrient::Nitrogen(0.0),
@@ -33,6 +34,7 @@ impl Formula {
                 Nutrient::Molybdenum(0.0),
             ],
             nitrogen_forms: NitrogenForms::new(),
+            error: None,
         }
     }
 
@@ -50,6 +52,10 @@ impl Formula {
 
     pub fn formulation(&self) -> String {
         self.formulation.clone()
+    }
+
+    pub fn error(&self) -> Option<String> {
+        self.error.clone()
     }
 
     fn add_element(&mut self, element: &Element) {
@@ -107,6 +113,10 @@ impl Formula {
             }
         });
     }
+
+    fn set_error(&mut self, error: String) {
+        self.error = Some(error);
+    }
 }
 
 impl From<String> for Formula {
@@ -119,21 +129,29 @@ impl From<&str> for Formula {
     fn from(formulation: &str) -> Self {
         let mut formula = Self::new(formulation);
 
-        let compound = Tokenizer::new(&Table::new(), formulation)
-            .tokenize()
-            .unwrap();
+        let table = Table::new();
 
-        compound.composition().iter().for_each(|element| {
-            formula.add_element(element);
-        });
+        let mut tokenizer = Tokenizer::new(&table, formulation);
 
-        compound.hydrate().iter().for_each(|element| {
-            formula.add_element(element);
-        });
+        match tokenizer.tokenize() {
+            Ok(compound) => {
+                compound.composition().iter().for_each(|element| {
+                    formula.add_element(element);
+                });
 
-        formula.apply_coefficient(compound.coefficient());
+                compound.hydrate().iter().for_each(|element| {
+                    formula.add_element(element);
+                });
 
-        formula.setup_nutrients();
+                formula.apply_coefficient(compound.coefficient());
+
+                formula.setup_nutrients();
+            }
+
+            Err(error) => {
+                formula.set_error(error.message);
+            }
+        }
 
         formula
     }

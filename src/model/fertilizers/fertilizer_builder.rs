@@ -77,8 +77,8 @@ impl FertilizerBuilder {
         self.label.update_component(component);
     }
 
-    pub fn update_formula(&mut self, formula: String) {
-        self.formula = Formula::from(formula);
+    pub fn update_formula(&mut self, formulation: String) {
+        self.formula = Formula::from(formulation);
     }
 
     pub fn update_liquid(&mut self, liquid: bool) {

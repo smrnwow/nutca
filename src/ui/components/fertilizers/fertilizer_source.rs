@@ -79,7 +79,6 @@ pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
                 SourceType::Formula => {
                     rsx! {
                         FertilizerFormula {
-                            fertilizer: props.fertilizer,
                             formula: props.formula,
                             on_formula_update: props.on_formula_update,
                         }

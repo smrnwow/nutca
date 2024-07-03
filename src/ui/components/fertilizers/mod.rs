@@ -1,5 +1,6 @@
 mod fertilizer_component_input;
 mod fertilizer_composition;
+mod fertilizer_details;
 mod fertilizer_editor;
 mod fertilizer_formula;
 mod fertilizer_label;
@@ -10,6 +11,7 @@ mod nutrient_content_value;
 
 pub use fertilizer_component_input::FertilizerComponentInput;
 pub use fertilizer_composition::FertilizerComposition;
+pub use fertilizer_details::FertilizerDetails;
 pub use fertilizer_editor::FertilizerEditor;
 pub use fertilizer_formula::FertilizerFormula;
 pub use fertilizer_label::FertilizerLabel;
