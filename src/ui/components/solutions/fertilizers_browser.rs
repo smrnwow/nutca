@@ -1,9 +1,9 @@
-use super::FertilizersBrowserItem;
 use crate::model::fertilizers::FertilizersListing;
 use crate::ui::components::layout::{Column, Row};
+use crate::ui::components::reference::ReferenceBadge;
+use crate::ui::components::solutions::FertilizersBrowserItem;
 use crate::ui::components::utils::icons::SearchIcon;
 use crate::ui::components::utils::{Label, List, Pagination, TextField, Title};
-use crate::ui::components::ReferencePreview;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -28,13 +28,10 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
             Row {
                 Title {
                     size: "small",
-
                     "Выбор удобрений",
-
-                    ReferencePreview {
-                        show_reference,
+                    ReferenceBadge {
                         article_id: "solution-editor-fertilizers-browser",
-                    }
+                    },
                 }
             }
 
@@ -42,12 +39,12 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
                 text: "Поиск",
 
                 TextField {
-                    value: fertilizers_listing.read().search_query(),
                     placeholder: "название удобрения",
-                    on_input: props.on_search,
+                    value: fertilizers_listing.read().search_query(),
                     icon_left: rsx! {
                         SearchIcon {}
-                    }
+                    },
+                    on_input: props.on_search,
                 }
             }
 
@@ -59,7 +56,7 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
                 for fertilizer in fertilizers_listing.read().list() {
                     FertilizersBrowserItem {
                         key: "{fertilizer.id()}",
-                        fertilizer,
+                        fertilizer: Signal::new(fertilizer),
                         on_select: props.on_select,
                     }
                 }

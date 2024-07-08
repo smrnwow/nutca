@@ -1,5 +1,5 @@
 use crate::model::fertilizers::FertilizerBuilder;
-use crate::storage::FertilizersStorage;
+use crate::storage::Storage;
 use crate::ui::components::fertilizers::FertilizerEditor;
 use crate::ui::components::layout::{Page, Section};
 use crate::ui::router::Route;
@@ -8,14 +8,14 @@ use dioxus_router::prelude::*;
 
 #[component]
 pub fn FertilizerEditPage(fertilizer_id: String) -> Element {
-    let fertilizers_storage = consume_context::<Signal<FertilizersStorage>>();
+    let storage = consume_context::<Signal<Storage>>();
 
     let mut fertilizer_builder = use_signal(|| {
-        let fertilizer = fertilizers_storage.read().get(fertilizer_id);
+        let fertilizer = storage.read().fertilizers().get(fertilizer_id);
 
         match fertilizer {
-            Some(fertilizer) => FertilizerBuilder::from(fertilizer),
-            None => FertilizerBuilder::new(),
+            Ok(fertilizer) => FertilizerBuilder::from(fertilizer),
+            Err(_) => FertilizerBuilder::new(),
         }
     });
 
@@ -63,9 +63,7 @@ pub fn FertilizerEditPage(fertilizer_id: String) -> Element {
                         fertilizer_builder.write().save();
 
                         if fertilizer_error.read().is_empty() {
-                            let storage = fertilizers_storage.read();
-
-                            storage.update(fertilizer.read().clone());
+                            storage.read().fertilizers().update(fertilizer.read().clone()).unwrap();
 
                             navigator().push(Route::FertilizersListingPage {});
                         }

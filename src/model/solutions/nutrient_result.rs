@@ -26,20 +26,6 @@ impl NutrientResult {
         }
     }
 
-    pub fn diff_color(&self) -> String {
-        let diff_percent = self.diff_percent();
-
-        if diff_percent < 2. {
-            return String::from("green");
-        }
-
-        if diff_percent < 10. {
-            return String::from("yellow");
-        }
-
-        String::from("red")
-    }
-
     pub fn diff_state(&self) -> String {
         let diff_percent = self.diff_percent();
 

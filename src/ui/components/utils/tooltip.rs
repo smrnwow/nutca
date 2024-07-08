@@ -2,18 +2,17 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct TooltipProps {
-    position: Option<String>,
     target: Element,
     body: Element,
+    #[props(default = String::from("top-center"))]
+    position: String,
 }
 
 #[component]
 pub fn Tooltip(props: TooltipProps) -> Element {
-    let position = props.position.unwrap_or(String::from("top-center"));
-
     rsx! {
         div {
-            class: "tooltip tooltip_{position}",
+            class: "tooltip tooltip_{props.position}",
 
             div {
                 class: "tooltip__target",

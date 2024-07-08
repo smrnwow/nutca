@@ -92,13 +92,6 @@ impl SolutionBuilder {
         self.profile.clone()
     }
 
-    pub fn fertilizers(&self) -> Vec<String> {
-        self.fertilizers
-            .iter()
-            .map(|fertilizer| fertilizer.id())
-            .collect()
-    }
-
     pub fn validate(&self) -> SolutionError {
         let mut solution_error = SolutionError::new();
 

@@ -46,14 +46,14 @@
     border-bottom-right-radius: 6px;
 }
 
-.buttons-group__button_size-small {
+.buttons-group_size-small .buttons-group__button {
     padding: 4px 12px;
     font-size: 12px;
     line-height: 16px;
     font-weight: 500;
 }
 
-.buttons-group__button_size-medium {
+.buttons-group_size-medium .buttons-group__button {
     padding: 4px 12px;
     font-size: 12px;
     line-height: 16px;

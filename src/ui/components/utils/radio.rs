@@ -28,6 +28,10 @@ pub fn Radio(props: RadioProps) -> Element {
 
             span {
                 class: "radio__control",
+
+                span {
+                    class: "radio__control_inner",
+                }
             }
 
             if let Some(text) = props.text {

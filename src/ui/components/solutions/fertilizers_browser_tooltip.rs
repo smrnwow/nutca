@@ -1,7 +1,8 @@
 use crate::model::chemistry::Nutrient;
 use crate::model::fertilizers::Fertilizer;
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::utils::{Tag, Text};
+use crate::ui::components::utils::icons::ArrowRight;
+use crate::ui::components::utils::{Button, Tag, Text, Tooltip};
 use dioxus::prelude::*;
 
 fn tag_text(nutrient: Nutrient) -> Vec<String> {
@@ -25,81 +26,101 @@ pub fn FertilizersBrowserTooltip(props: FertilizersBrowserTooltipProps) -> Eleme
     let micro_nutrients = props.fertilizer.read().micro_nutrients();
 
     rsx! {
-        Column {
-            gap: "medium",
+        Tooltip {
+            position: "top-right",
+            target: rsx! {
+                div {
+                    class: "fertilizers-browser-tooltip",
 
-            Text {
-                size: "x-small",
-                bold: true,
-                "Использовать: {props.fertilizer.read().name()}",
-            }
+                    Button {
+                        style: "compact",
+                        ArrowRight {},
+                    }
 
-            Column {
-                gap: "small",
+                    button {
+                        class: "fertilizers-browser-tooltip__button",
+                        "i",
+                    }
+                }
+            },
+            body: rsx! {
+                Column {
+                    gap: "medium",
 
-                if macro_nutrients.len() > 0 {
+                    Text {
+                        size: "x-small",
+                        bold: true,
+                        "Использовать: {props.fertilizer.read().name()}",
+                    }
+
                     Column {
-                        gap: "xx-small",
+                        gap: "small",
 
-                        Text {
-                            size: "xx-small",
-                            "Макроэлементы",
+                        if macro_nutrients.len() > 0 {
+                            Column {
+                                gap: "xx-small",
+
+                                Text {
+                                    size: "xx-small",
+                                    "Макроэлементы",
+                                }
+
+                                Row {
+                                    gap: "x-small",
+                                    wrap: true,
+                                    for nutrient in macro_nutrients {
+                                        Tag {
+                                            multiple_text: tag_text(nutrient),
+                                        }
+                                    }
+                                }
+                            }
                         }
 
-                        Row {
-                            gap: "x-small",
-                            wrap: true,
-                            for nutrient in macro_nutrients {
-                                Tag {
-                                    multiple_text: tag_text(nutrient),
+                        if nitrogen_forms.len() > 0 {
+                            Column {
+                                gap: "xx-small",
+
+                                Text {
+                                    size: "xx-small",
+                                    "Формы азота",
+                                }
+
+                                Row {
+                                    gap: "x-small",
+                                    wrap: true,
+                                    for nutrient in nitrogen_forms {
+                                        Tag {
+                                            multiple_text: tag_text(nutrient),
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if micro_nutrients.len() > 0 {
+                            Column {
+                                gap: "xx-small",
+
+                                Text {
+                                    size: "xx-small",
+                                    "Микроэлементы",
+                                }
+
+                                Row {
+                                    gap: "x-small",
+                                    wrap: true,
+                                    for nutrient in micro_nutrients {
+                                        Tag {
+                                            multiple_text: tag_text(nutrient),
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
-                if nitrogen_forms.len() > 0 {
-                    Column {
-                        gap: "xx-small",
-
-                        Text {
-                            size: "xx-small",
-                            "Формы азота",
-                        }
-
-                        Row {
-                            gap: "x-small",
-                            wrap: true,
-                            for nutrient in nitrogen_forms {
-                                Tag {
-                                    multiple_text: tag_text(nutrient),
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if micro_nutrients.len() > 0 {
-                    Column {
-                        gap: "xx-small",
-
-                        Text {
-                            size: "xx-small",
-                            "Микроэлементы",
-                        }
-
-                        Row {
-                            gap: "x-small",
-                            wrap: true,
-                            for nutrient in micro_nutrients {
-                                Tag {
-                                    multiple_text: tag_text(nutrient),
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            },
         }
     }
 }

@@ -1,5 +1,5 @@
-use crate::model::solutions::StockSolutionBuilder;
-use crate::storage::SolutionsStorage;
+use crate::model::solutions::{SolutionsListing, StockSolutionBuilder};
+use crate::storage::Storage;
 use crate::ui::components::layout::{Column, Page, Row, Section};
 use crate::ui::components::utils::{
     Block, Card, Divider, NumberField, QuickAction, Select, Text, Title,
@@ -18,18 +18,21 @@ fn render_fertilizer_weight(weight: f64, liquid: bool) -> String {
 
 #[component]
 pub fn StockSolutionPage(solution_id: String) -> Element {
-    let solutions_storage = consume_context::<Signal<SolutionsStorage>>();
+    let storage = consume_context::<Signal<Storage>>();
 
     let mut stock_solution_builder = use_signal(|| {
-        let solution = solutions_storage.read().get(solution_id);
+        let solution = storage.read().solutions().get(solution_id);
 
         match solution {
-            Some(solution) => StockSolutionBuilder::from(solution),
-            None => StockSolutionBuilder::new(),
+            Ok(solution) => StockSolutionBuilder::from(solution),
+            Err(_) => StockSolutionBuilder::new(),
         }
     });
 
-    let mut solutions_listing = use_signal(|| solutions_storage.read().list());
+    let mut solutions_listing = use_signal(|| match storage.read().solutions().list() {
+        Ok(listing) => listing,
+        Err(_) => SolutionsListing::new(vec![]),
+    });
 
     let solutions = use_memo(move || solutions_listing.read().list());
 

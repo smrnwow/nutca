@@ -1,7 +1,8 @@
 use crate::model::chemistry::Nutrient;
 use crate::model::solutions::FertilizerWeight;
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::utils::{Tag, Text};
+use crate::ui::components::utils::icons::ArrowLeft;
+use crate::ui::components::utils::{Button, Tag, Text, Tooltip};
 use dioxus::prelude::*;
 
 fn tag_text(nutrient: Nutrient) -> Vec<String> {
@@ -25,82 +26,102 @@ pub fn FertilizersSetTooltip(props: FertilizersSetTooltipProps) -> Element {
     let micro_nutrients = props.fertilizer_weight.read().micro_nutrients();
 
     rsx! {
-        Column {
-            gap: "medium",
+        Tooltip {
+            position: "top-left",
+            target: rsx! {
+                div {
+                    class: "fertilizers-browser-tooltip",
 
-            if props.fertilizer_weight.read().is_redurant() {
-                Text {
-                    size: "x-small",
-                    "Удобрение не вносит питательных веществ в раствор и исключено из расчета",
+                    Button {
+                        style: "compact",
+                        ArrowLeft {},
+                    }
+
+                    button {
+                        class: "fertilizers-browser-tooltip__button",
+                        "i",
+                    }
                 }
-            }
+            },
+            body: rsx! {
+                Column {
+                    gap: "medium",
 
-            Text {
-                size: "x-small",
-                bold: true,
-                "Исключить: {props.fertilizer_weight.read().fertilizer.name()}",
-            }
-
-            Column {
-                gap: "small",
-
-                if macro_nutrients.len() > 0 {
-                    Column {
-                        gap: "xx-small",
-
+                    if props.fertilizer_weight.read().is_redurant() {
                         Text {
-                            size: "xx-small",
-                            "Макроэлементы",
+                            size: "x-small",
+                            "Удобрение не вносит питательных веществ в раствор и исключено из расчета",
                         }
+                    }
 
-                        Row {
-                            gap: "x-small",
-                            wrap: true,
-                            for nutrient in macro_nutrients {
-                                Tag {
-                                    multiple_text: tag_text(nutrient),
+                    Text {
+                        size: "x-small",
+                        bold: true,
+                        "Исключить: {props.fertilizer_weight.read().fertilizer.name()}",
+                    }
+
+                    Column {
+                        gap: "small",
+
+                        if macro_nutrients.len() > 0 {
+                            Column {
+                                gap: "xx-small",
+
+                                Text {
+                                    size: "xx-small",
+                                    "Макроэлементы",
+                                }
+
+                                Row {
+                                    gap: "x-small",
+                                    wrap: true,
+                                    for nutrient in macro_nutrients {
+                                        Tag {
+                                            multiple_text: tag_text(nutrient),
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
-                }
 
-                if nitrogen_forms.len() > 0 {
-                    Column {
-                        gap: "xx-small",
+                        if nitrogen_forms.len() > 0 {
+                            Column {
+                                gap: "xx-small",
 
-                        Text {
-                            size: "xx-small",
-                            "Формы азота",
-                        }
+                                Text {
+                                    size: "xx-small",
+                                    "Формы азота",
+                                }
 
-                        Row {
-                            gap: "x-small",
-                            wrap: true,
-                            for nutrient in nitrogen_forms {
-                                Tag {
-                                    multiple_text: tag_text(nutrient),
+                                Row {
+                                    gap: "x-small",
+                                    wrap: true,
+                                    for nutrient in nitrogen_forms {
+                                        Tag {
+                                            multiple_text: tag_text(nutrient),
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
-                }
 
-                if micro_nutrients.len() > 0 {
-                    Column {
-                        gap: "xx-small",
+                        if micro_nutrients.len() > 0 {
+                            Column {
+                                gap: "xx-small",
 
-                        Text {
-                            size: "xx-small",
-                            "Микроэлементы",
-                        }
+                                Text {
+                                    size: "xx-small",
+                                    "Микроэлементы",
+                                }
 
-                        Row {
-                            gap: "x-small",
-                            wrap: true,
-                            for nutrient in micro_nutrients {
-                                Tag {
-                                    multiple_text: tag_text(nutrient),
+                                Row {
+                                    gap: "x-small",
+                                    wrap: true,
+                                    for nutrient in micro_nutrients {
+                                        Tag {
+                                            multiple_text: tag_text(nutrient),
+                                        }
+                                    }
                                 }
                             }
                         }

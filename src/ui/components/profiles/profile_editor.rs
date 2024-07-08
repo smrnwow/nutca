@@ -2,8 +2,8 @@ use crate::model::chemistry::Nutrient;
 use crate::model::profiles::{Profile, ProfileError};
 use crate::ui::components::layout::Row;
 use crate::ui::components::profiles::ProfileNutrients;
+use crate::ui::components::reference::ReferenceSubject;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
-use crate::ui::components::ReferenceSubject;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]

@@ -21,7 +21,7 @@ pub fn List(props: ListProps) -> Element {
 
     rsx! {
         div {
-            class: "list list_size-small list_limit-{limit}",
+            class: "list list_size-{size} list_limit-{limit}",
 
             if empty {
                 div {

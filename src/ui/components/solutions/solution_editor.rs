@@ -3,9 +3,9 @@ use crate::model::fertilizers::FertilizersListing;
 use crate::model::profiles::Profile;
 use crate::model::solutions::{Solution, SolutionError};
 use crate::ui::components::layout::Row;
+use crate::ui::components::reference::ReferenceSubject;
 use crate::ui::components::solutions::{FertilizersBrowser, FertilizersSet, SolutionProfile};
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
-use crate::ui::components::ReferenceSubject;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -55,17 +55,13 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
 
             Divider {}
 
-            ReferenceSubject {
-                Block {
-                    SolutionProfile {
-                        solution: props.solution,
-                        profile: props.profile,
-                        profiles: props.profiles,
-                        on_profile_change: props.on_profile_change,
-                        on_profile_search: props.on_profile_search,
-                        on_profile_nutrient_update: props.on_profile_nutrient_update,
-                    }
-                }
+            SolutionProfile {
+                solution: props.solution,
+                profile: props.profile,
+                profiles: props.profiles,
+                on_profile_change: props.on_profile_change,
+                on_profile_search: props.on_profile_search,
+                on_profile_nutrient_update: props.on_profile_nutrient_update,
             }
 
             Divider {}

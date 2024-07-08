@@ -1,246 +1,36 @@
+@import "./src/ui/styles/main.css";
 @import "./src/ui/styles/fonts.css";
+
 @import "./src/ui/styles/profiles.css";
 @import "./src/ui/styles/solutions.css";
-@import "./src/ui/styles/utils.css";
-@import "./src/ui/styles/layout.css";
 @import "./src/ui/styles/reference.css";
 
+@import "./src/ui/styles/layout/column.css";
+@import "./src/ui/styles/layout/page.css";
+@import "./src/ui/styles/layout/row.css";
+@import "./src/ui/styles/layout/section.css";
+
 @import "./src/ui/styles/utils/badge.css";
+@import "./src/ui/styles/utils/block.css";
 @import "./src/ui/styles/utils/button.css";
 @import "./src/ui/styles/utils/buttons_group.css";
+@import "./src/ui/styles/utils/card.css";
 @import "./src/ui/styles/utils/checkbox.css";
+@import "./src/ui/styles/utils/divider.css";
+@import "./src/ui/styles/utils/dropdown.css";
+@import "./src/ui/styles/utils/icon.css";
 @import "./src/ui/styles/utils/label.css";
 @import "./src/ui/styles/utils/list.css";
 @import "./src/ui/styles/utils/number_field.css";
 @import "./src/ui/styles/utils/nutrient_value.css";
+@import "./src/ui/styles/utils/pagination.css";
 @import "./src/ui/styles/utils/quick_action.css";
 @import "./src/ui/styles/utils/radio.css";
-@import "./src/ui/styles/utils/reference.css";
 @import "./src/ui/styles/utils/select.css";
+@import "./src/ui/styles/utils/tag.css";
 @import "./src/ui/styles/utils/text_field.css";
+@import "./src/ui/styles/utils/text.css";
+@import "./src/ui/styles/utils/title.css";
 @import "./src/ui/styles/utils/tooltip.css";
 
-
-body {
-    display: flex;
-    margin: 0;
-    min-height: 100vh;
-    box-sizing: border-box;
-    font-family: Rubik;
-    background-color: rgba(246, 248, 251, 1);
-}
-
-#main {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-.header {
-    /* padding: 20px; */
-}
-
-.navigation {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px;
-}
-
-.navigation__link {
-    position: relative;
-    padding: 12px 16px;
-    font-size: 14px;
-    line-height: 20px;
-    cursor: pointer;
-    text-decoration: none;
-    color: rgba(26, 33, 43, 1);
-    border-radius: 16px;
-    transition: .2s;
-}
-
-.navigation__link:hover {
-    background-color: rgba(179, 190, 255, 0.4);
-}
-
-.navigation__link_active::after {
-    position: absolute;
-    content: "";
-    width: 16px;
-    height: 4px;
-    background-color: rgba(92, 23, 229, 1);
-    border-radius: 2px;
-    bottom: 4px;
-    left: calc(50% - 8px);
-}
-
-.content {
-    display: flex;
-    align-items: flex-start;
-    flex-grow: 1;
-    box-shadow: 0px 30px 32px rgba(255,255,255,0.16);
-    box-sizing: border-box;
-    padding: 0px 12px 12px 12px;
-    gap: 16px;
-    /* max-width: 1120px; */
-    max-width: 1280px;
-    width: 100%;
-    margin: 0 auto;
-}
-
-.breadcrumbs {
-    text-transform: uppercase;
-    margin: 0px 0px 20px 0px;
-    font-size: 10px;
-}
-
-
-.preview {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    background-color: #ffffff;
-    border: 1px solid rgba(154, 168, 188, 0.2);
-    border-radius: 16px;
-}
-
-.value-set {
-    display: flex;
-    /* border: 1px solid gray; */
-    border-radius: 5px;
-    overflow: hidden;
-    box-sizing: border-box;
-}
-
-.value-set_vertical {
-    flex-direction: column;
-}
-
-.value {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid gray;
-    box-sizing: border-box;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.value-set .value {
-    flex-direction: row;
-    align-items: stretch;
-    border: none;
-    border-right: 1px solid gray;
-    border-radius: 0px;
-}
-
-.value-set_vertical .value {
-    border-bottom: 1px solid gray;
-    border-right: none;
-}
-
-.value-set .value:last-child {
-    border-right: none;
-}
-
-.value-set_vertical .value:last-child {
-    border-bottom: none;
-}
-
-.edged-value-set {
-    border-radius: 5px;
-    border: 1px solid gray;
-    overflow: hidden;
-}
-
-.edged-value-set .value-set {
-    border-radius: 0px;
-    border: none;
-    border-bottom: 1px solid gray;
-}
-
-.edged-value-set .value-set:last-child {
-    border-bottom: none;
-}
-
-.edged-value-set .value {
-    flex-grow: 1;
-}
-
-.value__text {
-    padding: 2px 5px;
-    font-size: 10px;
-}
-
-.value-set_vertical .value__text {
-    border-right: 1px solid gray;
-    width: 50%;
-}
-
-.value__input {
-    min-width: 100%;
-    border: none;
-    border-top: 1px solid gray;
-    font-size: 10px;
-    padding: 3px 5px;
-    margin: 0px;
-    text-align: center;
-    outline: none;
-    box-sizing: border-box;
-}
-
-.value-set_vertical .value__input {
-    min-width: 50%;
-    border-top: none;
-}
-
-.composition {
-    margin-top: 20px;
-}
-
-/* fertilizers details */
-
-.fertilizers-details {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 16px;
-    box-sizing: border-box;
-}
-
-/* fertilizers source */
-
-.fertilizers-source {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 12px;
-    /* border-bottom: 1px solid gray; */
-    box-sizing: border-box;
-}
-
-/* fertilizers preview */
-
-.fertilizers-preview__group {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-}
-
-.fertilizers-preview__title {
-    font-size: 18px;
-    margin: 0px;
-    margin-bottom: 15px;
-}
-
-.fertilizers-preview__text {
-    font-size: 12px;
-    margin: 0px;
-    margin-bottom: 10px;
-}
-
-
-/* nitrogen */
 

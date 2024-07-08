@@ -1,130 +1,103 @@
-use super::provider::Provider;
 use crate::model::fertilizers::{Fertilizer, FertilizersListing};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
-use rusqlite::params;
+use crate::storage::Error;
+use rusqlite::{params, Connection};
+use std::rc::Rc;
 use uuid::Uuid;
 
 #[derive(Debug)]
-pub struct FertilizersStorage {
-    storage: Provider,
+pub struct Fertilizers {
+    connection: Rc<Connection>,
 }
 
-impl FertilizersStorage {
-    pub fn new() -> Self {
-        let storage = Provider::new();
+impl Fertilizers {
+    pub fn new(connection: Rc<Connection>) -> Result<Self, Box<dyn std::error::Error>> {
+        let storage = Self { connection };
 
-        storage
-            .connection()
-            .execute(
-                "CREATE TABLE fertilizers (
+        storage.setup()?;
+
+        storage.seed()?;
+
+        Ok(storage)
+    }
+
+    pub fn add(&self, fertilizer: Fertilizer) -> Result<(), Box<dyn std::error::Error>> {
+        let data = serde_json::to_string(&fertilizer)?;
+
+        self.connection.execute(
+            "INSERT INTO fertilizers (id, data) VALUES (?1, ?2)",
+            params![fertilizer.id(), data],
+        )?;
+
+        Ok(())
+    }
+
+    pub fn get(&self, fertilizer_id: String) -> Result<Fertilizer, Box<dyn std::error::Error>> {
+        let mut statement = self
+            .connection
+            .prepare("SELECT * FROM fertilizers WHERE id = ?1")?;
+
+        let response = statement.query_map(params![fertilizer_id], |row| {
+            let data: String = row.get(1)?;
+            Ok(data)
+        })?;
+
+        match response.last() {
+            Some(fertilizer) => Ok(serde_json::from_str(&fertilizer?)?),
+            None => Err(Box::new(Error::new("not found"))),
+        }
+    }
+
+    pub fn update(&self, fertilizer: Fertilizer) -> Result<(), Box<dyn std::error::Error>> {
+        let data = serde_json::to_string(&fertilizer)?;
+
+        self.connection
+            .prepare("UPDATE fertilizers SET data = ?2 WHERE id = ?1")?
+            .execute(params![fertilizer.id(), data])?;
+
+        Ok(())
+    }
+
+    pub fn delete(&self, fertilizer_id: String) -> Result<(), Box<dyn std::error::Error>> {
+        self.connection
+            .prepare("DELETE FROM fertilizers WHERE id = ?1")?
+            .execute(params![fertilizer_id])?;
+
+        Ok(())
+    }
+
+    pub fn list(&self) -> Result<FertilizersListing, Box<dyn std::error::Error>> {
+        let mut statement = self.connection.prepare("SELECT * FROM fertilizers")?;
+
+        let response = statement.query_map([], |row| {
+            let data: String = row.get(1)?;
+            Ok(data)
+        })?;
+
+        let mut fertilizers = vec![];
+
+        for item in response {
+            let fertilizer = serde_json::from_str::<Fertilizer>(&item?)?;
+            fertilizers.push(fertilizer);
+        }
+
+        Ok(FertilizersListing::new(fertilizers))
+    }
+
+    fn setup(&self) -> Result<(), Box<dyn std::error::Error>> {
+        self.connection.execute(
+            "CREATE TABLE fertilizers (
                     id TEXT PRIMARY KEY,
                     data TEXT NOT NULL
                 )",
-                (),
-            )
-            .unwrap();
+            (),
+        )?;
 
-        let fertilizers_storage = Self { storage };
-
-        fertilizers_storage.seed();
-
-        fertilizers_storage
+        Ok(())
     }
 
-    pub fn add(&self, fertilizer: Fertilizer) -> i64 {
-        let data = serde_json::to_string(&fertilizer).expect("Failed to serialize");
-
-        self.storage
-            .connection()
-            .execute(
-                "INSERT INTO fertilizers (id, data) VALUES (?1, ?2)",
-                params![fertilizer.id(), data],
-            )
-            .unwrap();
-
-        self.storage.connection().last_insert_rowid()
-    }
-
-    pub fn get(&self, fertilizer_id: String) -> Option<Fertilizer> {
-        let query = format!("SELECT * FROM fertilizers WHERE id = \"{fertilizer_id}\"");
-
-        let response = self.storage.connection().prepare(query.as_str());
-
-        match response {
-            Ok(mut result) => {
-                let fertilizers: Vec<Fertilizer> = result
-                    .query_map([], |row| {
-                        let data: String = row.get(1).unwrap();
-
-                        Ok(serde_json::from_str::<Fertilizer>(&data)
-                            .expect("Failed to deserialize"))
-                    })
-                    .unwrap()
-                    .map(|fertilizer| fertilizer.unwrap())
-                    .collect();
-
-                if fertilizers.len() > 0 {
-                    return Some(fertilizers.get(0).unwrap().clone());
-                }
-
-                None
-            }
-            Err(error) => {
-                println!("fertilizer get error {:#?}", error);
-
-                None
-            }
-        }
-    }
-
-    pub fn update(&self, fertilizer: Fertilizer) {
-        let data = serde_json::to_string(&fertilizer).expect("Failed to serialize");
-
-        let query = "UPDATE fertilizers SET data = ?2 WHERE id = ?1";
-
-        let mut statement = self.storage.connection().prepare(query).unwrap();
-
-        let response = statement.execute(params![fertilizer.id(), data]).unwrap();
-
-        println!("response {:#?}", response);
-    }
-
-    pub fn delete(&self, fertilizer_id: String) {
-        let query = "DELETE FROM fertilizers WHERE id = ?1";
-
-        let mut statement = self.storage.connection().prepare(query).unwrap();
-
-        statement.execute(params![fertilizer_id]).unwrap();
-    }
-
-    pub fn list(&self) -> FertilizersListing {
-        let statement = self
-            .storage
-            .connection()
-            .prepare("SELECT * FROM fertilizers");
-
-        match statement {
-            Ok(mut query) => {
-                let fertilizers = query
-                    .query_map([], |row| {
-                        let data: String = row.get(1).unwrap();
-
-                        Ok(serde_json::from_str::<Fertilizer>(&data)
-                            .expect("Failed to deserialize"))
-                    })
-                    .unwrap()
-                    .map(|fertilizer| fertilizer.unwrap())
-                    .collect();
-
-                FertilizersListing::new(fertilizers)
-            }
-
-            Err(_) => FertilizersListing::new(vec![]),
-        }
-    }
-
-    fn seed(&self) {
+    fn seed(&self) -> Result<(), Box<dyn std::error::Error>> {
         let fertilizers = vec![
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())
@@ -218,7 +191,7 @@ impl FertilizersStorage {
         ];
 
         for fertilizer in fertilizers {
-            self.add(fertilizer);
+            self.add(fertilizer)?;
         }
 
         for index in 0..=100 {
@@ -227,7 +200,9 @@ impl FertilizersStorage {
                 .with_name(format!("Монофосфат калия {}", index))
                 .with_formula(Formula::from("KH2PO4"));
 
-            self.add(fertilizer);
+            self.add(fertilizer)?;
         }
+
+        Ok(())
     }
 }

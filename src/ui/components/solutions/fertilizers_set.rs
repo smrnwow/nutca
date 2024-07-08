@@ -1,9 +1,10 @@
 use crate::model::chemistry::Volume;
 use crate::model::solutions::Solution;
 use crate::ui::components::layout::{Column, Row};
+use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::solutions::FertilizersSetItem;
 use crate::ui::components::utils::{List, Pagination, Title};
-use crate::ui::components::{ReferencePreview, VolumeField};
+use crate::ui::components::VolumeField;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -27,27 +28,19 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
 
     let volume = use_memo(move || props.solution.read().volume());
 
-    let mut show_reference = use_signal(|| false);
-
     rsx! {
         Column {
             gap: "medium",
-            on_hover: move |hovered| {
-                show_reference.set(hovered);
-            },
 
             Row {
                 gap: "small",
 
                 Title {
                     size: "small",
-
                     "Используемые удобрения",
-
-                    ReferencePreview {
-                        show_reference,
+                    ReferenceBadge {
                         article_id: "solution-editor-fertilizers-set",
-                    }
+                    },
                 }
             }
 

@@ -1,121 +1,102 @@
-use super::provider::Provider;
 use crate::model::chemistry::Nutrient;
 use crate::model::profiles::{Profile, ProfilesListing};
-use rusqlite::params;
+use crate::storage::Error;
+use rusqlite::{params, Connection};
+use std::rc::Rc;
 
 #[derive(Debug)]
-pub struct ProfilesStorage {
-    storage: Provider,
+pub struct Profiles {
+    connection: Rc<Connection>,
 }
 
-impl ProfilesStorage {
-    pub fn new() -> Self {
-        let storage = Provider::new();
+impl Profiles {
+    pub fn new(connection: Rc<Connection>) -> Result<Self, Box<dyn std::error::Error>> {
+        let storage = Self { connection };
 
-        storage
-            .connection()
-            .execute(
-                "CREATE TABLE profiles (
+        storage.setup()?;
+
+        storage.seed()?;
+
+        Ok(storage)
+    }
+
+    pub fn add(&self, profile: Profile) -> Result<(), Box<dyn std::error::Error>> {
+        let data = serde_json::to_string(&profile)?;
+
+        self.connection.execute(
+            "INSERT INTO profiles (id, data) VALUES (?1, ?2)",
+            params![profile.id(), data],
+        )?;
+
+        Ok(())
+    }
+
+    pub fn get(&self, profile_id: String) -> Result<Profile, Box<dyn std::error::Error>> {
+        let mut statement = self
+            .connection
+            .prepare("SELECT * FROM profiles WHERE id = ?1")?;
+
+        let response = statement.query_map(params![profile_id], |row| {
+            let data: String = row.get(1)?;
+            Ok(data)
+        })?;
+
+        match response.last() {
+            Some(profile) => Ok(serde_json::from_str(&profile?)?),
+            None => Err(Box::new(Error::new("not found"))),
+        }
+    }
+
+    pub fn update(&self, profile: Profile) -> Result<(), Box<dyn std::error::Error>> {
+        let data = serde_json::to_string(&profile)?;
+
+        self.connection
+            .prepare("UPDATE profiles SET data = ?2 WHERE id = ?1")?
+            .execute(params![profile.id(), data])?;
+
+        Ok(())
+    }
+
+    pub fn delete(&self, profile_id: String) -> Result<(), Box<dyn std::error::Error>> {
+        self.connection
+            .prepare("DELETE FROM profiles WHERE id = ?1")?
+            .execute(params![profile_id])?;
+
+        Ok(())
+    }
+
+    pub fn list(&self) -> Result<ProfilesListing, Box<dyn std::error::Error>> {
+        let mut statement = self.connection.prepare("SELECT * FROM profiles")?;
+
+        let response = statement.query_map([], |row| {
+            let data: String = row.get(1)?;
+            Ok(data)
+        })?;
+
+        let mut profiles = vec![];
+
+        for item in response {
+            let profile: Profile = serde_json::from_str(&item?)?;
+
+            profiles.push(profile);
+        }
+
+        Ok(ProfilesListing::new(profiles))
+    }
+
+    fn setup(&self) -> Result<(), Box<dyn std::error::Error>> {
+        self.connection.execute(
+            "CREATE TABLE profiles (
                     id TEXT PRIMARY KEY,
                     data TEXT NOT NULL
                 )",
-                (),
-            )
-            .unwrap();
+            (),
+        )?;
 
-        let profiles_storage = Self { storage };
-
-        profiles_storage.seed();
-
-        profiles_storage
+        Ok(())
     }
 
-    pub fn add(&self, profile: Profile) -> i64 {
-        let data = serde_json::to_string(&profile).expect("Failed to serialize");
-
-        self.storage
-            .connection()
-            .execute(
-                "INSERT INTO profiles (id, data) VALUES (?1, ?2)",
-                params![profile.id(), data],
-            )
-            .unwrap();
-
-        self.storage.connection().last_insert_rowid()
-    }
-
-    pub fn get(&self, profile_id: String) -> Option<Profile> {
-        let query = format!("SELECT * FROM profiles WHERE id = \"{profile_id}\"");
-
-        let response = self.storage.connection().prepare(query.as_str());
-
-        match response {
-            Ok(mut result) => {
-                let profiles: Vec<Profile> = result
-                    .query_map([], |row| {
-                        let data: String = row.get(1).unwrap();
-
-                        Ok(serde_json::from_str::<Profile>(&data).expect("Failed to deserialize"))
-                    })
-                    .unwrap()
-                    .map(|profile| profile.unwrap())
-                    .collect();
-
-                if profiles.len() > 0 {
-                    return Some(profiles.get(0).unwrap().clone());
-                }
-
-                None
-            }
-            Err(error) => {
-                println!("profile get error {:#?}", error);
-
-                None
-            }
-        }
-    }
-
-    pub fn update(&self, profile: Profile) {
-        let data = serde_json::to_string(&profile).expect("Failed to serialize");
-
-        let query = "UPDATE profiles SET data = ?2 WHERE id = ?1";
-
-        let mut statement = self.storage.connection().prepare(query).unwrap();
-
-        statement.execute(params![profile.id(), data]).unwrap();
-    }
-
-    pub fn delete(&self, profile_id: String) {
-        let query = "DELETE FROM profiles WHERE id = ?1";
-
-        let mut statement = self.storage.connection().prepare(query).unwrap();
-
-        statement.execute(params![profile_id]).unwrap();
-    }
-
-    pub fn list(&self) -> ProfilesListing {
-        let statement = self.storage.connection().prepare("SELECT * FROM profiles");
-
-        match statement {
-            Ok(mut query) => {
-                let profiles = query
-                    .query_map([], |row| {
-                        let data: String = row.get(1).unwrap();
-
-                        Ok(serde_json::from_str::<Profile>(&data).expect("Failed to deserialize"))
-                    })
-                    .unwrap()
-                    .map(|profile| profile.unwrap())
-                    .collect();
-
-                ProfilesListing::new(profiles)
-            }
-
-            Err(_) => ProfilesListing::new(vec![]),
-        }
-    }
-
-    fn seed(&self) {
+    fn seed(&self) -> Result<(), Box<dyn std::error::Error>> {
         let profiles = vec![
             Profile::from(
                 "UA CEAC Recipe",
@@ -196,7 +177,9 @@ impl ProfilesStorage {
         ];
 
         for profile in profiles {
-            self.add(profile);
+            self.add(profile)?;
         }
+
+        Ok(())
     }
 }

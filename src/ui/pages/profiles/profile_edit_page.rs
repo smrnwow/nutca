@@ -1,5 +1,5 @@
 use crate::model::profiles::ProfileBuilder;
-use crate::storage::ProfilesStorage;
+use crate::storage::Storage;
 use crate::ui::components::layout::{Page, Section};
 use crate::ui::components::profiles::ProfileEditor;
 use crate::ui::router::Route;
@@ -8,14 +8,14 @@ use dioxus_router::prelude::*;
 
 #[component]
 pub fn ProfileEditPage(profile_id: String) -> Element {
-    let profiles_storage = consume_context::<Signal<ProfilesStorage>>();
+    let storage = consume_context::<Signal<Storage>>();
 
     let mut profile_builder = use_signal(|| {
-        let profile = profiles_storage.read().get(profile_id);
+        let profile = storage.read().profiles().get(profile_id);
 
         match profile {
-            Some(profile) => ProfileBuilder::from(profile),
-            None => ProfileBuilder::new(),
+            Ok(profile) => ProfileBuilder::from(profile),
+            Err(_) => ProfileBuilder::new(),
         }
     });
 
@@ -39,9 +39,7 @@ pub fn ProfileEditPage(profile_id: String) -> Element {
                         profile_builder.write().save();
 
                         if profile_error.read().is_empty() {
-                            let storage = profiles_storage.read();
-
-                            storage.update(profile.read().clone());
+                            storage.read().profiles().update(profile.read().clone()).unwrap();
 
                             navigator().push(Route::ProfilesListingPage {});
                         }

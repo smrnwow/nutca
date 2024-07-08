@@ -1,0 +1,7 @@
+.page {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    align-items: flex-start;
+    width: 100%;
+}

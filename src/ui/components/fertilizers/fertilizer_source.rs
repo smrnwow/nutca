@@ -3,19 +3,9 @@ use crate::model::fertilizers::{Fertilizer, SourceType};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::utils::{ButtonsGroup, Title};
-use crate::ui::components::ReferencePreview;
+use crate::ui::components::reference::ReferenceBadge;
+use crate::ui::components::utils::{ButtonsGroup, ButtonsGroupButton, Title};
 use dioxus::prelude::*;
-
-fn tab_class(source_type: SourceType, tab_value: SourceType) -> String {
-    if source_type == tab_value {
-        String::from(
-            "buttons-group__button buttons-group__button_size-small buttons-group__button_active",
-        )
-    } else {
-        String::from("buttons-group__button buttons-group__button_size-small")
-    }
-}
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerSourceProps {
@@ -44,24 +34,26 @@ pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
                 Title {
                     size: "small",
                     "Состав",
-                    ReferencePreview {
-                        show_reference: Signal::new(false),
+                    ReferenceBadge {
                         article_id: "fertilizer-editor-composition-source",
                     },
                 }
 
                 ButtonsGroup {
-                    button {
-                        class: tab_class(source_type, SourceType::Label),
-                        onclick: move |_| props.on_source_type_update.call(SourceType::Label),
-                        "С этикетки",
-                    }
-
-                    button {
-                        class: tab_class(source_type, SourceType::Formula),
-                        onclick: move |_| props.on_source_type_update.call(SourceType::Formula),
-                        "По формуле",
-                    }
+                    value: source_type.value(),
+                    buttons: vec![
+                        ButtonsGroupButton {
+                            label: SourceType::Label.label(),
+                            value: SourceType::Label.value(),
+                            badge: None,
+                        },
+                        ButtonsGroupButton {
+                            label: SourceType::Formula.label(),
+                            value: SourceType::Formula.value(),
+                            badge: None,
+                        },
+                    ],
+                    on_change: move |value| props.on_source_type_update.call(SourceType::from(value)),
                 }
             }
 

@@ -1,7 +1,7 @@
 use crate::model::reference::Article;
 use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Browser {
     articles: HashMap<String, Article>,
 }
@@ -9,6 +9,12 @@ pub struct Browser {
 impl Browser {
     pub fn new(articles: HashMap<String, Article>) -> Self {
         Self { articles }
+    }
+
+    pub fn empty() -> Self {
+        Self {
+            articles: HashMap::new(),
+        }
     }
 
     pub fn summary(&self, article_id: &String) -> Article {

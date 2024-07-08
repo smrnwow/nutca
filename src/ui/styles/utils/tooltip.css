@@ -16,38 +16,101 @@
     z-index: 101;
     max-width: 250px;
     min-width: 200px;
-    z-index: 110;
+    z-index: 999;
     transition: .1s ease-out;
-    /* transform: translateY(4px); */
 }
 
 .tooltip:hover .tooltip__body {
     opacity: 1;
     visibility: visible;
-    /* transform: translateY(0px); */
 }
 
+
+/* tooltip top */
 .tooltip_top-left .tooltip__body {
     left: 0px;
     bottom: calc(100% + 5px);
+    transform: translate(0%, 4px);
 }
 
 .tooltip_top-center .tooltip__body {
     left: 50%;
     bottom: calc(100% + 5px);
-    transform: translateX(-50%);
+    transform: translate(-50%, 4px);
 }
 
 .tooltip_top-right .tooltip__body {
     right: 0px;
     bottom: calc(100% + 5px);
+    transform: translate(0%, 4px);
+}
+
+.tooltip_top-left:hover .tooltip__body {
+    transform: translate(0%, 0px);
+}
+
+.tooltip_top-center:hover .tooltip__body {
+    transform: translate(-50%, 0px);
+}
+
+.tooltip_top-right:hover .tooltip__body {
+    transform: translate(0%, 0px);
+}
+
+.tooltip_top-left .tooltip__body::after,
+.tooltip_top-center .tooltip__body::after,
+.tooltip_top-right .tooltip__body::after {
+    content: "";
+    position: absolute;
+    height: 6px;
+    width: 100%;
+    bottom: -6px;
+    left: 0px;
+}
+
+/* tooltip bottom */
+.tooltip_bottom-left .tooltip__body {
+    right: 0px;
+    bottom: -5px;
+    transform: translate(0%, calc(100% - 5px));
 }
 
 .tooltip_bottom-center .tooltip__body {
     left: 50%;
-    bottom: -100%;
-    transform: translate(-50%, 50%);
+    bottom: -5px;
+    transform: translate(-50%, calc(100% - 5px));
 }
+
+.tooltip_bottom-right .tooltip__body {
+    left: 0px;
+    bottom: -5px;
+    transform: translate(0%, calc(100% - 5px));
+}
+
+.tooltip_bottom-left:hover .tooltip__body {
+    transform: translate(0%, 100%);
+}
+
+.tooltip_bottom-center:hover .tooltip__body {
+    transform: translate(-50%, 100%);
+}
+
+.tooltip_bottom-right:hover .tooltip__body {
+    transform: translate(0%, 100%);
+}
+
+.tooltip_bottom-left .tooltip__body::after,
+.tooltip_bottom-center .tooltip__body::after,
+.tooltip_bottom-right .tooltip__body::after {
+    content: "";
+    position: absolute;
+    height: 6px;
+    width: 100%;
+    top: -6px;
+    left: 0px;
+}
+
+
 
 /*
 .tooltip__body::before,

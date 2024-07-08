@@ -15,7 +15,6 @@ pub fn DropdownOption(props: DropdownOptionProps) -> Element {
             button {
                 class: "dropdown__button",
                 onclick: move |_| props.on_click.call(()),
-
                 {props.children},
             }
         }

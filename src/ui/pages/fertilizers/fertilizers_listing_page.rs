@@ -1,4 +1,5 @@
-use crate::storage::FertilizersStorage;
+use crate::model::fertilizers::FertilizersListing;
+use crate::storage::Storage;
 use crate::ui::components::fertilizers::FertilizersListing;
 use crate::ui::components::layout::{Page, Section};
 use crate::ui::router::Route;
@@ -7,14 +8,20 @@ use dioxus_router::prelude::*;
 
 #[component]
 pub fn FertilizersListingPage() -> Element {
-    let fertilizers_storage = consume_context::<Signal<FertilizersStorage>>();
+    let storage = consume_context::<Signal<Storage>>();
 
     let mut fertilizers_listing = use_signal(move || {
-        let mut listing = fertilizers_storage.read().list();
+        let listing = storage.read().fertilizers().list();
 
-        listing.update_limit(10);
+        match listing {
+            Ok(mut listing) => {
+                listing.update_limit(10);
 
-        listing
+                listing
+            }
+
+            Err(_) => FertilizersListing::new(vec![]),
+        }
     });
 
     rsx! {
@@ -34,9 +41,11 @@ pub fn FertilizersListingPage() -> Element {
                         });
                     },
                     on_delete: move |fertilizer_id| {
-                        fertilizers_storage.read().delete(fertilizer_id);
+                        storage.read().fertilizers().delete(fertilizer_id).unwrap();
 
-                        *fertilizers_listing.write() = fertilizers_storage.read().list();
+                        if let Ok(listing) = storage.read().fertilizers().list() {
+                            fertilizers_listing.set(listing);
+                        }
                     },
                     on_paginate: move |next_page| {
                         fertilizers_listing.write().paginate(next_page);

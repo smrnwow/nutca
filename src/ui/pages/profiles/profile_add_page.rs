@@ -1,5 +1,5 @@
 use crate::model::profiles::ProfileBuilder;
-use crate::storage::ProfilesStorage;
+use crate::storage::Storage;
 use crate::ui::components::layout::{Page, Section};
 use crate::ui::components::profiles::ProfileEditor;
 use crate::ui::router::Route;
@@ -8,7 +8,7 @@ use dioxus_router::prelude::*;
 
 #[component]
 pub fn ProfileAddPage() -> Element {
-    let profiles_storage = consume_context::<Signal<ProfilesStorage>>();
+    let storage = consume_context::<Signal<Storage>>();
 
     let mut profile_builder = use_signal(|| ProfileBuilder::new());
 
@@ -32,9 +32,7 @@ pub fn ProfileAddPage() -> Element {
                         profile_builder.write().save();
 
                         if profile_error.read().is_empty() {
-                            let storage = profiles_storage.read();
-
-                            storage.add(profile.read().clone());
+                            storage.read().profiles().add(profile.read().clone()).unwrap();
 
                             navigator().push(Route::ProfilesListingPage {});
                         }

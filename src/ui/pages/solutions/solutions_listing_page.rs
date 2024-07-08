@@ -1,4 +1,5 @@
-use crate::storage::SolutionsStorage;
+use crate::model::solutions::SolutionsListing;
+use crate::storage::Storage;
 use crate::ui::components::layout::{Page, Section};
 use crate::ui::components::solutions::{SolutionsListingControls, SolutionsListingTable};
 use crate::ui::components::utils::{Block, Card, Divider, Title};
@@ -8,9 +9,12 @@ use dioxus_router::prelude::*;
 
 #[component]
 pub fn SolutionsListingPage() -> Element {
-    let solutions_storage = consume_context::<Signal<SolutionsStorage>>();
+    let storage = consume_context::<Signal<Storage>>();
 
-    let mut solutions_listing = use_signal(|| solutions_storage.read().list());
+    let mut solutions_listing = use_signal(|| match storage.read().solutions().list() {
+        Ok(listing) => listing,
+        Err(_) => SolutionsListing::new(vec![]),
+    });
 
     rsx! {
         Page {
@@ -54,9 +58,12 @@ pub fn SolutionsListingPage() -> Element {
                                 });
                             },
                             on_delete: move |solution_id| {
-                                solutions_storage.read().delete(solution_id);
+                                storage.read().solutions().delete(solution_id).unwrap();
 
-                                *solutions_listing.write() = solutions_storage.read().list();
+                                *solutions_listing.write() = match storage.read().solutions().list() {
+                                    Ok(listing) => listing,
+                                    Err(_) => SolutionsListing::new(vec![]),
+                                };
                             },
                             on_paginate: move |page_index| {
                                 solutions_listing.write().paginate(page_index);

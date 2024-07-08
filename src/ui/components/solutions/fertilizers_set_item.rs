@@ -1,6 +1,5 @@
 use crate::model::solutions::FertilizerWeight;
 use crate::ui::components::solutions::FertilizersSetTooltip;
-use crate::ui::components::utils::icons::ArrowLeft;
 use crate::ui::components::utils::{QuickAction, Text};
 use dioxus::prelude::*;
 
@@ -16,9 +15,6 @@ pub fn FertilizersSetItem(props: FertilizersSetItemProps) -> Element {
         QuickAction {
             warn: props.fertilizer_weight.read().is_redurant(),
             action_left: rsx! {
-                ArrowLeft {},
-            },
-            reference: rsx! {
                 FertilizersSetTooltip {
                     fertilizer_weight: props.fertilizer_weight,
                 },

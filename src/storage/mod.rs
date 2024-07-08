@@ -1,10 +1,13 @@
-mod articles_storage;
-mod fertilizers_storage;
-mod profiles_storage;
-mod provider;
-mod solutions_storage;
+mod articles;
+mod error;
+mod fertilizers;
+mod profiles;
+mod solutions;
+mod storage;
 
-pub use articles_storage::ArticlesStorage;
-pub use fertilizers_storage::FertilizersStorage;
-pub use profiles_storage::ProfilesStorage;
-pub use solutions_storage::SolutionsStorage;
+pub use articles::Articles;
+pub use error::Error;
+pub use fertilizers::Fertilizers;
+pub use profiles::Profiles;
+pub use solutions::Solutions;
+pub use storage::Storage;

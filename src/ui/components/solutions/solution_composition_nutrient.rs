@@ -21,9 +21,9 @@ fn tooltip_text(nutrient_result: NutrientResult) -> String {
     }
 
     if diff < 0. {
-        return format!("До установленного значение не хватает {:.2}PPM", diff.abs());
-    } else {
         return format!("Установленное значение превышено на {:.2}PPM", diff);
+    } else {
+        return format!("До установленного значение не хватает {:.2}PPM", diff.abs());
     }
 }
 

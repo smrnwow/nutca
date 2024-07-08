@@ -1,4 +1,3 @@
-use crate::ui::components::utils::{Button, Reference};
 use dioxus::prelude::*;
 
 fn state(props: &QuickActionProps) -> String {
@@ -44,12 +43,6 @@ pub fn QuickAction(props: QuickActionProps) -> Element {
 
     let size = props.size.unwrap_or(String::from("small"));
 
-    let has_reference = use_signal(|| props.reference.is_some());
-
-    let mut action_hidden = use_signal(|| false && *has_reference.read());
-
-    let mut show_reference = use_signal(|| false);
-
     rsx! {
         div {
             class: "quick-action quick-action_state-{state} quick-action_size-{size}",
@@ -58,67 +51,23 @@ pub fn QuickAction(props: QuickActionProps) -> Element {
                     on_click.call(());
                 }
             },
-            onmouseover: move |_| {
-                action_hidden.set(true && *has_reference.read());
-
-                show_reference.set(true);
-
-                if let Some(on_hover_in) = props.on_hover_in {
-                    on_hover_in.call(());
-                }
-            },
-            onmouseout: move |_| {
-                show_reference.set(false);
-
-                action_hidden.set(false && *has_reference.read());
-
-                if let Some(on_hover_out) = props.on_hover_out {
-                    on_hover_out.call(());
-                }
-            },
 
             if let Some(action_left) = props.action_left {
                 div {
-                    class: "quick-action__left-action quick-action__left-action_has-reference-{*has_reference.read()}",
-
-                    Button {
-                        style: "compact",
-                        {action_left},
-                    }
-
-                    if let Some(reference) = props.reference.clone() {
-                        Reference {
-                            display: Signal::new(false),
-                            style: "button",
-                            tooltip: reference,
-                            tooltip_position: "top-left",
-                        }
-                    }
+                    class: "quick-action__left-action",
+                    {action_left},
                 }
             }
 
             div {
-                class: "quick-action__text quick-action",
+                class: "quick-action__text",
                 {props.children},
             }
 
             if let Some(action_right) = props.action_right {
                 div {
-                    class: "quick-action__right-action quick-action__right-action_has-reference-{*has_reference.read()}",
-
-                    Button {
-                        style: "compact",
-                        {action_right},
-                    }
-
-                    if let Some(reference) = props.reference.clone() {
-                        Reference {
-                            display: Signal::new(false),
-                            style: "button",
-                            tooltip: reference,
-                            tooltip_position: "top-right",
-                        }
-                    }
+                    class: "quick-action__right-action",
+                    {action_right},
                 }
             }
         }

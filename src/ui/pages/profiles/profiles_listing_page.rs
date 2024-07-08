@@ -1,4 +1,5 @@
-use crate::storage::ProfilesStorage;
+use crate::model::profiles::ProfilesListing;
+use crate::storage::Storage;
 use crate::ui::components::layout::{Page, Section};
 use crate::ui::components::profiles::ProfilesListing;
 use crate::ui::router::Route;
@@ -7,9 +8,12 @@ use dioxus_router::prelude::*;
 
 #[component]
 pub fn ProfilesListingPage() -> Element {
-    let profiles_storage = consume_context::<Signal<ProfilesStorage>>();
+    let storage = consume_context::<Signal<Storage>>();
 
-    let mut profiles_listing = use_signal(|| profiles_storage.read().list());
+    let mut profiles_listing = use_signal(|| match storage.read().profiles().list() {
+        Ok(listing) => listing,
+        Err(_) => ProfilesListing::new(vec![]),
+    });
 
     rsx! {
         Page {
@@ -33,9 +37,12 @@ pub fn ProfilesListingPage() -> Element {
                         });
                     },
                     on_delete: move |profile_id| {
-                        profiles_storage.read().delete(profile_id);
+                        storage.read().profiles().delete(profile_id).unwrap();
 
-                        *profiles_listing.write() = profiles_storage.read().list();
+                        *profiles_listing.write() = match storage.read().profiles().list() {
+                            Ok(listing) => listing,
+                            Err(_) => ProfilesListing::new(vec![]),
+                        };
                     },
                     on_paginate: move |page_index| {
                         profiles_listing.write().paginate(page_index);

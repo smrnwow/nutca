@@ -1,5 +1,7 @@
+use crate::model::fertilizers::FertilizersListing;
+use crate::model::profiles::ProfilesListing;
 use crate::model::solutions::SolutionBuilder;
-use crate::storage::{FertilizersStorage, ProfilesStorage, SolutionsStorage};
+use crate::storage::Storage;
 use crate::ui::components::layout::{Page, Section};
 use crate::ui::components::solutions::SolutionEditor;
 use crate::ui::router::Route;
@@ -8,18 +10,14 @@ use dioxus_router::prelude::*;
 
 #[component]
 pub fn SolutionEditPage(solution_id: String) -> Element {
-    let solutions_storage = consume_context::<Signal<SolutionsStorage>>();
-
-    let fertilizers_storage = consume_context::<Signal<FertilizersStorage>>();
-
-    let profiles_storage = consume_context::<Signal<ProfilesStorage>>();
+    let storage = consume_context::<Signal<Storage>>();
 
     let mut solution_builder = use_signal(|| {
-        let solution = solutions_storage.read().get(solution_id);
+        let solution = storage.read().solutions().get(solution_id);
 
         match solution {
-            Some(solution) => SolutionBuilder::from(solution),
-            None => SolutionBuilder::new(),
+            Ok(solution) => SolutionBuilder::from(solution),
+            Err(_) => SolutionBuilder::new(),
         }
     });
 
@@ -29,11 +27,17 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
 
     let profile = use_memo(move || solution_builder.read().profile());
 
-    let mut profiles_listing = use_signal(move || profiles_storage.read().list());
+    let mut profiles_listing = use_signal(move || match storage.read().profiles().list() {
+        Ok(listing) => listing,
+        Err(_) => ProfilesListing::new(vec![]),
+    });
 
     let profiles = use_memo(move || profiles_listing.read().list());
 
-    let mut fertilizers_listing = use_signal(move || fertilizers_storage.read().list());
+    let mut fertilizers_listing = use_signal(move || match storage.read().fertilizers().list() {
+        Ok(listing) => listing,
+        Err(_) => FertilizersListing::new(vec![]),
+    });
 
     rsx! {
         Page {
@@ -81,9 +85,7 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
                         solution_builder.write().save();
 
                         if solution_error.read().is_empty() {
-                            let solution = solution.read().clone();
-
-                            solutions_storage.read().update(solution);
+                            storage.read().solutions().update(solution.read().clone()).unwrap();
 
                             navigator().push(Route::SolutionsListingPage {});
                         }

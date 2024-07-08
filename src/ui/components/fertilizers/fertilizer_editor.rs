@@ -5,8 +5,8 @@ use crate::ui::components::fertilizers::{
     FertilizerComposition, FertilizerDetails, FertilizerSource,
 };
 use crate::ui::components::layout::Row;
+use crate::ui::components::reference::ReferenceSubject;
 use crate::ui::components::utils::{Block, Button, Card, Divider, Title};
-use crate::ui::components::ReferenceSubject;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
