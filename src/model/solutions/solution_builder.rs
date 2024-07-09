@@ -99,6 +99,10 @@ impl SolutionBuilder {
             if self.name.len() == 0 {
                 solution_error.set_name("не заполнено");
             }
+
+            if self.name.len() > 100 {
+                solution_error.set_name("не более 100 символов");
+            }
         }
 
         solution_error

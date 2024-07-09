@@ -89,6 +89,10 @@ impl ProfileBuilder {
             if self.name.len() == 0 {
                 profile_error.set_name("не заполнено");
             }
+
+            if self.name.len() > 100 {
+                profile_error.set_name("не более 100 символов");
+            }
         }
 
         profile_error

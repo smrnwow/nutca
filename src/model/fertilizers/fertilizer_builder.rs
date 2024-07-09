@@ -108,6 +108,10 @@ impl FertilizerBuilder {
             if self.name.len() == 0 {
                 fertilizer_error.set_name("не заполнено");
             }
+
+            if self.name.len() > 100 {
+                fertilizer_error.set_name("не более 100 символов");
+            }
         }
 
         fertilizer_error

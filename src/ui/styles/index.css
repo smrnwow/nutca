@@ -21,6 +21,7 @@
 @import "./src/ui/styles/utils/icon.css";
 @import "./src/ui/styles/utils/label.css";
 @import "./src/ui/styles/utils/list.css";
+@import "./src/ui/styles/utils/notifications.css";
 @import "./src/ui/styles/utils/number_field.css";
 @import "./src/ui/styles/utils/nutrient_value.css";
 @import "./src/ui/styles/utils/pagination.css";

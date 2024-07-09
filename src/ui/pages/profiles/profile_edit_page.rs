@@ -1,4 +1,5 @@
 use crate::model::profiles::ProfileBuilder;
+use crate::model::NotificationContainer;
 use crate::storage::Storage;
 use crate::ui::components::layout::{Page, Section};
 use crate::ui::components::profiles::ProfileEditor;
@@ -8,6 +9,8 @@ use dioxus_router::prelude::*;
 
 #[component]
 pub fn ProfileEditPage(profile_id: String) -> Element {
+    let mut notifications_container = consume_context::<Signal<NotificationContainer>>();
+
     let storage = consume_context::<Signal<Storage>>();
 
     let mut profile_builder = use_signal(|| {
@@ -42,6 +45,10 @@ pub fn ProfileEditPage(profile_id: String) -> Element {
                             storage.read().profiles().update(profile.read().clone()).unwrap();
 
                             navigator().push(Route::ProfilesListingPage {});
+                        } else {
+                            if let Some(error) = profile_error.read().name() {
+                                notifications_container.write().add(error);
+                            }
                         }
                     },
                     on_cancel: move |_| {

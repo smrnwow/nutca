@@ -1,3 +1,5 @@
+use crate::model::NotificationContainer;
+use crate::ui::components::utils::Notifications;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
@@ -14,6 +16,10 @@ fn link_class(current_route: &Route, path: Route) -> &str {
 #[component]
 pub fn Layout() -> Element {
     let current_route = use_route::<Route>();
+
+    let mut notifications_container = use_context::<Signal<NotificationContainer>>();
+
+    let notifications = use_memo(move || notifications_container.read().list());
 
     rsx! {
         header {
@@ -52,7 +58,13 @@ pub fn Layout() -> Element {
 
         main {
             class: "content",
-            Outlet::<Route> { }
+            Outlet::<Route> { },
+            Notifications {
+                notifications,
+                on_close: move |notification_id| {
+                    notifications_container.write().remove(notification_id);
+                },
+            },
         }
     }
 }

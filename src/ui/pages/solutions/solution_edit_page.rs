@@ -1,6 +1,7 @@
 use crate::model::fertilizers::FertilizersListing;
 use crate::model::profiles::ProfilesListing;
 use crate::model::solutions::SolutionBuilder;
+use crate::model::NotificationContainer;
 use crate::storage::Storage;
 use crate::ui::components::layout::{Page, Section};
 use crate::ui::components::solutions::SolutionEditor;
@@ -10,6 +11,8 @@ use dioxus_router::prelude::*;
 
 #[component]
 pub fn SolutionEditPage(solution_id: String) -> Element {
+    let mut notifications_container = consume_context::<Signal<NotificationContainer>>();
+
     let storage = consume_context::<Signal<Storage>>();
 
     let mut solution_builder = use_signal(|| {
@@ -88,6 +91,10 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
                             storage.read().solutions().update(solution.read().clone()).unwrap();
 
                             navigator().push(Route::SolutionsListingPage {});
+                        } else {
+                            if let Some(error) = solution_error.read().name() {
+                                notifications_container.write().add(error);
+                            }
                         }
                     },
                 }

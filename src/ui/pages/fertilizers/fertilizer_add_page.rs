@@ -1,4 +1,5 @@
 use crate::model::fertilizers::FertilizerBuilder;
+use crate::model::NotificationContainer;
 use crate::storage::Storage;
 use crate::ui::components::fertilizers::FertilizerEditor;
 use crate::ui::components::layout::{Page, Section};
@@ -8,6 +9,8 @@ use dioxus_router::prelude::*;
 
 #[component]
 pub fn FertilizerAddPage() -> Element {
+    let mut notifications_container = consume_context::<Signal<NotificationContainer>>();
+
     let storage = consume_context::<Signal<Storage>>();
 
     let mut fertilizer_builder = use_signal(|| FertilizerBuilder::new());
@@ -59,6 +62,10 @@ pub fn FertilizerAddPage() -> Element {
                             storage.read().fertilizers().add(fertilizer.read().clone()).unwrap();
 
                             navigator().push(Route::FertilizersListingPage {});
+                        } else {
+                            if let Some(error) = fertilizer_error.read().name() {
+                                notifications_container.write().add(error);
+                            }
                         }
                     },
                     on_cancel: move |_| {
