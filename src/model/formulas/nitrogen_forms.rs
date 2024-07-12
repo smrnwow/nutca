@@ -1,13 +1,12 @@
-use super::Element;
-use crate::model::chemistry::{Nutrient, Symbol};
-use serde::{Deserialize, Serialize};
+use crate::model::chemistry::Nutrient;
+use chemp::{ChemicalElement, Element};
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct NitrogenForms {
     nitrogen_element: Option<Element>,
-    nitrogen_atoms: i32,
-    nitrate_form: i32,
-    ammonium_form: i32,
+    nitrogen_atoms: usize,
+    nitrate_form: usize,
+    ammonium_form: usize,
 }
 
 impl NitrogenForms {
@@ -21,14 +20,14 @@ impl NitrogenForms {
     }
 
     pub fn find(&mut self, element: Element) {
-        match element.symbol() {
-            Symbol::Nitrogen => {
+        match element.chemical_element() {
+            ChemicalElement::Nitrogen => {
                 self.nitrogen_atoms += element.subscript();
 
                 self.nitrogen_element = Some(element);
             }
 
-            Symbol::Hydrogen => {
+            ChemicalElement::Hydrogen => {
                 if let Some(nitrogen) = &self.nitrogen_element {
                     if element.subscript() / nitrogen.subscript() == 4 {
                         self.ammonium_form += nitrogen.subscript();
@@ -38,7 +37,7 @@ impl NitrogenForms {
                 self.nitrogen_element = None;
             }
 
-            Symbol::Oxygen => {
+            ChemicalElement::Oxygen => {
                 if let Some(nitrogen) = &self.nitrogen_element {
                     if element.subscript() / nitrogen.subscript() == 3 {
                         self.nitrate_form += nitrogen.subscript();

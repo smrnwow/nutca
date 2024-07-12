@@ -450,6 +450,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fd16c4719339c4530435d38e511904438d07cce7950afa3718a84ac36c10e89e"
 
 [[package]]
+name = "chemp"
+version = "0.9.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "68dd785794243cb9b44bae226d9269fb71e8a7555f5420dcfb314aa126a15d46"
+dependencies = [
+ "once_cell",
+]
+
+[[package]]
 name = "ciborium"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1107,6 +1116,7 @@ checksum = "56ce8c6da7551ec6c462cbaf3bfbc75131ebbfa1c944aeaa9dab51ca1c5f0c3b"
 name = "elcin-calc"
 version = "0.1.0"
 dependencies = [
+ "chemp",
  "dioxus",
  "dioxus-router",
  "ellp",

@@ -1,14 +1,12 @@
-use super::{Element, NitrogenForms, Tokenizer};
-use crate::model::chemistry::{Nutrient, Symbol, Table};
+use super::NitrogenForms;
+use crate::model::chemistry::Nutrient;
+use chemp::ChemicalElement;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Formula {
     formulation: String,
-    elements: HashMap<Symbol, i32>,
     nutrients: [Nutrient; 14],
-    nitrogen_forms: NitrogenForms,
     error: Option<String>,
 }
 
@@ -16,7 +14,6 @@ impl Formula {
     pub fn new(formulation: impl Into<String>) -> Self {
         Self {
             formulation: formulation.into(),
-            elements: HashMap::new(),
             nutrients: [
                 Nutrient::Nitrogen(0.0),
                 Nutrient::NitrogenNitrate(0.0),
@@ -33,21 +30,12 @@ impl Formula {
                 Nutrient::Copper(0.0),
                 Nutrient::Molybdenum(0.0),
             ],
-            nitrogen_forms: NitrogenForms::new(),
             error: None,
         }
     }
 
     pub fn nutrients(&self) -> Vec<Nutrient> {
-        let mut nutrients = Vec::from(self.nutrients);
-
-        let nitrogen_percent = self.nutrients[Nutrient::Nitrogen(0.0).index()].value();
-
-        for nitrogen_form in self.nitrogen_forms.values(nitrogen_percent) {
-            nutrients.push(nitrogen_form);
-        }
-
-        nutrients
+        Vec::from(self.nutrients)
     }
 
     pub fn formulation(&self) -> String {
@@ -58,60 +46,8 @@ impl Formula {
         self.error.clone()
     }
 
-    fn add_element(&mut self, element: &Element) {
-        match self.elements.get_mut(&element.symbol()) {
-            Some(elem) => {
-                *elem += element.subscript();
-            }
-            None => {
-                self.elements.insert(element.symbol(), element.subscript());
-            }
-        }
-
-        self.nitrogen_forms.find(element.clone());
-    }
-
-    fn apply_coefficient(&mut self, coefficient: i32) {
-        if coefficient > 1 {
-            self.elements.values_mut().for_each(|atoms_count| {
-                *atoms_count *= coefficient;
-            });
-        }
-    }
-
-    fn molar_mass(&self) -> f64 {
-        self.elements
-            .iter()
-            .map(|(element, atoms_count)| element.atomic_weight() * *atoms_count as f64)
-            .sum()
-    }
-
-    fn setup_nutrients(&mut self) {
-        let molar_mass = self.molar_mass();
-
-        self.elements.iter().for_each(|(element, atoms_count)| {
-            let atoms_count = *atoms_count as f64;
-
-            let percent = (element.atomic_weight() * atoms_count) / molar_mass * 100.;
-
-            if let Some(nutrient_percent) = match element {
-                Symbol::Nitrogen => Some(Nutrient::Nitrogen(percent)),
-                Symbol::Phosphorus => Some(Nutrient::Phosphorus(percent)),
-                Symbol::Potassium => Some(Nutrient::Potassium(percent)),
-                Symbol::Calcium => Some(Nutrient::Calcium(percent)),
-                Symbol::Magnesium => Some(Nutrient::Magnesium(percent)),
-                Symbol::Sulfur => Some(Nutrient::Sulfur(percent)),
-                Symbol::Iron => Some(Nutrient::Iron(percent)),
-                Symbol::Zink => Some(Nutrient::Zinc(percent)),
-                Symbol::Manganese => Some(Nutrient::Manganese(percent)),
-                Symbol::Boron => Some(Nutrient::Boron(percent)),
-                Symbol::Copper => Some(Nutrient::Copper(percent)),
-                Symbol::Molybdenum => Some(Nutrient::Molybdenum(percent)),
-                _ => None,
-            } {
-                self.nutrients[nutrient_percent.index()] = nutrient_percent;
-            }
-        });
+    fn set_nutrient(&mut self, nutrient: Nutrient) {
+        self.nutrients[nutrient.index()] = nutrient;
     }
 
     fn set_error(&mut self, error: String) {
@@ -129,28 +65,51 @@ impl From<&str> for Formula {
     fn from(formulation: &str) -> Self {
         let mut formula = Self::new(formulation);
 
-        let table = Table::new();
+        let mut total_nitrogen_percent: f64 = 0.0;
 
-        let mut tokenizer = Tokenizer::new(&table, formulation);
-
-        match tokenizer.tokenize() {
+        match chemp::parse(formulation) {
             Ok(compound) => {
+                compound.components().values().for_each(|component| {
+                    let percent = component.mass_percent() as f64;
+
+                    if let Some(nutrient) = match component.chemical_element() {
+                        ChemicalElement::Nitrogen => Some(Nutrient::Nitrogen(percent)),
+                        ChemicalElement::Phosphorus => Some(Nutrient::Phosphorus(percent)),
+                        ChemicalElement::Potassium => Some(Nutrient::Potassium(percent)),
+                        ChemicalElement::Calcium => Some(Nutrient::Calcium(percent)),
+                        ChemicalElement::Magnesium => Some(Nutrient::Magnesium(percent)),
+                        ChemicalElement::Sulfur => Some(Nutrient::Sulfur(percent)),
+                        ChemicalElement::Iron => Some(Nutrient::Iron(percent)),
+                        ChemicalElement::Zinc => Some(Nutrient::Zinc(percent)),
+                        ChemicalElement::Manganese => Some(Nutrient::Manganese(percent)),
+                        ChemicalElement::Boron => Some(Nutrient::Boron(percent)),
+                        ChemicalElement::Copper => Some(Nutrient::Copper(percent)),
+                        ChemicalElement::Molybdenum => Some(Nutrient::Molybdenum(percent)),
+                        _ => None,
+                    } {
+                        formula.set_nutrient(nutrient);
+                    }
+
+                    if let ChemicalElement::Nitrogen = component.chemical_element() {
+                        total_nitrogen_percent = percent;
+                    }
+                });
+
+                let mut nitrogen_forms = NitrogenForms::new();
+
                 compound.composition().iter().for_each(|element| {
-                    formula.add_element(element);
+                    nitrogen_forms.find(*element);
                 });
 
-                compound.hydrate().iter().for_each(|element| {
-                    formula.add_element(element);
-                });
-
-                formula.apply_coefficient(compound.coefficient());
-
-                formula.setup_nutrients();
+                nitrogen_forms
+                    .values(total_nitrogen_percent)
+                    .iter()
+                    .for_each(|nitrogen_form| {
+                        formula.set_nutrient(*nitrogen_form);
+                    });
             }
 
-            Err(error) => {
-                formula.set_error(error.message);
-            }
+            Err(error) => formula.set_error(error.to_string()),
         }
 
         formula
