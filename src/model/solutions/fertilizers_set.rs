@@ -1,76 +1,67 @@
-use crate::model::chemistry::Volume;
 use crate::model::fertilizers::Fertilizer;
 use crate::model::solutions::FertilizerWeight;
+use crate::model::{calculation::Amount, chemistry::Volume};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct FertilizersSet {
-    page_index: usize,
-    limit: usize,
-    items: Vec<FertilizerWeight>,
+    fertilizers: Vec<FertilizerWeight>,
 }
 
 impl FertilizersSet {
-    pub fn new(
-        volume: Volume,
-        fertilizers_weights: Vec<FertilizerWeight>,
-        redurant_fertilizers: Vec<Fertilizer>,
-    ) -> Self {
-        let mut items: Vec<FertilizerWeight> = redurant_fertilizers
-            .iter()
-            .map(|fertilizer| FertilizerWeight::new(fertilizer.clone(), 0.0))
-            .collect();
-
-        let mut fertilizers_weights: Vec<FertilizerWeight> = fertilizers_weights
-            .iter()
-            .map(|fertilizer_weight| {
-                FertilizerWeight::new(
-                    fertilizer_weight.fertilizer.clone(),
-                    fertilizer_weight.weight * volume.to_litres(),
-                )
-            })
-            .collect();
-
-        fertilizers_weights.sort_by(|a, b| b.weight.partial_cmp(&a.weight).unwrap());
-
-        items.extend(fertilizers_weights.into_iter());
-
+    pub fn new() -> Self {
         Self {
-            page_index: 1,
-            limit: 8,
-            items,
+            fertilizers: Vec::new(),
         }
+    }
+
+    pub fn add_fertilizer_weight(&mut self, fertilizer_weight: FertilizerWeight) {
+        self.fertilizers.push(fertilizer_weight);
     }
 
     pub fn is_empty(&self) -> bool {
-        self.items.len() == 0
+        self.fertilizers.len() == 0
     }
 
-    pub fn total(&self) -> usize {
-        self.items.len()
+    pub fn fertilizers(&self) -> Vec<Fertilizer> {
+        self.fertilizers
+            .iter()
+            .map(|fertilizer_weight| fertilizer_weight.clone().into())
+            .collect()
     }
 
-    pub fn page_index(&self) -> usize {
-        self.page_index
+    pub fn list(&self) -> Vec<FertilizerWeight> {
+        self.fertilizers.clone()
     }
 
-    pub fn limit(&self) -> usize {
-        self.limit
+    pub fn weight(&self, volume: Volume) -> Vec<FertilizerWeight> {
+        self.fertilizers
+            .iter()
+            .map(|fertilizer_weight| fertilizer_weight.multiply(volume.to_litres()))
+            .collect()
     }
+}
 
-    pub fn paginate(&mut self, page_index: usize) {
-        self.page_index = page_index;
-    }
+impl From<Vec<Fertilizer>> for FertilizersSet {
+    fn from(fertilizers: Vec<Fertilizer>) -> Self {
+        let mut fertilizers_set = Self::new();
 
-    pub fn items(&self) -> Vec<FertilizerWeight> {
-        let start = (self.page_index - 1) * self.limit;
-
-        let end = (self.page_index * self.limit) - 1;
-
-        if end < self.items.len() {
-            Vec::from(&self.items[start..=end])
-        } else {
-            Vec::from(&self.items[start..])
+        for fertilizer in fertilizers {
+            fertilizers_set.add_fertilizer_weight(FertilizerWeight::from(fertilizer));
         }
+
+        fertilizers_set
+    }
+}
+
+impl From<Vec<Amount>> for FertilizersSet {
+    fn from(amounts: Vec<Amount>) -> Self {
+        let mut fertilizers_set = Self::new();
+
+        for amount in amounts {
+            fertilizers_set.add_fertilizer_weight(FertilizerWeight::from(amount));
+        }
+
+        fertilizers_set
     }
 }

@@ -1,6 +1,7 @@
-use crate::model::fertilizers::{Fertilizer, FertilizerError, Source, SourceType};
+use crate::model::fertilizers::{Fertilizer, Source, SourceType};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
+use crate::model::Error;
 use uuid::Uuid;
 
 pub struct FertilizerBuilder {
@@ -11,7 +12,6 @@ pub struct FertilizerBuilder {
     liquid: bool,
     label: Label,
     formula: Formula,
-    saved: bool,
 }
 
 impl FertilizerBuilder {
@@ -24,32 +24,6 @@ impl FertilizerBuilder {
             liquid: false,
             label: Label::new(Units::Percent),
             formula: Formula::new(""),
-            saved: false,
-        }
-    }
-
-    pub fn from(fertilizer: Fertilizer) -> Self {
-        Self {
-            id: fertilizer.id(),
-            name: fertilizer.name(),
-            vendor: fertilizer.vendor(),
-            source_type: fertilizer.source_type(),
-            liquid: fertilizer.liquid(),
-            label: {
-                if let Source::Label(label) = fertilizer.source() {
-                    label
-                } else {
-                    Label::new(Units::Percent)
-                }
-            },
-            formula: {
-                if let Source::Formula(formula) = fertilizer.source() {
-                    formula
-                } else {
-                    Formula::new("")
-                }
-            },
-            saved: false,
         }
     }
 
@@ -97,24 +71,18 @@ impl FertilizerBuilder {
         self.formula.clone()
     }
 
-    pub fn save(&mut self) {
-        self.saved = true;
-    }
+    pub fn validate(&self) -> Vec<Error> {
+        let mut errors = Vec::new();
 
-    pub fn validate(&self) -> FertilizerError {
-        let mut fertilizer_error = FertilizerError::new();
-
-        if self.saved {
-            if self.name.len() == 0 {
-                fertilizer_error.set_name("не заполнено");
-            }
-
-            if self.name.len() > 100 {
-                fertilizer_error.set_name("не более 100 символов");
-            }
+        if self.name.len() == 0 {
+            errors.push(Error::FertilizerNameEmpty);
         }
 
-        fertilizer_error
+        if self.name.len() > 100 {
+            errors.push(Error::FertilizerNameTooLong);
+        }
+
+        errors
     }
 
     pub fn build(&self) -> Fertilizer {
@@ -127,6 +95,36 @@ impl FertilizerBuilder {
         match self.source_type {
             SourceType::Label => fertilizer.with_label(self.label),
             SourceType::Formula => fertilizer.with_formula(self.formula.clone()),
+        }
+    }
+}
+
+impl From<Fertilizer> for FertilizerBuilder {
+    fn from(fertilizer: Fertilizer) -> Self {
+        let label = {
+            if let Source::Label(label) = fertilizer.source() {
+                label
+            } else {
+                Label::new(Units::Percent)
+            }
+        };
+
+        let formula = {
+            if let Source::Formula(formula) = fertilizer.source() {
+                formula
+            } else {
+                Formula::new("")
+            }
+        };
+
+        Self {
+            id: fertilizer.id(),
+            name: fertilizer.name(),
+            vendor: fertilizer.vendor(),
+            source_type: fertilizer.source_type(),
+            liquid: fertilizer.liquid(),
+            label,
+            formula,
         }
     }
 }

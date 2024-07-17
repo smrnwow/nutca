@@ -1,4 +1,4 @@
-use crate::model::reference::Browser;
+use crate::repository::ArticlesBrowser;
 use crate::ui::components::layout::Column;
 use crate::ui::components::reference::ReferenceTip;
 use crate::ui::components::utils::Title;
@@ -13,7 +13,7 @@ pub struct ReferenceBadgeProps {
 
 #[component]
 pub fn ReferenceBadge(props: ReferenceBadgeProps) -> Element {
-    let reference_browser = consume_context::<Signal<Browser>>();
+    let reference_browser = consume_context::<Signal<ArticlesBrowser>>();
 
     let article = use_signal(|| reference_browser.read().summary(&props.article_id));
 

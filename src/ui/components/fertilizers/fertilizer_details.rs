@@ -1,4 +1,5 @@
-use crate::model::fertilizers::{Fertilizer, FertilizerError};
+use crate::controller::Validation;
+use crate::model::fertilizers::Fertilizer;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{Checkbox, TextField};
 use dioxus::prelude::*;
@@ -6,7 +7,7 @@ use dioxus::prelude::*;
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerDetailsProps {
     fertilizer: Memo<Fertilizer>,
-    fertilizer_error: Memo<FertilizerError>,
+    validation: Memo<Validation>,
     on_name_update: EventHandler<String>,
     on_vendor_update: EventHandler<String>,
     on_liquid_update: EventHandler<bool>,
@@ -20,7 +21,7 @@ pub fn FertilizerDetails(props: FertilizerDetailsProps) -> Element {
                 TextField {
                     label: "Название",
                     value: props.fertilizer.read().name(),
-                    error: props.fertilizer_error.read().name(),
+                    error: props.validation.read().get("fertilizer-name"),
                     on_input: props.on_name_update,
                 }
 

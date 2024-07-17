@@ -1,13 +1,20 @@
-pub struct NotificationContainer {
+#[derive(Clone, Debug)]
+pub struct Toaster {
     counter: usize,
     notifications: Vec<(String, String, String)>,
 }
 
-impl NotificationContainer {
+impl Toaster {
     pub fn new() -> Self {
         Self {
             counter: 0,
             notifications: vec![],
+        }
+    }
+
+    pub fn render(&mut self, errors: Vec<String>) {
+        for error in errors {
+            self.add(error);
         }
     }
 

@@ -31,38 +31,38 @@ pub fn SolutionComposition(props: SolutionCompositionProps) -> Element {
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::Nitrogen(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::Nitrogen(0.0)),
+                        nutrient: solution.nutrients[Nutrient::Nitrogen],
+                        nutrient_result: solution.nutrient_result(Nutrient::Nitrogen),
                     }
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::Phosphorus(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::Phosphorus(0.0)),
+                        nutrient: solution.nutrients[Nutrient::Phosphorus],
+                        nutrient_result: solution.nutrient_result(Nutrient::Phosphorus),
                     }
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::Potassium(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::Potassium(0.0)),
+                        nutrient: solution.nutrients[Nutrient::Potassium],
+                        nutrient_result: solution.nutrient_result(Nutrient::Potassium),
                     }
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::Calcium(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::Calcium(0.0)),
+                        nutrient: solution.nutrients[Nutrient::Calcium],
+                        nutrient_result: solution.nutrient_result(Nutrient::Calcium),
                     }
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::Magnesium(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::Magnesium(0.0)),
+                        nutrient: solution.nutrients[Nutrient::Magnesium],
+                        nutrient_result: solution.nutrient_result(Nutrient::Magnesium),
                     }
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::Sulfur(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::Sulfur(0.0)),
+                        nutrient: solution.nutrients[Nutrient::Sulfur],
+                        nutrient_result: solution.nutrient_result(Nutrient::Sulfur),
                     }
                 }
             }
@@ -80,14 +80,14 @@ pub fn SolutionComposition(props: SolutionCompositionProps) -> Element {
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::NitrogenNitrate(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::NitrogenNitrate(0.0)),
+                        nutrient: solution.nutrients[Nutrient::NitrogenNitrate],
+                        nutrient_result: solution.nutrient_result(Nutrient::NitrogenNitrate),
                     }
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::NitrogenAmmonium(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::NitrogenAmmonium(0.0)),
+                        nutrient: solution.nutrients[Nutrient::NitrogenAmmonium],
+                        nutrient_result: solution.nutrient_result(Nutrient::NitrogenAmmonium),
                     }
                 }
             }
@@ -105,38 +105,38 @@ pub fn SolutionComposition(props: SolutionCompositionProps) -> Element {
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::Iron(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::Iron(0.0)),
+                        nutrient: solution.nutrients[Nutrient::Iron],
+                        nutrient_result: solution.nutrient_result(Nutrient::Iron),
                     }
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::Manganese(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::Manganese(0.0)),
+                        nutrient: solution.nutrients[Nutrient::Manganese],
+                        nutrient_result: solution.nutrient_result(Nutrient::Manganese),
                     }
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::Copper(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::Copper(0.0)),
+                        nutrient: solution.nutrients[Nutrient::Copper],
+                        nutrient_result: solution.nutrient_result(Nutrient::Copper),
                     }
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::Zinc(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::Zinc(0.0)),
+                        nutrient: solution.nutrients[Nutrient::Zinc],
+                        nutrient_result: solution.nutrient_result(Nutrient::Zinc),
                     }
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::Boron(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::Boron(0.0)),
+                        nutrient: solution.nutrients[Nutrient::Boron],
+                        nutrient_result: solution.nutrient_result(Nutrient::Boron),
                     }
 
                     SolutionCompositionNutrient {
                         badge: solution.is_empty(),
-                        nutrient: solution[Nutrient::Molybdenum(0.0)],
-                        nutrient_result: solution.nutrient_result(Nutrient::Molybdenum(0.0)),
+                        nutrient: solution.nutrients[Nutrient::Molybdenum],
+                        nutrient_result: solution.nutrient_result(Nutrient::Molybdenum),
                     }
                 }
             }

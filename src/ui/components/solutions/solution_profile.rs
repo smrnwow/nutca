@@ -1,6 +1,7 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::NutrientAmount;
 use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
+use crate::repository::ProfilesListing;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfileForm;
 use crate::ui::components::reference::{ReferenceBadge, ReferenceSubject};
@@ -18,10 +19,10 @@ fn round(value: f64) -> String {
 pub struct SolutionProfileProps {
     solution: Memo<Solution>,
     profile: Memo<Profile>,
-    profiles: Memo<Vec<Profile>>,
+    profiles_listing: Signal<ProfilesListing>,
     on_profile_change: EventHandler<String>,
     on_profile_search: EventHandler<String>,
-    on_profile_nutrient_update: EventHandler<Nutrient>,
+    on_profile_nutrient_update: EventHandler<NutrientAmount>,
 }
 
 #[component]
@@ -90,7 +91,8 @@ pub fn SolutionProfile(props: SolutionProfileProps) -> Element {
                     Select {
                         placeholder: "выбрать готовый профиль",
                         value: profile_select_value,
-                        options: props.profiles.read()
+                        options: props.profiles_listing.read()
+                            .list()
                             .iter()
                             .map(|profile| (profile.id(), profile.name()))
                             .collect(),

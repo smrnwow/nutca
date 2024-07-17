@@ -1,4 +1,4 @@
-use crate::model::fertilizers::FertilizersListing;
+use crate::repository::FertilizersListing;
 use crate::ui::components::fertilizers::FertilizersListingItem;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::SearchIcon;
@@ -9,7 +9,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersListingProps {
-    fertilizers_listing: Signal<FertilizersListing>,
+    fertilizers_listing: Memo<FertilizersListing>,
     on_search: EventHandler<String>,
     on_add: EventHandler<()>,
     on_open: EventHandler<String>,

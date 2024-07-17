@@ -1,13 +1,13 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::NutrientAmount;
 use crate::model::fertilizers::Fertilizer;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::ArrowRight;
 use crate::ui::components::utils::{Button, Tag, Text, Tooltip};
 use dioxus::prelude::*;
 
-fn tag_text(nutrient: Nutrient) -> Vec<String> {
+fn tag_text(nutrient: NutrientAmount) -> Vec<String> {
     vec![
-        nutrient.symbol().to_string(),
+        nutrient.nutrient().symbol().to_string(),
         format!("{:.1}%", nutrient.value()),
     ]
 }
@@ -19,11 +19,11 @@ pub struct FertilizersBrowserTooltipProps {
 
 #[component]
 pub fn FertilizersBrowserTooltip(props: FertilizersBrowserTooltipProps) -> Element {
-    let macro_nutrients = props.fertilizer.read().macro_nutrients();
+    let macro_nutrients = props.fertilizer.read().nutrients.macros();
 
-    let nitrogen_forms = props.fertilizer.read().nitrogen_forms();
+    let nitrogen_forms = props.fertilizer.read().nutrients.nitrogen_forms();
 
-    let micro_nutrients = props.fertilizer.read().micro_nutrients();
+    let micro_nutrients = props.fertilizer.read().nutrients.micros();
 
     rsx! {
         Tooltip {

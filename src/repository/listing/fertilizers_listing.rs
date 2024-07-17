@@ -1,7 +1,10 @@
 use crate::model::fertilizers::Fertilizer;
+use crate::repository::Storage;
+use dioxus::prelude::*;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct FertilizersListing {
+    storage: Signal<Storage>,
     fertilizers: Vec<Fertilizer>,
     excluded_fertilizers_ids: Vec<String>,
     search_query: String,
@@ -10,8 +13,14 @@ pub struct FertilizersListing {
 }
 
 impl FertilizersListing {
-    pub fn new(fertilizers: Vec<Fertilizer>) -> Self {
+    pub fn new(storage: Signal<Storage>) -> Self {
+        let fertilizers = match storage.read().fertilizers().list() {
+            Ok(fertilizers) => fertilizers,
+            Err(_) => Vec::new(),
+        };
+
         Self {
+            storage,
             fertilizers,
             excluded_fertilizers_ids: Vec::new(),
             search_query: String::new(),
@@ -70,13 +79,15 @@ impl FertilizersListing {
         self.find(fertilizer_id)
     }
 
-    pub fn include(&mut self, fertilizer_id: String) {
+    pub fn include(&mut self, fertilizer_id: String) -> Option<Fertilizer> {
         self.excluded_fertilizers_ids = self
             .excluded_fertilizers_ids
             .iter()
             .cloned()
             .filter(|excluded_fertilizer_id| *excluded_fertilizer_id != fertilizer_id)
             .collect();
+
+        self.find(fertilizer_id)
     }
 
     pub fn paginate(&mut self, page_index: usize) {

@@ -1,4 +1,4 @@
-use crate::model::NotificationContainer;
+use crate::controller::Toaster;
 use crate::ui::components::utils::Notifications;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
@@ -17,9 +17,9 @@ fn link_class(current_route: &Route, path: Route) -> &str {
 pub fn Layout() -> Element {
     let current_route = use_route::<Route>();
 
-    let mut notifications_container = use_context::<Signal<NotificationContainer>>();
+    let mut toaster = use_context::<Signal<Toaster>>();
 
-    let notifications = use_memo(move || notifications_container.read().list());
+    let toasts = use_memo(move || toaster.read().list());
 
     rsx! {
         header {
@@ -60,9 +60,9 @@ pub fn Layout() -> Element {
             class: "content",
             Outlet::<Route> { },
             Notifications {
-                notifications,
+                notifications: toasts,
                 on_close: move |notification_id| {
-                    notifications_container.write().remove(notification_id);
+                    toaster.write().remove(notification_id);
                 },
             },
         }

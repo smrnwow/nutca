@@ -11,6 +11,8 @@ mod solution_profile;
 mod solutions_listing_controls;
 mod solutions_listing_item;
 mod solutions_listing_table;
+mod stock_solution_controls;
+mod stock_solution_part;
 
 pub use fertilizers_browser::FertilizersBrowser;
 pub use fertilizers_browser_item::FertilizersBrowserItem;
@@ -25,3 +27,5 @@ pub use solution_profile::SolutionProfile;
 pub use solutions_listing_controls::SolutionsListingControls;
 pub use solutions_listing_item::SolutionsListingItem;
 pub use solutions_listing_table::SolutionsListingTable;
+pub use stock_solution_controls::StockSolutionControls;
+pub use stock_solution_part::StockSolutionPart;

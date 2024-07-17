@@ -1,4 +1,4 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::NutrientAmount;
 use serde::{Deserialize, Serialize};
 
 #[derive(Copy, Clone, Debug, PartialEq, Deserialize, Serialize)]
@@ -101,28 +101,28 @@ impl Component {
         }
     }
 
-    pub fn nutrient(&self) -> Nutrient {
+    pub fn nutrient(&self) -> NutrientAmount {
         match self {
-            Component::Nitrogen(value) => Nutrient::Nitrogen(*value),
-            Component::NitrogenNitrate(value) => Nutrient::NitrogenNitrate(*value),
-            Component::NitrogenAmmonium(value) => Nutrient::NitrogenAmmonium(*value),
-            Component::Phosphor(value) => Nutrient::Phosphorus(*value),
-            Component::PhosphorPentoxide(value) => Nutrient::Phosphorus(*value * 0.436421),
-            Component::Potassium(value) => Nutrient::Potassium(*value),
-            Component::PotassiumOxide(value) => Nutrient::Potassium(*value * 0.830148),
-            Component::Calcium(value) => Nutrient::Calcium(*value),
-            Component::CalciumOxide(value) => Nutrient::Calcium(*value * 0.714691),
-            Component::Magnesium(value) => Nutrient::Magnesium(*value),
-            Component::MagnesiumOxide(value) => Nutrient::Magnesium(*value * 0.603036),
-            Component::Sulfur(value) => Nutrient::Sulfur(*value),
-            Component::SulfurTrioxide(value) => Nutrient::Sulfur(*value * 0.400496),
-            Component::SulfurTetroxide(value) => Nutrient::Sulfur(*value * 0.333793),
-            Component::Iron(value) => Nutrient::Iron(*value),
-            Component::Manganese(value) => Nutrient::Manganese(*value),
-            Component::Copper(value) => Nutrient::Copper(*value),
-            Component::Zinc(value) => Nutrient::Zinc(*value),
-            Component::Boron(value) => Nutrient::Boron(*value),
-            Component::Molybdenum(value) => Nutrient::Molybdenum(*value),
+            Component::Nitrogen(value) => NutrientAmount::Nitrogen(*value),
+            Component::NitrogenNitrate(value) => NutrientAmount::NitrogenNitrate(*value),
+            Component::NitrogenAmmonium(value) => NutrientAmount::NitrogenAmmonium(*value),
+            Component::Phosphor(value) => NutrientAmount::Phosphorus(*value),
+            Component::PhosphorPentoxide(value) => NutrientAmount::Phosphorus(*value * 0.436421),
+            Component::Potassium(value) => NutrientAmount::Potassium(*value),
+            Component::PotassiumOxide(value) => NutrientAmount::Potassium(*value * 0.830148),
+            Component::Calcium(value) => NutrientAmount::Calcium(*value),
+            Component::CalciumOxide(value) => NutrientAmount::Calcium(*value * 0.714691),
+            Component::Magnesium(value) => NutrientAmount::Magnesium(*value),
+            Component::MagnesiumOxide(value) => NutrientAmount::Magnesium(*value * 0.603036),
+            Component::Sulfur(value) => NutrientAmount::Sulfur(*value),
+            Component::SulfurTrioxide(value) => NutrientAmount::Sulfur(*value * 0.400496),
+            Component::SulfurTetroxide(value) => NutrientAmount::Sulfur(*value * 0.333793),
+            Component::Iron(value) => NutrientAmount::Iron(*value),
+            Component::Manganese(value) => NutrientAmount::Manganese(*value),
+            Component::Copper(value) => NutrientAmount::Copper(*value),
+            Component::Zinc(value) => NutrientAmount::Zinc(*value),
+            Component::Boron(value) => NutrientAmount::Boron(*value),
+            Component::Molybdenum(value) => NutrientAmount::Molybdenum(*value),
         }
     }
 

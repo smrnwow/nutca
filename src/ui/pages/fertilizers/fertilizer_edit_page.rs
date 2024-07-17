@@ -1,43 +1,38 @@
-use crate::model::fertilizers::FertilizerBuilder;
-use crate::model::NotificationContainer;
-use crate::storage::Storage;
+use crate::controller::fertilizers::FertilizerEditor;
+use crate::controller::Toaster;
+use crate::repository::Storage;
 use crate::ui::components::fertilizers::FertilizerEditor;
 use crate::ui::components::layout::{Page, Section};
-use crate::ui::router::Route;
 use dioxus::prelude::*;
-use dioxus_router::prelude::*;
 
 #[component]
 pub fn FertilizerEditPage(fertilizer_id: String) -> Element {
-    let mut notifications_container = consume_context::<Signal<NotificationContainer>>();
+    let mut toaster = consume_context::<Signal<Toaster>>();
 
     let storage = consume_context::<Signal<Storage>>();
 
-    let mut fertilizer_builder = use_signal(|| {
-        let fertilizer = storage.read().fertilizers().get(fertilizer_id);
+    let mut fertilizer_editor = use_signal(|| FertilizerEditor::edit(storage, fertilizer_id));
 
-        match fertilizer {
-            Ok(fertilizer) => FertilizerBuilder::from(fertilizer),
-            Err(_) => FertilizerBuilder::new(),
-        }
-    });
+    let mut fertilizer_builder = fertilizer_editor.read().fertilizer_builder();
 
-    let fertilizer = use_memo(move || fertilizer_builder.read().build());
+    let fertilizer = fertilizer_editor.read().fertilizer();
 
-    let fertilizer_error = use_memo(move || fertilizer_builder.read().validate());
-
-    let source_type = use_memo(move || fertilizer_builder.read().source_type());
+    let validation = fertilizer_editor.read().validation();
 
     let label = use_memo(move || fertilizer_builder.read().label());
 
     let formula = use_memo(move || fertilizer_builder.read().formula());
+
+    let source_type = use_memo(move || fertilizer_builder.read().source_type());
+
+    use_effect(move || toaster.write().render(validation.read().list()));
 
     rsx! {
         Page {
             Section {
                 FertilizerEditor {
                     fertilizer,
-                    fertilizer_error,
+                    validation,
                     source_type,
                     label,
                     formula,
@@ -59,24 +54,14 @@ pub fn FertilizerEditPage(fertilizer_id: String) -> Element {
                     on_label_component_update: move |component| {
                         fertilizer_builder.write().update_label_component(component);
                     },
-                    on_formula_update: move |formula: String| {
+                    on_formula_update: move |formula| {
                         fertilizer_builder.write().update_formula(formula);
                     },
                     on_save: move |_| {
-                        fertilizer_builder.write().save();
-
-                        if fertilizer_error.read().is_empty() {
-                            storage.read().fertilizers().update(fertilizer.read().clone()).unwrap();
-
-                            navigator().push(Route::FertilizersListingPage {});
-                        } else {
-                            if let Some(error) = fertilizer_error.read().name() {
-                                notifications_container.write().add(error);
-                            }
-                        }
+                        fertilizer_editor.write().update();
                     },
                     on_cancel: move |_| {
-                        navigator().push(Route::FertilizersListingPage {});
+                        fertilizer_editor.write().back();
                     },
                 }
             }

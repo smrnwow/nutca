@@ -1,4 +1,4 @@
-use crate::model::fertilizers::FertilizersListing;
+use crate::repository::FertilizersListing;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::solutions::FertilizersBrowserItem;
@@ -16,8 +16,6 @@ pub struct FertilizersBrowserProps {
 
 #[component]
 pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
-    let fertilizers_listing = use_memo(move || props.fertilizers_listing.read().clone());
-
     let mut show_reference = use_signal(|| false);
 
     rsx! {
@@ -40,7 +38,7 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
 
                 TextField {
                     placeholder: "название удобрения",
-                    value: fertilizers_listing.read().search_query(),
+                    value: props.fertilizers_listing.read().search_query(),
                     icon_left: rsx! {
                         SearchIcon {}
                     },
@@ -50,10 +48,10 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
 
             List {
                 limit: 8,
-                empty: fertilizers_listing.read().is_empty(),
+                empty: props.fertilizers_listing.read().is_empty(),
                 stub_text: "Удобрений не найдено",
 
-                for fertilizer in fertilizers_listing.read().list() {
+                for fertilizer in props.fertilizers_listing.read().list() {
                     FertilizersBrowserItem {
                         key: "{fertilizer.id()}",
                         fertilizer: Signal::new(fertilizer),
@@ -63,9 +61,9 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
             }
 
             Pagination {
-                page_index: fertilizers_listing.read().page_index(),
-                limit: fertilizers_listing.read().limit(),
-                total: fertilizers_listing.read().total(),
+                page_index: props.fertilizers_listing.read().page_index(),
+                limit: props.fertilizers_listing.read().limit(),
+                total: props.fertilizers_listing.read().total(),
                 on_change: move |next_page| {
                     props.on_paginate.call(next_page);
                 },

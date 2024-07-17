@@ -1,51 +1,43 @@
-use crate::model::profiles::ProfileBuilder;
-use crate::model::NotificationContainer;
-use crate::storage::Storage;
+use crate::controller::profiles::ProfileEditor;
+use crate::controller::Toaster;
+use crate::repository::Storage;
 use crate::ui::components::layout::{Page, Section};
 use crate::ui::components::profiles::ProfileEditor;
-use crate::ui::router::Route;
 use dioxus::prelude::*;
-use dioxus_router::prelude::*;
 
 #[component]
 pub fn ProfileAddPage() -> Element {
-    let mut notifications_container = consume_context::<Signal<NotificationContainer>>();
+    let mut toaster = consume_context::<Signal<Toaster>>();
 
     let storage = consume_context::<Signal<Storage>>();
 
-    let mut profile_builder = use_signal(|| ProfileBuilder::new());
+    let mut profile_editor = use_signal(|| ProfileEditor::new(storage));
 
-    let profile = use_memo(move || profile_builder.read().build());
+    let mut profile_builder = profile_editor.read().builder();
 
-    let profile_error = use_memo(move || profile_builder.read().validate());
+    let profile = profile_editor.read().profile();
+
+    let validation = profile_editor.read().validation();
+
+    use_effect(move || toaster.write().render(validation.read().list()));
 
     rsx! {
         Page {
             Section {
                 ProfileEditor {
                     profile,
-                    profile_error,
-                    on_nutrient_update: move |nutrient| {
-                        profile_builder.write().update_nutrient(nutrient);
+                    validation,
+                    on_nutrient_update: move |nutrient_amount| {
+                        profile_builder.write().update_nutrient(nutrient_amount);
                     },
                     on_name_update: move |name| {
                         profile_builder.write().update_name(name);
                     },
                     on_save: move |_| {
-                        profile_builder.write().save();
-
-                        if profile_error.read().is_empty() {
-                            storage.read().profiles().add(profile.read().clone()).unwrap();
-
-                            navigator().push(Route::ProfilesListingPage {});
-                        } else {
-                            if let Some(error) = profile_error.read().name() {
-                                notifications_container.write().add(error);
-                            }
-                        }
+                        profile_editor.write().create();
                     },
                     on_cancel: move |_| {
-                        navigator().push(Route::ProfilesListingPage {});
+                        profile_editor.write().back();
                     },
                 }
             }

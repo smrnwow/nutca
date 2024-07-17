@@ -1,5 +1,5 @@
 use crate::model::reference::Article;
-use crate::storage::Storage;
+use crate::repository::Storage;
 use crate::ui::components::layout::{Column, Page, Section};
 use crate::ui::components::utils::{Block, Card, Divider, Text, Title};
 use dioxus::prelude::*;

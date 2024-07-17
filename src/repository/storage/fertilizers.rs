@@ -1,18 +1,18 @@
-use crate::model::fertilizers::{Fertilizer, FertilizersListing};
+use crate::model::fertilizers::Fertilizer;
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
-use crate::storage::Error;
+use crate::repository::{Error, RepositoryError};
 use rusqlite::{params, Connection};
 use std::rc::Rc;
 use uuid::Uuid;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Fertilizers {
     connection: Rc<Connection>,
 }
 
 impl Fertilizers {
-    pub fn new(connection: Rc<Connection>) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new(connection: Rc<Connection>) -> Result<Self, Error> {
         let storage = Self { connection };
 
         storage.setup()?;
@@ -22,7 +22,7 @@ impl Fertilizers {
         Ok(storage)
     }
 
-    pub fn add(&self, fertilizer: Fertilizer) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn add(&self, fertilizer: Fertilizer) -> Result<(), Error> {
         let data = serde_json::to_string(&fertilizer)?;
 
         self.connection.execute(
@@ -33,7 +33,7 @@ impl Fertilizers {
         Ok(())
     }
 
-    pub fn get(&self, fertilizer_id: String) -> Result<Fertilizer, Box<dyn std::error::Error>> {
+    pub fn get(&self, fertilizer_id: String) -> Result<Fertilizer, Error> {
         let mut statement = self
             .connection
             .prepare("SELECT * FROM fertilizers WHERE id = ?1")?;
@@ -45,11 +45,11 @@ impl Fertilizers {
 
         match response.last() {
             Some(fertilizer) => Ok(serde_json::from_str(&fertilizer?)?),
-            None => Err(Box::new(Error::new("not found"))),
+            None => Err(Box::new(RepositoryError::new("not found"))),
         }
     }
 
-    pub fn update(&self, fertilizer: Fertilizer) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn update(&self, fertilizer: Fertilizer) -> Result<(), Error> {
         let data = serde_json::to_string(&fertilizer)?;
 
         self.connection
@@ -59,7 +59,7 @@ impl Fertilizers {
         Ok(())
     }
 
-    pub fn delete(&self, fertilizer_id: String) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn delete(&self, fertilizer_id: String) -> Result<(), Error> {
         self.connection
             .prepare("DELETE FROM fertilizers WHERE id = ?1")?
             .execute(params![fertilizer_id])?;
@@ -67,7 +67,7 @@ impl Fertilizers {
         Ok(())
     }
 
-    pub fn list(&self) -> Result<FertilizersListing, Box<dyn std::error::Error>> {
+    pub fn list(&self) -> Result<Vec<Fertilizer>, Error> {
         let mut statement = self.connection.prepare("SELECT * FROM fertilizers")?;
 
         let response = statement.query_map([], |row| {
@@ -82,10 +82,10 @@ impl Fertilizers {
             fertilizers.push(fertilizer);
         }
 
-        Ok(FertilizersListing::new(fertilizers))
+        Ok(fertilizers)
     }
 
-    fn setup(&self) -> Result<(), Box<dyn std::error::Error>> {
+    fn setup(&self) -> Result<(), Error> {
         self.connection.execute(
             "CREATE TABLE fertilizers (
                     id TEXT PRIMARY KEY,
@@ -97,7 +97,7 @@ impl Fertilizers {
         Ok(())
     }
 
-    fn seed(&self) -> Result<(), Box<dyn std::error::Error>> {
+    fn seed(&self) -> Result<(), Error> {
         let fertilizers = vec![
             Fertilizer::build()
                 .with_id(Uuid::new_v4().to_string())

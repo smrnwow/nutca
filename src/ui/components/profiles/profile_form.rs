@@ -1,4 +1,4 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::{Nutrient, NutrientAmount};
 use crate::model::profiles::Profile;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfileNutrientInput;
@@ -8,7 +8,7 @@ use dioxus::prelude::*;
 #[derive(Props, PartialEq, Clone)]
 pub struct ProfileFormProps {
     profile: Memo<Profile>,
-    on_nutrient_update: EventHandler<Nutrient>,
+    on_nutrient_update: EventHandler<NutrientAmount>,
 }
 
 #[component]
@@ -31,32 +31,32 @@ pub fn ProfileForm(props: ProfileFormProps) -> Element {
                     gap: "small",
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::Nitrogen(0.0)],
+                        nutrient: profile.nutrients[Nutrient::Nitrogen],
                         on_update: props.on_nutrient_update,
                     }
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::Phosphorus(0.0)],
+                        nutrient: profile.nutrients[Nutrient::Phosphorus],
                         on_update: props.on_nutrient_update,
                     }
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::Potassium(0.0)],
+                        nutrient: profile.nutrients[Nutrient::Potassium],
                         on_update: props.on_nutrient_update,
                     }
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::Calcium(0.0)],
+                        nutrient: profile.nutrients[Nutrient::Calcium],
                         on_update: props.on_nutrient_update,
                     }
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::Magnesium(0.0)],
+                        nutrient: profile.nutrients[Nutrient::Magnesium],
                         on_update: props.on_nutrient_update,
                     }
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::Sulfur(0.0)],
+                        nutrient: profile.nutrients[Nutrient::Sulfur],
                         on_update: props.on_nutrient_update,
                     }
                 }
@@ -74,12 +74,12 @@ pub fn ProfileForm(props: ProfileFormProps) -> Element {
                     gap: "small",
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::NitrogenNitrate(0.0)],
+                        nutrient: profile.nutrients[Nutrient::NitrogenNitrate],
                         on_update: props.on_nutrient_update,
                     }
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::NitrogenAmmonium(0.0)],
+                        nutrient: profile.nutrients[Nutrient::NitrogenAmmonium],
                         on_update: props.on_nutrient_update,
                     }
                 }
@@ -97,32 +97,32 @@ pub fn ProfileForm(props: ProfileFormProps) -> Element {
                     gap: "small",
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::Iron(0.0)],
+                        nutrient: profile.nutrients[Nutrient::Iron],
                         on_update: props.on_nutrient_update,
                     }
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::Manganese(0.0)],
+                        nutrient: profile.nutrients[Nutrient::Manganese],
                         on_update: props.on_nutrient_update,
                     }
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::Copper(0.0)],
+                        nutrient: profile.nutrients[Nutrient::Copper],
                         on_update: props.on_nutrient_update,
                     }
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::Zinc(0.0)],
+                        nutrient: profile.nutrients[Nutrient::Zinc],
                         on_update: props.on_nutrient_update,
                     }
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::Boron(0.0)],
+                        nutrient: profile.nutrients[Nutrient::Boron],
                         on_update: props.on_nutrient_update,
                     }
 
                     ProfileNutrientInput {
-                        nutrient: profile[Nutrient::Molybdenum(0.0)],
+                        nutrient: profile.nutrients[Nutrient::Molybdenum],
                         on_update: props.on_nutrient_update,
                     }
                 }

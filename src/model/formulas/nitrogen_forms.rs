@@ -1,4 +1,4 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::NutrientAmount;
 use chemp::{ChemicalElement, Element};
 
 #[derive(Clone, Debug, PartialEq)]
@@ -61,23 +61,23 @@ impl NitrogenForms {
         (self.ammonium_form as f64) / (self.nitrogen_atoms as f64) * 100.
     }
 
-    pub fn values(&self, total_nitrogen_percent: f64) -> Vec<Nutrient> {
+    pub fn values(&self, total_nitrogen_percent: f64) -> Vec<NutrientAmount> {
         if total_nitrogen_percent > 0. {
             let mut nitrogen_forms = vec![];
 
-            nitrogen_forms.push(Nutrient::NitrogenNitrate(
+            nitrogen_forms.push(NutrientAmount::NitrogenNitrate(
                 total_nitrogen_percent * (self.nitrate() / 100.),
             ));
 
-            nitrogen_forms.push(Nutrient::NitrogenAmmonium(
+            nitrogen_forms.push(NutrientAmount::NitrogenAmmonium(
                 total_nitrogen_percent * (self.ammonium() / 100.),
             ));
 
             nitrogen_forms
         } else {
             vec![
-                Nutrient::NitrogenNitrate(0.0),
-                Nutrient::NitrogenAmmonium(0.0),
+                NutrientAmount::NitrogenNitrate(0.0),
+                NutrientAmount::NitrogenAmmonium(0.0),
             ]
         }
     }

@@ -1,20 +1,17 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::Nutrients;
 use crate::model::fertilizers::{Source, SourceType};
-use crate::model::{
-    formulas::Formula,
-    labels::{Label, Units},
-};
+use crate::model::formulas::Formula;
+use crate::model::labels::{Label, Units};
 use serde::{Deserialize, Serialize};
-use std::ops::Index;
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct Fertilizer {
+    pub nutrients: Nutrients,
     id: String,
     name: String,
     vendor: String,
     source: Source,
     liquid: bool,
-    nutrients: [Nutrient; 14],
 }
 
 impl Fertilizer {
@@ -25,22 +22,7 @@ impl Fertilizer {
             vendor: String::new(),
             source: Source::Label(Label::new(Units::Percent)),
             liquid: false,
-            nutrients: [
-                Nutrient::Nitrogen(0.0),
-                Nutrient::NitrogenNitrate(0.0),
-                Nutrient::NitrogenAmmonium(0.0),
-                Nutrient::Phosphorus(0.0),
-                Nutrient::Potassium(0.0),
-                Nutrient::Calcium(0.0),
-                Nutrient::Magnesium(0.0),
-                Nutrient::Sulfur(0.0),
-                Nutrient::Iron(0.0),
-                Nutrient::Manganese(0.0),
-                Nutrient::Copper(0.0),
-                Nutrient::Zinc(0.0),
-                Nutrient::Boron(0.0),
-                Nutrient::Molybdenum(0.0),
-            ],
+            nutrients: Nutrients::new(),
         }
     }
 
@@ -64,7 +46,7 @@ impl Fertilizer {
 
     pub fn with_label(mut self, label: Label) -> Self {
         label.components().iter().for_each(|component| {
-            self.add_nutrient(component.nutrient());
+            self.nutrients.add(component.nutrient());
         });
 
         self.source = Source::Label(label);
@@ -73,8 +55,8 @@ impl Fertilizer {
     }
 
     pub fn with_formula(mut self, formula: Formula) -> Self {
-        formula.nutrients().iter().for_each(|nutrient_amount| {
-            self.add_nutrient(*nutrient_amount);
+        formula.nutrients.list().iter().for_each(|nutrient_amount| {
+            self.nutrients.add(*nutrient_amount);
         });
 
         self.source = Source::Formula(formula);
@@ -88,10 +70,6 @@ impl Fertilizer {
         self
     }
 
-    fn add_nutrient(&mut self, nutrient: Nutrient) {
-        self.nutrients[nutrient.index()] = self.nutrients[nutrient.index()].add(nutrient.value());
-    }
-
     pub fn id(&self) -> String {
         self.id.clone()
     }
@@ -101,11 +79,7 @@ impl Fertilizer {
     }
 
     pub fn vendor(&self) -> String {
-        if self.vendor.len() > 0 {
-            self.vendor.clone()
-        } else {
-            String::from("Не указан")
-        }
+        self.vendor.clone()
     }
 
     pub fn source(&self) -> Source {
@@ -121,68 +95,5 @@ impl Fertilizer {
 
     pub fn liquid(&self) -> bool {
         self.liquid
-    }
-
-    pub fn nutrients(&self) -> Vec<Nutrient> {
-        self.nutrients
-            .iter()
-            .filter(|nutrient| nutrient.value() > 0.)
-            .map(|nutrient| *nutrient)
-            .collect()
-    }
-
-    pub fn macro_nutrients(&self) -> Vec<Nutrient> {
-        self.nutrients()
-            .iter()
-            .filter(|nutrient| match nutrient {
-                Nutrient::Nitrogen(_)
-                | Nutrient::Phosphorus(_)
-                | Nutrient::Potassium(_)
-                | Nutrient::Calcium(_)
-                | Nutrient::Magnesium(_)
-                | Nutrient::Sulfur(_) => true,
-                _ => false,
-            })
-            .map(|nutrient| *nutrient)
-            .collect()
-    }
-
-    pub fn nitrogen_forms(&self) -> Vec<Nutrient> {
-        self.nutrients()
-            .iter()
-            .filter(|nutrient| match nutrient {
-                Nutrient::NitrogenNitrate(_) | Nutrient::NitrogenAmmonium(_) => true,
-                _ => false,
-            })
-            .map(|nutrient| *nutrient)
-            .collect()
-    }
-
-    pub fn micro_nutrients(&self) -> Vec<Nutrient> {
-        self.nutrients()
-            .iter()
-            .filter(|nutrient| match nutrient {
-                Nutrient::Iron(_)
-                | Nutrient::Manganese(_)
-                | Nutrient::Copper(_)
-                | Nutrient::Zinc(_)
-                | Nutrient::Boron(_)
-                | Nutrient::Molybdenum(_) => true,
-                _ => false,
-            })
-            .map(|nutrient| *nutrient)
-            .collect()
-    }
-
-    pub fn is_complex(&self) -> bool {
-        self.nutrients().len() > 3
-    }
-}
-
-impl Index<Nutrient> for Fertilizer {
-    type Output = Nutrient;
-
-    fn index(&self, nutrient: Nutrient) -> &Self::Output {
-        &self.nutrients[nutrient.index()]
     }
 }

@@ -1,7 +1,8 @@
-use crate::storage::{Articles, Fertilizers, Profiles, Solutions};
+use crate::repository::storage::{Articles, Fertilizers, Profiles, Solutions};
 use rusqlite::Connection;
 use std::rc::Rc;
 
+#[derive(Clone, Debug)]
 pub struct Storage {
     connection: Rc<Connection>,
     articles: Articles,

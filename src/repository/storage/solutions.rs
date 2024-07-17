@@ -1,15 +1,15 @@
-use crate::model::solutions::{Solution, SolutionsListing};
-use crate::storage::Error;
+use crate::model::solutions::Solution;
+use crate::repository::{Error, RepositoryError, SolutionsListing};
 use rusqlite::{params, Connection};
 use std::rc::Rc;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Solutions {
     connection: Rc<Connection>,
 }
 
 impl Solutions {
-    pub fn new(connection: Rc<Connection>) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new(connection: Rc<Connection>) -> Result<Self, Error> {
         let storage = Self { connection };
 
         storage.setup()?;
@@ -19,7 +19,7 @@ impl Solutions {
         Ok(storage)
     }
 
-    pub fn add(&self, solution: Solution) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn add(&self, solution: Solution) -> Result<(), Error> {
         let data = serde_json::to_string(&solution)?;
 
         self.connection.execute(
@@ -30,7 +30,7 @@ impl Solutions {
         Ok(())
     }
 
-    pub fn get(&self, solution_id: String) -> Result<Solution, Box<dyn std::error::Error>> {
+    pub fn get(&self, solution_id: String) -> Result<Solution, Error> {
         let mut statement = self
             .connection
             .prepare("SELECT * FROM solutions WHERE id = ?1")?;
@@ -42,11 +42,11 @@ impl Solutions {
 
         match response.last() {
             Some(solution) => Ok(serde_json::from_str(&solution?)?),
-            None => Err(Box::new(Error::new("not found"))),
+            None => Err(Box::new(RepositoryError::new("not found"))),
         }
     }
 
-    pub fn update(&self, solution: Solution) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn update(&self, solution: Solution) -> Result<(), Error> {
         let data = serde_json::to_string(&solution)?;
 
         self.connection
@@ -56,7 +56,7 @@ impl Solutions {
         Ok(())
     }
 
-    pub fn delete(&self, solution_id: String) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn delete(&self, solution_id: String) -> Result<(), Error> {
         self.connection
             .prepare("DELETE FROM solutions WHERE id = ?1")?
             .execute(params![solution_id])?;
@@ -64,7 +64,7 @@ impl Solutions {
         Ok(())
     }
 
-    pub fn list(&self) -> Result<SolutionsListing, Box<dyn std::error::Error>> {
+    pub fn list(&self) -> Result<SolutionsListing, Error> {
         let mut statement = self.connection.prepare("SELECT * FROM solutions")?;
 
         let response = statement.query_map([], |row| {
@@ -75,14 +75,13 @@ impl Solutions {
         let mut solutions = vec![];
 
         for item in response {
-            let solution: Solution = serde_json::from_str(&item?)?;
-            solutions.push(solution);
+            solutions.push(serde_json::from_str(&item?)?);
         }
 
         Ok(SolutionsListing::new(solutions))
     }
 
-    fn setup(&self) -> Result<(), Box<dyn std::error::Error>> {
+    fn setup(&self) -> Result<(), Error> {
         self.connection.execute(
             "CREATE TABLE solutions (
                 id TEXT PRIMARY KEY,
@@ -94,7 +93,7 @@ impl Solutions {
         Ok(())
     }
 
-    fn seed(&self) -> Result<(), Box<dyn std::error::Error>> {
+    fn seed(&self) -> Result<(), Error> {
         let solutions = vec![];
 
         for solution in solutions {

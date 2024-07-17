@@ -1,8 +1,6 @@
-use super::Error;
-use crate::model::calculation::Calculation;
+use crate::model::calculation::{Amount, Calculation};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
-use crate::model::solutions::Solution;
 
 pub struct Solver {
     profile: Profile,
@@ -11,15 +9,7 @@ pub struct Solver {
 }
 
 impl Solver {
-    pub fn new(profile: Profile, mut fertilizers: Vec<Fertilizer>) -> Self {
-        fertilizers.sort_by(|a, b| {
-            let a_count = a.nutrients().len();
-
-            let b_count = b.nutrients().len();
-
-            a_count.partial_cmp(&b_count).unwrap()
-        });
-
+    pub fn new(profile: Profile, fertilizers: Vec<Fertilizer>) -> Self {
         Self {
             profile,
             fertilizers,
@@ -27,60 +17,73 @@ impl Solver {
         }
     }
 
-    pub fn solve(&mut self) -> Result<Solution, Error> {
+    pub fn solve(&mut self) -> Vec<Amount> {
+        if self.fertilizers.len() == 0 {
+            return Vec::new();
+        }
+
         let mut try_count = 0;
 
         while try_count < 4 {
-            let calculation =
-                Calculation::new(self.profile.clone(), self.fertilizers.clone()).unwrap();
+            let calculation = Calculation::new()
+                .with_fertilizers(self.fertilizers.clone())
+                .with_profile(self.profile.clone());
 
-            if let Ok(mut solution) = calculation.solve() {
-                match self.has_negative_fertilizer(&solution) {
-                    Some(fertilizer) => {
-                        self.exclude_fertilizer(fertilizer);
-                    }
+            match calculation.solve() {
+                Ok(mut amounts) => {
+                    let latest_rotten_index: Option<usize> = amounts
+                        .iter()
+                        .cloned()
+                        .filter(|amount| amount.amount().abs() > 100000.0)
+                        .map(|amount| amount.fertilizer_index())
+                        .max();
 
-                    None => {
-                        self.redurant_fertilizers.iter().for_each(|fertilizer| {
-                            solution.add_redurant_fertilizer(fertilizer.clone());
-                        });
+                    match latest_rotten_index {
+                        Some(fertilizer_index) => {
+                            self.exclude_fertilizer(fertilizer_index);
+                        }
 
-                        return Ok(solution);
+                        None => {
+                            self.redurant_fertilizers.iter().for_each(|fertilizer| {
+                                amounts.push(Amount::new(fertilizer.clone(), 1, 0.0));
+                            });
+
+                            return amounts;
+                        }
                     }
                 }
-            } else {
-                if let Some(fertilizer) = self.fertilizers.last() {
-                    if fertilizer.is_complex() {
-                        self.exclude_fertilizer(fertilizer.clone());
+
+                Err(error) => {
+                    println!("error: {:#?}", error);
+
+                    if self.fertilizers.len() > 0 {
+                        let last_index = self.fertilizers.len() - 1;
+
+                        self.exclude_fertilizer(last_index);
                     }
+
+                    // return Err(error);
                 }
             }
 
             try_count += 1;
         }
 
-        Ok(Solution::empty(self.fertilizers.clone()))
+        Vec::new()
     }
 
-    fn exclude_fertilizer(&mut self, excluded_fertilizer: Fertilizer) {
-        self.fertilizers = self
-            .fertilizers
-            .iter()
-            .cloned()
-            .filter(|f| f.id() != excluded_fertilizer.id())
-            .collect();
+    fn exclude_fertilizer(&mut self, fertilizer_index: usize) {
+        if let Some(fertilizer) = self.fertilizers.get(fertilizer_index) {
+            self.redurant_fertilizers.push(fertilizer.clone());
 
-        self.redurant_fertilizers.push(excluded_fertilizer);
-    }
-
-    fn has_negative_fertilizer(&self, solution: &Solution) -> Option<Fertilizer> {
-        if let Some(fertilizer) = solution.fertilizers().last() {
-            if fertilizer.weight < 0. {
-                return Some(fertilizer.fertilizer.clone());
-            }
+            self.fertilizers = self
+                .fertilizers
+                .iter()
+                .enumerate()
+                .filter(|(index, _)| *index != fertilizer_index)
+                .map(|(_, fertilizer)| fertilizer.clone())
+                .collect();
         }
-
-        None
     }
 }
 

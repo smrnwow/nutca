@@ -2,11 +2,11 @@ use crate::model::reference::Article;
 use std::collections::HashMap;
 
 #[derive(Clone, Debug)]
-pub struct Browser {
+pub struct ArticlesBrowser {
     articles: HashMap<String, Article>,
 }
 
-impl Browser {
+impl ArticlesBrowser {
     pub fn new(articles: HashMap<String, Article>) -> Self {
         Self { articles }
     }

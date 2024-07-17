@@ -1,16 +1,16 @@
-use crate::model::reference::{Article, Browser};
+use crate::model::reference::Article;
 use rusqlite::{params, Connection};
 use std::collections::HashMap;
 use std::rc::Rc;
-use crate::storage::Error;
+use crate::repository::{Error, RepositoryError, ArticlesBrowser};
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Articles {
     connection: Rc<Connection>,
 }
 
 impl Articles {
-    pub fn new(connection: Rc<Connection>) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new(connection: Rc<Connection>) -> Result<Self, Error> {
         let storage = Self { connection };
 
         storage.setup()?;
@@ -20,7 +20,7 @@ impl Articles {
         Ok(storage)
     }
 
-    pub fn add(&self, article: Article) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn add(&self, article: Article) -> Result<(), Error> {
         let data = serde_json::to_string(&article)?;
 
         self.connection.execute(
@@ -31,7 +31,7 @@ impl Articles {
         Ok(())
     }
 
-    pub fn get(&self, article_id: String) -> Result<Article, Box<dyn std::error::Error>> {
+    pub fn get(&self, article_id: String) -> Result<Article, Error> {
         let mut statement = self.connection
             .prepare("SELECT * FROM articles WHERE id = ?1")?;
 
@@ -42,11 +42,11 @@ impl Articles {
 
         match rows.last() {
             Some(article) => Ok(serde_json::from_str(&article?)?),
-            None => Err(Box::new(Error::new("not found")))
+            None => Err(Box::new(RepositoryError::new("not found")))
         }
     }
 
-    pub fn update(&self, article: Article) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn _update(&self, article: Article) -> Result<(), Error> {
         let data = serde_json::to_string(&article)?;
 
         self.connection
@@ -56,7 +56,7 @@ impl Articles {
         Ok(())
     }
 
-    pub fn delete(&self, article_id: String) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn _delete(&self, article_id: String) -> Result<(), Error> {
         self.connection
             .prepare("DELETE FROM articles WHERE id = ?1")?
             .execute(params![article_id])?;
@@ -64,7 +64,7 @@ impl Articles {
         Ok(())
     }
 
-    pub fn browse(&self) -> Result<Browser, Box<dyn std::error::Error>> {
+    pub fn browse(&self) -> Result<ArticlesBrowser, Error> {
         let mut statement = self
             .connection
             .prepare("SELECT * FROM articles")?;
@@ -84,10 +84,10 @@ impl Articles {
             articles.insert(article.id(), article);
         }
 
-        Ok(Browser::new(articles))
+        Ok(ArticlesBrowser::new(articles))
     }
 
-    fn setup(&self) -> Result<(), Box<dyn std::error::Error>> {
+    fn setup(&self) -> Result<(), Error> {
         self.connection.execute(
             "CREATE TABLE articles (
                 id TEXT PRIMARY KEY,
@@ -99,7 +99,7 @@ impl Articles {
         Ok(())
     }
 
-    fn seed(&self) -> Result<(), Box<dyn std::error::Error>> {
+    fn seed(&self) -> Result<(), Error> {
         let articles = vec![
             Article::new()
                 .with_id("solution-editor-nutrient-profile")

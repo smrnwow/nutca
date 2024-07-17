@@ -1,5 +1,6 @@
 use crate::model::chemistry::Volume;
 use crate::model::solutions::Solution;
+use crate::repository::SolutionFertilizers;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::solutions::FertilizersSetItem;
@@ -18,12 +19,14 @@ pub struct FertilizersSetProps {
 pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
     let mut page_index = use_signal(|| 1);
 
-    let fertilizers_set = use_memo(move || {
-        let mut fertilizers_set = props.solution.read().fertilizers_set();
+    let solution_fertilizers = use_memo(move || {
+        let fertilizers = props.solution.read().fertilizers_set.list();
 
-        fertilizers_set.paginate(*page_index.read());
+        let mut solution_fertilizers = SolutionFertilizers::new(fertilizers);
 
-        fertilizers_set
+        solution_fertilizers.paginate(*page_index.read());
+
+        solution_fertilizers
     });
 
     let volume = use_memo(move || props.solution.read().volume());
@@ -51,13 +54,13 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
             }
 
             List {
-                limit: fertilizers_set.read().limit(),
-                empty: fertilizers_set.read().is_empty(),
+                limit: solution_fertilizers.read().limit(),
+                empty: solution_fertilizers.read().is_empty(),
                 stub_text: "Выберите удобрения из списка",
 
-                for fertilizer_weight in fertilizers_set.read().items() {
+                for fertilizer_weight in solution_fertilizers.read().items() {
                     FertilizersSetItem {
-                        key: "{fertilizer_weight.fertilizer.id()}",
+                        key: "{fertilizer_weight.id()}",
                         fertilizer_weight: Signal::new(fertilizer_weight),
                         on_exclude: props.on_exclude,
                     }
@@ -65,9 +68,9 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
             }
 
             Pagination {
-                page_index: fertilizers_set.read().page_index(),
-                limit: fertilizers_set.read().limit(),
-                total: fertilizers_set.read().total(),
+                page_index: solution_fertilizers.read().page_index(),
+                limit: solution_fertilizers.read().limit(),
+                total: solution_fertilizers.read().total(),
                 on_change: move |next_page| {
                     *page_index.write() = next_page;
                 },

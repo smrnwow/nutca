@@ -1,4 +1,5 @@
-use crate::model::fertilizers::{Fertilizer, FertilizerError, SourceType};
+use crate::controller::Validation;
+use crate::model::fertilizers::{Fertilizer, SourceType};
 use crate::model::formulas::Formula;
 use crate::model::labels::{Component, Label, Units};
 use crate::ui::components::fertilizers::{
@@ -12,7 +13,7 @@ use dioxus::prelude::*;
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerEditorProps {
     fertilizer: Memo<Fertilizer>,
-    fertilizer_error: Memo<FertilizerError>,
+    validation: Memo<Validation>,
     source_type: Memo<SourceType>,
     label: Memo<Label>,
     formula: Memo<Formula>,
@@ -42,7 +43,7 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
             Block {
                 FertilizerDetails {
                     fertilizer: props.fertilizer,
-                    fertilizer_error: props.fertilizer_error,
+                    validation: props.validation,
                     on_name_update: props.on_name_update,
                     on_vendor_update: props.on_vendor_update,
                     on_liquid_update: props.on_liquid_update,

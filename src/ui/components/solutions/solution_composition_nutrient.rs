@@ -1,4 +1,4 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::NutrientAmount;
 use crate::model::solutions::NutrientResult;
 use crate::ui::components::layout::Column;
 use crate::ui::components::utils::{Badge, Text, Tooltip};
@@ -30,7 +30,7 @@ fn tooltip_text(nutrient_result: NutrientResult) -> String {
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionCompositionNutrientProps {
     badge: bool,
-    nutrient: Nutrient,
+    nutrient: NutrientAmount,
     nutrient_result: NutrientResult,
 }
 
@@ -54,7 +54,7 @@ pub fn SolutionCompositionNutrient(props: SolutionCompositionNutrientProps) -> E
                 target: rsx! {
                     NutrientValue {
                         state: diff_state,
-                        symbol: props.nutrient.symbol(),
+                        symbol: props.nutrient.nutrient().symbol(),
                         value: props.nutrient.value(),
                     }
                 },
@@ -66,7 +66,7 @@ pub fn SolutionCompositionNutrient(props: SolutionCompositionNutrientProps) -> E
                         Text {
                             size: "x-small",
                             nowrap: true,
-                            {props.nutrient.name()},
+                            {props.nutrient.nutrient().name()},
                         }
 
                         if !props.badge {

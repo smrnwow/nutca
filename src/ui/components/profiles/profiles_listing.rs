@@ -1,4 +1,4 @@
-use crate::model::profiles::ProfilesListing;
+use crate::repository::ProfilesListing;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfilesListingItem;
 use crate::ui::components::utils::icons::SearchIcon;
@@ -9,7 +9,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ProfilesListingProps {
-    profiles_listing: Signal<ProfilesListing>,
+    profiles_listing: Memo<ProfilesListing>,
     on_search: EventHandler<String>,
     on_add: EventHandler<()>,
     on_open: EventHandler<String>,

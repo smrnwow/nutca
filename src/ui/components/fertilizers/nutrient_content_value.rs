@@ -1,17 +1,17 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::NutrientAmount;
 use crate::ui::components::NutrientValue;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct NutrientContentValueProps {
-    nutrient: Nutrient,
+    nutrient: NutrientAmount,
 }
 
 #[component]
 pub fn NutrientContentValue(props: NutrientContentValueProps) -> Element {
     rsx! {
         NutrientValue {
-            symbol: props.nutrient.symbol(),
+            symbol: props.nutrient.nutrient().symbol(),
             value: props.nutrient.value(),
         }
     }

@@ -1,4 +1,4 @@
-use crate::model::chemistry::{Nutrient, Volume};
+use crate::model::chemistry::{NutrientAmount, Volume};
 use crate::model::solutions::{FertilizerWeight, Solution};
 
 pub struct StockSolutionBuilder {
@@ -38,48 +38,52 @@ impl StockSolutionBuilder {
             None => Solution::new(),
         };
 
-        solution.fertilizers().iter().for_each(|fertilizer_weight| {
-            let mut has_calcium = false;
+        solution
+            .fertilizers_set
+            .list()
+            .iter()
+            .for_each(|fertilizer_weight| {
+                let mut has_calcium = false;
 
-            let mut has_sulfur_or_phosphorus = false;
+                let mut has_sulfur_or_phosphorus = false;
 
-            let mut micros_count = 0;
+                let mut micros_count = 0;
 
-            for nutrient in fertilizer_weight.fertilizer.nutrients() {
-                match nutrient {
-                    Nutrient::Calcium(_) => {
-                        has_calcium = true;
+                for nutrient in fertilizer_weight.nutrients.list() {
+                    match nutrient {
+                        NutrientAmount::Calcium(_) => {
+                            has_calcium = true;
+                        }
+
+                        NutrientAmount::Sulfur(_) | NutrientAmount::Phosphorus(_) => {
+                            has_sulfur_or_phosphorus = true;
+                        }
+
+                        NutrientAmount::Iron(_)
+                        | NutrientAmount::Manganese(_)
+                        | NutrientAmount::Copper(_)
+                        | NutrientAmount::Zinc(_)
+                        | NutrientAmount::Boron(_)
+                        | NutrientAmount::Molybdenum(_) => {
+                            micros_count += 1;
+                        }
+
+                        _ => {}
                     }
-
-                    Nutrient::Sulfur(_) | Nutrient::Phosphorus(_) => {
-                        has_sulfur_or_phosphorus = true;
-                    }
-
-                    Nutrient::Iron(_)
-                    | Nutrient::Manganese(_)
-                    | Nutrient::Copper(_)
-                    | Nutrient::Zinc(_)
-                    | Nutrient::Boron(_)
-                    | Nutrient::Molybdenum(_) => {
-                        micros_count += 1;
-                    }
-
-                    _ => {}
                 }
-            }
 
-            if has_calcium && has_sulfur_or_phosphorus {
-                println!("fertilizer contains both calcium and sulfur/phosphorus");
-            }
+                if has_calcium && has_sulfur_or_phosphorus {
+                    println!("fertilizer contains both calcium and sulfur/phosphorus");
+                }
 
-            if has_calcium || (!has_sulfur_or_phosphorus && micros_count < 3) {
-                self.part_a.push(fertilizer_weight.clone());
-            }
+                if has_calcium || (!has_sulfur_or_phosphorus && micros_count < 3) {
+                    self.part_a.push(fertilizer_weight.clone());
+                }
 
-            if has_sulfur_or_phosphorus || micros_count > 3 {
-                self.part_b.push(fertilizer_weight.clone());
-            }
-        });
+                if has_sulfur_or_phosphorus || micros_count > 3 {
+                    self.part_b.push(fertilizer_weight.clone());
+                }
+            });
 
         self.solution = solution;
     }
@@ -100,11 +104,8 @@ impl StockSolutionBuilder {
         self.part_a
             .iter()
             .map(|fertilizer_weight| {
-                let stock_weight = fertilizer_weight.weight
-                    * self.concentration_factor as f64
-                    * self.volume.to_litres();
-
-                FertilizerWeight::new(fertilizer_weight.fertilizer.clone(), stock_weight)
+                let stock_weight = self.concentration_factor as f64 * self.volume.to_litres();
+                fertilizer_weight.multiply(stock_weight)
             })
             .collect()
     }
@@ -113,11 +114,8 @@ impl StockSolutionBuilder {
         self.part_b
             .iter()
             .map(|fertilizer_weight| {
-                let stock_weight = fertilizer_weight.weight
-                    * self.concentration_factor as f64
-                    * self.volume.to_litres();
-
-                FertilizerWeight::new(fertilizer_weight.fertilizer.clone(), stock_weight)
+                let stock_weight = self.concentration_factor as f64 * self.volume.to_litres();
+                fertilizer_weight.multiply(stock_weight)
             })
             .collect()
     }

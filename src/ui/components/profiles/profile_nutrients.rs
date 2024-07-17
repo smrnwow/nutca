@@ -1,4 +1,4 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::NutrientAmount;
 use crate::model::profiles::Profile;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfileForm;
@@ -9,7 +9,7 @@ use dioxus::prelude::*;
 #[derive(Props, PartialEq, Clone)]
 pub struct ProfileNutrientsProps {
     profile: Memo<Profile>,
-    on_nutrient_update: EventHandler<Nutrient>,
+    on_nutrient_update: EventHandler<NutrientAmount>,
 }
 
 #[component]

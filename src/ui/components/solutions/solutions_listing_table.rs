@@ -1,4 +1,4 @@
-use crate::model::solutions::SolutionsListing;
+use crate::repository::SolutionsListing;
 use crate::ui::components::layout::Column;
 use crate::ui::components::solutions::SolutionsListingItem;
 use crate::ui::components::utils::{List, Pagination};
@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionsListingTableProps {
-    solutions_listing: Signal<SolutionsListing>,
+    solutions_listing: Memo<SolutionsListing>,
     on_open: EventHandler<String>,
     on_stock: EventHandler<String>,
     on_delete: EventHandler<String>,

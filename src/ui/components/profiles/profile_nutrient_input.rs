@@ -1,11 +1,11 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::NutrientAmount;
 use crate::ui::components::NutrientValue;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ProfileNutrientInputProps {
-    nutrient: Nutrient,
-    on_update: Option<EventHandler<Nutrient>>,
+    nutrient: NutrientAmount,
+    on_update: Option<EventHandler<NutrientAmount>>,
 }
 
 #[component]
@@ -16,7 +16,7 @@ pub fn ProfileNutrientInput(props: ProfileNutrientInputProps) -> Element {
 
             if let Some(on_update) = props.on_update {
                 NutrientValue {
-                    symbol: props.nutrient.symbol(),
+                    symbol: props.nutrient.nutrient().symbol(),
                     value: props.nutrient.value(),
                     on_change: move |value| {
                         on_update.call(props.nutrient.new(value));
@@ -24,7 +24,7 @@ pub fn ProfileNutrientInput(props: ProfileNutrientInputProps) -> Element {
                 }
             } else {
                 NutrientValue {
-                    symbol: props.nutrient.symbol(),
+                    symbol: props.nutrient.nutrient().symbol(),
                     value: props.nutrient.value(),
                 }
             }

@@ -1,12 +1,12 @@
-use super::NitrogenForms;
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::{NutrientAmount, Nutrients};
+use crate::model::formulas::NitrogenForms;
 use chemp::ChemicalElement;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Formula {
+    pub nutrients: Nutrients,
     formulation: String,
-    nutrients: [Nutrient; 14],
     error: Option<String>,
 }
 
@@ -14,28 +14,9 @@ impl Formula {
     pub fn new(formulation: impl Into<String>) -> Self {
         Self {
             formulation: formulation.into(),
-            nutrients: [
-                Nutrient::Nitrogen(0.0),
-                Nutrient::NitrogenNitrate(0.0),
-                Nutrient::NitrogenAmmonium(0.0),
-                Nutrient::Phosphorus(0.0),
-                Nutrient::Potassium(0.0),
-                Nutrient::Calcium(0.0),
-                Nutrient::Magnesium(0.0),
-                Nutrient::Sulfur(0.0),
-                Nutrient::Iron(0.0),
-                Nutrient::Zinc(0.0),
-                Nutrient::Manganese(0.0),
-                Nutrient::Boron(0.0),
-                Nutrient::Copper(0.0),
-                Nutrient::Molybdenum(0.0),
-            ],
+            nutrients: Nutrients::new(),
             error: None,
         }
-    }
-
-    pub fn nutrients(&self) -> Vec<Nutrient> {
-        Vec::from(self.nutrients)
     }
 
     pub fn formulation(&self) -> String {
@@ -44,10 +25,6 @@ impl Formula {
 
     pub fn error(&self) -> Option<String> {
         self.error.clone()
-    }
-
-    fn set_nutrient(&mut self, nutrient: Nutrient) {
-        self.nutrients[nutrient.index()] = nutrient;
     }
 
     fn set_error(&mut self, error: String) {
@@ -73,21 +50,21 @@ impl From<&str> for Formula {
                     let percent = component.mass_percent() as f64;
 
                     if let Some(nutrient) = match component.chemical_element() {
-                        ChemicalElement::Nitrogen => Some(Nutrient::Nitrogen(percent)),
-                        ChemicalElement::Phosphorus => Some(Nutrient::Phosphorus(percent)),
-                        ChemicalElement::Potassium => Some(Nutrient::Potassium(percent)),
-                        ChemicalElement::Calcium => Some(Nutrient::Calcium(percent)),
-                        ChemicalElement::Magnesium => Some(Nutrient::Magnesium(percent)),
-                        ChemicalElement::Sulfur => Some(Nutrient::Sulfur(percent)),
-                        ChemicalElement::Iron => Some(Nutrient::Iron(percent)),
-                        ChemicalElement::Zinc => Some(Nutrient::Zinc(percent)),
-                        ChemicalElement::Manganese => Some(Nutrient::Manganese(percent)),
-                        ChemicalElement::Boron => Some(Nutrient::Boron(percent)),
-                        ChemicalElement::Copper => Some(Nutrient::Copper(percent)),
-                        ChemicalElement::Molybdenum => Some(Nutrient::Molybdenum(percent)),
+                        ChemicalElement::Nitrogen => Some(NutrientAmount::Nitrogen(percent)),
+                        ChemicalElement::Phosphorus => Some(NutrientAmount::Phosphorus(percent)),
+                        ChemicalElement::Potassium => Some(NutrientAmount::Potassium(percent)),
+                        ChemicalElement::Calcium => Some(NutrientAmount::Calcium(percent)),
+                        ChemicalElement::Magnesium => Some(NutrientAmount::Magnesium(percent)),
+                        ChemicalElement::Sulfur => Some(NutrientAmount::Sulfur(percent)),
+                        ChemicalElement::Iron => Some(NutrientAmount::Iron(percent)),
+                        ChemicalElement::Zinc => Some(NutrientAmount::Zinc(percent)),
+                        ChemicalElement::Manganese => Some(NutrientAmount::Manganese(percent)),
+                        ChemicalElement::Boron => Some(NutrientAmount::Boron(percent)),
+                        ChemicalElement::Copper => Some(NutrientAmount::Copper(percent)),
+                        ChemicalElement::Molybdenum => Some(NutrientAmount::Molybdenum(percent)),
                         _ => None,
                     } {
-                        formula.set_nutrient(nutrient);
+                        formula.nutrients.set(nutrient);
                     }
 
                     if let ChemicalElement::Nitrogen = component.chemical_element() {
@@ -105,7 +82,7 @@ impl From<&str> for Formula {
                     .values(total_nitrogen_percent)
                     .iter()
                     .for_each(|nitrogen_form| {
-                        formula.set_nutrient(*nitrogen_form);
+                        formula.nutrients.set(*nitrogen_form);
                     });
             }
 
@@ -131,6 +108,6 @@ mod tests {
 
         println!("{:#?}", formula);
 
-        println!("{:#?}", formula.nutrients());
+        println!("{:#?}", formula.nutrients);
     }
 }

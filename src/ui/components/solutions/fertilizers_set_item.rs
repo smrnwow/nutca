@@ -20,18 +20,18 @@ pub fn FertilizersSetItem(props: FertilizersSetItemProps) -> Element {
                 },
             },
             on_click: move |_| {
-                props.on_exclude.call(props.fertilizer_weight.read().fertilizer.id());
+                props.on_exclude.call(props.fertilizer_weight.read().id());
             },
 
             Text {
                 size: "x-small",
-                {props.fertilizer_weight.read().fertilizer.name()},
+                {props.fertilizer_weight.read().name()},
             }
 
             Text {
                 size: "x-small",
                 nowrap: true,
-                {props.fertilizer_weight.read().display_amount()},
+                {props.fertilizer_weight.read().amount()},
             }
         }
     }

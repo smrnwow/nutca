@@ -41,27 +41,27 @@ pub fn FertilizerComposition(props: FertilizerCompositionProps) -> Element {
                     gap: "small",
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::Nitrogen(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::Nitrogen],
                     }
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::Phosphorus(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::Phosphorus],
                     }
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::Potassium(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::Potassium],
                     }
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::Calcium(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::Calcium],
                     }
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::Magnesium(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::Magnesium],
                     }
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::Sulfur(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::Sulfur],
                     }
                 }
             }
@@ -78,11 +78,11 @@ pub fn FertilizerComposition(props: FertilizerCompositionProps) -> Element {
                     gap: "small",
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::NitrogenNitrate(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::NitrogenNitrate],
                     }
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::NitrogenAmmonium(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::NitrogenAmmonium],
                     }
                 }
             }
@@ -99,27 +99,27 @@ pub fn FertilizerComposition(props: FertilizerCompositionProps) -> Element {
                     gap: "small",
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::Iron(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::Iron],
                     }
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::Manganese(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::Manganese],
                     }
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::Copper(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::Copper],
                     }
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::Zinc(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::Zinc],
                     }
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::Boron(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::Boron],
                     }
 
                     NutrientContentValue {
-                        nutrient: fertilizer[Nutrient::Molybdenum(0.0)],
+                        nutrient: fertilizer.nutrients[Nutrient::Molybdenum],
                     }
                 }
             }

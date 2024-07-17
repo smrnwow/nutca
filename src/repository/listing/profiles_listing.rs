@@ -1,7 +1,10 @@
 use crate::model::profiles::Profile;
+use crate::repository::Storage;
+use dioxus::prelude::*;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ProfilesListing {
+    storage: Signal<Storage>,
     profiles: Vec<Profile>,
     search_query: String,
     page_index: usize,
@@ -9,8 +12,14 @@ pub struct ProfilesListing {
 }
 
 impl ProfilesListing {
-    pub fn new(profiles: Vec<Profile>) -> Self {
+    pub fn new(storage: Signal<Storage>) -> Self {
+        let profiles = match storage.read().profiles().list() {
+            Ok(profiles) => profiles,
+            Err(_) => vec![],
+        };
+
         Self {
+            storage,
             profiles,
             search_query: String::new(),
             page_index: 1,

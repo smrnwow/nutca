@@ -1,28 +1,16 @@
-use crate::model::fertilizers::FertilizersListing;
-use crate::storage::Storage;
+use crate::controller::fertilizers::Dashboard;
+use crate::repository::Storage;
 use crate::ui::components::fertilizers::FertilizersListing;
 use crate::ui::components::layout::{Page, Section};
-use crate::ui::router::Route;
 use dioxus::prelude::*;
-use dioxus_router::prelude::*;
 
 #[component]
 pub fn FertilizersListingPage() -> Element {
     let storage = consume_context::<Signal<Storage>>();
 
-    let mut fertilizers_listing = use_signal(move || {
-        let listing = storage.read().fertilizers().list();
+    let mut dashboard = use_signal(|| Dashboard::new(storage));
 
-        match listing {
-            Ok(mut listing) => {
-                listing.update_limit(10);
-
-                listing
-            }
-
-            Err(_) => FertilizersListing::new(vec![]),
-        }
-    });
+    let fertilizers_listing = use_memo(move || dashboard.read().listing());
 
     rsx! {
         Page {
@@ -30,25 +18,19 @@ pub fn FertilizersListingPage() -> Element {
                 FertilizersListing {
                     fertilizers_listing,
                     on_search: move |query| {
-                        fertilizers_listing.write().search(query);
+                        dashboard.write().search(query);
                     },
                     on_add: move |_| {
-                        navigator().push(Route::FertilizerAddPage {});
+                        dashboard.write().add();
                     },
                     on_open: move |fertilizer_id| {
-                        navigator().push(Route::FertilizerEditPage {
-                            fertilizer_id
-                        });
+                        dashboard.write().edit(fertilizer_id);
                     },
                     on_delete: move |fertilizer_id| {
-                        storage.read().fertilizers().delete(fertilizer_id).unwrap();
-
-                        if let Ok(listing) = storage.read().fertilizers().list() {
-                            fertilizers_listing.set(listing);
-                        }
+                        dashboard.write().delete(fertilizer_id);
                     },
                     on_paginate: move |next_page| {
-                        fertilizers_listing.write().paginate(next_page);
+                        dashboard.write().paginate(next_page);
                     },
                 }
             }

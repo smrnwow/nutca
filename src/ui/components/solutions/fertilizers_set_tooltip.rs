@@ -1,14 +1,14 @@
-use crate::model::chemistry::Nutrient;
+use crate::model::chemistry::NutrientAmount;
 use crate::model::solutions::FertilizerWeight;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::ArrowLeft;
 use crate::ui::components::utils::{Button, Tag, Text, Tooltip};
 use dioxus::prelude::*;
 
-fn tag_text(nutrient: Nutrient) -> Vec<String> {
+fn tag_text(nutrient: NutrientAmount) -> Vec<String> {
     vec![
-        nutrient.symbol().to_string(),
-        format!("{:.1}PPM", nutrient.value()),
+        nutrient.nutrient().symbol().to_string(),
+        format!("{:.1}PPM", nutrient.value() / 10.),
     ]
 }
 
@@ -19,11 +19,11 @@ pub struct FertilizersSetTooltipProps {
 
 #[component]
 pub fn FertilizersSetTooltip(props: FertilizersSetTooltipProps) -> Element {
-    let macro_nutrients = props.fertilizer_weight.read().macro_nutrients();
+    let macros = props.fertilizer_weight.read().nutrients.macros();
 
-    let nitrogen_forms = props.fertilizer_weight.read().nitrogen_forms();
+    let nitrogen_forms = props.fertilizer_weight.read().nutrients.nitrogen_forms();
 
-    let micro_nutrients = props.fertilizer_weight.read().micro_nutrients();
+    let micros = props.fertilizer_weight.read().nutrients.micros();
 
     rsx! {
         Tooltip {
@@ -57,13 +57,13 @@ pub fn FertilizersSetTooltip(props: FertilizersSetTooltipProps) -> Element {
                     Text {
                         size: "x-small",
                         bold: true,
-                        "Исключить: {props.fertilizer_weight.read().fertilizer.name()}",
+                        "Исключить: {props.fertilizer_weight.read().name()}",
                     }
 
                     Column {
                         gap: "small",
 
-                        if macro_nutrients.len() > 0 {
+                        if macros.len() > 0 {
                             Column {
                                 gap: "xx-small",
 
@@ -75,7 +75,7 @@ pub fn FertilizersSetTooltip(props: FertilizersSetTooltipProps) -> Element {
                                 Row {
                                     gap: "x-small",
                                     wrap: true,
-                                    for nutrient in macro_nutrients {
+                                    for nutrient in macros {
                                         Tag {
                                             multiple_text: tag_text(nutrient),
                                         }
@@ -105,7 +105,7 @@ pub fn FertilizersSetTooltip(props: FertilizersSetTooltipProps) -> Element {
                             }
                         }
 
-                        if micro_nutrients.len() > 0 {
+                        if micros.len() > 0 {
                             Column {
                                 gap: "xx-small",
 
@@ -117,7 +117,7 @@ pub fn FertilizersSetTooltip(props: FertilizersSetTooltipProps) -> Element {
                                 Row {
                                     gap: "x-small",
                                     wrap: true,
-                                    for nutrient in micro_nutrients {
+                                    for nutrient in micros {
                                         Tag {
                                             multiple_text: tag_text(nutrient),
                                         }
