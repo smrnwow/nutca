@@ -1,5 +1,5 @@
-use crate::model::chemistry::{NutrientAmount, Nutrients};
-use crate::model::profiles::Profile;
+use crate::model::chemistry::NutrientAmount;
+use crate::model::profiles::{Profile, ProfileBuilder};
 use crate::repository::{Error, RepositoryError};
 use rusqlite::{params, Connection};
 use std::rc::Rc;
@@ -98,82 +98,74 @@ impl Profiles {
 
     fn seed(&self) -> Result<(), Error> {
         let profiles = vec![
-            Profile::from(
-                "UA CEAC Recipe",
-                Nutrients::from(vec![
-                    NutrientAmount::Nitrogen(189.0),
-                    NutrientAmount::NitrogenNitrate(189.0),
-                    NutrientAmount::NitrogenAmmonium(0.0),
-                    NutrientAmount::Phosphorus(39.0),
-                    NutrientAmount::Potassium(341.0),
-                    NutrientAmount::Calcium(170.0),
-                    NutrientAmount::Magnesium(48.0),
-                    NutrientAmount::Sulfur(150.0),
-                    NutrientAmount::Iron(2.0),
-                    NutrientAmount::Manganese(0.55),
-                    NutrientAmount::Copper(0.05),
-                    NutrientAmount::Zinc(0.33),
-                    NutrientAmount::Boron(0.28),
-                    NutrientAmount::Molybdenum(0.05),
-                ]),
-            ),
-            Profile::from(
-                "Modified Sonneveld`s solution",
-                Nutrients::from(vec![
-                    NutrientAmount::Nitrogen(150.0),
-                    NutrientAmount::NitrogenNitrate(150.0),
-                    NutrientAmount::NitrogenAmmonium(0.0),
-                    NutrientAmount::Phosphorus(31.0),
-                    NutrientAmount::Potassium(210.0),
-                    NutrientAmount::Calcium(90.0),
-                    NutrientAmount::Magnesium(24.0),
-                    NutrientAmount::Sulfur(120.0),
-                    NutrientAmount::Iron(1.0),
-                    NutrientAmount::Manganese(0.25),
-                    NutrientAmount::Copper(0.023),
-                    NutrientAmount::Zinc(0.13),
-                    NutrientAmount::Boron(0.16),
-                    NutrientAmount::Molybdenum(0.024),
-                ]),
-            ),
-            Profile::from(
-                "Hoagland solution",
-                Nutrients::from(vec![
-                    NutrientAmount::Nitrogen(210.0),
-                    NutrientAmount::NitrogenNitrate(210.0),
-                    NutrientAmount::NitrogenAmmonium(0.0),
-                    NutrientAmount::Phosphorus(31.0),
-                    NutrientAmount::Potassium(234.0),
-                    NutrientAmount::Calcium(200.0),
-                    NutrientAmount::Magnesium(50.0),
-                    NutrientAmount::Sulfur(64.0),
-                    NutrientAmount::Iron(3.0),
-                    NutrientAmount::Manganese(0.5),
-                    NutrientAmount::Copper(0.02),
-                    NutrientAmount::Zinc(0.05),
-                    NutrientAmount::Boron(0.5),
-                    NutrientAmount::Molybdenum(0.01),
-                ]),
-            ),
-            Profile::from(
-                "University of Arizona Hydroponic Tomato Formula",
-                Nutrients::from(vec![
-                    NutrientAmount::Nitrogen(210.0),
-                    NutrientAmount::NitrogenNitrate(210.0),
-                    NutrientAmount::NitrogenAmmonium(0.0),
-                    NutrientAmount::Phosphorus(60.0),
-                    NutrientAmount::Potassium(350.0),
-                    NutrientAmount::Calcium(180.0),
-                    NutrientAmount::Magnesium(50.0),
-                    NutrientAmount::Sulfur(70.0),
-                    NutrientAmount::Iron(2.0),
-                    NutrientAmount::Manganese(0.5),
-                    NutrientAmount::Copper(0.05),
-                    NutrientAmount::Zinc(0.1),
-                    NutrientAmount::Boron(0.5),
-                    NutrientAmount::Molybdenum(0.01),
-                ]),
-            ),
+            ProfileBuilder::new()
+                .name("UA CEAC Recipe")
+                .nutrient_requirement(NutrientAmount::Nitrogen(189.0))
+                .nutrient_requirement(NutrientAmount::NitrogenNitrate(189.0))
+                .nutrient_requirement(NutrientAmount::NitrogenAmmonium(0.0))
+                .nutrient_requirement(NutrientAmount::Phosphorus(39.0))
+                .nutrient_requirement(NutrientAmount::Potassium(341.0))
+                .nutrient_requirement(NutrientAmount::Calcium(170.0))
+                .nutrient_requirement(NutrientAmount::Magnesium(48.0))
+                .nutrient_requirement(NutrientAmount::Sulfur(150.0))
+                .nutrient_requirement(NutrientAmount::Iron(2.0))
+                .nutrient_requirement(NutrientAmount::Manganese(0.55))
+                .nutrient_requirement(NutrientAmount::Copper(0.05))
+                .nutrient_requirement(NutrientAmount::Zinc(0.33))
+                .nutrient_requirement(NutrientAmount::Boron(0.28))
+                .nutrient_requirement(NutrientAmount::Molybdenum(0.05))
+                .build(),
+            ProfileBuilder::new()
+                .name("Modified Sonneveld`s solution")
+                .nutrient_requirement(NutrientAmount::Nitrogen(150.0))
+                .nutrient_requirement(NutrientAmount::NitrogenNitrate(150.0))
+                .nutrient_requirement(NutrientAmount::NitrogenAmmonium(0.0))
+                .nutrient_requirement(NutrientAmount::Phosphorus(31.0))
+                .nutrient_requirement(NutrientAmount::Potassium(210.0))
+                .nutrient_requirement(NutrientAmount::Calcium(90.0))
+                .nutrient_requirement(NutrientAmount::Magnesium(24.0))
+                .nutrient_requirement(NutrientAmount::Sulfur(120.0))
+                .nutrient_requirement(NutrientAmount::Iron(1.0))
+                .nutrient_requirement(NutrientAmount::Manganese(0.25))
+                .nutrient_requirement(NutrientAmount::Copper(0.023))
+                .nutrient_requirement(NutrientAmount::Zinc(0.13))
+                .nutrient_requirement(NutrientAmount::Boron(0.16))
+                .nutrient_requirement(NutrientAmount::Molybdenum(0.024))
+                .build(),
+            ProfileBuilder::new()
+                .name("Hoagland solution")
+                .nutrient_requirement(NutrientAmount::Nitrogen(210.0))
+                .nutrient_requirement(NutrientAmount::NitrogenNitrate(210.0))
+                .nutrient_requirement(NutrientAmount::NitrogenAmmonium(0.0))
+                .nutrient_requirement(NutrientAmount::Phosphorus(31.0))
+                .nutrient_requirement(NutrientAmount::Potassium(234.0))
+                .nutrient_requirement(NutrientAmount::Calcium(200.0))
+                .nutrient_requirement(NutrientAmount::Magnesium(50.0))
+                .nutrient_requirement(NutrientAmount::Sulfur(64.0))
+                .nutrient_requirement(NutrientAmount::Iron(3.0))
+                .nutrient_requirement(NutrientAmount::Manganese(0.5))
+                .nutrient_requirement(NutrientAmount::Copper(0.02))
+                .nutrient_requirement(NutrientAmount::Zinc(0.05))
+                .nutrient_requirement(NutrientAmount::Boron(0.5))
+                .nutrient_requirement(NutrientAmount::Molybdenum(0.01))
+                .build(),
+            ProfileBuilder::new()
+                .name("University of Arizona Hydroponic Tomato Formula")
+                .nutrient_requirement(NutrientAmount::Nitrogen(210.0))
+                .nutrient_requirement(NutrientAmount::NitrogenNitrate(210.0))
+                .nutrient_requirement(NutrientAmount::NitrogenAmmonium(0.0))
+                .nutrient_requirement(NutrientAmount::Phosphorus(60.0))
+                .nutrient_requirement(NutrientAmount::Potassium(350.0))
+                .nutrient_requirement(NutrientAmount::Calcium(180.0))
+                .nutrient_requirement(NutrientAmount::Magnesium(50.0))
+                .nutrient_requirement(NutrientAmount::Sulfur(70.0))
+                .nutrient_requirement(NutrientAmount::Iron(2.0))
+                .nutrient_requirement(NutrientAmount::Manganese(0.5))
+                .nutrient_requirement(NutrientAmount::Copper(0.05))
+                .nutrient_requirement(NutrientAmount::Zinc(0.1))
+                .nutrient_requirement(NutrientAmount::Boron(0.5))
+                .nutrient_requirement(NutrientAmount::Molybdenum(0.01))
+                .build(),
         ];
 
         for profile in profiles {

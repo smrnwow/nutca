@@ -28,10 +28,10 @@ pub fn ProfileAddPage() -> Element {
                     profile,
                     validation,
                     on_nutrient_update: move |nutrient_amount| {
-                        profile_builder.write().update_nutrient(nutrient_amount);
+                        profile_builder.write().nutrient_requirement(nutrient_amount);
                     },
                     on_name_update: move |name| {
-                        profile_builder.write().update_name(name);
+                        profile_builder.write().name(name);
                     },
                     on_save: move |_| {
                         profile_editor.write().create();

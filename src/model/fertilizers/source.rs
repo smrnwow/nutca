@@ -1,5 +1,5 @@
-use crate::model::formulas::Formula;
-use crate::model::labels::Label;
+use crate::model::fertilizers::formulas::Formula;
+use crate::model::fertilizers::labels::Label;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]

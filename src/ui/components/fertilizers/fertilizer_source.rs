@@ -1,7 +1,6 @@
-use super::{FertilizerFormula, FertilizerLabel};
-use crate::model::fertilizers::{Fertilizer, SourceType};
-use crate::model::formulas::Formula;
-use crate::model::labels::{Component, Label, Units};
+use crate::model::fertilizers::labels::{Component, Units};
+use crate::model::fertilizers::{Fertilizer, Source, SourceType};
+use crate::ui::components::fertilizers::{FertilizerFormula, FertilizerLabel};
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::{ButtonsGroup, ButtonsGroupButton, Title};
@@ -9,10 +8,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerSourceProps {
-    source_type: Memo<SourceType>,
     fertilizer: Memo<Fertilizer>,
-    label: Memo<Label>,
-    formula: Memo<Formula>,
     on_source_type_update: EventHandler<SourceType>,
     on_label_component_update: EventHandler<Component>,
     on_label_units_update: EventHandler<Units>,
@@ -21,8 +17,6 @@ pub struct FertilizerSourceProps {
 
 #[component]
 pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
-    let source_type = *props.source_type.read();
-
     rsx! {
         Column {
             gap: "medium",
@@ -40,7 +34,7 @@ pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
                 }
 
                 ButtonsGroup {
-                    value: source_type.value(),
+                    value: props.fertilizer.read().source_type().value(),
                     buttons: vec![
                         ButtonsGroupButton {
                             label: SourceType::Label.label(),
@@ -57,21 +51,21 @@ pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
                 }
             }
 
-            match source_type {
-                SourceType::Label => {
+            match props.fertilizer.read().source().clone() {
+                Source::Label(label) => {
                     rsx! {
                         FertilizerLabel {
-                            label: props.label,
+                            label: Signal::new(label),
                             on_label_units_update: props.on_label_units_update,
                             on_label_component_update: props.on_label_component_update,
                         }
                     }
                 }
 
-                SourceType::Formula => {
+                Source::Formula(formula) => {
                     rsx! {
                         FertilizerFormula {
-                            formula: props.formula,
+                            formula: Signal::new(formula),
                             on_formula_update: props.on_formula_update,
                         }
                     }

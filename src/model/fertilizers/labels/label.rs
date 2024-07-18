@@ -1,4 +1,4 @@
-use super::{Component, Units};
+use crate::model::fertilizers::labels::{Component, Units};
 use serde::{Deserialize, Serialize};
 use std::ops::Index;
 
@@ -111,5 +111,11 @@ impl Index<Component> for Label {
 
     fn index(&self, component: Component) -> &Self::Output {
         &self.components[component.index()]
+    }
+}
+
+impl Default for Label {
+    fn default() -> Self {
+        Self::new(Units::Percent)
     }
 }

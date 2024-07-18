@@ -1,5 +1,5 @@
 use crate::model::chemistry::{NutrientAmount, Nutrients};
-use crate::model::formulas::NitrogenForms;
+use crate::model::fertilizers::formulas::NitrogenForms;
 use chemp::ChemicalElement;
 use serde::{Deserialize, Serialize};
 

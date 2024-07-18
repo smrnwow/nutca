@@ -1,10 +1,10 @@
-use crate::model::formulas::Formula;
+use crate::model::fertilizers::formulas::Formula;
 use crate::ui::components::utils::TextField;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerFormulaProps {
-    formula: Memo<Formula>,
+    formula: Signal<Formula>,
     on_formula_update: EventHandler<String>,
 }
 

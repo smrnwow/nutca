@@ -1,4 +1,4 @@
-use crate::model::reference::{Block, Topic, TopicId};
+use crate::controller::reference::{Block, Topic, TopicId};
 use crate::repository::{Error, ReferenceBrowser, RepositoryError};
 use rusqlite::{params, Connection};
 use std::collections::HashMap;

@@ -31,9 +31,7 @@ pub fn ReferenceBadge(props: ReferenceBadgeProps) -> Element {
                         }
 
                         Link {
-                            to: Route::ReferenceArticlePage {
-                                article_id: topic.read().id(),
-                            },
+                            to: Route::ReferenceMainPage {},
                             "Ссылка на справку",
                         }
                     }

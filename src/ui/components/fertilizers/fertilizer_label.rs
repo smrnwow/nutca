@@ -1,4 +1,4 @@
-use crate::model::labels::{Component, Label, Units};
+use crate::model::fertilizers::labels::{Component, Label, Units};
 use crate::ui::components::fertilizers::FertilizerComponentInput;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{Label, Radio};
@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerLabelProps {
-    label: Memo<Label>,
+    label: Signal<Label>,
     on_label_units_update: EventHandler<Units>,
     on_label_component_update: EventHandler<Component>,
 }

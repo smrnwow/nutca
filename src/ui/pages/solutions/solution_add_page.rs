@@ -17,7 +17,7 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
 
     let mut fertilizers_listing = solution_editor.read().fertilizers_listing();
 
-    let mut builder = solution_editor.read().builder();
+    let mut solution_builder = solution_editor.read().builder();
 
     let solution = solution_editor.read().solution();
 
@@ -46,13 +46,13 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
                         solution_editor.write().exclude_fertilizer(fertilizer_id);
                     },
                     on_name_update: move |name| {
-                        builder.write().update_name(name);
+                        solution_builder.write().name(name);
                     },
                     on_profile_nutrient_update: move |nutrient| {
-                        builder.write().update_profile_nutrient(nutrient);
+                        solution_builder.write().nutrient_requirement(nutrient);
                     },
                     on_volume_update: move |volume| {
-                        builder.write().update_volume(volume);
+                        solution_builder.write().volume(volume);
                     },
                     on_profile_search: move |search_query| {
                         profiles_listing.write().search(search_query);

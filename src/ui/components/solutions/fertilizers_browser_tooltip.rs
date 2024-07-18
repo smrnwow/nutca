@@ -19,11 +19,13 @@ pub struct FertilizersBrowserTooltipProps {
 
 #[component]
 pub fn FertilizersBrowserTooltip(props: FertilizersBrowserTooltipProps) -> Element {
-    let macro_nutrients = props.fertilizer.read().nutrients.macros();
+    let nutrients = props.fertilizer.read().nutrients();
 
-    let nitrogen_forms = props.fertilizer.read().nutrients.nitrogen_forms();
+    let macros = nutrients.macros();
 
-    let micro_nutrients = props.fertilizer.read().nutrients.micros();
+    let nitrogen_forms = nutrients.nitrogen_forms();
+
+    let micros = nutrients.micros();
 
     rsx! {
         Tooltip {
@@ -56,7 +58,7 @@ pub fn FertilizersBrowserTooltip(props: FertilizersBrowserTooltipProps) -> Eleme
                     Column {
                         gap: "small",
 
-                        if macro_nutrients.len() > 0 {
+                        if macros.len() > 0 {
                             Column {
                                 gap: "xx-small",
 
@@ -68,7 +70,7 @@ pub fn FertilizersBrowserTooltip(props: FertilizersBrowserTooltipProps) -> Eleme
                                 Row {
                                     gap: "x-small",
                                     wrap: true,
-                                    for nutrient in macro_nutrients {
+                                    for nutrient in macros {
                                         Tag {
                                             multiple_text: tag_text(nutrient),
                                         }
@@ -98,7 +100,7 @@ pub fn FertilizersBrowserTooltip(props: FertilizersBrowserTooltipProps) -> Eleme
                             }
                         }
 
-                        if micro_nutrients.len() > 0 {
+                        if micros.len() > 0 {
                             Column {
                                 gap: "xx-small",
 
@@ -110,7 +112,7 @@ pub fn FertilizersBrowserTooltip(props: FertilizersBrowserTooltipProps) -> Eleme
                                 Row {
                                     gap: "x-small",
                                     wrap: true,
-                                    for nutrient in micro_nutrients {
+                                    for nutrient in micros {
                                         Tag {
                                             multiple_text: tag_text(nutrient),
                                         }

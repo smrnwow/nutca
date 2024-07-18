@@ -4,34 +4,32 @@ use crate::model::Error;
 use uuid::Uuid;
 
 pub struct ProfileBuilder {
-    pub nutrients: Nutrients,
     id: String,
     name: String,
+    nutrients: Nutrients,
 }
 
 impl ProfileBuilder {
     pub fn new() -> Self {
         Self {
-            id: Uuid::new_v4().to_string(),
+            id: String::new(),
             name: String::new(),
             nutrients: Nutrients::new(),
         }
     }
 
-    pub fn from(profile: Profile) -> Self {
-        Self {
-            id: profile.id(),
-            name: profile.name(),
-            nutrients: profile.nutrients(),
-        }
+    pub fn name(&mut self, name: impl ToString) -> &mut Self {
+        self.name = name.to_string();
+        self
     }
 
-    pub fn update_name(&mut self, name: String) {
-        self.name = name;
-    }
-
-    pub fn update_nutrient(&mut self, nutrient_amount: NutrientAmount) {
+    pub fn nutrient_requirement(&mut self, nutrient_amount: NutrientAmount) -> &mut Self {
         self.nutrients.set(nutrient_amount);
+        self
+    }
+
+    pub fn is_saved(&self) -> bool {
+        self.id.len() > 0
     }
 
     pub fn validate(&self) -> Vec<Error> {
@@ -49,10 +47,26 @@ impl ProfileBuilder {
     }
 
     pub fn build(&self) -> Profile {
-        let mut profile = Profile::from(self.name.as_str(), self.nutrients);
+        let id = if self.is_saved() {
+            self.id.clone()
+        } else {
+            Uuid::new_v4().to_string()
+        };
 
-        profile.set_id(self.id.clone());
+        Profile {
+            id,
+            name: self.name.clone(),
+            nutrients: self.nutrients.clone(),
+        }
+    }
+}
 
-        profile
+impl From<Profile> for ProfileBuilder {
+    fn from(profile: Profile) -> Self {
+        Self {
+            id: profile.id(),
+            name: profile.name(),
+            nutrients: profile.nutrients(),
+        }
     }
 }

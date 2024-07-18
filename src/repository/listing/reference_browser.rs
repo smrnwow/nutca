@@ -1,4 +1,4 @@
-use crate::model::reference::Topic;
+use crate::controller::reference::Topic;
 use std::collections::HashMap;
 
 #[derive(Clone, Debug)]

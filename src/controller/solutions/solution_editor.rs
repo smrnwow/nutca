@@ -30,6 +30,8 @@ impl SolutionEditor {
 
         let storage_error = Signal::new(None);
 
+        let solution = Memo::new(move || builder.read().build());
+
         Self {
             is_draft,
             storage,
@@ -42,8 +44,8 @@ impl SolutionEditor {
                     storage_error.read().clone(),
                 );
             }),
-            solution: Memo::new(move || builder.read().build()),
-            profile: Memo::new(move || builder.read().profile()),
+            solution,
+            profile: Memo::new(move || solution.read().profile()),
             fertilizers_listing: Signal::new(FertilizersListing::new(storage)),
             profiles_listing: Signal::new(ProfilesListing::new(storage)),
         }
@@ -59,6 +61,8 @@ impl SolutionEditor {
 
         let storage_error = Signal::new(None);
 
+        let solution = Memo::new(move || builder.read().build());
+
         Self {
             is_draft,
             storage,
@@ -71,8 +75,8 @@ impl SolutionEditor {
                     storage_error.read().clone(),
                 );
             }),
-            solution: Memo::new(move || builder.read().build()),
-            profile: Memo::new(move || builder.read().profile()),
+            solution,
+            profile: Memo::new(move || solution.read().profile()),
             fertilizers_listing: Signal::new(FertilizersListing::new(storage)),
             profiles_listing: Signal::new(ProfilesListing::new(storage)),
         }
@@ -104,7 +108,7 @@ impl SolutionEditor {
 
     pub fn change_profile(&mut self, profile_id: String) {
         let profile = self.profiles_listing.read().find(profile_id);
-        self.builder.write().update_profile(profile);
+        self.builder.write().profile(profile);
     }
 
     pub fn select_fertilizer(&mut self, fertilizer_id: String) {

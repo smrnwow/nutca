@@ -1,75 +1,19 @@
-use crate::model::chemistry::Nutrients;
+use crate::model::chemistry::{Nutrient, NutrientAmount, Nutrients};
+use crate::model::fertilizers::labels::Label;
 use crate::model::fertilizers::{Source, SourceType};
-use crate::model::formulas::Formula;
-use crate::model::labels::{Label, Units};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct Fertilizer {
-    pub nutrients: Nutrients,
-    id: String,
-    name: String,
-    vendor: String,
-    source: Source,
-    liquid: bool,
+    pub(super) id: String,
+    pub(super) name: String,
+    pub(super) vendor: String,
+    pub(super) source: Source,
+    pub(super) liquid: bool,
+    pub(super) nutrients: Nutrients,
 }
 
 impl Fertilizer {
-    pub fn build() -> Self {
-        Self {
-            id: String::new(),
-            name: String::new(),
-            vendor: String::new(),
-            source: Source::Label(Label::new(Units::Percent)),
-            liquid: false,
-            nutrients: Nutrients::new(),
-        }
-    }
-
-    pub fn with_id(mut self, id: String) -> Self {
-        self.id = id;
-
-        self
-    }
-
-    pub fn with_name(mut self, name: String) -> Self {
-        self.name = name;
-
-        self
-    }
-
-    pub fn with_vendor(mut self, vendor: String) -> Self {
-        self.vendor = vendor;
-
-        self
-    }
-
-    pub fn with_label(mut self, label: Label) -> Self {
-        label.components().iter().for_each(|component| {
-            self.nutrients.add(component.nutrient());
-        });
-
-        self.source = Source::Label(label);
-
-        self
-    }
-
-    pub fn with_formula(mut self, formula: Formula) -> Self {
-        formula.nutrients.list().iter().for_each(|nutrient_amount| {
-            self.nutrients.add(*nutrient_amount);
-        });
-
-        self.source = Source::Formula(formula);
-
-        self
-    }
-
-    pub fn with_liquid(mut self, liquid: bool) -> Self {
-        self.liquid = liquid;
-
-        self
-    }
-
     pub fn id(&self) -> String {
         self.id.clone()
     }
@@ -95,5 +39,26 @@ impl Fertilizer {
 
     pub fn liquid(&self) -> bool {
         self.liquid
+    }
+
+    pub fn nutrients(&self) -> Nutrients {
+        self.nutrients
+    }
+
+    pub fn nutrient_amount(&self, nutrient: Nutrient) -> NutrientAmount {
+        self.nutrients[nutrient]
+    }
+}
+
+impl Default for Fertilizer {
+    fn default() -> Self {
+        Self {
+            id: String::new(),
+            name: String::new(),
+            vendor: String::new(),
+            source: Source::Label(Label::default()),
+            liquid: false,
+            nutrients: Nutrients::new(),
+        }
     }
 }

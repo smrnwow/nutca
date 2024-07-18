@@ -1,6 +1,7 @@
+use crate::model::chemistry::Nutrients;
+use crate::model::fertilizers::formulas::Formula;
+use crate::model::fertilizers::labels::{Component, Label, Units};
 use crate::model::fertilizers::{Fertilizer, Source, SourceType};
-use crate::model::formulas::Formula;
-use crate::model::labels::{Component, Label, Units};
 use crate::model::Error;
 use uuid::Uuid;
 
@@ -27,48 +28,53 @@ impl FertilizerBuilder {
         }
     }
 
-    pub fn update_name(&mut self, name: String) {
-        self.name = name;
+    pub fn name(&mut self, name: impl ToString) -> &mut Self {
+        self.name = name.to_string();
+        self
     }
 
-    pub fn update_vendor(&mut self, vendor: String) {
-        self.vendor = vendor;
+    pub fn vendor(&mut self, vendor: impl ToString) -> &mut Self {
+        self.vendor = vendor.to_string();
+        self
     }
 
-    pub fn update_source_type(&mut self, source_type: SourceType) {
+    pub fn source_type(&mut self, source_type: SourceType) -> &mut Self {
         self.source_type = source_type;
+        self
     }
 
-    pub fn update_label_units(&mut self, units: Units) {
+    pub fn label_units(&mut self, units: Units) -> &mut Self {
         self.label.update_units(units);
 
         if let Units::WeightVolume = units {
             self.liquid = true;
         }
+
+        self.source_type = SourceType::Label;
+
+        self
     }
 
-    pub fn update_label_component(&mut self, component: Component) {
+    pub fn label_component(&mut self, component: Component) -> &mut Self {
         self.label.update_component(component);
+
+        self.source_type = SourceType::Label;
+
+        self
     }
 
-    pub fn update_formula(&mut self, formulation: String) {
-        self.formula = Formula::from(formulation);
+    pub fn formula(&mut self, formula: impl ToString) -> &mut Self {
+        self.formula = Formula::from(formula.to_string());
+
+        self.source_type = SourceType::Formula;
+
+        self
     }
 
-    pub fn update_liquid(&mut self, liquid: bool) {
+    pub fn liquid(&mut self, liquid: bool) -> &mut Self {
         self.liquid = liquid;
-    }
 
-    pub fn source_type(&self) -> SourceType {
-        self.source_type
-    }
-
-    pub fn label(&self) -> Label {
-        self.label.clone()
-    }
-
-    pub fn formula(&self) -> Formula {
-        self.formula.clone()
+        self
     }
 
     pub fn validate(&self) -> Vec<Error> {
@@ -86,35 +92,52 @@ impl FertilizerBuilder {
     }
 
     pub fn build(&self) -> Fertilizer {
-        let fertilizer = Fertilizer::build()
-            .with_id(self.id.clone())
-            .with_name(self.name.clone())
-            .with_vendor(self.vendor.clone())
-            .with_liquid(self.liquid);
+        let mut nutrients = Nutrients::new();
 
-        match self.source_type {
-            SourceType::Label => fertilizer.with_label(self.label),
-            SourceType::Formula => fertilizer.with_formula(self.formula.clone()),
+        let composition = match self.source_type {
+            SourceType::Label => {
+                self.label.components().iter().for_each(|component| {
+                    nutrients.add(component.nutrient());
+                });
+
+                Source::Label(self.label)
+            }
+            SourceType::Formula => {
+                self.formula
+                    .nutrients
+                    .list()
+                    .iter()
+                    .for_each(|nutrient_amount| {
+                        nutrients.add(*nutrient_amount);
+                    });
+
+                Source::Formula(self.formula.clone())
+            }
+        };
+
+        Fertilizer {
+            id: self.id.clone(),
+            name: self.name.clone(),
+            vendor: self.vendor.clone(),
+            liquid: self.liquid,
+            source: composition,
+            nutrients,
         }
     }
 }
 
 impl From<Fertilizer> for FertilizerBuilder {
     fn from(fertilizer: Fertilizer) -> Self {
-        let label = {
-            if let Source::Label(label) = fertilizer.source() {
-                label
-            } else {
-                Label::new(Units::Percent)
-            }
+        let label = if let Source::Label(label) = fertilizer.source() {
+            label
+        } else {
+            Label::new(Units::Percent)
         };
 
-        let formula = {
-            if let Source::Formula(formula) = fertilizer.source() {
-                formula
-            } else {
-                Formula::new("")
-            }
+        let formula = if let Source::Formula(formula) = fertilizer.source() {
+            formula
+        } else {
+            Formula::new("")
         };
 
         Self {

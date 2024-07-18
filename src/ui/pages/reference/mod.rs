@@ -1,5 +1,3 @@
-mod reference_article_page;
-mod reference_main_page;
+mod main;
 
-pub use reference_article_page::ReferenceArticlePage;
-pub use reference_main_page::ReferenceMainPage;
+pub use main::ReferenceMainPage;

@@ -20,7 +20,7 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
     let mut page_index = use_signal(|| 1);
 
     let solution_fertilizers = use_memo(move || {
-        let fertilizers = props.solution.read().fertilizers_set.list();
+        let fertilizers = props.solution.read().fertilizers();
 
         let mut solution_fertilizers = SolutionFertilizers::new(fertilizers);
 

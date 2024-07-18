@@ -1,10 +1,8 @@
-use crate::model::fertilizers::Fertilizer;
-use crate::model::formulas::Formula;
-use crate::model::labels::{Component, Label, Units};
+use crate::model::fertilizers::labels::{Component, Units};
+use crate::model::fertilizers::{Fertilizer, FertilizerBuilder};
 use crate::repository::{Error, RepositoryError};
 use rusqlite::{params, Connection};
 use std::rc::Rc;
-use uuid::Uuid;
 
 #[derive(Clone, Debug)]
 pub struct Fertilizers {
@@ -99,95 +97,88 @@ impl Fertilizers {
 
     fn seed(&self) -> Result<(), Error> {
         let fertilizers = vec![
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Кальциевая селитра (3-х водная)"))
-                .with_formula(Formula::from("Ca(NO3)2*3H20")),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Кальциевая селитра (4-х водная)"))
-                .with_formula(Formula::from("Ca(NO3)2*4H20")),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Калиевая селитра"))
-                .with_formula(Formula::from("KNO3")),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Аммиачная селитра"))
-                .with_formula(Formula::from("NH4NO3")),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Сульфат магния"))
-                .with_formula(Formula::from("MgSO4*7H2O")),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Сульфат калия"))
-                .with_formula(Formula::from("K2SO4")),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Монофосфат калия"))
-                .with_formula(Formula::from("KH2PO4")),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Кристалон цветочный"))
-                .with_vendor(String::from("fertika"))
-                .with_label(Label::from(
-                    Units::Percent,
-                    vec![
-                        Component::Nitrogen(19.),
-                        Component::PhosphorPentoxide(6.),
-                        Component::PotassiumOxide(20.),
-                        Component::MagnesiumOxide(3.),
-                        Component::Sulfur(3.),
-                        Component::SulfurTrioxide(7.5),
-                        Component::Iron(0.07),
-                        Component::Manganese(0.04),
-                        Component::Copper(0.01),
-                        Component::Zinc(0.025),
-                        Component::Boron(0.025),
-                        Component::Molybdenum(0.004),
-                    ],
-                )),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Унифлор микро"))
-                .with_label(Label::from(
-                    Units::WeightVolume,
-                    vec![
-                        Component::Magnesium(15000.),
-                        Component::Iron(3200.),
-                        Component::Manganese(1600.),
-                        Component::Boron(1200.),
-                        Component::Zinc(360.),
-                        Component::Copper(320.),
-                        Component::Molybdenum(102.),
-                    ],
-                ))
-                .with_liquid(true),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Хелат железа DTPA"))
-                .with_label(Label::from(Units::Percent, vec![Component::Iron(10.)])),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Сульфат марганца"))
-                .with_formula(Formula::from("MnSO4*H2O")),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Борная кислота"))
-                .with_formula(Formula::from("H3BO3")),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Молибденовая кислота"))
-                .with_formula(Formula::from("Na2MoO4*2H2O")),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Сульфат цинка"))
-                .with_formula(Formula::from("ZnSO4*7H2O")),
-            Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(String::from("Сульфат меди"))
-                .with_formula(Formula::from("CuSO4*5H2O")),
+            FertilizerBuilder::new()
+                .name("Кальциевая селитра (3-х водная)")
+                .formula("Ca(NO3)2*3H20")
+                .build(),
+            FertilizerBuilder::new()
+                .name("Кальциевая селитра (4-х водная)")
+                .formula("Ca(NO3)2*4H20")
+                .build(),
+            FertilizerBuilder::new()
+                .name("Калиевая селитра")
+                .formula("KNO3")
+                .build(),
+            FertilizerBuilder::new()
+                .name("Аммиачная селитра")
+                .formula("NH4NO3")
+                .build(),
+            FertilizerBuilder::new()
+                .name("Сульфат магния")
+                .formula("MgSO4*7H2O")
+                .build(),
+            FertilizerBuilder::new()
+                .name("Сульфат калия")
+                .formula("K2SO4")
+                .build(),
+            FertilizerBuilder::new()
+                .name("Монофосфат калия")
+                .formula("KH2PO4")
+                .build(),
+            FertilizerBuilder::new()
+                .name("Кристалон цветочный")
+                .vendor("fertika")
+                .label_units(Units::Percent)
+                .label_component(Component::Nitrogen(19.))
+                .label_component(Component::PhosphorPentoxide(6.))
+                .label_component(Component::PotassiumOxide(20.))
+                .label_component(Component::MagnesiumOxide(3.))
+                .label_component(Component::Sulfur(3.))
+                .label_component(Component::SulfurTrioxide(7.5))
+                .label_component(Component::Iron(0.07))
+                .label_component(Component::Manganese(0.04))
+                .label_component(Component::Copper(0.01))
+                .label_component(Component::Zinc(0.025))
+                .label_component(Component::Boron(0.025))
+                .label_component(Component::Molybdenum(0.004))
+                .build(),
+            FertilizerBuilder::new()
+                .name("Унифлор микро")
+                .label_units(Units::WeightVolume)
+                .label_component(Component::Magnesium(15000.))
+                .label_component(Component::Iron(3200.))
+                .label_component(Component::Manganese(1600.))
+                .label_component(Component::Boron(1200.))
+                .label_component(Component::Zinc(360.))
+                .label_component(Component::Copper(320.))
+                .label_component(Component::Molybdenum(102.))
+                .liquid(true)
+                .build(),
+            FertilizerBuilder::new()
+                .name("Хелат железа DTPA")
+                .label_units(Units::Percent)
+                .label_component(Component::Iron(10.))
+                .build(),
+            FertilizerBuilder::new()
+                .name("Сульфат марганца")
+                .formula("MnSO4*H2O")
+                .build(),
+            FertilizerBuilder::new()
+                .name("Борная кислота")
+                .formula("H3BO3")
+                .build(),
+            FertilizerBuilder::new()
+                .name("Молибденовая кислота")
+                .formula("Na2MoO4*2H2O")
+                .build(),
+            FertilizerBuilder::new()
+                .name("Сульфат цинка")
+                .formula("ZnSO4*7H2O")
+                .build(),
+            FertilizerBuilder::new()
+                .name("Сульфат меди")
+                .formula("CuSO4*5H2O")
+                .build(),
         ];
 
         for fertilizer in fertilizers {
@@ -195,10 +186,10 @@ impl Fertilizers {
         }
 
         for index in 0..=100 {
-            let fertilizer = Fertilizer::build()
-                .with_id(Uuid::new_v4().to_string())
-                .with_name(format!("Монофосфат калия {}", index))
-                .with_formula(Formula::from("KH2PO4"));
+            let fertilizer = FertilizerBuilder::new()
+                .name(format!("Монофосфат калия {}", index))
+                .formula("KH2PO4")
+                .build();
 
             self.add(fertilizer)?;
         }

@@ -1,4 +1,4 @@
-use crate::model::reference::Block;
+use crate::controller::reference::Block;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]

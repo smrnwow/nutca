@@ -2,14 +2,14 @@ use crate::model::calculation::{Amount, Calculation};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
 
-pub struct Solver {
-    profile: Profile,
+pub struct Solver<'a> {
+    profile: &'a Profile,
     fertilizers: Vec<Fertilizer>,
     redurant_fertilizers: Vec<Fertilizer>,
 }
 
-impl Solver {
-    pub fn new(profile: Profile, fertilizers: Vec<Fertilizer>) -> Self {
+impl<'a> Solver<'a> {
+    pub fn new(profile: &'a Profile, fertilizers: Vec<Fertilizer>) -> Self {
         Self {
             profile,
             fertilizers,
@@ -27,7 +27,7 @@ impl Solver {
         while try_count < 4 {
             let calculation = Calculation::new()
                 .with_fertilizers(self.fertilizers.clone())
-                .with_profile(self.profile.clone());
+                .with_profile(self.profile);
 
             match calculation.solve() {
                 Ok(mut amounts) => {

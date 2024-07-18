@@ -1,4 +1,4 @@
-use crate::model::calculation::{Amount, Error};
+use crate::model::calculation::Amount;
 use crate::model::chemistry::NutrientAmount;
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
@@ -34,7 +34,7 @@ impl Calculation {
         }
     }
 
-    pub fn solve(&self) -> Result<Vec<Amount>, Error> {
+    pub fn solve(&self) -> Result<Vec<Amount>, ()> {
         println!("problem: {}", self.problem);
 
         if let Ok(result) = DualSimplexSolver::default().solve(self.problem.clone()) {
@@ -59,7 +59,7 @@ impl Calculation {
             }
         }
 
-        Err(Error::new("impossible profile".to_string()))
+        Err(())
     }
 
     pub fn with_fertilizers(mut self, fertilizers: Vec<Fertilizer>) -> Self {
@@ -70,7 +70,7 @@ impl Calculation {
         self
     }
 
-    pub fn with_profile(mut self, profile: Profile) -> Self {
+    pub fn with_profile(mut self, profile: &Profile) -> Self {
         profile
             .nutrients()
             .list()
@@ -92,7 +92,7 @@ impl Calculation {
             .add_var(1.0, Bound::Lower(0.0), Some(variable_name))
             .unwrap();
 
-        fertilizer.nutrients.list().iter().for_each(|nutrient| {
+        fertilizer.nutrients().list().iter().for_each(|nutrient| {
             self.coefficients[nutrient.nutrient().index()].push((variable_id, nutrient.value()));
         });
     }

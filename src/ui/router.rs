@@ -3,7 +3,7 @@ use dioxus_router::prelude::*;
 
 use super::pages::fertilizers::{FertilizerAddPage, FertilizerEditPage, FertilizersListingPage};
 use super::pages::profiles::{ProfileAddPage, ProfileEditPage, ProfilesListingPage};
-use super::pages::reference::{ReferenceArticlePage, ReferenceMainPage};
+use super::pages::reference::ReferenceMainPage;
 use super::pages::solutions::{
     SolutionAddPage, SolutionEditPage, SolutionsListingPage, StockSolutionPage,
 };
@@ -15,9 +15,6 @@ pub enum Route {
     #[layout(Layout)]
     #[route("/reference")]
     ReferenceMainPage {},
-
-    #[route("/reference/articles/get/:article_id")]
-    ReferenceArticlePage { article_id: String },
 
     #[route("/solutions")]
     SolutionsListingPage {},

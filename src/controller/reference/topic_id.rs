@@ -1,3 +1,4 @@
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum TopicId {
     Profiles,
     ProfileEditor,

@@ -12,7 +12,7 @@ pub struct StockSolutionBuilder {
 impl StockSolutionBuilder {
     pub fn new() -> Self {
         Self {
-            solution: Solution::new(),
+            solution: Solution::default(),
             part_a: Vec::new(),
             part_b: Vec::new(),
             concentration_factor: 100,
@@ -35,7 +35,7 @@ impl StockSolutionBuilder {
 
         let solution = match solution {
             Some(solution) => solution,
-            None => Solution::new(),
+            None => Solution::default(),
         };
 
         solution

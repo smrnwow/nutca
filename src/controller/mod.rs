@@ -1,6 +1,7 @@
 mod error;
 pub mod fertilizers;
 pub mod profiles;
+pub mod reference;
 pub mod solutions;
 mod toaster;
 mod validation;

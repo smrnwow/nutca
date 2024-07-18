@@ -16,7 +16,7 @@ pub struct FertilizerWeight {
 impl FertilizerWeight {
     pub fn new(fertilizer: Fertilizer, weight: f64) -> Self {
         Self {
-            nutrients: fertilizer.nutrients.multiply(weight),
+            nutrients: fertilizer.nutrients().multiply(weight),
             id: fertilizer.id(),
             name: fertilizer.name(),
             liquid: fertilizer.liquid(),

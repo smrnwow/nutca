@@ -1,64 +1,19 @@
-use crate::model::chemistry::{Nutrient, Nutrients, Volume};
-use crate::model::profiles::Profile;
-use crate::model::solutions::{FertilizersSet, NutrientResult};
+use crate::model::chemistry::{Nutrient, NutrientAmount, Nutrients, Volume};
+use crate::model::profiles::{Profile, ProfileBuilder};
+use crate::model::solutions::{FertilizerWeight, FertilizersSet, NutrientResult};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Solution {
-    pub nutrients: Nutrients,
-    pub fertilizers_set: FertilizersSet,
-    id: String,
-    name: String,
-    profile: Profile,
-    volume: Volume,
+    pub(super) id: String,
+    pub(super) name: String,
+    pub(super) profile: Profile,
+    pub(super) volume: Volume,
+    pub(super) fertilizers_set: FertilizersSet,
+    pub(super) nutrients: Nutrients,
 }
 
 impl Solution {
-    pub fn new() -> Self {
-        Self {
-            id: String::new(),
-            name: String::new(),
-            profile: Profile::new(),
-            nutrients: Nutrients::new(),
-            volume: Volume::default(),
-            fertilizers_set: FertilizersSet::new(),
-        }
-    }
-
-    pub fn with_id(mut self, id: String) -> Self {
-        self.id = id;
-        self
-    }
-
-    pub fn with_name(mut self, name: String) -> Self {
-        self.name = name;
-        self
-    }
-
-    pub fn with_volume(mut self, volume: Volume) -> Self {
-        self.volume = volume;
-        self
-    }
-
-    pub fn with_fertilizers_set(mut self, fertilizers_set: FertilizersSet) -> Self {
-        self.fertilizers_set = fertilizers_set;
-
-        self.fertilizers_set
-            .list()
-            .iter()
-            .for_each(|fertilizer_weight| {
-                fertilizer_weight
-                    .nutrients
-                    .list()
-                    .iter()
-                    .for_each(|nutrient_amount| {
-                        self.nutrients.add(*nutrient_amount);
-                    });
-            });
-
-        self
-    }
-
     pub fn id(&self) -> String {
         self.id.clone()
     }
@@ -71,22 +26,24 @@ impl Solution {
         self.profile.clone()
     }
 
-    pub fn is_empty(&self) -> bool {
-        self.fertilizers_set.is_empty()
+    pub fn fertilizers(&self) -> Vec<FertilizerWeight> {
+        self.fertilizers_set.list()
     }
 
     pub fn volume(&self) -> Volume {
         self.volume
     }
 
-    pub fn nutrient_result(&self, nutrient: Nutrient) -> NutrientResult {
-        let required_amount = self.profile.nutrients[nutrient].value();
+    pub fn nutrient_value(&self, nutrient: Nutrient) -> NutrientAmount {
+        self.nutrients[nutrient]
+    }
 
-        let result_amount = self.nutrients[nutrient].value();
+    pub fn nutrient_diff(&self, nutrient: Nutrient) -> NutrientResult {
+        let nutrient_value = self.nutrient_value(nutrient).value();
 
         NutrientResult::new(
-            required_amount,
-            format!("{:.3}", result_amount).parse().unwrap(),
+            self.profile.nutrient_requirement(nutrient).value(),
+            format!("{:.3}", nutrient_value).parse().unwrap(),
         )
     }
 
@@ -100,17 +57,34 @@ impl Solution {
 
         (total_ppms / 1000.) * 0.7
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.fertilizers_set.is_empty()
+    }
 }
 
 impl From<Profile> for Solution {
     fn from(profile: Profile) -> Self {
         Self {
-            nutrients: Nutrients::new(),
-            fertilizers_set: FertilizersSet::new(),
             id: String::new(),
             name: String::new(),
             profile,
+            nutrients: Nutrients::new(),
             volume: Volume::default(),
+            fertilizers_set: FertilizersSet::new(),
+        }
+    }
+}
+
+impl Default for Solution {
+    fn default() -> Self {
+        Self {
+            id: String::new(),
+            name: String::new(),
+            profile: ProfileBuilder::new().build(),
+            nutrients: Nutrients::new(),
+            volume: Volume::default(),
+            fertilizers_set: FertilizersSet::new(),
         }
     }
 }

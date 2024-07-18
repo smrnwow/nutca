@@ -1,7 +1,7 @@
 use crate::model::calculation::Solver;
-use crate::model::chemistry::{NutrientAmount, Volume};
+use crate::model::chemistry::{NutrientAmount, Nutrients, Volume};
 use crate::model::fertilizers::Fertilizer;
-use crate::model::profiles::Profile;
+use crate::model::profiles::{Profile, ProfileBuilder};
 use crate::model::solutions::{FertilizersSet, Solution};
 use crate::model::Error;
 use uuid::Uuid;
@@ -9,7 +9,7 @@ use uuid::Uuid;
 pub struct SolutionBuilder {
     id: String,
     name: String,
-    profile: Profile,
+    profile_builder: ProfileBuilder,
     fertilizers: Vec<Fertilizer>,
     volume: Volume,
 }
@@ -19,50 +19,58 @@ impl SolutionBuilder {
         Self {
             id: Uuid::new_v4().to_string(),
             name: String::new(),
-            profile: Profile::new(),
+            profile_builder: ProfileBuilder::new(),
             fertilizers: Vec::new(),
             volume: Volume::default(),
         }
     }
 
-    pub fn update_name(&mut self, name: String) {
+    pub fn name(&mut self, name: String) -> &mut Self {
         self.name = name;
+
+        self
     }
 
-    pub fn update_volume(&mut self, volume: Volume) {
+    pub fn volume(&mut self, volume: Volume) -> &mut Self {
         self.volume = volume;
+
+        self
     }
 
-    pub fn update_profile(&mut self, profile: Option<Profile>) {
+    pub fn profile(&mut self, profile: Option<Profile>) -> &mut Self {
         match profile {
-            Some(profile) => self.profile = profile,
-            None => self.profile = Profile::new(),
-        }
+            Some(profile) => self.profile_builder = ProfileBuilder::from(profile),
+            None => self.profile_builder = ProfileBuilder::new(),
+        };
+
+        self
     }
 
-    pub fn update_profile_nutrient(&mut self, nutrient: NutrientAmount) {
-        if self.profile.id().len() > 0 {
-            self.profile = Profile::from_another(self.profile.clone());
+    pub fn nutrient_requirement(&mut self, nutrient_amount: NutrientAmount) -> &mut Self {
+        if self.profile_builder.is_saved() {
+            self.profile_builder = ProfileBuilder::from(self.profile_builder.build());
         }
 
-        self.profile.nutrients.set(nutrient);
+        self.profile_builder.nutrient_requirement(nutrient_amount);
+
+        self
     }
 
-    pub fn add_fertilizer(&mut self, fertilizer: Fertilizer) {
+    pub fn add_fertilizer(&mut self, fertilizer: Fertilizer) -> &mut Self {
         self.fertilizers.push(fertilizer);
+
+        self
     }
 
-    pub fn remove_fertilizer(&mut self, fertilizer_id: String) {
+    pub fn remove_fertilizer(&mut self, fertilizer_id: String) -> &mut Self {
         self.fertilizers = self
             .fertilizers
             .iter()
             .filter(|fertilizer| fertilizer.id() != fertilizer_id)
             .map(|fertilizer| fertilizer.clone())
             .collect();
-    }
 
-    pub fn profile(&self) -> Profile {
-        self.profile.clone()
+        self
     }
 
     pub fn validate(&self) -> Vec<Error> {
@@ -80,13 +88,32 @@ impl SolutionBuilder {
     }
 
     pub fn build(&self) -> Solution {
-        let amounts = Solver::new(self.profile.clone(), self.fertilizers.clone()).solve();
+        let profile = self.profile_builder.build();
 
-        Solution::from(self.profile.clone())
-            .with_fertilizers_set(FertilizersSet::from(amounts))
-            .with_id(self.id.clone())
-            .with_name(self.name.clone())
-            .with_volume(self.volume)
+        let amounts = Solver::new(&profile, self.fertilizers.clone()).solve();
+
+        let fertilizers_set = FertilizersSet::from(amounts);
+
+        let mut nutrients = Nutrients::new();
+
+        fertilizers_set.list().iter().for_each(|fertilizer_weight| {
+            fertilizer_weight
+                .nutrients
+                .list()
+                .iter()
+                .for_each(|nutrient_amount| {
+                    nutrients.add(*nutrient_amount);
+                });
+        });
+
+        Solution {
+            id: self.id.clone(),
+            name: self.name.clone(),
+            profile,
+            volume: self.volume,
+            fertilizers_set,
+            nutrients,
+        }
     }
 }
 
@@ -95,7 +122,7 @@ impl From<Solution> for SolutionBuilder {
         Self {
             id: solution.id(),
             name: solution.name(),
-            profile: solution.profile(),
+            profile_builder: ProfileBuilder::from(solution.profile()),
             fertilizers: solution.fertilizers_set.fertilizers(),
             volume: Volume::default(),
         }
@@ -107,7 +134,7 @@ impl From<Profile> for SolutionBuilder {
         Self {
             id: Uuid::new_v4().to_string(),
             name: String::new(),
-            profile,
+            profile_builder: ProfileBuilder::from(profile),
             fertilizers: Vec::new(),
             volume: Volume::default(),
         }
