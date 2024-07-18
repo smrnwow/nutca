@@ -1,6 +1,6 @@
 use super::router::Route;
 use crate::controller::Toaster;
-use crate::repository::{ArticlesBrowser, Storage};
+use crate::repository::{ReferenceBrowser, Storage};
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
@@ -12,9 +12,9 @@ pub fn App() -> Element {
 
     let storage = use_context::<Signal<Storage>>();
 
-    use_context_provider(|| match storage.read().articles().browse() {
+    use_context_provider(|| match storage.read().reference().browse() {
         Ok(browser) => Signal::new(browser),
-        Err(_) => Signal::new(ArticlesBrowser::empty()),
+        Err(_) => Signal::new(ReferenceBrowser::empty()),
     });
 
     rsx! {

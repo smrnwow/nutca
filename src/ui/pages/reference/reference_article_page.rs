@@ -1,4 +1,4 @@
-use crate::model::reference::Article;
+use crate::model::reference::Topic;
 use crate::repository::Storage;
 use crate::ui::components::layout::{Column, Page, Section};
 use crate::ui::components::utils::{Block, Card, Divider, Text, Title};
@@ -8,9 +8,9 @@ use dioxus::prelude::*;
 pub fn ReferenceArticlePage(article_id: String) -> Element {
     let storage = consume_context::<Signal<Storage>>();
 
-    let article = use_signal(|| match storage.read().articles().get(article_id) {
-        Ok(article) => article,
-        Err(_) => Article::new(),
+    let topic = use_signal(|| match storage.read().reference().get(article_id) {
+        Ok(topic) => topic,
+        Err(_) => Topic::new(),
     });
 
     rsx! {
@@ -31,12 +31,12 @@ pub fn ReferenceArticlePage(article_id: String) -> Element {
 
                             Title {
                                 size: "small",
-                                {article.read().title()},
+                                {topic.read().title()},
                             }
 
                             Text {
                                 size: "x-small",
-                                {article.read().text()},
+                                {topic.read().text()},
                             }
                         }
                     }

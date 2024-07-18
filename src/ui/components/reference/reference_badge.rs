@@ -1,4 +1,4 @@
-use crate::repository::ArticlesBrowser;
+use crate::repository::ReferenceBrowser;
 use crate::ui::components::layout::Column;
 use crate::ui::components::reference::ReferenceTip;
 use crate::ui::components::utils::Title;
@@ -13,9 +13,9 @@ pub struct ReferenceBadgeProps {
 
 #[component]
 pub fn ReferenceBadge(props: ReferenceBadgeProps) -> Element {
-    let reference_browser = consume_context::<Signal<ArticlesBrowser>>();
+    let reference_browser = consume_context::<Signal<ReferenceBrowser>>();
 
-    let article = use_signal(|| reference_browser.read().summary(&props.article_id));
+    let topic = use_signal(|| reference_browser.read().summary(&props.article_id));
 
     rsx! {
         div {
@@ -27,12 +27,12 @@ pub fn ReferenceBadge(props: ReferenceBadgeProps) -> Element {
                     Column {
                         Title {
                             size: "x-small",
-                            {article.read().title()},
+                            {topic.read().title()},
                         }
 
                         Link {
                             to: Route::ReferenceArticlePage {
-                                article_id: article.read().id(),
+                                article_id: topic.read().id(),
                             },
                             "Ссылка на справку",
                         }
