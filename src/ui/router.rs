@@ -1,11 +1,11 @@
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
-use super::pages::fertilizers::{FertilizerAddPage, FertilizerEditPage, FertilizersListingPage};
-use super::pages::profiles::{ProfileAddPage, ProfileEditPage, ProfilesListingPage};
+use super::pages::fertilizers::{FertilizerAddPage, FertilizerEditPage, FertilizersMainPage};
+use super::pages::profiles::{ProfileAddPage, ProfileEditPage, ProfilesMainPage};
 use super::pages::reference::ReferenceMainPage;
 use super::pages::solutions::{
-    SolutionAddPage, SolutionEditPage, SolutionsListingPage, StockSolutionPage,
+    SolutionAddPage, SolutionEditPage, SolutionsMainPage, StockSolutionPage,
 };
 use super::Layout;
 
@@ -17,7 +17,7 @@ pub enum Route {
     ReferenceMainPage {},
 
     #[route("/solutions")]
-    SolutionsListingPage {},
+    SolutionsMainPage {},
 
     #[route("/solutions/add?:profile_id")]
     SolutionAddPage { profile_id: String },
@@ -29,7 +29,7 @@ pub enum Route {
     StockSolutionPage { solution_id: String },
 
     #[route("/profiles")]
-    ProfilesListingPage {},
+    ProfilesMainPage {},
 
     #[route("/profiles/add")]
     ProfileAddPage {},
@@ -38,7 +38,7 @@ pub enum Route {
     ProfileEditPage { profile_id: String },
 
     #[route("/fertilizers")]
-    FertilizersListingPage {},
+    FertilizersMainPage {},
 
     #[route("/fertilizers/add")]
     FertilizerAddPage {},

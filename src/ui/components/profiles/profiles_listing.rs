@@ -1,6 +1,8 @@
+use crate::controller::reference::TopicId;
 use crate::repository::ProfilesListing;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfilesListingItem;
+use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::icons::SearchIcon;
 use crate::ui::components::utils::{
     Block, Button, Card, Divider, List, Pagination, TextField, Title,
@@ -25,8 +27,13 @@ pub fn ProfilesListing(props: ProfilesListingProps) -> Element {
     rsx! {
         Card {
             Block {
-                Title {
-                    "Список профилей питания",
+                Row {
+                    Title {
+                        {TopicId::ProfilesDashboard.title()},
+                        ReferenceBadge {
+                            topic_id: TopicId::ProfilesDashboard,
+                        },
+                    }
                 }
             }
 

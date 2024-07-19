@@ -139,7 +139,7 @@ impl SolutionEditor {
 
             match result {
                 Ok(_) => {
-                    navigator().push(Route::SolutionsListingPage {});
+                    navigator().push(Route::SolutionsMainPage {});
                 }
                 Err(error) => {
                     self.storage_error
@@ -161,7 +161,7 @@ impl SolutionEditor {
 
             match result {
                 Ok(_) => {
-                    navigator().push(Route::SolutionsListingPage {});
+                    navigator().push(Route::SolutionsMainPage {});
                 }
                 Err(error) => {
                     self.storage_error

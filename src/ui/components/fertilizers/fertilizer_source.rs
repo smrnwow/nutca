@@ -2,7 +2,6 @@ use crate::model::fertilizers::labels::{Component, Units};
 use crate::model::fertilizers::{Fertilizer, Source, SourceType};
 use crate::ui::components::fertilizers::{FertilizerFormula, FertilizerLabel};
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::{ButtonsGroup, ButtonsGroupButton, Title};
 use dioxus::prelude::*;
 
@@ -28,9 +27,6 @@ pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
                 Title {
                     size: "small",
                     "Состав",
-                    ReferenceBadge {
-                        article_id: "fertilizer-editor-composition-source",
-                    },
                 }
 
                 ButtonsGroup {

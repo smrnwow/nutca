@@ -90,7 +90,7 @@ impl ProfileEditor {
 
             match result {
                 Ok(_) => {
-                    navigator().push(Route::ProfilesListingPage {});
+                    navigator().push(Route::ProfilesMainPage {});
                 }
                 Err(error) => {
                     self.storage_error
@@ -112,7 +112,7 @@ impl ProfileEditor {
 
             match result {
                 Ok(_) => {
-                    navigator().push(Route::ProfilesListingPage {});
+                    navigator().push(Route::ProfilesMainPage {});
                 }
                 Err(error) => {
                     self.storage_error
@@ -123,6 +123,6 @@ impl ProfileEditor {
     }
 
     pub fn back(&self) {
-        navigator().push(Route::ProfilesListingPage {});
+        navigator().push(Route::ProfilesMainPage {});
     }
 }

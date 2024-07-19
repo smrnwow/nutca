@@ -2,7 +2,6 @@ use crate::model::chemistry::NutrientAmount;
 use crate::model::profiles::Profile;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfileForm;
-use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::Title;
 use dioxus::prelude::*;
 
@@ -22,9 +21,6 @@ pub fn ProfileNutrients(props: ProfileNutrientsProps) -> Element {
                 Title {
                     size: "small",
                     "Питательные элементы",
-                    ReferenceBadge {
-                        article_id: "profile-editor-nutrients",
-                    },
                 }
             }
 

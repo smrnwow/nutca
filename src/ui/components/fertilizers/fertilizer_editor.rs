@@ -1,3 +1,4 @@
+use crate::controller::reference::TopicId;
 use crate::controller::Validation;
 use crate::model::fertilizers::labels::{Component, Units};
 use crate::model::fertilizers::{Fertilizer, SourceType};
@@ -5,7 +6,7 @@ use crate::ui::components::fertilizers::{
     FertilizerComposition, FertilizerDetails, FertilizerSource,
 };
 use crate::ui::components::layout::Row;
-use crate::ui::components::reference::ReferenceSubject;
+use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::{Block, Button, Card, Divider, Title};
 use dioxus::prelude::*;
 
@@ -29,8 +30,13 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
     rsx! {
         Card {
             Block {
-                Title {
-                    "Редактор удобрения",
+                Row {
+                    Title {
+                        {TopicId::FertilizerEditor.title()},
+                        ReferenceBadge {
+                            topic_id: TopicId::FertilizerEditor,
+                        },
+                    }
                 }
             }
 
@@ -48,25 +54,21 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
 
             Divider {}
 
-            ReferenceSubject {
-                Block {
-                    FertilizerSource {
-                        fertilizer: props.fertilizer,
-                        on_source_type_update: props.on_source_type_update,
-                        on_label_units_update: props.on_label_units_update,
-                        on_label_component_update: props.on_label_component_update,
-                        on_formula_update: props.on_formula_update,
-                    }
+            Block {
+                FertilizerSource {
+                    fertilizer: props.fertilizer,
+                    on_source_type_update: props.on_source_type_update,
+                    on_label_units_update: props.on_label_units_update,
+                    on_label_component_update: props.on_label_component_update,
+                    on_formula_update: props.on_formula_update,
                 }
             }
 
             Divider {}
 
-            ReferenceSubject {
-                Block {
-                    FertilizerComposition {
-                        fertilizer: props.fertilizer
-                    }
+            Block {
+                FertilizerComposition {
+                    fertilizer: props.fertilizer
                 }
             }
 

@@ -1,22 +1,36 @@
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum TopicId {
-    Profiles,
+    ProfilesDashboard,
     ProfileEditor,
-    Fertilizers,
+    FertilizersDashboard,
     FertilizerEditor,
-    Solutions,
+    SolutionsDashboard,
     NutrientSolutionEditor,
     StockSolutionEditor,
+}
+
+impl TopicId {
+    pub fn title(&self) -> String {
+        match self {
+            Self::ProfilesDashboard => String::from("Профили питания"),
+            Self::ProfileEditor => String::from("Редактор профиля питания"),
+            Self::FertilizersDashboard => String::from("Удобрения"),
+            Self::FertilizerEditor => String::from("Редактор удобрения"),
+            Self::SolutionsDashboard => String::from("Растворы"),
+            Self::NutrientSolutionEditor => String::from("Редактор питательного раствора"),
+            Self::StockSolutionEditor => String::from("Редактор рабочего раствора"),
+        }
+    }
 }
 
 impl ToString for TopicId {
     fn to_string(&self) -> String {
         match self {
-            Self::Profiles => String::from("profiles"),
+            Self::ProfilesDashboard => String::from("profiles-dashboard"),
             Self::ProfileEditor => String::from("profile-editor"),
-            Self::Fertilizers => String::from("fertilizers"),
+            Self::FertilizersDashboard => String::from("fertilizers-dashboard"),
             Self::FertilizerEditor => String::from("fertilizer-editor"),
-            Self::Solutions => String::from("solutions"),
+            Self::SolutionsDashboard => String::from("solutions-dashboard"),
             Self::NutrientSolutionEditor => String::from("nutrient-solution-editor"),
             Self::StockSolutionEditor => String::from("stock-solution-editor"),
         }

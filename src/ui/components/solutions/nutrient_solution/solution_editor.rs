@@ -1,11 +1,12 @@
+use super::{FertilizersBrowser, FertilizersSet, SolutionProfile};
+use crate::controller::reference::TopicId;
 use crate::controller::Validation;
 use crate::model::chemistry::{NutrientAmount, Volume};
 use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
 use crate::repository::{FertilizersListing, ProfilesListing};
 use crate::ui::components::layout::Row;
-use crate::ui::components::reference::ReferenceSubject;
-use crate::ui::components::solutions::{FertilizersBrowser, FertilizersSet, SolutionProfile};
+use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
 use dioxus::prelude::*;
 
@@ -34,11 +35,11 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
         Card {
             Block {
                 Row {
-                    gap: "x-small",
-                    vertical: "center",
-
                     Title {
-                        "Редактор раствора",
+                        {TopicId::NutrientSolutionEditor.title()},
+                        ReferenceBadge {
+                            topic_id: TopicId::NutrientSolutionEditor,
+                        },
                     }
                 }
             }
@@ -69,21 +70,17 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
 
             Block {
                 Row {
-                    ReferenceSubject {
-                        FertilizersBrowser {
-                            fertilizers_listing: props.fertilizers_listing,
-                            on_select: props.on_fertilizer_select,
-                            on_search: props.on_fertilizer_search,
-                            on_paginate: props.on_fertilizers_paginate,
-                        }
+                    FertilizersBrowser {
+                        fertilizers_listing: props.fertilizers_listing,
+                        on_select: props.on_fertilizer_select,
+                        on_search: props.on_fertilizer_search,
+                        on_paginate: props.on_fertilizers_paginate,
                     }
 
-                    ReferenceSubject {
-                        FertilizersSet {
-                            solution: props.solution,
-                            on_exclude: props.on_fertilizer_exclude,
-                            on_volume_update: props.on_volume_update,
-                        }
+                    FertilizersSet {
+                        solution: props.solution,
+                        on_exclude: props.on_fertilizer_exclude,
+                        on_volume_update: props.on_volume_update,
                     }
                 }
             }

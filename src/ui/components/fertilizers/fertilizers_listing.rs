@@ -1,6 +1,8 @@
+use crate::controller::reference::TopicId;
 use crate::repository::FertilizersListing;
 use crate::ui::components::fertilizers::FertilizersListingItem;
 use crate::ui::components::layout::{Column, Row};
+use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::icons::SearchIcon;
 use crate::ui::components::utils::{
     Block, Button, Card, Divider, List, Pagination, TextField, Title,
@@ -24,8 +26,13 @@ pub fn FertilizersListing(props: FertilizersListingProps) -> Element {
     rsx! {
         Card {
             Block {
-                Title {
-                    "Список удобрений",
+                Row {
+                    Title {
+                        {TopicId::FertilizersDashboard.title()},
+                        ReferenceBadge {
+                            topic_id: TopicId::FertilizersDashboard,
+                        },
+                    }
                 }
             }
 

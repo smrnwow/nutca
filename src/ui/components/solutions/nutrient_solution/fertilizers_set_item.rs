@@ -1,5 +1,5 @@
+use super::FertilizersSetTooltip;
 use crate::model::solutions::FertilizerWeight;
-use crate::ui::components::solutions::FertilizersSetTooltip;
 use crate::ui::components::utils::{QuickAction, Text};
 use dioxus::prelude::*;
 

@@ -1,4 +1,4 @@
-use crate::controller::reference::{Block, Topic, TopicId};
+use crate::controller::reference::{Topic, TopicId};
 use crate::repository::{Error, ReferenceBrowser, RepositoryError};
 use rusqlite::{params, Connection};
 use std::collections::HashMap;
@@ -98,61 +98,33 @@ impl Reference {
     fn seed(&self) -> Result<(), Error> {
         let topics = vec![
             Topic::new()
-                .with_id(TopicId::Profiles)
+                .with_id(TopicId::ProfilesDashboard)
                 .with_title("Профили питания")
-                .with_block(Block::new().with_title("Список профилей питания"))
-                .with_block(Block::new().with_title("Поиск профиля питания"))
-                .with_block(Block::new().with_title("Добавление профиля питания"))
-                .with_block(Block::new().with_title("Расчет по профилю"))
-                .with_block(Block::new().with_title("Удаление профиля питания"))
-                .build(),
+                .with_text(""),
             Topic::new()
                 .with_id(TopicId::ProfileEditor)
                 .with_title("Редактор профиля питания")
-                .with_block(Block::new().with_title("Ввод питательных элементов"))
-                .build(),
+                .with_text(""),
             Topic::new()
-                .with_id(TopicId::Fertilizers)
+                .with_id(TopicId::FertilizersDashboard)
                 .with_title("Удобрения")
-                .with_block(Block::new().with_title("Поиск удобрения"))
-                .with_block(Block::new().with_title("Добавление удобрения"))
-                .with_block(Block::new().with_title("Удаление удобрения"))
-                .build(),
+                .with_text(""),
             Topic::new()
                 .with_id(TopicId::FertilizerEditor)
                 .with_title("Редактор удобрения")
-                .with_block(Block::new().with_title("Ввод названия"))
-                .with_block(Block::new().with_title("Ввод производителя"))
-                .with_block(Block::new().with_title("Ввод формы удобрения"))
-                .with_block(Block::new().with_title("Ввод состава с этикетки"))
-                .with_block(Block::new().with_title("Ввод состава по формуле"))
-                .with_block(Block::new().with_title("Вывод питательных веществ в составе"))
-                .build(),
+                .with_text(""),
             Topic::new()
-                .with_id(TopicId::Solutions)
+                .with_id(TopicId::SolutionsDashboard)
                 .with_title("Растворы")
-                .with_block(Block::new().with_title("Поиск раствора"))
-                .with_block(Block::new().with_title("Список растворов"))
-                .with_block(Block::new().with_title("Добавление питательного раствора"))
-                .with_block(Block::new().with_title("Расчет рабочего"))
-                .with_block(Block::new().with_title("Удаление питательного раствора"))
-                .build(),
+                .with_text(""),
             Topic::new()
                 .with_id(TopicId::NutrientSolutionEditor)
                 .with_title("Редактор питательного раствора")
-                .with_block(Block::new().with_title("Ввод профиля питания"))
-                .with_block(Block::new().with_title("Выбор удобрений"))
-                .with_block(Block::new().with_title("Используемые удобрения"))
-                .build(),
+                .with_text(""),
             Topic::new()
                 .with_id(TopicId::StockSolutionEditor)
                 .with_title("Редактор рабочего раствора")
-                .with_block(Block::new().with_title("Выбор раствора"))
-                .with_block(Block::new().with_title("Выбор концентрации"))
-                .with_block(Block::new().with_title("Выбор объема"))
-                .with_block(Block::new().with_title("Часть A"))
-                .with_block(Block::new().with_title("Часть B"))
-                .build(),
+                .with_text(""),
         ];
 
         for topic in topics {

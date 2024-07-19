@@ -1,5 +1,5 @@
+use super::FertilizersBrowserTooltip;
 use crate::model::fertilizers::Fertilizer;
-use crate::ui::components::solutions::FertilizersBrowserTooltip;
 use crate::ui::components::utils::{QuickAction, Text};
 use dioxus::prelude::*;
 

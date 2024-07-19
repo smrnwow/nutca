@@ -1,9 +1,10 @@
+use crate::controller::reference::TopicId;
 use crate::controller::Validation;
 use crate::model::chemistry::NutrientAmount;
 use crate::model::profiles::Profile;
 use crate::ui::components::layout::Row;
 use crate::ui::components::profiles::ProfileNutrients;
-use crate::ui::components::reference::ReferenceSubject;
+use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
 use dioxus::prelude::*;
 
@@ -22,8 +23,13 @@ pub fn ProfileEditor(props: ProfileEditorProps) -> Element {
     rsx! {
         Card {
             Block {
-                Title {
-                    "Редактор профиля питания",
+                Row {
+                    Title {
+                        {TopicId::ProfileEditor.title()},
+                        ReferenceBadge {
+                            topic_id: TopicId::ProfileEditor,
+                        },
+                    }
                 }
             }
 
@@ -40,12 +46,10 @@ pub fn ProfileEditor(props: ProfileEditorProps) -> Element {
 
             Divider {}
 
-            ReferenceSubject {
-                Block {
-                    ProfileNutrients {
-                        profile: props.profile,
-                        on_nutrient_update: props.on_nutrient_update,
-                    }
+            Block {
+                ProfileNutrients {
+                    profile: props.profile,
+                    on_nutrient_update: props.on_nutrient_update,
                 }
             }
 

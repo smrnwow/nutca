@@ -9,9 +9,6 @@
     position: absolute;
     top: calc(50% - 6px);
     right: -16px;
-    transform: translateY(-4px);
-    opacity: 0;
-    visibility: hidden;
     font-size: 9px;
     line-height: 12px;
     min-width: 12px;
@@ -20,12 +17,6 @@
     transition: .1s ease-out;
     cursor: pointer;
     z-index: 999;
-}
-
-.reference-subject:hover .reference-badge {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0px);
 }
 
 .reference__icon {

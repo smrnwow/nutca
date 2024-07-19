@@ -1,4 +1,5 @@
 use crate::controller::Toaster;
+use crate::ui::components::layout::{Page, Section};
 use crate::ui::components::utils::Notifications;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
@@ -37,20 +38,20 @@ pub fn Layout() -> Element {
                 }
 
                 Link {
-                    class: link_class(&current_route, Route::SolutionsListingPage {}),
-                    to: Route::SolutionsListingPage {},
+                    class: link_class(&current_route, Route::SolutionsMainPage {}),
+                    to: Route::SolutionsMainPage {},
                     "Растворы",
                 }
 
                 Link {
-                    class: link_class(&current_route, Route::ProfilesListingPage {}),
-                    to: Route::ProfilesListingPage {},
+                    class: link_class(&current_route, Route::ProfilesMainPage {}),
+                    to: Route::ProfilesMainPage {},
                     "Профили",
                 }
 
                 Link {
-                    class: link_class(&current_route, Route::FertilizersListingPage {}),
-                    to: Route::FertilizersListingPage {},
+                    class: link_class(&current_route, Route::FertilizersMainPage {}),
+                    to: Route::FertilizersMainPage {},
                     "Удобрения",
                 }
             }
@@ -58,7 +59,13 @@ pub fn Layout() -> Element {
 
         main {
             class: "content",
-            Outlet::<Route> { },
+
+            Page {
+                Section {
+                    Outlet::<Route> { },
+                }
+            }
+
             Notifications {
                 notifications: toasts,
                 on_close: move |notification_id| {

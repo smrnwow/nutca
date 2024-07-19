@@ -1,9 +1,8 @@
+use super::FertilizersSetItem;
 use crate::model::chemistry::Volume;
 use crate::model::solutions::Solution;
 use crate::repository::SolutionFertilizers;
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::reference::ReferenceBadge;
-use crate::ui::components::solutions::FertilizersSetItem;
 use crate::ui::components::utils::{List, Pagination, Title};
 use crate::ui::components::VolumeField;
 use dioxus::prelude::*;
@@ -41,9 +40,6 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
                 Title {
                     size: "small",
                     "Используемые удобрения",
-                    ReferenceBadge {
-                        article_id: "solution-editor-fertilizers-set",
-                    },
                 }
             }
 

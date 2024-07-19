@@ -1,6 +1,6 @@
+use super::SolutionsListingItem;
 use crate::repository::SolutionsListing;
 use crate::ui::components::layout::Column;
-use crate::ui::components::solutions::SolutionsListingItem;
 use crate::ui::components::utils::{List, Pagination};
 use dioxus::prelude::*;
 

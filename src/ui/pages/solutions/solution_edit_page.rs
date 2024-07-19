@@ -1,7 +1,6 @@
 use crate::controller::solutions::SolutionEditor;
 use crate::controller::Toaster;
 use crate::repository::Storage;
-use crate::ui::components::layout::{Page, Section};
 use crate::ui::components::solutions::SolutionEditor;
 use dioxus::prelude::*;
 
@@ -28,46 +27,42 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
     use_effect(move || toaster.write().render(validation.read().list()));
 
     rsx! {
-        Page {
-            Section {
-                SolutionEditor {
-                    profiles_listing,
-                    fertilizers_listing,
-                    validation,
-                    solution,
-                    profile,
-                    on_profile_change: move |profile_id| {
-                        solution_editor.write().change_profile(profile_id);
-                    },
-                    on_fertilizer_select: move |fertilizer_id| {
-                        solution_editor.write().select_fertilizer(fertilizer_id);
-                    },
-                    on_fertilizer_exclude: move |fertilizer_id| {
-                        solution_editor.write().exclude_fertilizer(fertilizer_id);
-                    },
-                    on_name_update: move |name| {
-                        solution_builder.write().name(name);
-                    },
-                    on_volume_update: move |volume| {
-                        solution_builder.write().volume(volume);
-                    },
-                    on_profile_nutrient_update: move |nutrient| {
-                        solution_builder.write().nutrient_requirement(nutrient);
-                    },
-                    on_profile_search: move |search_query| {
-                        profiles_listing.write().search(search_query);
-                    },
-                    on_fertilizer_search: move |search_query| {
-                        fertilizers_listing.write().search(search_query);
-                    },
-                    on_fertilizers_paginate: move |page_index| {
-                        fertilizers_listing.write().paginate(page_index);
-                    },
-                    on_save: move |_| {
-                        solution_editor.write().update();
-                    },
-                }
-            }
+        SolutionEditor {
+            profiles_listing,
+            fertilizers_listing,
+            validation,
+            solution,
+            profile,
+            on_profile_change: move |profile_id| {
+                solution_editor.write().change_profile(profile_id);
+            },
+            on_fertilizer_select: move |fertilizer_id| {
+                solution_editor.write().select_fertilizer(fertilizer_id);
+            },
+            on_fertilizer_exclude: move |fertilizer_id| {
+                solution_editor.write().exclude_fertilizer(fertilizer_id);
+            },
+            on_name_update: move |name| {
+                solution_builder.write().name(name);
+            },
+            on_volume_update: move |volume| {
+                solution_builder.write().volume(volume);
+            },
+            on_profile_nutrient_update: move |nutrient| {
+                solution_builder.write().nutrient_requirement(nutrient);
+            },
+            on_profile_search: move |search_query| {
+                profiles_listing.write().search(search_query);
+            },
+            on_fertilizer_search: move |search_query| {
+                fertilizers_listing.write().search(search_query);
+            },
+            on_fertilizers_paginate: move |page_index| {
+                fertilizers_listing.write().paginate(page_index);
+            },
+            on_save: move |_| {
+                solution_editor.write().update();
+            },
         }
     }
 }

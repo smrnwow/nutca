@@ -1,7 +1,6 @@
+use super::FertilizersBrowserItem;
 use crate::repository::FertilizersListing;
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::reference::ReferenceBadge;
-use crate::ui::components::solutions::FertilizersBrowserItem;
 use crate::ui::components::utils::icons::SearchIcon;
 use crate::ui::components::utils::{Label, List, Pagination, TextField, Title};
 use dioxus::prelude::*;
@@ -27,9 +26,6 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
                 Title {
                     size: "small",
                     "Выбор удобрений",
-                    ReferenceBadge {
-                        article_id: "solution-editor-fertilizers-browser",
-                    },
                 }
             }
 

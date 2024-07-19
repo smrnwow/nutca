@@ -90,7 +90,7 @@ impl FertilizerEditor {
 
             match result {
                 Ok(_) => {
-                    navigator().push(Route::FertilizersListingPage {});
+                    navigator().push(Route::FertilizersMainPage {});
                 }
                 Err(error) => {
                     self.storage_error
@@ -112,7 +112,7 @@ impl FertilizerEditor {
 
             match result {
                 Ok(_) => {
-                    navigator().push(Route::FertilizersListingPage {});
+                    navigator().push(Route::FertilizersMainPage {});
                 }
                 Err(error) => {
                     self.storage_error
@@ -123,6 +123,6 @@ impl FertilizerEditor {
     }
 
     pub fn back(&mut self) {
-        navigator().push(Route::FertilizersListingPage {});
+        navigator().push(Route::FertilizersMainPage {});
     }
 }
