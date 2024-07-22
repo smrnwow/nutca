@@ -99,6 +99,7 @@ impl Profiles {
     fn seed(&self) -> Result<(), Error> {
         let profiles = vec![
             ProfileBuilder::new()
+                .new_id()
                 .name("UA CEAC Recipe")
                 .nutrient_requirement(NutrientAmount::Nitrogen(189.0))
                 .nutrient_requirement(NutrientAmount::NitrogenNitrate(189.0))
@@ -116,6 +117,7 @@ impl Profiles {
                 .nutrient_requirement(NutrientAmount::Molybdenum(0.05))
                 .build(),
             ProfileBuilder::new()
+                .new_id()
                 .name("Modified Sonneveld`s solution")
                 .nutrient_requirement(NutrientAmount::Nitrogen(150.0))
                 .nutrient_requirement(NutrientAmount::NitrogenNitrate(150.0))
@@ -133,6 +135,7 @@ impl Profiles {
                 .nutrient_requirement(NutrientAmount::Molybdenum(0.024))
                 .build(),
             ProfileBuilder::new()
+                .new_id()
                 .name("Hoagland solution")
                 .nutrient_requirement(NutrientAmount::Nitrogen(210.0))
                 .nutrient_requirement(NutrientAmount::NitrogenNitrate(210.0))
@@ -150,6 +153,7 @@ impl Profiles {
                 .nutrient_requirement(NutrientAmount::Molybdenum(0.01))
                 .build(),
             ProfileBuilder::new()
+                .new_id()
                 .name("University of Arizona Hydroponic Tomato Formula")
                 .nutrient_requirement(NutrientAmount::Nitrogen(210.0))
                 .nutrient_requirement(NutrientAmount::NitrogenNitrate(210.0))

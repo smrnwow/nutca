@@ -48,7 +48,13 @@ impl SolutionBuilder {
 
     pub fn nutrient_requirement(&mut self, nutrient_amount: NutrientAmount) -> &mut Self {
         if self.profile_builder.is_saved() {
-            self.profile_builder = ProfileBuilder::from(self.profile_builder.build());
+            let profile = self.profile_builder.build();
+
+            self.profile_builder = ProfileBuilder::new();
+
+            self.profile_builder
+                .name(profile.name())
+                .nutrients(profile.nutrients());
         }
 
         self.profile_builder.nutrient_requirement(nutrient_amount);

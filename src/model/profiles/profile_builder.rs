@@ -18,8 +18,23 @@ impl ProfileBuilder {
         }
     }
 
+    pub fn new_id(&mut self) -> &mut Self {
+        self.id = Uuid::new_v4().to_string();
+        self
+    }
+
+    pub fn id(&mut self, id: String) -> &mut Self {
+        self.id = id;
+        self
+    }
+
     pub fn name(&mut self, name: impl ToString) -> &mut Self {
         self.name = name.to_string();
+        self
+    }
+
+    pub fn nutrients(&mut self, nutrients: Nutrients) -> &mut Self {
+        self.nutrients = nutrients;
         self
     }
 
@@ -47,14 +62,8 @@ impl ProfileBuilder {
     }
 
     pub fn build(&self) -> Profile {
-        let id = if self.is_saved() {
-            self.id.clone()
-        } else {
-            Uuid::new_v4().to_string()
-        };
-
         Profile {
-            id,
+            id: self.id.clone(),
             name: self.name.clone(),
             nutrients: self.nutrients.clone(),
         }

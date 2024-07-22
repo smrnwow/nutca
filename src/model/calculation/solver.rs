@@ -31,30 +31,31 @@ impl<'a> Solver<'a> {
 
             match calculation.solve() {
                 Ok(mut amounts) => {
-                    let latest_rotten_index: Option<usize> = amounts
-                        .iter()
-                        .cloned()
-                        .filter(|amount| amount.amount().abs() > 100000.0)
-                        .map(|amount| amount.fertilizer_index())
-                        .max();
+                    // println!("{} try result:", try_count + 1);
 
-                    match latest_rotten_index {
-                        Some(fertilizer_index) => {
-                            self.exclude_fertilizer(fertilizer_index);
-                        }
+                    amounts.iter().for_each(|amount| {
+                        println!("{} = {}", amount.fertilizer().name(), amount.amount());
+                    });
 
-                        None => {
-                            self.redurant_fertilizers.iter().for_each(|fertilizer| {
-                                amounts.push(Amount::new(fertilizer.clone(), 1, 0.0));
-                            });
-
-                            return amounts;
-                        }
+                    if let Some(rotten_index) = self.test_rotten(&amounts) {
+                        self.exclude_fertilizer(rotten_index);
+                        continue;
                     }
+
+                    if let Some(negative_index) = self.test_negative(&amounts) {
+                        self.exclude_fertilizer(negative_index);
+                        continue;
+                    }
+
+                    self.redurant_fertilizers.iter().for_each(|fertilizer| {
+                        amounts.push(Amount::new(fertilizer.clone(), 1, 0.0));
+                    });
+
+                    return amounts;
                 }
 
                 Err(error) => {
-                    println!("error: {:#?}", error);
+                    // println!("{} try error: {:#?}", try_count + 1, error);
 
                     if self.fertilizers.len() > 0 {
                         let last_index = self.fertilizers.len() - 1;
@@ -83,6 +84,35 @@ impl<'a> Solver<'a> {
                 .filter(|(index, _)| *index != fertilizer_index)
                 .map(|(_, fertilizer)| fertilizer.clone())
                 .collect();
+        }
+    }
+
+    fn test_rotten(&self, amounts: &Vec<Amount>) -> Option<usize> {
+        amounts
+            .iter()
+            .filter(|amount| amount.amount().abs() > 100000.0)
+            .map(|amount| amount.fertilizer_index())
+            .max()
+    }
+
+    fn test_negative(&self, amounts: &Vec<Amount>) -> Option<usize> {
+        let mut negatives: Vec<(usize, f64)> = amounts
+            .iter()
+            .filter(|amount| amount.amount().is_sign_negative())
+            .map(|amount| (amount.fertilizer_index(), amount.amount()))
+            .collect();
+
+        if negatives.len() == 0 {
+            return None;
+        }
+
+        negatives.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+
+        println!("negatives {:#?}", negatives);
+
+        match negatives.get(0) {
+            Some(negative) => Some(negative.0),
+            None => None,
         }
     }
 }

@@ -35,7 +35,7 @@ impl Calculation {
     }
 
     pub fn solve(&self) -> Result<Vec<Amount>, ()> {
-        println!("problem: {}", self.problem);
+        // println!("problem: {}", self.problem);
 
         if let Ok(result) = DualSimplexSolver::default().solve(self.problem.clone()) {
             if let SolverResult::Optimal(solution) = result {
