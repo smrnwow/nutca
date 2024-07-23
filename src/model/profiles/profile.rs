@@ -25,3 +25,13 @@ impl Profile {
         self.nutrients[nutrient]
     }
 }
+
+impl Default for Profile {
+    fn default() -> Self {
+        Self {
+            id: String::new(),
+            name: String::new(),
+            nutrients: Nutrients::new(),
+        }
+    }
+}

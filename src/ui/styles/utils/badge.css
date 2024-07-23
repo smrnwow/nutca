@@ -1,12 +1,15 @@
 .badge {
-    position: absolute;
-    right: 5%;
     border-radius: 50%;
     color: #ffffff;
     font-weight: 500;
     font-family: "Rubik";
     text-align: center;
     z-index: 11;
+}
+
+button .badge {
+    position: absolute;
+    right: 5%;
 }
 
 .badge_state-default {
@@ -30,6 +33,9 @@
     line-height: 10px;
     min-width: 10px;
     padding: 1px;
+}
+
+button .badge_size-small {
     top: -7px;
 }
 

@@ -1,7 +1,7 @@
-use crate::model::calculation::Amount;
 use crate::model::chemistry::NutrientAmount;
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
+use crate::model::solutions::FertilizerWeight;
 use ellp::{problem::VariableId, Bound, ConstraintOp, DualSimplexSolver, Problem, SolverResult};
 
 pub struct Calculation {
@@ -34,28 +34,25 @@ impl Calculation {
         }
     }
 
-    pub fn solve(&self) -> Result<Vec<Amount>, ()> {
+    pub fn solve(&self) -> Result<Vec<FertilizerWeight>, ()> {
+        if self.fertilizers.len() == 0 {
+            return Ok(Vec::new());
+        }
+
         // println!("problem: {}", self.problem);
 
         if let Ok(result) = DualSimplexSolver::default().solve(self.problem.clone()) {
             if let SolverResult::Optimal(solution) = result {
-                let mut amounts = Vec::new();
+                let mut fertilizers_weights = Vec::new();
 
-                solution
-                    .x()
-                    .iter()
-                    .enumerate()
-                    .for_each(|(fertilizer_index, amount)| {
-                        if let Some(fertilizer) = self.fertilizers.get(fertilizer_index) {
-                            amounts.push(Amount::new(
-                                fertilizer.clone(),
-                                fertilizer_index,
-                                *amount,
-                            ));
-                        }
-                    });
+                solution.x().iter().enumerate().for_each(|(index, amount)| {
+                    if let Some(fertilizer) = self.fertilizers.get(index) {
+                        fertilizers_weights
+                            .push(FertilizerWeight::new(fertilizer.clone(), *amount));
+                    }
+                });
 
-                return Ok(amounts);
+                return Ok(fertilizers_weights);
             }
         }
 

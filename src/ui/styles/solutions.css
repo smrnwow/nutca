@@ -5,3 +5,10 @@
     max-width: 98px;
     cursor: pointer;
 }
+
+.solution-composition-nutrient__badge {
+    position: absolute;
+    top: -7px;
+    right: 5%;
+    z-index: 11;
+}

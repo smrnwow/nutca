@@ -43,40 +43,44 @@ pub fn SolutionCompositionNutrient(props: SolutionCompositionNutrientProps) -> E
             class: "solution-composition-nutrient",
 
             if !props.badge {
-                Badge {
-                    size: "small",
-                    state: diff_state.clone(),
-                    text: "!"
+                div {
+                    class: "solution-composition-nutrient__badge",
+
+                    Tooltip {
+                        target: rsx! {
+                            Badge {
+                                size: "small",
+                                state: diff_state.clone(),
+                                text: "!"
+                            }
+                        },
+
+                        body: rsx! {
+                            Column {
+                                gap: "small",
+
+                                Text {
+                                    size: "x-small",
+                                    nowrap: true,
+                                    {props.nutrient.nutrient().name()},
+                                }
+
+                                if !props.badge {
+                                    Text {
+                                        size: "x-small",
+                                        {tooltip_text(props.nutrient_result)},
+                                    }
+                                }
+                            }
+                        },
+                    }
                 }
             }
 
-            Tooltip {
-                target: rsx! {
-                    NutrientValue {
-                        state: diff_state,
-                        symbol: props.nutrient.nutrient().symbol(),
-                        value: props.nutrient.value(),
-                    }
-                },
-
-                body: rsx! {
-                    Column {
-                        gap: "small",
-
-                        Text {
-                            size: "x-small",
-                            nowrap: true,
-                            {props.nutrient.nutrient().name()},
-                        }
-
-                        if !props.badge {
-                            Text {
-                                size: "x-small",
-                                {tooltip_text(props.nutrient_result)},
-                            }
-                        }
-                    }
-                },
+            NutrientValue {
+                state: diff_state,
+                symbol: props.nutrient.nutrient().symbol(),
+                value: props.nutrient.value(),
             }
         }
     }

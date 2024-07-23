@@ -2,7 +2,7 @@ use crate::model::calculation::Solver;
 use crate::model::chemistry::{NutrientAmount, Nutrients, Volume};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::{Profile, ProfileBuilder};
-use crate::model::solutions::{FertilizersSet, Solution};
+use crate::model::solutions::Solution;
 use crate::model::Error;
 use uuid::Uuid;
 
@@ -96,21 +96,12 @@ impl SolutionBuilder {
     pub fn build(&self) -> Solution {
         let profile = self.profile_builder.build();
 
-        let amounts = Solver::new(&profile, self.fertilizers.clone()).solve();
+        let fertilizers_set = Solver::new()
+            .with_profile(profile.clone())
+            .with_fertilizers(self.fertilizers.clone())
+            .solve();
 
-        let fertilizers_set = FertilizersSet::from(amounts);
-
-        let mut nutrients = Nutrients::new();
-
-        fertilizers_set.list().iter().for_each(|fertilizer_weight| {
-            fertilizer_weight
-                .nutrients
-                .list()
-                .iter()
-                .for_each(|nutrient_amount| {
-                    nutrients.add(*nutrient_amount);
-                });
-        });
+        let nutrients = Nutrients::from(&fertilizers_set);
 
         Solution {
             id: self.id.clone(),

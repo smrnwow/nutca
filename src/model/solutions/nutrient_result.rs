@@ -29,11 +29,11 @@ impl NutrientResult {
     pub fn diff_state(&self) -> String {
         let diff_percent = self.diff_percent();
 
-        if diff_percent < 2. {
+        if diff_percent < 1. {
             return String::from("success");
         }
 
-        if diff_percent < 10. {
+        if diff_percent < 50. {
             return String::from("warn");
         }
 

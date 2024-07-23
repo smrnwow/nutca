@@ -71,7 +71,7 @@ impl From<Profile> for Solution {
             profile,
             nutrients: Nutrients::new(),
             volume: Volume::default(),
-            fertilizers_set: FertilizersSet::new(),
+            fertilizers_set: FertilizersSet::empty(),
         }
     }
 }
@@ -84,7 +84,7 @@ impl Default for Solution {
             profile: ProfileBuilder::new().build(),
             nutrients: Nutrients::new(),
             volume: Volume::default(),
-            fertilizers_set: FertilizersSet::new(),
+            fertilizers_set: FertilizersSet::empty(),
         }
     }
 }

@@ -1,4 +1,3 @@
-use crate::model::calculation::Amount;
 use crate::model::chemistry::Nutrients;
 use crate::model::fertilizers::Fertilizer;
 use serde::{Deserialize, Serialize};
@@ -73,11 +72,5 @@ impl Into<Fertilizer> for FertilizerWeight {
 impl From<Fertilizer> for FertilizerWeight {
     fn from(fertilizer: Fertilizer) -> Self {
         Self::new(fertilizer, 0.0)
-    }
-}
-
-impl From<Amount> for FertilizerWeight {
-    fn from(amount: Amount) -> Self {
-        Self::new(amount.fertilizer().clone(), amount.amount())
     }
 }
