@@ -1,4 +1,3 @@
-pub mod calculation;
 pub mod chemistry;
 mod error;
 pub mod fertilizers;

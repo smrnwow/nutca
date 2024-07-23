@@ -3,4 +3,5 @@ pub enum ExclusionReason {
     DuplicatedNutrientSource,
     NullishNutrientRequirement,
     NegativeAmount,
+    RedurantFertilizer,
 }

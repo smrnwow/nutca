@@ -1,8 +1,7 @@
-use crate::model::calculation::Solver;
 use crate::model::chemistry::{NutrientAmount, Nutrients, Volume};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::{Profile, ProfileBuilder};
-use crate::model::solutions::Solution;
+use crate::model::solutions::{Solution, Solver};
 use crate::model::Error;
 use uuid::Uuid;
 

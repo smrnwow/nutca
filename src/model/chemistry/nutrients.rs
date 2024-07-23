@@ -48,13 +48,6 @@ impl Nutrients {
             .collect()
     }
 
-    pub fn compare_composition(&self, nutrients: &Nutrients) -> bool {
-        self.list()
-            .iter()
-            .zip(&nutrients.list())
-            .all(|(a, b)| a.nutrient().symbol() == b.nutrient().symbol())
-    }
-
     pub fn total_nutrients(&self) -> f64 {
         self.list()
             .iter()

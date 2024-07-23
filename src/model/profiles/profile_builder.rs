@@ -23,11 +23,6 @@ impl ProfileBuilder {
         self
     }
 
-    pub fn id(&mut self, id: String) -> &mut Self {
-        self.id = id;
-        self
-    }
-
     pub fn name(&mut self, name: impl ToString) -> &mut Self {
         self.name = name.to_string();
         self

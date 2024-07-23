@@ -1,7 +1,6 @@
-use crate::model::calculation::{Calculation, ExclusionReason};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
-use crate::model::solutions::{FertilizerWeight, FertilizersSet};
+use crate::model::solutions::{Calculation, ExclusionReason, FertilizerWeight, FertilizersSet};
 use std::collections::HashMap;
 
 pub struct Solver {
@@ -98,15 +97,16 @@ impl Solver {
                 Err(_) => {
                     // println!("{} try error", try_count + 1);
 
-                    /*
                     if self.fertilizers.len() > 0 {
                         let last_index = self.fertilizers.len() - 1;
 
                         if let Some(fertilizer) = self.fertilizers.get(last_index) {
-                            self.exclude_fertilizer(fertilizer.id());
+                            self.exclude_fertilizer(
+                                fertilizer.id(),
+                                ExclusionReason::RedurantFertilizer,
+                            );
                         }
                     }
-                    */
 
                     // return Err(error);
                 }

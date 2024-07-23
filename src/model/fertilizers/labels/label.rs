@@ -37,16 +37,6 @@ impl Label {
         }
     }
 
-    pub fn from(units: Units, components: Vec<Component>) -> Self {
-        let mut label = Self::new(units);
-
-        components.iter().for_each(|component| {
-            label.update_component(*component);
-        });
-
-        label
-    }
-
     pub fn components(&self) -> Vec<Component> {
         let mut components: Vec<Component> = vec![];
 
