@@ -24,6 +24,17 @@ impl FertilizerWeight {
         }
     }
 
+    pub fn volume(&self, litres: f64) -> Self {
+        Self {
+            nutrients: self.nutrients,
+            id: self.id.clone(),
+            name: self.name.clone(),
+            liquid: self.liquid,
+            weight: self.weight * litres,
+            fertilizer: self.fertilizer.clone(),
+        }
+    }
+
     pub fn multiply(&self, factor: f64) -> Self {
         let weight = self.weight * factor;
 

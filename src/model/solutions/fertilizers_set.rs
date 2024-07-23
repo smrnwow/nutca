@@ -1,4 +1,4 @@
-use crate::model::chemistry::Volume;
+use crate::model::chemistry::{Nutrients, Volume};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::solutions::FertilizerWeight;
 use serde::{Deserialize, Serialize};
@@ -36,6 +36,22 @@ impl FertilizersSet {
             .collect()
     }
 
+    pub fn nutrients(&self) -> Nutrients {
+        let mut nutrients = Nutrients::new();
+
+        self.list().iter().for_each(|fertilizer_weight| {
+            fertilizer_weight
+                .nutrients
+                .list()
+                .iter()
+                .for_each(|nutrient_amount| {
+                    nutrients.add(*nutrient_amount);
+                });
+        });
+
+        nutrients
+    }
+
     pub fn list(&self) -> Vec<FertilizerWeight> {
         let mut fertilizers_weights = Vec::new();
 
@@ -61,10 +77,27 @@ impl FertilizersSet {
     }
 
     pub fn weight(&self, volume: Volume) -> Vec<FertilizerWeight> {
+        let mut fertilizers_weights = Vec::new();
+
         self.fertilizers
             .iter()
-            .map(|fertilizer_weight| fertilizer_weight.multiply(volume.to_litres()))
-            .collect()
+            .filter(|fertilizer_weight| fertilizer_weight.weight() == 0.0)
+            .for_each(|fertilizer_weight| fertilizers_weights.push(fertilizer_weight.clone()));
+
+        let mut non_nullish: Vec<&FertilizerWeight> = self
+            .fertilizers
+            .iter()
+            .filter(|fertilizer_weight| fertilizer_weight.weight() > 0.0)
+            .collect();
+
+        non_nullish.sort_by(|a, b| b.weight().partial_cmp(&a.weight()).unwrap());
+
+        non_nullish
+            .iter()
+            .map(|fertilizer_weight| fertilizer_weight.volume(volume.to_litres()))
+            .for_each(|fertilizer_weight| fertilizers_weights.push(fertilizer_weight));
+
+        fertilizers_weights
     }
 }
 

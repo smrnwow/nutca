@@ -1,4 +1,4 @@
-use crate::model::chemistry::{NutrientAmount, Nutrients, Volume};
+use crate::model::chemistry::{NutrientAmount, Volume};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::{Profile, ProfileBuilder};
 use crate::model::solutions::{Solution, Solver};
@@ -100,7 +100,7 @@ impl SolutionBuilder {
             .with_fertilizers(self.fertilizers.clone())
             .solve();
 
-        let nutrients = Nutrients::from(&fertilizers_set);
+        let nutrients = fertilizers_set.nutrients();
 
         Solution {
             id: self.id.clone(),

@@ -27,7 +27,7 @@ impl Solution {
     }
 
     pub fn fertilizers(&self) -> Vec<FertilizerWeight> {
-        self.fertilizers_set.list()
+        self.fertilizers_set.weight(self.volume)
     }
 
     pub fn volume(&self) -> Volume {
