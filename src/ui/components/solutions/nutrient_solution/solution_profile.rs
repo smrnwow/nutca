@@ -1,7 +1,4 @@
 use super::SolutionComposition;
-use crate::model::chemistry::NutrientAmount;
-use crate::model::profiles::Profile;
-use crate::model::solutions::Solution;
 use crate::repository::ProfilesListing;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfileForm;
@@ -9,6 +6,9 @@ use crate::ui::components::utils::{
     Badge, Block, ButtonsGroup, ButtonsGroupButton, Select, Text, Title,
 };
 use dioxus::prelude::*;
+use nutca::chemistry::NutrientAmount;
+use nutca::profiles::Profile;
+use nutca::solutions::Solution;
 
 fn round(value: f64) -> String {
     format!("{:.3}", value)

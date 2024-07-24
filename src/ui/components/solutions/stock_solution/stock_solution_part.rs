@@ -1,7 +1,7 @@
-use crate::model::solutions::FertilizerWeight;
 use crate::ui::components::layout::Column;
 use crate::ui::components::utils::{QuickAction, Text, Title};
 use dioxus::prelude::*;
+use nutca::solutions::FertilizerWeight;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct StockSolutionPartProps {

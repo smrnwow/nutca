@@ -1,5 +1,5 @@
-use crate::model::solutions::Solution;
 use crate::repository::{Error, RepositoryError, SolutionsListing};
+use nutca::solutions::Solution;
 use rusqlite::{params, Connection};
 use std::rc::Rc;
 

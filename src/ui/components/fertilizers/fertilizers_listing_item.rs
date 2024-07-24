@@ -1,7 +1,7 @@
-use crate::model::fertilizers::Fertilizer;
 use crate::ui::components::utils::icons::More;
 use crate::ui::components::utils::{Button, Dropdown, DropdownOption, QuickAction, Text};
 use dioxus::prelude::*;
+use nutca::fertilizers::Fertilizer;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersListingItemProps {

@@ -1,14 +1,14 @@
 use super::{FertilizersBrowser, FertilizersSet, SolutionProfile};
 use crate::controller::reference::TopicId;
 use crate::controller::Validation;
-use crate::model::chemistry::{NutrientAmount, Volume};
-use crate::model::profiles::Profile;
-use crate::model::solutions::Solution;
 use crate::repository::{FertilizersListing, ProfilesListing};
 use crate::ui::components::layout::Row;
 use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
 use dioxus::prelude::*;
+use nutca::chemistry::{NutrientAmount, Volume};
+use nutca::profiles::Profile;
+use nutca::solutions::Solution;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionEditorProps {

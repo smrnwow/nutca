@@ -1,9 +1,9 @@
 use crate::controller::{Error, Validation};
-use crate::model::fertilizers::{Fertilizer, FertilizerBuilder};
 use crate::repository::Storage;
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
+use nutca::fertilizers::{Fertilizer, FertilizerBuilder};
 
 pub struct FertilizerEditor {
     is_draft: Signal<bool>,

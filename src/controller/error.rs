@@ -1,4 +1,4 @@
-use crate::model::Error as ModelError;
+use nutca::Error as ModelError;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Error {

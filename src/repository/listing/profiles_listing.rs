@@ -1,6 +1,6 @@
-use crate::model::profiles::Profile;
 use crate::repository::Storage;
 use dioxus::prelude::*;
+use nutca::profiles::Profile;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ProfilesListing {

@@ -1,7 +1,5 @@
 use crate::controller::reference::TopicId;
 use crate::controller::Validation;
-use crate::model::fertilizers::labels::{Component, Units};
-use crate::model::fertilizers::{Fertilizer, SourceType};
 use crate::ui::components::fertilizers::{
     FertilizerComposition, FertilizerDetails, FertilizerSource,
 };
@@ -9,6 +7,8 @@ use crate::ui::components::layout::Row;
 use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::{Block, Button, Card, Divider, Title};
 use dioxus::prelude::*;
+use nutca::fertilizers::labels::{Component, Units};
+use nutca::fertilizers::{Fertilizer, SourceType};
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerEditorProps {

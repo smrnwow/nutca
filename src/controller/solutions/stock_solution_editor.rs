@@ -1,7 +1,7 @@
-use crate::model::chemistry::Volume;
-use crate::model::solutions::{FertilizerWeight, Solution, StockSolutionBuilder};
 use crate::repository::{SolutionsListing, Storage};
 use dioxus::prelude::*;
+use nutca::chemistry::Volume;
+use nutca::solutions::{FertilizerWeight, Solution, StockSolutionBuilder};
 
 pub struct StockSolutionEditor {
     builder: StockSolutionBuilder,

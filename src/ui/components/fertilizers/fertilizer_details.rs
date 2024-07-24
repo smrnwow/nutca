@@ -1,8 +1,8 @@
 use crate::controller::Validation;
-use crate::model::fertilizers::Fertilizer;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{Checkbox, TextField};
 use dioxus::prelude::*;
+use nutca::fertilizers::Fertilizer;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerDetailsProps {

@@ -2,7 +2,6 @@ use dioxus::desktop::{Config, WindowBuilder};
 use dioxus::prelude::LaunchBuilder;
 
 mod controller;
-mod model;
 mod repository;
 mod ui;
 

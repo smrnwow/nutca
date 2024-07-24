@@ -1,9 +1,9 @@
-use crate::model::chemistry::Nutrient;
-use crate::model::fertilizers::Fertilizer;
 use crate::ui::components::fertilizers::NutrientContentValue;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{Text, Title};
 use dioxus::prelude::*;
+use nutca::chemistry::Nutrient;
+use nutca::fertilizers::Fertilizer;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerCompositionProps {

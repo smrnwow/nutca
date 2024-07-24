@@ -1,12 +1,12 @@
 use crate::controller::reference::TopicId;
 use crate::controller::Validation;
-use crate::model::chemistry::NutrientAmount;
-use crate::model::profiles::Profile;
 use crate::ui::components::layout::Row;
 use crate::ui::components::profiles::ProfileNutrients;
 use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
 use dioxus::prelude::*;
+use nutca::chemistry::NutrientAmount;
+use nutca::profiles::Profile;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ProfileEditorProps {

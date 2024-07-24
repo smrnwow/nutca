@@ -1,9 +1,9 @@
-use crate::model::fertilizers::labels::{Component, Units};
-use crate::model::fertilizers::{Fertilizer, Source, SourceType};
 use crate::ui::components::fertilizers::{FertilizerFormula, FertilizerLabel};
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{ButtonsGroup, ButtonsGroupButton, Title};
 use dioxus::prelude::*;
+use nutca::fertilizers::labels::{Component, Units};
+use nutca::fertilizers::{Fertilizer, Source, SourceType};
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerSourceProps {

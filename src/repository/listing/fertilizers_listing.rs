@@ -1,6 +1,6 @@
-use crate::model::fertilizers::Fertilizer;
 use crate::repository::Storage;
 use dioxus::prelude::*;
+use nutca::fertilizers::Fertilizer;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct FertilizersListing {

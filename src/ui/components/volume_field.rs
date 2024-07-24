@@ -1,7 +1,7 @@
-use crate::model::chemistry::{Volume, VolumeUnits};
 use crate::ui::components::layout::Row;
 use crate::ui::components::utils::{FloatField, Label, Select};
 use dioxus::prelude::*;
+use nutca::chemistry::{Volume, VolumeUnits};
 
 fn round(value: f64) -> f64 {
     format!("{:.2}", value).parse().unwrap()

@@ -1,4 +1,4 @@
-use crate::model::solutions::Solution;
+use nutca::solutions::Solution;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct SolutionsListing {

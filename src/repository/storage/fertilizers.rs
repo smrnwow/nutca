@@ -1,6 +1,6 @@
-use crate::model::fertilizers::labels::{Component, Units};
-use crate::model::fertilizers::{Fertilizer, FertilizerBuilder};
 use crate::repository::{Error, RepositoryError};
+use nutca::fertilizers::labels::{Component, Units};
+use nutca::fertilizers::{Fertilizer, FertilizerBuilder};
 use rusqlite::{params, Connection};
 use std::rc::Rc;
 
