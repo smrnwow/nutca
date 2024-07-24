@@ -63,6 +63,17 @@ impl SolutionEditor {
 
         let solution = Memo::new(move || builder.read().build());
 
+        let mut fertilizers_listing = FertilizersListing::new(storage);
+
+        fertilizers_listing.excluded(
+            solution
+                .read()
+                .fertilizers()
+                .iter()
+                .map(|fertilizer| fertilizer.id())
+                .collect(),
+        );
+
         Self {
             is_draft,
             storage,
@@ -77,7 +88,7 @@ impl SolutionEditor {
             }),
             solution,
             profile: Memo::new(move || solution.read().profile()),
-            fertilizers_listing: Signal::new(FertilizersListing::new(storage)),
+            fertilizers_listing: Signal::new(fertilizers_listing),
             profiles_listing: Signal::new(ProfilesListing::new(storage)),
         }
     }

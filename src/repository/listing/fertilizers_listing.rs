@@ -73,6 +73,12 @@ impl FertilizersListing {
         }
     }
 
+    pub fn excluded(&mut self, fertilizers_ids: Vec<String>) {
+        for fertilizer_id in fertilizers_ids {
+            self.excluded_fertilizers_ids.push(fertilizer_id);
+        }
+    }
+
     pub fn exclude(&mut self, fertilizer_id: String) -> Option<Fertilizer> {
         self.excluded_fertilizers_ids.push(fertilizer_id.clone());
 
