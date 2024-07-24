@@ -35,7 +35,7 @@ impl Solution {
     }
 
     pub fn nutrient_value(&self, nutrient: Nutrient) -> NutrientAmount {
-        self.nutrients[nutrient]
+        self.nutrients.value_of(nutrient)
     }
 
     pub fn nutrient_diff(&self, nutrient: Nutrient) -> NutrientResult {

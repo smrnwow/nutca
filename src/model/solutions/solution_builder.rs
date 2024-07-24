@@ -68,12 +68,14 @@ impl SolutionBuilder {
     }
 
     pub fn remove_fertilizer(&mut self, fertilizer_id: String) -> &mut Self {
-        self.fertilizers = self
+        let position = self
             .fertilizers
             .iter()
-            .filter(|fertilizer| fertilizer.id() != fertilizer_id)
-            .map(|fertilizer| fertilizer.clone())
-            .collect();
+            .position(|fertilizer| fertilizer.id() == fertilizer_id);
+
+        if let Some(index) = position {
+            self.fertilizers.remove(index);
+        }
 
         self
     }
@@ -95,10 +97,7 @@ impl SolutionBuilder {
     pub fn build(&self) -> Solution {
         let profile = self.profile_builder.build();
 
-        let fertilizers_set = Solver::new()
-            .with_profile(profile.clone())
-            .with_fertilizers(self.fertilizers.clone())
-            .solve();
+        let fertilizers_set = Solver::new(&profile, self.fertilizers()).solve();
 
         let nutrients = fertilizers_set.nutrients();
 
@@ -111,6 +110,10 @@ impl SolutionBuilder {
             nutrients,
         }
     }
+
+    fn fertilizers(&self) -> Vec<&Fertilizer> {
+        self.fertilizers.iter().collect()
+    }
 }
 
 impl From<Solution> for SolutionBuilder {
@@ -119,7 +122,7 @@ impl From<Solution> for SolutionBuilder {
             id: solution.id(),
             name: solution.name(),
             profile_builder: ProfileBuilder::from(solution.profile()),
-            fertilizers: solution.fertilizers_set.fertilizers(),
+            fertilizers: solution.fertilizers_set.into(),
             volume: Volume::default(),
         }
     }

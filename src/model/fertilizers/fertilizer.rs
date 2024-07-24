@@ -48,6 +48,10 @@ impl Fertilizer {
     pub fn nutrient_amount(&self, nutrient: Nutrient) -> NutrientAmount {
         self.nutrients[nutrient]
     }
+
+    pub fn contains_more_nutrients(&self, fertilizer: &Fertilizer) -> bool {
+        self.nutrients().total_nutrients() > fertilizer.nutrients().total_nutrients()
+    }
 }
 
 impl Default for Fertilizer {

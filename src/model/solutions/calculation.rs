@@ -1,52 +1,50 @@
-use crate::model::chemistry::NutrientAmount;
+use crate::model::chemistry::{Nutrient, NutrientAmount};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
 use crate::model::solutions::FertilizerWeight;
 use ellp::{problem::VariableId, Bound, ConstraintOp, DualSimplexSolver, Problem, SolverResult};
+use std::collections::HashMap;
 
-pub struct Calculation {
-    fertilizers: Vec<Fertilizer>,
+pub struct Calculation<'a> {
+    fertilizers: Vec<&'a Fertilizer>,
     problem: Problem,
-    coefficients: Vec<Vec<(VariableId, f64)>>,
+    coefficients: HashMap<Nutrient, Vec<(VariableId, f64)>>,
 }
 
-impl Calculation {
-    pub fn new() -> Self {
-        Self {
-            problem: Problem::new(),
+impl<'a> Calculation<'a> {
+    /// create new calculation instance and setup linear programming problem
+    pub fn new(profile: &Profile, fertilizers: Vec<&'a Fertilizer>) -> Self {
+        let mut calculation = Self {
             fertilizers: Vec::new(),
-            coefficients: Vec::from([
-                vec![],
-                vec![],
-                vec![],
-                vec![],
-                vec![],
-                vec![],
-                vec![],
-                vec![],
-                vec![],
-                vec![],
-                vec![],
-                vec![],
-                vec![],
-                vec![],
-            ]),
-        }
+            problem: Problem::new(),
+            coefficients: HashMap::new(),
+        };
+
+        fertilizers
+            .iter()
+            .for_each(|fertilizer| calculation.add_variable(*fertilizer));
+
+        profile
+            .nutrients()
+            .list()
+            .iter()
+            .for_each(|required_nutrient| {
+                calculation.add_constraint(*required_nutrient);
+            });
+
+        calculation
     }
 
-    pub fn solve(&self) -> Result<Vec<FertilizerWeight>, ()> {
-        if self.fertilizers.len() == 0 {
-            return Ok(Vec::new());
-        }
-
-        // println!("problem: {}", self.problem);
-
-        if let Ok(result) = DualSimplexSolver::default().solve(self.problem.clone()) {
+    /// calculate fertilizers weights to achieve desired nutrients profile
+    pub fn calculate(self) -> Result<Vec<FertilizerWeight>, ()> {
+        if let Ok(result) = DualSimplexSolver::default().solve(self.problem) {
             if let SolverResult::Optimal(solution) = result {
                 let mut fertilizers_weights = Vec::new();
 
                 solution.x().iter().enumerate().for_each(|(index, amount)| {
                     if let Some(fertilizer) = self.fertilizers.get(index) {
+                        let fertilizer = *fertilizer;
+
                         fertilizers_weights
                             .push(FertilizerWeight::new(fertilizer.clone(), *amount));
                     }
@@ -59,28 +57,8 @@ impl Calculation {
         Err(())
     }
 
-    pub fn with_fertilizers(mut self, fertilizers: Vec<Fertilizer>) -> Self {
-        fertilizers.iter().for_each(|fertilizer| {
-            self.add_variable(fertilizer);
-        });
-
-        self
-    }
-
-    pub fn with_profile(mut self, profile: &Profile) -> Self {
-        profile
-            .nutrients()
-            .list()
-            .iter()
-            .for_each(|required_nutrient| {
-                self.add_constraint(*required_nutrient);
-            });
-
-        self
-    }
-
-    fn add_variable(&mut self, fertilizer: &Fertilizer) {
-        self.fertilizers.push(fertilizer.clone());
+    fn add_variable(&mut self, fertilizer: &'a Fertilizer) {
+        self.fertilizers.push(fertilizer);
 
         let variable_name = format!("x{}", self.problem.variables.len() + 1);
 
@@ -89,13 +67,22 @@ impl Calculation {
             .add_var(1.0, Bound::Lower(0.0), Some(variable_name))
             .unwrap();
 
-        fertilizer.nutrients().list().iter().for_each(|nutrient| {
-            self.coefficients[nutrient.nutrient().index()].push((variable_id, nutrient.value()));
-        });
+        fertilizer
+            .nutrients()
+            .list()
+            .iter()
+            .for_each(|nutrient_amount| {
+                let coefficient = (variable_id, nutrient_amount.value());
+
+                self.coefficients
+                    .entry(nutrient_amount.nutrient())
+                    .and_modify(|coefficients| coefficients.push(coefficient))
+                    .or_insert(Vec::from([coefficient]));
+            });
     }
 
     fn add_constraint(&mut self, nutrient: NutrientAmount) {
-        if let Some(coefficients) = self.coefficients.get(nutrient.nutrient().index()) {
+        if let Some(coefficients) = self.coefficients.get(&nutrient.nutrient()) {
             if coefficients.len() > 0 {
                 let (op, nutrient_requirement) = match nutrient {
                     NutrientAmount::Sulfur(_) => (ConstraintOp::Gte, 0.0),
@@ -111,4 +98,120 @@ impl Calculation {
 }
 
 #[cfg(test)]
-mod tests {}
+mod tests {
+    use super::Calculation;
+    use crate::model::chemistry::NutrientAmount;
+    use crate::model::fertilizers::{labels::Component, FertilizerBuilder};
+    use crate::model::profiles::ProfileBuilder;
+
+    #[test]
+    fn correctly_handles_empty_fertilizers() {
+        let profile = ProfileBuilder::new()
+            .nutrient_requirement(NutrientAmount::Nitrogen(10.0))
+            .nutrient_requirement(NutrientAmount::NitrogenNitrate(10.0))
+            .nutrient_requirement(NutrientAmount::NitrogenAmmonium(0.0))
+            .build();
+
+        let calculation = Calculation::new(&profile, vec![]);
+
+        assert_eq!(0, calculation.calculate().unwrap().len());
+    }
+
+    #[test]
+    fn correctly_handles_single_fertilizer() {
+        let profile = ProfileBuilder::new()
+            .nutrient_requirement(NutrientAmount::Nitrogen(10.0))
+            .nutrient_requirement(NutrientAmount::NitrogenNitrate(10.0))
+            .build();
+
+        let fertilizer = FertilizerBuilder::new()
+            .label_component(Component::Nitrogen(10.))
+            .build();
+
+        let calculation = Calculation::new(&profile, vec![&fertilizer]);
+
+        let result = calculation.calculate().unwrap();
+
+        assert_eq!(1, result.len());
+
+        assert_eq!(1.0, result.get(0).unwrap().weight());
+    }
+
+    #[test]
+    fn correctly_handles_multiple_fertilizers() {
+        let profile = ProfileBuilder::new()
+            .nutrient_requirement(NutrientAmount::Nitrogen(10.0))
+            .nutrient_requirement(NutrientAmount::NitrogenNitrate(10.0))
+            .nutrient_requirement(NutrientAmount::Phosphorus(10.0))
+            .nutrient_requirement(NutrientAmount::Potassium(20.0))
+            .build();
+
+        let fertilizer_1 = FertilizerBuilder::new()
+            .label_component(Component::Nitrogen(10.))
+            .label_component(Component::Potassium(10.))
+            .build();
+
+        let fertilizer_2 = FertilizerBuilder::new()
+            .label_component(Component::Phosphor(10.))
+            .label_component(Component::Potassium(10.))
+            .build();
+
+        let calculation = Calculation::new(&profile, vec![&fertilizer_1, &fertilizer_2]);
+
+        let result = calculation.calculate().unwrap();
+
+        assert_eq!(2, result.len());
+
+        assert_eq!(1.0, result.get(0).unwrap().weight());
+
+        assert_eq!(1.0, result.get(1).unwrap().weight());
+    }
+
+    #[test]
+    fn correctly_handles_complex_problem() {
+        let profile = ProfileBuilder::new()
+            .nutrient_requirement(NutrientAmount::Nitrogen(10.0))
+            .nutrient_requirement(NutrientAmount::NitrogenNitrate(10.0))
+            .nutrient_requirement(NutrientAmount::Phosphorus(10.0))
+            .nutrient_requirement(NutrientAmount::Potassium(30.0))
+            .nutrient_requirement(NutrientAmount::Calcium(15.0))
+            .build();
+
+        let fertilizer_1 = FertilizerBuilder::new()
+            .label_component(Component::Nitrogen(5.))
+            .label_component(Component::Calcium(15.))
+            .build();
+
+        let fertilizer_2 = FertilizerBuilder::new()
+            .label_component(Component::Nitrogen(10.))
+            .label_component(Component::Potassium(10.))
+            .build();
+
+        let fertilizer_3 = FertilizerBuilder::new()
+            .label_component(Component::Phosphor(10.))
+            .label_component(Component::Potassium(10.))
+            .build();
+
+        let fertilizer_4 = FertilizerBuilder::new()
+            .label_component(Component::Potassium(10.))
+            .label_component(Component::Sulfur(10.))
+            .build();
+
+        let calculation = Calculation::new(
+            &profile,
+            vec![&fertilizer_1, &fertilizer_2, &fertilizer_3, &fertilizer_4],
+        );
+
+        let result = calculation.calculate().unwrap();
+
+        assert_eq!(4, result.len());
+
+        assert_eq!(1.0, result.get(0).unwrap().weight());
+
+        assert_eq!(0.5, result.get(1).unwrap().weight());
+
+        assert_eq!(1.0, result.get(2).unwrap().weight());
+
+        assert_eq!(1.5, result.get(3).unwrap().weight());
+    }
+}

@@ -65,6 +65,10 @@ impl Nutrients {
         string
     }
 
+    pub fn value_of(&self, nutrient: Nutrient) -> NutrientAmount {
+        self.nutrients[nutrient.index()]
+    }
+
     pub fn macros(&self) -> Vec<NutrientAmount> {
         self.nutrients
             .iter()

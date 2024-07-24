@@ -74,14 +74,20 @@ impl FertilizerWeight {
     }
 }
 
-impl Into<Fertilizer> for FertilizerWeight {
-    fn into(self) -> Fertilizer {
-        Fertilizer::from(self.fertilizer)
-    }
-}
-
 impl From<Fertilizer> for FertilizerWeight {
     fn from(fertilizer: Fertilizer) -> Self {
         Self::new(fertilizer, 0.0)
+    }
+}
+
+impl From<&Fertilizer> for FertilizerWeight {
+    fn from(fertilizer: &Fertilizer) -> Self {
+        Self::new(fertilizer.clone(), 0.0)
+    }
+}
+
+impl Into<Fertilizer> for FertilizerWeight {
+    fn into(self) -> Fertilizer {
+        Fertilizer::from(self.fertilizer)
     }
 }

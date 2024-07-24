@@ -94,20 +94,4 @@ impl From<&str> for Formula {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::Formula;
-
-    #[test]
-    fn nitrogen_form() {
-        // "KNO3"
-        // "NH4NO3"
-        // "Ca(NO3)2"
-        // "2C14H18N3O10Fe(NH4)2"
-
-        let formula = Formula::from("NH4NO3");
-
-        println!("{:#?}", formula);
-
-        println!("{:#?}", formula.nutrients);
-    }
-}
+mod tests {}

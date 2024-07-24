@@ -29,13 +29,6 @@ impl FertilizersSet {
         self.fertilizers.len() == 0
     }
 
-    pub fn fertilizers(&self) -> Vec<Fertilizer> {
-        self.fertilizers
-            .iter()
-            .map(|fertilizer_weight| fertilizer_weight.clone().into())
-            .collect()
-    }
-
     pub fn nutrients(&self) -> Nutrients {
         let mut nutrients = Nutrients::new();
 
@@ -107,6 +100,30 @@ impl From<Vec<Fertilizer>> for FertilizersSet {
 
         for fertilizer in fertilizers {
             fertilizers_set.add_fertilizer_weight(FertilizerWeight::from(fertilizer));
+        }
+
+        fertilizers_set
+    }
+}
+
+impl Into<Vec<Fertilizer>> for FertilizersSet {
+    fn into(self) -> Vec<Fertilizer> {
+        let mut fertilizers: Vec<Fertilizer> = Vec::new();
+
+        for fertilizer_weight in self.fertilizers {
+            fertilizers.push(fertilizer_weight.into());
+        }
+
+        fertilizers
+    }
+}
+
+impl From<&Vec<&Fertilizer>> for FertilizersSet {
+    fn from(fertilizers: &Vec<&Fertilizer>) -> Self {
+        let mut fertilizers_set = Self::empty();
+
+        for fertilizer in fertilizers {
+            fertilizers_set.add_fertilizer_weight(FertilizerWeight::from(*fertilizer));
         }
 
         fertilizers_set
