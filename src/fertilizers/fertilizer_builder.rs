@@ -1,7 +1,6 @@
 use crate::chemistry::Nutrients;
-use crate::fertilizers::formulas::Formula;
 use crate::fertilizers::labels::{Component, Label, Units};
-use crate::fertilizers::{Fertilizer, Source, SourceType};
+use crate::fertilizers::{Fertilizer, Formula, Source, SourceType};
 use crate::Error;
 use uuid::Uuid;
 
@@ -21,10 +20,10 @@ impl FertilizerBuilder {
             id: Uuid::new_v4().to_string(),
             name: String::new(),
             vendor: String::new(),
-            source_type: SourceType::Label,
+            source_type: SourceType::default(),
             liquid: false,
-            label: Label::new(Units::Percent),
-            formula: Formula::new(""),
+            label: Label::default(),
+            formula: Formula::default(),
         }
     }
 
@@ -92,62 +91,60 @@ impl FertilizerBuilder {
     }
 
     pub fn build(&self) -> Fertilizer {
-        let mut nutrients = Nutrients::new();
-
-        let composition = match self.source_type {
-            SourceType::Label => {
-                self.label.components().iter().for_each(|component| {
-                    nutrients.add(component.nutrient());
-                });
-
-                Source::Label(self.label)
-            }
-            SourceType::Formula => {
-                self.formula
-                    .nutrients
-                    .list()
-                    .iter()
-                    .for_each(|nutrient_amount| {
-                        nutrients.add(*nutrient_amount);
-                    });
-
-                Source::Formula(self.formula.clone())
-            }
-        };
-
         Fertilizer {
             id: self.id.clone(),
             name: self.name.clone(),
             vendor: self.vendor.clone(),
             liquid: self.liquid,
-            source: composition,
-            nutrients,
+            source: match self.source_type {
+                SourceType::Label => Source::Label(self.label),
+                SourceType::Formula => Source::Formula(self.formula.clone()),
+            },
+            nutrients: match self.source_type {
+                SourceType::Label => {
+                    let mut nutrients = Nutrients::new();
+
+                    self.label.components().iter().for_each(|component| {
+                        nutrients.add(component.nutrient());
+                    });
+
+                    nutrients
+                }
+
+                SourceType::Formula => {
+                    let mut nutrients = Nutrients::new();
+
+                    self.formula
+                        .nutrients()
+                        .list()
+                        .iter()
+                        .for_each(|nutrient_amount| {
+                            nutrients.add(*nutrient_amount);
+                        });
+
+                    nutrients
+                }
+            },
         }
     }
 }
 
 impl From<Fertilizer> for FertilizerBuilder {
     fn from(fertilizer: Fertilizer) -> Self {
-        let label = if let Source::Label(label) = fertilizer.source() {
-            label
-        } else {
-            Label::new(Units::Percent)
-        };
-
-        let formula = if let Source::Formula(formula) = fertilizer.source() {
-            formula
-        } else {
-            Formula::new("")
-        };
-
         Self {
             id: fertilizer.id(),
             name: fertilizer.name(),
             vendor: fertilizer.vendor(),
             source_type: fertilizer.source_type(),
             liquid: fertilizer.liquid(),
-            label,
-            formula,
+            label: match fertilizer.source() {
+                Source::Label(label) => label,
+                _ => Label::default(),
+            },
+            formula: match fertilizer.source() {
+                Source::Formula(formula) => formula,
+                _ => Formula::default(),
+            },
         }
     }
 }

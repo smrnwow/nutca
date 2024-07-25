@@ -49,7 +49,7 @@ impl StockSolutionBuilder {
 
                 let mut micros_count = 0;
 
-                for nutrient in fertilizer_weight.nutrients.list() {
+                for nutrient in fertilizer_weight.nutrients().list() {
                     match nutrient {
                         NutrientAmount::Calcium(_) => {
                             has_calcium = true;
@@ -104,8 +104,9 @@ impl StockSolutionBuilder {
         self.part_a
             .iter()
             .map(|fertilizer_weight| {
-                let stock_weight = self.concentration_factor as f64 * self.volume.to_litres();
-                fertilizer_weight.multiply(stock_weight)
+                let volume = self.concentration_factor as f64 * self.volume.to_litres();
+
+                fertilizer_weight.volume(volume)
             })
             .collect()
     }
@@ -114,8 +115,9 @@ impl StockSolutionBuilder {
         self.part_b
             .iter()
             .map(|fertilizer_weight| {
-                let stock_weight = self.concentration_factor as f64 * self.volume.to_litres();
-                fertilizer_weight.multiply(stock_weight)
+                let volume = self.concentration_factor as f64 * self.volume.to_litres();
+
+                fertilizer_weight.volume(volume)
             })
             .collect()
     }

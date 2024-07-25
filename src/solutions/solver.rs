@@ -208,11 +208,12 @@ mod tests {
 
         let mut solver = Solver::new(&profile, vec![&fertilizer_1, &fertilizer_2, &fertilizer_3]);
 
-        let fertilizers_weights = solver.solve().list();
+        let fertilizers_weights = solver.solve();
 
         assert_eq!(
             0.0,
             fertilizers_weights
+                .list()
                 .iter()
                 .find(|fertilizer| fertilizer.id() == fertilizer_1.id())
                 .unwrap()
@@ -222,6 +223,7 @@ mod tests {
         assert_eq!(
             0.5,
             fertilizers_weights
+                .list()
                 .iter()
                 .find(|fertilizer| fertilizer.id() == fertilizer_2.id())
                 .unwrap()
@@ -231,6 +233,7 @@ mod tests {
         assert_eq!(
             0.0,
             fertilizers_weights
+                .list()
                 .iter()
                 .find(|fertilizer| fertilizer.id() == fertilizer_3.id())
                 .unwrap()
@@ -265,11 +268,12 @@ mod tests {
 
         let mut solver = Solver::new(&profile, vec![&fertilizer_1, &fertilizer_2, &fertilizer_3]);
 
-        let fertilizers_weights = solver.solve().list();
+        let fertilizers_weights = solver.solve();
 
         assert_eq!(
             0.0,
             fertilizers_weights
+                .list()
                 .iter()
                 .find(|fertilizer| fertilizer.id() == fertilizer_1.id())
                 .unwrap()
@@ -279,6 +283,7 @@ mod tests {
         assert_eq!(
             0.0,
             fertilizers_weights
+                .list()
                 .iter()
                 .find(|fertilizer| fertilizer.id() == fertilizer_2.id())
                 .unwrap()
@@ -288,6 +293,7 @@ mod tests {
         assert_eq!(
             0.5,
             fertilizers_weights
+                .list()
                 .iter()
                 .find(|fertilizer| fertilizer.id() == fertilizer_3.id())
                 .unwrap()

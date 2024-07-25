@@ -2,48 +2,36 @@ use crate::chemistry::Nutrients;
 use crate::fertilizers::Fertilizer;
 use serde::{Deserialize, Serialize};
 
+/// Amount (in grams or milliliters) of fertilizer for the solution.
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct FertilizerWeight {
-    pub nutrients: Nutrients,
     id: String,
     name: String,
     liquid: bool,
     weight: f64,
+    nutrients: Nutrients,
     fertilizer: Fertilizer,
 }
 
 impl FertilizerWeight {
     pub fn new(fertilizer: Fertilizer, weight: f64) -> Self {
         Self {
-            nutrients: fertilizer.nutrients().multiply(weight),
             id: fertilizer.id(),
             name: fertilizer.name(),
             liquid: fertilizer.liquid(),
             weight,
+            nutrients: fertilizer.nutrients().multiply(weight),
             fertilizer,
         }
     }
 
     pub fn volume(&self, litres: f64) -> Self {
         Self {
-            nutrients: self.nutrients,
             id: self.id.clone(),
             name: self.name.clone(),
             liquid: self.liquid,
             weight: self.weight * litres,
-            fertilizer: self.fertilizer.clone(),
-        }
-    }
-
-    pub fn multiply(&self, factor: f64) -> Self {
-        let weight = self.weight * factor;
-
-        Self {
-            nutrients: self.nutrients.multiply(weight),
-            id: self.id.clone(),
-            name: self.name.clone(),
-            liquid: self.liquid,
-            weight,
+            nutrients: self.nutrients,
             fertilizer: self.fertilizer.clone(),
         }
     }
@@ -58,6 +46,10 @@ impl FertilizerWeight {
 
     pub fn weight(&self) -> f64 {
         self.weight
+    }
+
+    pub fn nutrients(&self) -> Nutrients {
+        self.nutrients
     }
 
     pub fn amount(&self) -> String {

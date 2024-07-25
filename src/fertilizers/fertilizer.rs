@@ -1,5 +1,4 @@
 use crate::chemistry::{Nutrient, NutrientAmount, Nutrients};
-use crate::fertilizers::labels::Label;
 use crate::fertilizers::{Source, SourceType};
 use serde::{Deserialize, Serialize};
 
@@ -60,7 +59,7 @@ impl Default for Fertilizer {
             id: String::new(),
             name: String::new(),
             vendor: String::new(),
-            source: Source::Label(Label::default()),
+            source: Source::default(),
             liquid: false,
             nutrients: Nutrients::new(),
         }

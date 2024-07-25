@@ -1,5 +1,4 @@
 use crate::chemistry::{Nutrient, NutrientAmount};
-use crate::solutions::FertilizersSet;
 use serde::{Deserialize, Serialize};
 use std::ops::{Index, IndexMut};
 
@@ -161,24 +160,6 @@ impl From<Vec<NutrientAmount>> for Nutrients {
         for nutrient_amount in nutrients_amounts {
             nutrients.set(nutrient_amount);
         }
-
-        nutrients
-    }
-}
-
-impl From<&FertilizersSet> for Nutrients {
-    fn from(fertilizers_set: &FertilizersSet) -> Nutrients {
-        let mut nutrients = Nutrients::new();
-
-        fertilizers_set.list().iter().for_each(|fertilizer_weight| {
-            fertilizer_weight
-                .nutrients
-                .list()
-                .iter()
-                .for_each(|nutrient_amount| {
-                    nutrients.add(*nutrient_amount);
-                });
-        });
 
         nutrients
     }

@@ -5,6 +5,7 @@ use crate::solutions::{Solution, Solver};
 use crate::Error;
 use uuid::Uuid;
 
+/// A helper struct that enables to incremental building a solution
 pub struct SolutionBuilder {
     id: String,
     name: String,
@@ -14,6 +15,7 @@ pub struct SolutionBuilder {
 }
 
 impl SolutionBuilder {
+    /// Creates a new instance of the builder with default values
     pub fn new() -> Self {
         Self {
             id: Uuid::new_v4().to_string(),
@@ -24,18 +26,22 @@ impl SolutionBuilder {
         }
     }
 
+    /// Sets the solution's name
     pub fn name(&mut self, name: String) -> &mut Self {
         self.name = name;
 
         self
     }
 
+    /// Sets volume of the solution
     pub fn volume(&mut self, volume: Volume) -> &mut Self {
         self.volume = volume;
 
         self
     }
 
+    /// Sets the nutrient profile.
+    /// If `profile` is `Some`, uses it; otherwise, sets a new empty one.
     pub fn profile(&mut self, profile: Option<Profile>) -> &mut Self {
         match profile {
             Some(profile) => self.profile_builder = ProfileBuilder::from(profile),
@@ -45,6 +51,9 @@ impl SolutionBuilder {
         self
     }
 
+    /// Updates the nutrient requirement for the solution.
+    /// If the current nutrient profile is saved, it extends the new profile from the existing one
+    /// and applies the updated requirements to the new profile.
     pub fn nutrient_requirement(&mut self, nutrient_amount: NutrientAmount) -> &mut Self {
         if self.profile_builder.is_saved() {
             let profile = self.profile_builder.build();
@@ -61,12 +70,15 @@ impl SolutionBuilder {
         self
     }
 
+    /// Adds fertilizer to solution
     pub fn add_fertilizer(&mut self, fertilizer: Fertilizer) -> &mut Self {
         self.fertilizers.push(fertilizer);
 
         self
     }
 
+    /// Removes fertilizer from solution
+    /// `fertilizer_id`: The unique identifier for the fertilizer to be removed
     pub fn remove_fertilizer(&mut self, fertilizer_id: String) -> &mut Self {
         let position = self
             .fertilizers
@@ -80,6 +92,7 @@ impl SolutionBuilder {
         self
     }
 
+    /// Validates the solution
     pub fn validate(&self) -> Vec<Error> {
         let mut errors = Vec::new();
 
@@ -94,6 +107,7 @@ impl SolutionBuilder {
         errors
     }
 
+    /// Builds the solution
     pub fn build(&self) -> Solution {
         let profile = self.profile_builder.build();
 
@@ -137,5 +151,48 @@ impl From<Profile> for SolutionBuilder {
             fertilizers: Vec::new(),
             volume: Volume::default(),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::SolutionBuilder;
+    use crate::fertilizers::{labels::Component, FertilizerBuilder};
+
+    #[test]
+    fn fertilizers_management() {
+        let fertilizer_1 = FertilizerBuilder::new()
+            .label_component(Component::Calcium(10.0))
+            .build();
+
+        let fertilizer_2 = FertilizerBuilder::new()
+            .label_component(Component::Copper(0.01))
+            .build();
+
+        let mut solution_builder = SolutionBuilder::new();
+
+        solution_builder
+            .add_fertilizer(fertilizer_1.clone())
+            .add_fertilizer(fertilizer_2.clone());
+
+        assert!(solution_builder
+            .fertilizers
+            .iter()
+            .find(|fertilizer| fertilizer.id() == fertilizer_1.id())
+            .is_some());
+
+        solution_builder.remove_fertilizer(fertilizer_1.id());
+
+        assert!(solution_builder
+            .fertilizers
+            .iter()
+            .find(|fertilizer| fertilizer.id() == fertilizer_1.id())
+            .is_none());
+
+        assert!(solution_builder
+            .fertilizers
+            .iter()
+            .find(|fertilizer| fertilizer.id() == fertilizer_2.id())
+            .is_some());
     }
 }

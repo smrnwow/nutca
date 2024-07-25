@@ -20,6 +20,12 @@ impl SourceType {
     }
 }
 
+impl Default for SourceType {
+    fn default() -> Self {
+        Self::Label
+    }
+}
+
 impl From<String> for SourceType {
     fn from(value: String) -> Self {
         match value.as_str() {

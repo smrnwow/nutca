@@ -39,7 +39,7 @@ impl Solution {
     }
 
     pub fn nutrient_diff(&self, nutrient: Nutrient) -> NutrientResult {
-        let nutrient_value = self.nutrient_value(nutrient).value();
+        let nutrient_value = self.nutrients.value_of(nutrient).value();
 
         NutrientResult::new(
             self.profile.nutrient_requirement(nutrient).value(),
@@ -71,7 +71,7 @@ impl From<Profile> for Solution {
             profile,
             nutrients: Nutrients::new(),
             volume: Volume::default(),
-            fertilizers_set: FertilizersSet::empty(),
+            fertilizers_set: FertilizersSet::default(),
         }
     }
 }
@@ -84,7 +84,7 @@ impl Default for Solution {
             profile: ProfileBuilder::new().build(),
             nutrients: Nutrients::new(),
             volume: Volume::default(),
-            fertilizers_set: FertilizersSet::empty(),
+            fertilizers_set: FertilizersSet::default(),
         }
     }
 }
