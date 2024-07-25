@@ -101,7 +101,7 @@ impl<'a> Calculation<'a> {
 mod tests {
     use super::Calculation;
     use crate::chemistry::NutrientAmount;
-    use crate::fertilizers::{labels::Component, FertilizerBuilder};
+    use crate::fertilizers::{FertilizerBuilder, LabelComponent};
     use crate::profiles::ProfileBuilder;
 
     #[test]
@@ -125,7 +125,7 @@ mod tests {
             .build();
 
         let fertilizer = FertilizerBuilder::new()
-            .label_component(Component::Nitrogen(10.))
+            .label_component(LabelComponent::Nitrogen(10.))
             .build();
 
         let calculation = Calculation::new(&profile, vec![&fertilizer]);
@@ -147,13 +147,13 @@ mod tests {
             .build();
 
         let fertilizer_1 = FertilizerBuilder::new()
-            .label_component(Component::Nitrogen(10.))
-            .label_component(Component::Potassium(10.))
+            .label_component(LabelComponent::Nitrogen(10.))
+            .label_component(LabelComponent::Potassium(10.))
             .build();
 
         let fertilizer_2 = FertilizerBuilder::new()
-            .label_component(Component::Phosphor(10.))
-            .label_component(Component::Potassium(10.))
+            .label_component(LabelComponent::Phosphorus(10.))
+            .label_component(LabelComponent::Potassium(10.))
             .build();
 
         let calculation = Calculation::new(&profile, vec![&fertilizer_1, &fertilizer_2]);
@@ -178,23 +178,23 @@ mod tests {
             .build();
 
         let fertilizer_1 = FertilizerBuilder::new()
-            .label_component(Component::Nitrogen(5.))
-            .label_component(Component::Calcium(15.))
+            .label_component(LabelComponent::Nitrogen(5.))
+            .label_component(LabelComponent::Calcium(15.))
             .build();
 
         let fertilizer_2 = FertilizerBuilder::new()
-            .label_component(Component::Nitrogen(10.))
-            .label_component(Component::Potassium(10.))
+            .label_component(LabelComponent::Nitrogen(10.))
+            .label_component(LabelComponent::Potassium(10.))
             .build();
 
         let fertilizer_3 = FertilizerBuilder::new()
-            .label_component(Component::Phosphor(10.))
-            .label_component(Component::Potassium(10.))
+            .label_component(LabelComponent::Phosphorus(10.))
+            .label_component(LabelComponent::Potassium(10.))
             .build();
 
         let fertilizer_4 = FertilizerBuilder::new()
-            .label_component(Component::Potassium(10.))
-            .label_component(Component::Sulfur(10.))
+            .label_component(LabelComponent::Potassium(10.))
+            .label_component(LabelComponent::Sulfur(10.))
             .build();
 
         let calculation = Calculation::new(

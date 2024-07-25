@@ -1,6 +1,6 @@
-use crate::chemistry::Nutrients;
-use crate::fertilizers::labels::{Component, Label, Units};
-use crate::fertilizers::{Fertilizer, Formula, Source, SourceType};
+use crate::fertilizers::{
+    Fertilizer, Formula, Label, LabelComponent, LabelUnits, SourceComposition, SourceType,
+};
 use crate::Error;
 use uuid::Uuid;
 
@@ -42,10 +42,10 @@ impl FertilizerBuilder {
         self
     }
 
-    pub fn label_units(&mut self, units: Units) -> &mut Self {
+    pub fn label_units(&mut self, units: LabelUnits) -> &mut Self {
         self.label.update_units(units);
 
-        if let Units::WeightVolume = units {
+        if let LabelUnits::WeightVolume = units {
             self.liquid = true;
         }
 
@@ -54,7 +54,7 @@ impl FertilizerBuilder {
         self
     }
 
-    pub fn label_component(&mut self, component: Component) -> &mut Self {
+    pub fn label_component(&mut self, component: LabelComponent) -> &mut Self {
         self.label.update_component(component);
 
         self.source_type = SourceType::Label;
@@ -96,34 +96,13 @@ impl FertilizerBuilder {
             name: self.name.clone(),
             vendor: self.vendor.clone(),
             liquid: self.liquid,
-            source: match self.source_type {
-                SourceType::Label => Source::Label(self.label),
-                SourceType::Formula => Source::Formula(self.formula.clone()),
+            source_composition: match self.source_type {
+                SourceType::Label => SourceComposition::Label(self.label),
+                SourceType::Formula => SourceComposition::Formula(self.formula.clone()),
             },
             nutrients: match self.source_type {
-                SourceType::Label => {
-                    let mut nutrients = Nutrients::new();
-
-                    self.label.components().iter().for_each(|component| {
-                        nutrients.add(component.nutrient());
-                    });
-
-                    nutrients
-                }
-
-                SourceType::Formula => {
-                    let mut nutrients = Nutrients::new();
-
-                    self.formula
-                        .nutrients()
-                        .list()
-                        .iter()
-                        .for_each(|nutrient_amount| {
-                            nutrients.add(*nutrient_amount);
-                        });
-
-                    nutrients
-                }
+                SourceType::Label => self.label.nutrients(),
+                SourceType::Formula => self.formula.nutrients(),
             },
         }
     }
@@ -135,14 +114,14 @@ impl From<Fertilizer> for FertilizerBuilder {
             id: fertilizer.id(),
             name: fertilizer.name(),
             vendor: fertilizer.vendor(),
-            source_type: fertilizer.source_type(),
+            source_type: fertilizer.source_composition().source_type(),
             liquid: fertilizer.liquid(),
-            label: match fertilizer.source() {
-                Source::Label(label) => label,
+            label: match fertilizer.source_composition() {
+                SourceComposition::Label(label) => *label,
                 _ => Label::default(),
             },
-            formula: match fertilizer.source() {
-                Source::Formula(formula) => formula,
+            formula: match fertilizer.source_composition() {
+                SourceComposition::Formula(formula) => formula.clone(),
                 _ => Formula::default(),
             },
         }

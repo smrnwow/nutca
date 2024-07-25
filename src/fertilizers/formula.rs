@@ -15,8 +15,8 @@ impl Formula {
         self.formulation.clone()
     }
 
-    pub fn nutrients(&self) -> &Nutrients {
-        &self.nutrients
+    pub fn nutrients(&self) -> Nutrients {
+        self.nutrients
     }
 
     pub fn error(&self) -> Option<String> {

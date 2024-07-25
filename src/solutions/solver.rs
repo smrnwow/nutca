@@ -95,7 +95,7 @@ impl<'a> Solver<'a> {
         match self.sources.get(&nutrients_string) {
             Some(same_nutrients_source) => {
                 if let Some(other_fertilizer) = self.find_fertilizer(same_nutrients_source) {
-                    if fertilizer.contains_more_nutrients(other_fertilizer) {
+                    if fertilizer.compare(other_fertilizer) {
                         self.exclude_fertilizer(
                             other_fertilizer.id(),
                             ExclusionReason::DuplicatedNutrientSource,
@@ -180,7 +180,7 @@ impl<'a> Solver<'a> {
 mod tests {
     use super::Solver;
     use crate::chemistry::{Nutrient, NutrientAmount};
-    use crate::fertilizers::{labels::Component, FertilizerBuilder};
+    use crate::fertilizers::{FertilizerBuilder, LabelComponent};
     use crate::profiles::ProfileBuilder;
 
     #[test]
@@ -192,18 +192,18 @@ mod tests {
             .build();
 
         let fertilizer_1 = FertilizerBuilder::new()
-            .label_component(Component::Nitrogen(10.0))
-            .label_component(Component::Potassium(20.0))
+            .label_component(LabelComponent::Nitrogen(10.0))
+            .label_component(LabelComponent::Potassium(20.0))
             .build();
 
         let fertilizer_2 = FertilizerBuilder::new()
-            .label_component(Component::Nitrogen(20.0))
-            .label_component(Component::Potassium(40.0))
+            .label_component(LabelComponent::Nitrogen(20.0))
+            .label_component(LabelComponent::Potassium(40.0))
             .build();
 
         let fertilizer_3 = FertilizerBuilder::new()
-            .label_component(Component::Nitrogen(15.0))
-            .label_component(Component::Potassium(30.0))
+            .label_component(LabelComponent::Nitrogen(15.0))
+            .label_component(LabelComponent::Potassium(30.0))
             .build();
 
         let mut solver = Solver::new(&profile, vec![&fertilizer_1, &fertilizer_2, &fertilizer_3]);
@@ -250,20 +250,20 @@ mod tests {
             .build();
 
         let fertilizer_1 = FertilizerBuilder::new()
-            .label_component(Component::Calcium(10.0))
+            .label_component(LabelComponent::Calcium(10.0))
             .build();
 
         let fertilizer_2 = FertilizerBuilder::new()
-            .label_component(Component::Phosphor(20.0))
-            .label_component(Component::Potassium(40.0))
+            .label_component(LabelComponent::Phosphorus(20.0))
+            .label_component(LabelComponent::Potassium(40.0))
             .build();
 
         let fertilizer_3 = FertilizerBuilder::new()
-            .label_component(Component::Nitrogen(20.0))
-            .label_component(Component::Potassium(40.0))
-            .label_component(Component::Phosphor(10.0))
-            .label_component(Component::Calcium(10.0))
-            .label_component(Component::Sulfur(10.0))
+            .label_component(LabelComponent::Nitrogen(20.0))
+            .label_component(LabelComponent::Potassium(40.0))
+            .label_component(LabelComponent::Phosphorus(10.0))
+            .label_component(LabelComponent::Calcium(10.0))
+            .label_component(LabelComponent::Sulfur(10.0))
             .build();
 
         let mut solver = Solver::new(&profile, vec![&fertilizer_1, &fertilizer_2, &fertilizer_3]);
@@ -311,20 +311,20 @@ mod tests {
             .build();
 
         let fertilizer_1 = FertilizerBuilder::new()
-            .label_component(Component::Calcium(10.0))
+            .label_component(LabelComponent::Calcium(10.0))
             .build();
 
         let fertilizer_2 = FertilizerBuilder::new()
-            .label_component(Component::Phosphor(20.0))
-            .label_component(Component::Potassium(40.0))
+            .label_component(LabelComponent::Phosphorus(20.0))
+            .label_component(LabelComponent::Potassium(40.0))
             .build();
 
         let fertilizer_3 = FertilizerBuilder::new()
-            .label_component(Component::Nitrogen(20.0))
-            .label_component(Component::Potassium(40.0))
-            .label_component(Component::Phosphor(10.0))
-            .label_component(Component::Calcium(10.0))
-            .label_component(Component::Sulfur(10.0))
+            .label_component(LabelComponent::Nitrogen(20.0))
+            .label_component(LabelComponent::Potassium(40.0))
+            .label_component(LabelComponent::Phosphorus(10.0))
+            .label_component(LabelComponent::Calcium(10.0))
+            .label_component(LabelComponent::Sulfur(10.0))
             .build();
 
         let mut solver = Solver::new(&profile, vec![&fertilizer_1, &fertilizer_2, &fertilizer_3]);

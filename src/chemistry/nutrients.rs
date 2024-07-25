@@ -47,7 +47,7 @@ impl Nutrients {
             .collect()
     }
 
-    pub fn total_nutrients(&self) -> f64 {
+    pub fn total_amount(&self) -> f64 {
         self.list()
             .iter()
             .map(|nutrient_amount| nutrient_amount.value())

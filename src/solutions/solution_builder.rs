@@ -157,16 +157,16 @@ impl From<Profile> for SolutionBuilder {
 #[cfg(test)]
 mod tests {
     use super::SolutionBuilder;
-    use crate::fertilizers::{labels::Component, FertilizerBuilder};
+    use crate::fertilizers::{FertilizerBuilder, LabelComponent};
 
     #[test]
     fn fertilizers_management() {
         let fertilizer_1 = FertilizerBuilder::new()
-            .label_component(Component::Calcium(10.0))
+            .label_component(LabelComponent::Calcium(10.0))
             .build();
 
         let fertilizer_2 = FertilizerBuilder::new()
-            .label_component(Component::Copper(0.01))
+            .label_component(LabelComponent::Copper(0.01))
             .build();
 
         let mut solution_builder = SolutionBuilder::new();
