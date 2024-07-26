@@ -2,15 +2,14 @@ use crate::ui::components::fertilizers::{FertilizerFormula, FertilizerLabel};
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{ButtonsGroup, ButtonsGroupButton, Title};
 use dioxus::prelude::*;
-use nutca::fertilizers::labels::{Component, Units};
-use nutca::fertilizers::{Fertilizer, Source, SourceType};
+use nutca::fertilizers::{Fertilizer, LabelComponent, LabelUnits, SourceComposition, SourceType};
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerSourceProps {
     fertilizer: Memo<Fertilizer>,
     on_source_type_update: EventHandler<SourceType>,
-    on_label_component_update: EventHandler<Component>,
-    on_label_units_update: EventHandler<Units>,
+    on_label_component_update: EventHandler<LabelComponent>,
+    on_label_units_update: EventHandler<LabelUnits>,
     on_formula_update: EventHandler<String>,
 }
 
@@ -30,7 +29,7 @@ pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
                 }
 
                 ButtonsGroup {
-                    value: props.fertilizer.read().source_type().value(),
+                    value: props.fertilizer.read().source_composition().source_type().value(),
                     buttons: vec![
                         ButtonsGroupButton {
                             label: SourceType::Label.label(),
@@ -47,8 +46,8 @@ pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
                 }
             }
 
-            match props.fertilizer.read().source().clone() {
-                Source::Label(label) => {
+            match props.fertilizer.read().source_composition().clone() {
+                SourceComposition::Label(label) => {
                     rsx! {
                         FertilizerLabel {
                             label: Signal::new(label),
@@ -58,7 +57,7 @@ pub fn FertilizerSource(props: FertilizerSourceProps) -> Element {
                     }
                 }
 
-                Source::Formula(formula) => {
+                SourceComposition::Formula(formula) => {
                     rsx! {
                         FertilizerFormula {
                             formula: Signal::new(formula),

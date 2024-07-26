@@ -7,8 +7,7 @@ use crate::ui::components::layout::Row;
 use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::{Block, Button, Card, Divider, Title};
 use dioxus::prelude::*;
-use nutca::fertilizers::labels::{Component, Units};
-use nutca::fertilizers::{Fertilizer, SourceType};
+use nutca::fertilizers::{Fertilizer, LabelComponent, LabelUnits, SourceType};
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerEditorProps {
@@ -18,8 +17,8 @@ pub struct FertilizerEditorProps {
     on_vendor_update: EventHandler<String>,
     on_source_type_update: EventHandler<SourceType>,
     on_liquid_update: EventHandler<bool>,
-    on_label_units_update: EventHandler<Units>,
-    on_label_component_update: EventHandler<Component>,
+    on_label_units_update: EventHandler<LabelUnits>,
+    on_label_component_update: EventHandler<LabelComponent>,
     on_formula_update: EventHandler<String>,
     on_save: EventHandler<()>,
     on_cancel: EventHandler<()>,

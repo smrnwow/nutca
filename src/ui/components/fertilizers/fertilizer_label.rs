@@ -2,13 +2,13 @@ use crate::ui::components::fertilizers::FertilizerComponentInput;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{Label, Radio};
 use dioxus::prelude::*;
-use nutca::fertilizers::labels::{Component, Label, Units};
+use nutca::fertilizers::{Label, LabelComponent, LabelUnits};
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerLabelProps {
     label: Signal<Label>,
-    on_label_units_update: EventHandler<Units>,
-    on_label_component_update: EventHandler<Component>,
+    on_label_units_update: EventHandler<LabelUnits>,
+    on_label_component_update: EventHandler<LabelComponent>,
 }
 
 #[component]
@@ -29,16 +29,16 @@ pub fn FertilizerLabel(props: FertilizerLabelProps) -> Element {
                         text: "Проценты",
                         name: "units",
                         value: "percent",
-                        checked: label.units() == Units::Percent,
-                        on_change: move |_| props.on_label_units_update.call(Units::Percent),
+                        checked: label.units() == LabelUnits::Percent,
+                        on_change: move |_| props.on_label_units_update.call(LabelUnits::Percent),
                     }
 
                     Radio {
                         text: "мг/л",
                         name: "units",
                         value: "weight_volume",
-                        checked: label.units() == Units::WeightVolume,
-                        on_change: move |_| props.on_label_units_update.call(Units::WeightVolume),
+                        checked: label.units() == LabelUnits::WeightVolume,
+                        on_change: move |_| props.on_label_units_update.call(LabelUnits::WeightVolume),
                     }
                 }
             }
@@ -53,31 +53,17 @@ pub fn FertilizerLabel(props: FertilizerLabelProps) -> Element {
                         gap: "x-small",
 
                         FertilizerComponentInput {
-                            component: label[Component::Nitrogen(0.0)],
+                            component: label[LabelComponent::Nitrogen(0.0)],
                             on_update: props.on_label_component_update,
                         }
 
                         FertilizerComponentInput {
-                            component: label[Component::NitrogenNitrate(0.0)],
+                            component: label[LabelComponent::NitrogenNitrate(0.0)],
                             on_update: props.on_label_component_update,
                         }
 
                         FertilizerComponentInput {
-                            component: label[Component::NitrogenAmmonium(0.0)],
-                            on_update: props.on_label_component_update,
-                        }
-                    }
-
-                    Column {
-                        gap: "x-small",
-
-                        FertilizerComponentInput {
-                            component: label[Component::Phosphor(0.0)],
-                            on_update: props.on_label_component_update,
-                        }
-
-                        FertilizerComponentInput {
-                            component: label[Component::PhosphorPentoxide(0.0)],
+                            component: label[LabelComponent::NitrogenAmmonium(0.0)],
                             on_update: props.on_label_component_update,
                         }
                     }
@@ -86,26 +72,12 @@ pub fn FertilizerLabel(props: FertilizerLabelProps) -> Element {
                         gap: "x-small",
 
                         FertilizerComponentInput {
-                            component: label[Component::Potassium(0.0)],
+                            component: label[LabelComponent::Phosphorus(0.0)],
                             on_update: props.on_label_component_update,
                         }
 
                         FertilizerComponentInput {
-                            component: label[Component::PotassiumOxide(0.0)],
-                            on_update: props.on_label_component_update,
-                        }
-                    }
-
-                    Column {
-                        gap: "x-small",
-
-                        FertilizerComponentInput {
-                            component: label[Component::Calcium(0.0)],
-                            on_update: props.on_label_component_update,
-                        }
-
-                        FertilizerComponentInput {
-                            component: label[Component::CalciumOxide(0.0)],
+                            component: label[LabelComponent::PhosphorusPentoxide(0.0)],
                             on_update: props.on_label_component_update,
                         }
                     }
@@ -114,12 +86,12 @@ pub fn FertilizerLabel(props: FertilizerLabelProps) -> Element {
                         gap: "x-small",
 
                         FertilizerComponentInput {
-                            component: label[Component::Magnesium(0.0)],
+                            component: label[LabelComponent::Potassium(0.0)],
                             on_update: props.on_label_component_update,
                         }
 
                         FertilizerComponentInput {
-                            component: label[Component::MagnesiumOxide(0.0)],
+                            component: label[LabelComponent::PotassiumOxide(0.0)],
                             on_update: props.on_label_component_update,
                         }
                     }
@@ -128,17 +100,45 @@ pub fn FertilizerLabel(props: FertilizerLabelProps) -> Element {
                         gap: "x-small",
 
                         FertilizerComponentInput {
-                            component: label[Component::Sulfur(0.0)],
+                            component: label[LabelComponent::Calcium(0.0)],
                             on_update: props.on_label_component_update,
                         }
 
                         FertilizerComponentInput {
-                            component: label[Component::SulfurTrioxide(0.0)],
+                            component: label[LabelComponent::CalciumOxide(0.0)],
+                            on_update: props.on_label_component_update,
+                        }
+                    }
+
+                    Column {
+                        gap: "x-small",
+
+                        FertilizerComponentInput {
+                            component: label[LabelComponent::Magnesium(0.0)],
                             on_update: props.on_label_component_update,
                         }
 
                         FertilizerComponentInput {
-                            component: label[Component::SulfurTetroxide(0.0)],
+                            component: label[LabelComponent::MagnesiumOxide(0.0)],
+                            on_update: props.on_label_component_update,
+                        }
+                    }
+
+                    Column {
+                        gap: "x-small",
+
+                        FertilizerComponentInput {
+                            component: label[LabelComponent::Sulfur(0.0)],
+                            on_update: props.on_label_component_update,
+                        }
+
+                        FertilizerComponentInput {
+                            component: label[LabelComponent::SulfurTrioxide(0.0)],
+                            on_update: props.on_label_component_update,
+                        }
+
+                        FertilizerComponentInput {
+                            component: label[LabelComponent::SulfurTetroxide(0.0)],
                             on_update: props.on_label_component_update,
                         }
                     }
@@ -149,42 +149,42 @@ pub fn FertilizerLabel(props: FertilizerLabelProps) -> Element {
 
                     Column {
                         FertilizerComponentInput {
-                            component: label[Component::Iron(0.0)],
+                            component: label[LabelComponent::Iron(0.0)],
                             on_update: props.on_label_component_update,
                         }
                     }
 
                     Column {
                         FertilizerComponentInput {
-                            component: label[Component::Manganese(0.0)],
+                            component: label[LabelComponent::Manganese(0.0)],
                             on_update: props.on_label_component_update,
                         }
                     }
 
                     Column {
                         FertilizerComponentInput {
-                            component: label[Component::Copper(0.0)],
+                            component: label[LabelComponent::Copper(0.0)],
                             on_update: props.on_label_component_update,
                         }
                     }
 
                     Column {
                         FertilizerComponentInput {
-                            component: label[Component::Zinc(0.0)],
+                            component: label[LabelComponent::Zinc(0.0)],
                             on_update: props.on_label_component_update,
                         }
                     }
 
                     Column {
                         FertilizerComponentInput {
-                            component: label[Component::Boron(0.0)],
+                            component: label[LabelComponent::Boron(0.0)],
                             on_update: props.on_label_component_update,
                         }
                     }
 
                     Column {
                         FertilizerComponentInput {
-                            component: label[Component::Molybdenum(0.0)],
+                            component: label[LabelComponent::Molybdenum(0.0)],
                             on_update: props.on_label_component_update,
                         }
                     }

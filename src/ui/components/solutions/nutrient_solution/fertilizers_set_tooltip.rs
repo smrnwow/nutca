@@ -19,11 +19,11 @@ pub struct FertilizersSetTooltipProps {
 
 #[component]
 pub fn FertilizersSetTooltip(props: FertilizersSetTooltipProps) -> Element {
-    let macros = props.fertilizer_weight.read().nutrients.macros();
+    let macros = props.fertilizer_weight.read().nutrients().macros();
 
-    let nitrogen_forms = props.fertilizer_weight.read().nutrients.nitrogen_forms();
+    let nitrogen_forms = props.fertilizer_weight.read().nutrients().nitrogen_forms();
 
-    let micros = props.fertilizer_weight.read().nutrients.micros();
+    let micros = props.fertilizer_weight.read().nutrients().micros();
 
     rsx! {
         Tooltip {

@@ -180,11 +180,6 @@ fn SelectSearch(
                 oninput: move |event| {
                     on_search.call(event.value());
                 },
-                onmounted: move |event| {
-                    async move {
-                        event.as_ref().set_focus(true).await.unwrap();
-                    }
-                },
             }
         }
     }

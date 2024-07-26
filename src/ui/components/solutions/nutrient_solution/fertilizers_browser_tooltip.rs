@@ -19,7 +19,7 @@ pub struct FertilizersBrowserTooltipProps {
 
 #[component]
 pub fn FertilizersBrowserTooltip(props: FertilizersBrowserTooltipProps) -> Element {
-    let nutrients = props.fertilizer.read().nutrients();
+    let nutrients = props.fertilizer.read().nutrients().clone();
 
     let macros = nutrients.macros();
 
