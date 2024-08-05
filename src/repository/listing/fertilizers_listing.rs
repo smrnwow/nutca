@@ -1,12 +1,14 @@
 use crate::repository::Storage;
 use dioxus::prelude::*;
 use nutca::fertilizers::Fertilizer;
+use std::collections::HashMap;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct FertilizersListing {
     storage: Signal<Storage>,
-    fertilizers: Vec<Fertilizer>,
-    excluded_fertilizers_ids: Vec<String>,
+    fertilizers: HashMap<String, Fertilizer>,
+    items: Vec<String>,
+    excluded_ids: Vec<String>,
     search_query: String,
     page_index: usize,
     limit: usize,
@@ -15,14 +17,23 @@ pub struct FertilizersListing {
 impl FertilizersListing {
     pub fn new(storage: Signal<Storage>) -> Self {
         let fertilizers = match storage.read().fertilizers().list() {
-            Ok(fertilizers) => fertilizers,
-            Err(_) => Vec::new(),
+            Ok(list) => list.iter().fold(HashMap::new(), |mut acc, fertilizer| {
+                acc.insert(fertilizer.id(), fertilizer.clone());
+                acc
+            }),
+            Err(_) => HashMap::new(),
         };
+
+        let items: Vec<String> = fertilizers
+            .keys()
+            .map(|fertilizer_id| fertilizer_id.clone())
+            .collect();
 
         Self {
             storage,
             fertilizers,
-            excluded_fertilizers_ids: Vec::new(),
+            items,
+            excluded_ids: Vec::new(),
             search_query: String::new(),
             page_index: 1,
             limit: 8,
@@ -31,43 +42,30 @@ impl FertilizersListing {
 
     pub fn search(&mut self, search_query: String) {
         self.search_query = search_query.to_lowercase();
+
+        self.update_list();
     }
 
     pub fn list(&self) -> Vec<Fertilizer> {
-        let fertilizers: Vec<Fertilizer> = self
-            .fertilizers
-            .iter()
-            .cloned()
-            .filter(|fertilizer| {
-                let search_filter = fertilizer
-                    .name()
-                    .to_lowercase()
-                    .contains(self.search_query.as_str());
-
-                let exclusion_filter = !self.excluded_fertilizers_ids.contains(&fertilizer.id());
-
-                search_filter && exclusion_filter
-            })
-            .collect();
-
         let start = (self.page_index - 1) * self.limit;
 
         let end = (self.page_index * self.limit) - 1;
 
-        if end < fertilizers.len() {
-            Vec::from(&fertilizers[start..=end])
+        if end < self.items.len() {
+            return self.items[start..=end]
+                .iter()
+                .map(|fertilizer_id| self.fertilizers.get(fertilizer_id).unwrap().clone())
+                .collect();
         } else {
-            Vec::from(&fertilizers[start..])
+            return self.items[start..]
+                .iter()
+                .map(|fertilizer_id| self.fertilizers.get(fertilizer_id).unwrap().clone())
+                .collect();
         }
     }
 
     pub fn find(&self, fertilizer_id: String) -> Option<Fertilizer> {
-        let fertilizer = self
-            .fertilizers
-            .iter()
-            .find(|fertilizer| fertilizer.id() == fertilizer_id);
-
-        match fertilizer {
+        match self.fertilizers.get(&fertilizer_id) {
             Some(fertilizer) => Some(fertilizer.clone()),
             None => None,
         }
@@ -75,23 +73,29 @@ impl FertilizersListing {
 
     pub fn excluded(&mut self, fertilizers_ids: Vec<String>) {
         for fertilizer_id in fertilizers_ids {
-            self.excluded_fertilizers_ids.push(fertilizer_id);
+            self.excluded_ids.push(fertilizer_id);
         }
+
+        self.update_list();
     }
 
     pub fn exclude(&mut self, fertilizer_id: String) -> Option<Fertilizer> {
-        self.excluded_fertilizers_ids.push(fertilizer_id.clone());
+        self.excluded_ids.push(fertilizer_id.clone());
+
+        self.update_list();
 
         self.find(fertilizer_id)
     }
 
     pub fn include(&mut self, fertilizer_id: String) -> Option<Fertilizer> {
-        self.excluded_fertilizers_ids = self
-            .excluded_fertilizers_ids
+        self.excluded_ids = self
+            .excluded_ids
             .iter()
             .cloned()
             .filter(|excluded_fertilizer_id| *excluded_fertilizer_id != fertilizer_id)
             .collect();
+
+        self.update_list();
 
         self.find(fertilizer_id)
     }
@@ -113,20 +117,7 @@ impl FertilizersListing {
     }
 
     pub fn total(&self) -> usize {
-        self.fertilizers
-            .iter()
-            .filter(|fertilizer| {
-                let search_filter = fertilizer
-                    .name()
-                    .to_lowercase()
-                    .contains(self.search_query.as_str());
-
-                let exclusion_filter = !self.excluded_fertilizers_ids.contains(&fertilizer.id());
-
-                search_filter && exclusion_filter
-            })
-            .collect::<Vec<&Fertilizer>>()
-            .len()
+        self.items.len()
     }
 
     pub fn is_empty(&self) -> bool {
@@ -135,5 +126,29 @@ impl FertilizersListing {
 
     pub fn search_query(&self) -> String {
         self.search_query.clone()
+    }
+
+    fn update_list(&mut self) {
+        self.items = self
+            .fertilizers
+            .values()
+            .filter(|fertilizer| {
+                let search_filter = fertilizer
+                    .name()
+                    .to_lowercase()
+                    .contains(self.search_query.as_str());
+
+                let exclusion_filter = !self.excluded_ids.contains(&fertilizer.id());
+
+                search_filter && exclusion_filter
+            })
+            .map(|fertilizer| fertilizer.id())
+            .collect();
+
+        let pages_count = self.items.len() / self.limit;
+
+        if pages_count < self.page_index {
+            self.page_index = 1;
+        }
     }
 }

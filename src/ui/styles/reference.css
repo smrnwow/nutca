@@ -64,7 +64,6 @@
     left: 0px;
     top: 0px;
     border-radius: 50%;
-    transform: scale(0.0);
     background-color: rgba(54, 0, 144, 1);
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
@@ -72,7 +71,6 @@
     width: 100%;
     height: 100%;
     border: none;
-    transition: .1s ease-out;
     cursor: pointer;
 }
 
@@ -80,6 +78,5 @@
     opacity: 1;
     visibility: visible;
     border-radius: 6px;
-    transform: scale(1);
 }
 

@@ -38,21 +38,21 @@ pub fn Layout() -> Element {
                 }
 
                 Link {
-                    class: link_class(&current_route, Route::SolutionsMainPage {}),
-                    to: Route::SolutionsMainPage {},
-                    "Растворы",
-                }
-
-                Link {
                     class: link_class(&current_route, Route::ProfilesMainPage {}),
                     to: Route::ProfilesMainPage {},
-                    "Профили",
+                    "Питательные составы",
                 }
 
                 Link {
                     class: link_class(&current_route, Route::FertilizersMainPage {}),
                     to: Route::FertilizersMainPage {},
                     "Удобрения",
+                }
+
+                Link {
+                    class: link_class(&current_route, Route::SolutionsMainPage {}),
+                    to: Route::SolutionsMainPage {},
+                    "Растворы",
                 }
             }
         }

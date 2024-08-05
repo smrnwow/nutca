@@ -5,7 +5,7 @@ use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::icons::SearchIcon;
 use crate::ui::components::utils::{
-    Block, Button, Card, Divider, List, Pagination, TextField, Title,
+    Banner, Block, Button, Card, Divider, List, Pagination, TextField, Title,
 };
 use dioxus::prelude::*;
 
@@ -39,6 +39,15 @@ pub fn FertilizersListing(props: FertilizersListingProps) -> Element {
             Divider {}
 
             Block {
+                Banner {
+                    text: "Удобрения - это источник основных питательных элементов. Набор качественных и совместимых удобрений обеспечит потребность растений в питании.",
+                    more_link: "#",
+                }
+            }
+
+            Block {
+                exclude_padding: "top",
+
                 Row {
                     TextField {
                         value: props.fertilizers_listing.read().search_query(),

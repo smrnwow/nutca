@@ -3,7 +3,7 @@ use crate::controller::reference::TopicId;
 use crate::repository::SolutionsListing;
 use crate::ui::components::layout::Row;
 use crate::ui::components::reference::ReferenceBadge;
-use crate::ui::components::utils::{Block, Card, Divider, Title};
+use crate::ui::components::utils::{Banner, Block, Card, Divider, Title};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -35,6 +35,15 @@ pub fn SolutionsDashboard(props: SolutionsDashboardProps) -> Element {
             Divider {}
 
             Block {
+                Banner {
+                    text: "Раствор - это рецепт в котором записан питательный состав, который требуется растению и набор удобрений с рассчитанным для него объемом.",
+                    more_link: "#",
+                }
+            }
+
+            Block {
+                exclude_padding: "top",
+
                 SolutionsListingControls {
                     search_query: props.solutions_listing.read().search_query(),
                     on_search: props.on_search,

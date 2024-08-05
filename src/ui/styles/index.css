@@ -11,6 +11,7 @@
 @import "./src/ui/styles/layout/section.css";
 
 @import "./src/ui/styles/utils/badge.css";
+@import "./src/ui/styles/utils/banner.css";
 @import "./src/ui/styles/utils/block.css";
 @import "./src/ui/styles/utils/button.css";
 @import "./src/ui/styles/utils/buttons_group.css";

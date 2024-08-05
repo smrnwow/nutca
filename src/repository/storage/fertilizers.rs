@@ -85,9 +85,9 @@ impl Fertilizers {
     fn setup(&self) -> Result<(), Error> {
         self.connection.execute(
             "CREATE TABLE fertilizers (
-                    id TEXT PRIMARY KEY,
-                    data TEXT NOT NULL
-                )",
+                id TEXT PRIMARY KEY,
+                data TEXT NOT NULL
+            )",
             (),
         )?;
 
@@ -181,15 +181,6 @@ impl Fertilizers {
         ];
 
         for fertilizer in fertilizers {
-            self.add(fertilizer)?;
-        }
-
-        for index in 0..=100 {
-            let fertilizer = FertilizerBuilder::new()
-                .name(format!("Монофосфат калия {}", index))
-                .formula("KH2PO4")
-                .build();
-
             self.add(fertilizer)?;
         }
 

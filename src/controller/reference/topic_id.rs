@@ -12,8 +12,8 @@ pub enum TopicId {
 impl TopicId {
     pub fn title(&self) -> String {
         match self {
-            Self::ProfilesDashboard => String::from("Профили питания"),
-            Self::ProfileEditor => String::from("Редактор профиля питания"),
+            Self::ProfilesDashboard => String::from("Питательные составы"),
+            Self::ProfileEditor => String::from("Редактор питательного состава"),
             Self::FertilizersDashboard => String::from("Удобрения"),
             Self::FertilizerEditor => String::from("Редактор удобрения"),
             Self::SolutionsDashboard => String::from("Растворы"),

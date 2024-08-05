@@ -1,4 +1,5 @@
 mod badge;
+mod banner;
 mod block;
 mod button;
 mod buttons_group;
@@ -24,6 +25,7 @@ mod title;
 mod tooltip;
 
 pub use badge::Badge;
+pub use banner::Banner;
 pub use block::Block;
 pub use button::Button;
 pub use buttons_group::ButtonsGroup;

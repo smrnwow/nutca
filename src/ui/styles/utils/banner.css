@@ -1,0 +1,33 @@
+.banner {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background-color: #feee99;
+    padding: 14px;
+    border-radius: 8px;
+}
+
+.banner__content {
+    display: flex;
+    gap: 14px;
+}
+
+.banner__text {
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 16px;
+    margin: 0px 0px 5px 0px;
+    color: rgba(14, 18, 27, 1);
+}
+
+.banner__links {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.banner__more-link {
+    font-size: 12px;
+    text-decoration: none;
+    line-height: 16px;
+    color: rgba(14, 18, 27, 1);
+}

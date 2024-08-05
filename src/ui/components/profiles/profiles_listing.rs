@@ -5,7 +5,7 @@ use crate::ui::components::profiles::ProfilesListingItem;
 use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::icons::SearchIcon;
 use crate::ui::components::utils::{
-    Block, Button, Card, Divider, List, Pagination, TextField, Title,
+    Banner, Block, Button, Card, Divider, List, Pagination, TextField, Title,
 };
 use dioxus::prelude::*;
 
@@ -29,10 +29,7 @@ pub fn ProfilesListing(props: ProfilesListingProps) -> Element {
             Block {
                 Row {
                     Title {
-                        {TopicId::ProfilesDashboard.title()},
-                        ReferenceBadge {
-                            topic_id: TopicId::ProfilesDashboard,
-                        },
+                        {TopicId::ProfilesDashboard.title()}
                     }
                 }
             }
@@ -40,10 +37,19 @@ pub fn ProfilesListing(props: ProfilesListingProps) -> Element {
             Divider {}
 
             Block {
+                Banner {
+                    text: "Питательный состав - это набор требований к объему основных питательных элементов, небходимых растениям для роста и развития. Сбалансированный питательный состав - залог успеха.",
+                    more_link: "#",
+                }
+            }
+
+            Block {
+                exclude_padding: "top",
+
                 Row {
                     TextField {
                         value: props.profiles_listing.read().search_query(),
-                        placeholder: "найти профиль питания",
+                        placeholder: "найти питательный состав",
                         on_input: props.on_search,
                         icon_left: rsx! {
                             SearchIcon {}
@@ -53,7 +59,7 @@ pub fn ProfilesListing(props: ProfilesListingProps) -> Element {
                     Button {
                         style: "primary",
                         on_click: props.on_add,
-                        "Добавить профиль питания",
+                        "Добавить питательный состав",
                     }
                 }
             }
@@ -65,7 +71,7 @@ pub fn ProfilesListing(props: ProfilesListingProps) -> Element {
                     List {
                         limit: 10,
                         empty: profiles.read().len() == 0,
-                        stub_text: "Сохраненные профили питания отсутствуют",
+                        stub_text: "Сохраненные питательные составы отсутствуют",
 
                         for profile in profiles.read().clone() {
                             ProfilesListingItem {
