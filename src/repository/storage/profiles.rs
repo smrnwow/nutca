@@ -1,6 +1,6 @@
+use crate::model::chemistry::NutrientAmount;
+use crate::model::profiles::{Profile, ProfileBuilder};
 use crate::repository::{Error, RepositoryError};
-use nutca::chemistry::NutrientAmount;
-use nutca::profiles::{Profile, ProfileBuilder};
 use rusqlite::{params, Connection};
 use std::rc::Rc;
 

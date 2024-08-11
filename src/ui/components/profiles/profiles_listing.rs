@@ -2,7 +2,6 @@ use crate::controller::reference::TopicId;
 use crate::repository::ProfilesListing;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfilesListingItem;
-use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::icons::SearchIcon;
 use crate::ui::components::utils::{
     Banner, Block, Button, Card, Divider, List, Pagination, TextField, Title,
@@ -87,7 +86,7 @@ pub fn ProfilesListing(props: ProfilesListingProps) -> Element {
                     Pagination {
                         page_index: props.profiles_listing.read().page_index(),
                         limit: props.profiles_listing.read().limit(),
-                        total: props.profiles_listing.read().total(),
+                        items_count: profiles.read().len(),
                         on_change: props.on_paginate,
                     }
                 }

@@ -1,7 +1,7 @@
 use super::FertilizersSetTooltip;
 use crate::ui::components::utils::{QuickAction, Text};
 use dioxus::prelude::*;
-use nutca::solutions::FertilizerWeight;
+use crate::model::solutions::FertilizerWeight;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersSetItemProps {

@@ -1,4 +1,4 @@
-use nutca::solutions::FertilizerWeight;
+use crate::model::solutions::FertilizerWeight;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct SolutionFertilizers {

@@ -1,6 +1,6 @@
 use crate::ui::components::utils::TextField;
 use dioxus::prelude::*;
-use nutca::fertilizers::Formula;
+use crate::model::fertilizers::Formula;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerFormulaProps {

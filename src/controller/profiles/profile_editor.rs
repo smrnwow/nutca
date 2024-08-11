@@ -3,7 +3,7 @@ use crate::repository::Storage;
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
-use nutca::profiles::{Profile, ProfileBuilder};
+use crate::model::profiles::{Profile, ProfileBuilder};
 
 pub struct ProfileEditor {
     is_draft: Signal<bool>,

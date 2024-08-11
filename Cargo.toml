@@ -10,7 +10,9 @@ manganis = "0.2.2"
 rusqlite = "0.31.0"
 serde = "1.0.203"
 serde_json = "1.0.117"
-nutca = { git = "https://github.com/smrnwow/nutca.git" }
+ellp = "0.2.0"
+chemp = "0.9.6"
+uuid = { version = "1.8.0", features = ["v4"] }
 
 [features]
 desktop = ["dioxus/desktop"]

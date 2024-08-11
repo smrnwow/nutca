@@ -1,6 +1,6 @@
 use crate::ui::components::NutrientValue;
 use dioxus::prelude::*;
-use nutca::chemistry::NutrientAmount;
+use crate::model::chemistry::NutrientAmount;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct NutrientContentValueProps {

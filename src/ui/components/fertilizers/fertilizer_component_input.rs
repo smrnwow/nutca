@@ -1,6 +1,6 @@
 use crate::ui::components::NutrientValue;
 use dioxus::prelude::*;
-use nutca::fertilizers::LabelComponent;
+use crate::model::fertilizers::LabelComponent;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerComponentInputProps {

@@ -17,6 +17,8 @@ pub struct SolutionsListingTableProps {
 pub fn SolutionsListingTable(props: SolutionsListingTableProps) -> Element {
     let solutions = props.solutions_listing.read().list();
 
+    let items_count = solutions.len();
+
     rsx! {
         Column {
             List {
@@ -38,7 +40,7 @@ pub fn SolutionsListingTable(props: SolutionsListingTableProps) -> Element {
             Pagination {
                 page_index: props.solutions_listing.read().page_index(),
                 limit: props.solutions_listing.read().limit(),
-                total: props.solutions_listing.read().total(),
+                items_count,
                 on_change: props.on_paginate,
             }
         }

@@ -1,6 +1,6 @@
+use crate::model::fertilizers::{Fertilizer, FertilizerBuilder, LabelComponent, LabelUnits};
 use crate::repository::{Error, RepositoryError};
-use nutca::fertilizers::{Fertilizer, FertilizerBuilder, LabelComponent, LabelUnits};
-use rusqlite::{params, Connection};
+use rusqlite::{named_params, params, Connection};
 use std::rc::Rc;
 
 #[derive(Clone, Debug)]
@@ -23,8 +23,8 @@ impl Fertilizers {
         let data = serde_json::to_string(&fertilizer)?;
 
         self.connection.execute(
-            "INSERT INTO fertilizers (id, data) VALUES (?1, ?2)",
-            params![fertilizer.id(), data],
+            "INSERT INTO fertilizers (id, name, data) VALUES (?1, ?2, ?3)",
+            params![fertilizer.id(), fertilizer.name().to_lowercase(), data],
         )?;
 
         Ok(())
@@ -36,7 +36,7 @@ impl Fertilizers {
             .prepare("SELECT * FROM fertilizers WHERE id = ?1")?;
 
         let response = statement.query_map(params![fertilizer_id], |row| {
-            let data: String = row.get(1)?;
+            let data: String = row.get(2)?;
             Ok(data)
         })?;
 
@@ -64,13 +64,34 @@ impl Fertilizers {
         Ok(())
     }
 
-    pub fn list(&self) -> Result<Vec<Fertilizer>, Error> {
-        let mut statement = self.connection.prepare("SELECT * FROM fertilizers")?;
+    pub fn search(
+        &self,
+        query: String,
+        not_in: &[String],
+        limit: usize,
+        offset: usize,
+    ) -> Result<Vec<Fertilizer>, Error> {
+        let not_in_items = not_in
+            .iter()
+            .map(|id| format!("\"{}\"", id))
+            .collect::<Vec<String>>()
+            .join(",");
 
-        let response = statement.query_map([], |row| {
-            let data: String = row.get(1)?;
-            Ok(data)
-        })?;
+        let query_str = format!("SELECT * FROM fertilizers WHERE name LIKE '%' || :search || '%' AND id NOT IN ({}) LIMIT :limit OFFSET :offset", not_in_items);
+
+        let mut statement = self.connection.prepare(&query_str)?;
+
+        let response = statement.query_map(
+            named_params! {
+                ":search": query,
+                ":limit": limit,
+                ":offset": offset,
+            },
+            |row| {
+                let data: String = row.get(2)?;
+                Ok(data)
+            },
+        )?;
 
         let mut fertilizers = vec![];
 
@@ -86,6 +107,7 @@ impl Fertilizers {
         self.connection.execute(
             "CREATE TABLE fertilizers (
                 id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
                 data TEXT NOT NULL
             )",
             (),
@@ -98,11 +120,11 @@ impl Fertilizers {
         let fertilizers = vec![
             FertilizerBuilder::new()
                 .name("Кальциевая селитра (3-х водная)")
-                .formula("Ca(NO3)2*3H20")
+                .formula("Ca(NO3)2*3H2O")
                 .build(),
             FertilizerBuilder::new()
                 .name("Кальциевая селитра (4-х водная)")
-                .formula("Ca(NO3)2*4H20")
+                .formula("Ca(NO3)2*4H2O")
                 .build(),
             FertilizerBuilder::new()
                 .name("Калиевая селитра")

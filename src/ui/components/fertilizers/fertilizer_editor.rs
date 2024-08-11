@@ -1,13 +1,12 @@
 use crate::controller::reference::TopicId;
 use crate::controller::Validation;
+use crate::model::fertilizers::{Fertilizer, LabelComponent, LabelUnits, SourceType};
 use crate::ui::components::fertilizers::{
     FertilizerComposition, FertilizerDetails, FertilizerSource,
 };
 use crate::ui::components::layout::Row;
-use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::{Block, Button, Card, Divider, Title};
 use dioxus::prelude::*;
-use nutca::fertilizers::{Fertilizer, LabelComponent, LabelUnits, SourceType};
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerEditorProps {
@@ -32,9 +31,6 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
                 Row {
                     Title {
                         {TopicId::FertilizerEditor.title()},
-                        ReferenceBadge {
-                            topic_id: TopicId::FertilizerEditor,
-                        },
                     }
                 }
             }

@@ -2,7 +2,7 @@ use crate::ui::components::fertilizers::FertilizerComponentInput;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{Label, Radio};
 use dioxus::prelude::*;
-use nutca::fertilizers::{Label, LabelComponent, LabelUnits};
+use crate::model::fertilizers::{Label, LabelComponent, LabelUnits};
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerLabelProps {

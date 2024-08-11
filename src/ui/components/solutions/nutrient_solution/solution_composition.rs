@@ -2,8 +2,8 @@ use super::SolutionCompositionNutrient;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::Text;
 use dioxus::prelude::*;
-use nutca::chemistry::Nutrient;
-use nutca::solutions::Solution;
+use crate::model::chemistry::Nutrient;
+use crate::model::solutions::Solution;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionCompositionProps {

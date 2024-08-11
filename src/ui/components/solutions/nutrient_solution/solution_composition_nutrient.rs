@@ -2,8 +2,8 @@ use crate::ui::components::layout::Column;
 use crate::ui::components::utils::{Badge, Text, Tooltip};
 use crate::ui::components::NutrientValue;
 use dioxus::prelude::*;
-use nutca::chemistry::NutrientAmount;
-use nutca::solutions::NutrientResult;
+use crate::model::chemistry::NutrientAmount;
+use crate::model::solutions::NutrientResult;
 
 fn tooltip_text(nutrient_result: NutrientResult) -> String {
     let diff_percent = nutrient_result.diff_percent();

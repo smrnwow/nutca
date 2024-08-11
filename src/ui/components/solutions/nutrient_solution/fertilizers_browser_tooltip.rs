@@ -2,8 +2,8 @@ use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::ArrowRight;
 use crate::ui::components::utils::{Button, Tag, Text, Tooltip};
 use dioxus::prelude::*;
-use nutca::chemistry::NutrientAmount;
-use nutca::fertilizers::Fertilizer;
+use crate::model::chemistry::NutrientAmount;
+use crate::model::fertilizers::Fertilizer;
 
 fn tag_text(nutrient: NutrientAmount) -> Vec<String> {
     vec![

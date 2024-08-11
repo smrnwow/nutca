@@ -17,6 +17,10 @@ pub struct FertilizersBrowserProps {
 pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
     let mut show_reference = use_signal(|| false);
 
+    let fertilizers = props.fertilizers_listing.read().fetch();
+
+    let items_count = fertilizers.len();
+
     rsx! {
         Column {
             gap: "medium",
@@ -44,10 +48,10 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
 
             List {
                 limit: 8,
-                empty: props.fertilizers_listing.read().is_empty(),
+                empty: items_count == 0,
                 stub_text: "Удобрений не найдено",
 
-                for fertilizer in props.fertilizers_listing.read().list() {
+                for fertilizer in fertilizers {
                     FertilizersBrowserItem {
                         key: "{fertilizer.id()}",
                         fertilizer: Signal::new(fertilizer),
@@ -59,7 +63,7 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
             Pagination {
                 page_index: props.fertilizers_listing.read().page_index(),
                 limit: props.fertilizers_listing.read().limit(),
-                total: props.fertilizers_listing.read().total(),
+                items_count,
                 on_change: move |next_page| {
                     props.on_paginate.call(next_page);
                 },

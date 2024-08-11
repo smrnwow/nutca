@@ -1,7 +1,7 @@
 use crate::ui::components::utils::icons::More;
 use crate::ui::components::utils::{Button, Dropdown, DropdownOption, QuickAction, Text};
 use dioxus::prelude::*;
-use nutca::solutions::Solution;
+use crate::model::solutions::Solution;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionListingItemProps {

@@ -2,8 +2,8 @@ use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfileNutrientInput;
 use crate::ui::components::utils::Text;
 use dioxus::prelude::*;
-use nutca::chemistry::{Nutrient, NutrientAmount};
-use nutca::profiles::Profile;
+use crate::model::chemistry::{Nutrient, NutrientAmount};
+use crate::model::profiles::Profile;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ProfileFormProps {

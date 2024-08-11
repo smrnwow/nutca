@@ -1,10 +1,10 @@
+use crate::model::chemistry::Volume;
+use crate::model::solutions::Solution;
 use crate::repository::SolutionsListing;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{NumberField, Select};
 use crate::ui::components::VolumeField;
 use dioxus::prelude::*;
-use nutca::chemistry::Volume;
-use nutca::solutions::Solution;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct StockSolutionControlsProps {

@@ -1,12 +1,11 @@
 use crate::controller::reference::TopicId;
+use crate::model::chemistry::Volume;
+use crate::model::solutions::{FertilizerWeight, Solution};
 use crate::repository::SolutionsListing;
 use crate::ui::components::layout::Row;
-use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::solutions::stock_solution::{StockSolutionControls, StockSolutionPart};
 use crate::ui::components::utils::{Block, Card, Divider, Title};
 use dioxus::prelude::*;
-use nutca::chemistry::Volume;
-use nutca::solutions::{FertilizerWeight, Solution};
 
 #[derive(Props, PartialEq, Clone)]
 pub struct StockSolutionEditorProps {
@@ -30,9 +29,6 @@ pub fn StockSolutionEditor(props: StockSolutionEditorProps) -> Element {
                 Row {
                     Title {
                         {TopicId::NutrientSolutionEditor.title()},
-                        ReferenceBadge {
-                            topic_id: TopicId::NutrientSolutionEditor,
-                        },
                     }
                 }
             }

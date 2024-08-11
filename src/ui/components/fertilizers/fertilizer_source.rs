@@ -2,7 +2,7 @@ use crate::ui::components::fertilizers::{FertilizerFormula, FertilizerLabel};
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{ButtonsGroup, ButtonsGroupButton, Title};
 use dioxus::prelude::*;
-use nutca::fertilizers::{Fertilizer, LabelComponent, LabelUnits, SourceComposition, SourceType};
+use crate::model::fertilizers::{Fertilizer, LabelComponent, LabelUnits, SourceComposition, SourceType};
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerSourceProps {

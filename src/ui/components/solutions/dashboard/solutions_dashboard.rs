@@ -2,7 +2,6 @@ use super::{SolutionsListingControls, SolutionsListingTable};
 use crate::controller::reference::TopicId;
 use crate::repository::SolutionsListing;
 use crate::ui::components::layout::Row;
-use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::{Banner, Block, Card, Divider, Title};
 use dioxus::prelude::*;
 
@@ -25,9 +24,6 @@ pub fn SolutionsDashboard(props: SolutionsDashboardProps) -> Element {
                 Row {
                     Title {
                         {TopicId::SolutionsDashboard.title()},
-                        ReferenceBadge {
-                            topic_id: TopicId::SolutionsDashboard,
-                        },
                     }
                 }
             }

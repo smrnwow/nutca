@@ -1,5 +1,5 @@
 use crate::controller::Error;
-use nutca::Error as ModelError;
+use crate::model::Error as ModelError;
 
 #[derive(Debug, PartialEq)]
 pub struct Validation {

@@ -2,7 +2,6 @@ use crate::controller::reference::TopicId;
 use crate::repository::FertilizersListing;
 use crate::ui::components::fertilizers::FertilizersListingItem;
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::reference::ReferenceBadge;
 use crate::ui::components::utils::icons::SearchIcon;
 use crate::ui::components::utils::{
     Banner, Block, Button, Card, Divider, List, Pagination, TextField, Title,
@@ -21,7 +20,7 @@ pub struct FertilizersListingProps {
 
 #[component]
 pub fn FertilizersListing(props: FertilizersListingProps) -> Element {
-    let fertilizers = use_memo(move || props.fertilizers_listing.read().list());
+    let fertilizers = use_memo(move || props.fertilizers_listing.read().fetch());
 
     rsx! {
         Card {
@@ -29,9 +28,6 @@ pub fn FertilizersListing(props: FertilizersListingProps) -> Element {
                 Row {
                     Title {
                         {TopicId::FertilizersDashboard.title()},
-                        ReferenceBadge {
-                            topic_id: TopicId::FertilizersDashboard,
-                        },
                     }
                 }
             }
@@ -88,7 +84,7 @@ pub fn FertilizersListing(props: FertilizersListingProps) -> Element {
                     Pagination {
                         page_index: props.fertilizers_listing.read().page_index(),
                         limit: props.fertilizers_listing.read().limit(),
-                        total: props.fertilizers_listing.read().total(),
+                        items_count: fertilizers.read().len(),
                         on_change: props.on_paginate,
                     }
                 }

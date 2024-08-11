@@ -1,11 +1,11 @@
 use crate::controller::{Error, Validation};
+use crate::model::profiles::Profile;
+use crate::model::solutions::{Solution, SolutionBuilder};
 use crate::repository::Storage;
 use crate::repository::{FertilizersListing, ProfilesListing};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
-use nutca::profiles::Profile;
-use nutca::solutions::{Solution, SolutionBuilder};
 
 pub struct SolutionEditor {
     is_draft: Signal<bool>,
@@ -65,7 +65,7 @@ impl SolutionEditor {
 
         let mut fertilizers_listing = FertilizersListing::new(storage);
 
-        fertilizers_listing.excluded(
+        fertilizers_listing.exclude_many(
             solution
                 .read()
                 .fertilizers()

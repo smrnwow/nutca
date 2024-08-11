@@ -1,7 +1,7 @@
 use super::FertilizersBrowserTooltip;
 use crate::ui::components::utils::{QuickAction, Text};
 use dioxus::prelude::*;
-use nutca::fertilizers::Fertilizer;
+use crate::model::fertilizers::Fertilizer;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersBrowserItemProps {

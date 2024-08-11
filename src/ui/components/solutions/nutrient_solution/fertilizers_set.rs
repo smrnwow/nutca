@@ -1,11 +1,11 @@
 use super::FertilizersSetItem;
+use crate::model::chemistry::Volume;
+use crate::model::solutions::Solution;
 use crate::repository::SolutionFertilizers;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{List, Pagination, Title};
 use crate::ui::components::VolumeField;
 use dioxus::prelude::*;
-use nutca::chemistry::Volume;
-use nutca::solutions::Solution;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersSetProps {
@@ -29,6 +29,10 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
     });
 
     let volume = use_memo(move || props.solution.read().volume());
+
+    let fertilizers_weights = solution_fertilizers.read().items();
+
+    let items_count = fertilizers_weights.len();
 
     rsx! {
         Column {
@@ -54,7 +58,7 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
                 empty: solution_fertilizers.read().is_empty(),
                 stub_text: "Выберите удобрения из списка",
 
-                for fertilizer_weight in solution_fertilizers.read().items() {
+                for fertilizer_weight in fertilizers_weights {
                     FertilizersSetItem {
                         key: "{fertilizer_weight.id()}",
                         fertilizer_weight: Signal::new(fertilizer_weight),
@@ -66,7 +70,7 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
             Pagination {
                 page_index: solution_fertilizers.read().page_index(),
                 limit: solution_fertilizers.read().limit(),
-                total: solution_fertilizers.read().total(),
+                items_count,
                 on_change: move |next_page| {
                     *page_index.write() = next_page;
                 },
