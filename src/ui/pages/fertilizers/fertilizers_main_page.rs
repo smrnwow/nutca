@@ -9,11 +9,9 @@ pub fn FertilizersMainPage() -> Element {
 
     let mut dashboard = use_signal(|| Dashboard::new(storage));
 
-    let fertilizers_listing = use_memo(move || dashboard.read().listing());
-
     rsx! {
         FertilizersListing {
-            fertilizers_listing,
+            fertilizers_listing: dashboard.read().listing(),
             on_search: move |query| {
                 dashboard.write().search(query);
             },

@@ -1,7 +1,7 @@
 use crate::controller::reference::TopicId;
+use crate::controller::solutions::SolutionsListing;
 use crate::model::chemistry::Volume;
 use crate::model::solutions::{FertilizerWeight, Solution};
-use crate::repository::SolutionsListing;
 use crate::ui::components::layout::Row;
 use crate::ui::components::solutions::stock_solution::{StockSolutionControls, StockSolutionPart};
 use crate::ui::components::utils::{Block, Card, Divider, Title};

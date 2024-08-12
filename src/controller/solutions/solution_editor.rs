@@ -1,8 +1,9 @@
+use crate::controller::fertilizers::FertilizersListing;
+use crate::controller::profiles::ProfilesListing;
 use crate::controller::{Error, Validation};
 use crate::model::profiles::Profile;
 use crate::model::solutions::{Solution, SolutionBuilder};
 use crate::repository::Storage;
-use crate::repository::{FertilizersListing, ProfilesListing};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
@@ -21,7 +22,7 @@ pub struct SolutionEditor {
 
 impl SolutionEditor {
     pub fn new(storage: Signal<Storage>, profile_id: String) -> Self {
-        let builder = match storage.read().profiles().get(profile_id) {
+        let builder = match storage.read().profiles().get(&profile_id) {
             Ok(profile) => Signal::new(SolutionBuilder::from(profile)),
             Err(_) => Signal::new(SolutionBuilder::new()),
         };
@@ -31,6 +32,10 @@ impl SolutionEditor {
         let storage_error = Signal::new(None);
 
         let solution = Memo::new(move || builder.read().build());
+
+        let mut fertilizers_listing = FertilizersListing::new(storage);
+
+        fertilizers_listing.update_limit(8);
 
         Self {
             is_draft,
@@ -46,13 +51,13 @@ impl SolutionEditor {
             }),
             solution,
             profile: Memo::new(move || solution.read().profile()),
-            fertilizers_listing: Signal::new(FertilizersListing::new(storage)),
+            fertilizers_listing: Signal::new(fertilizers_listing),
             profiles_listing: Signal::new(ProfilesListing::new(storage)),
         }
     }
 
     pub fn edit(storage: Signal<Storage>, solution_id: String) -> Self {
-        let builder = match storage.read().solutions().get(solution_id) {
+        let builder = match storage.read().solutions().get(&solution_id) {
             Ok(solution) => Signal::new(SolutionBuilder::from(solution)),
             Err(_) => Signal::new(SolutionBuilder::new()),
         };
@@ -64,6 +69,8 @@ impl SolutionEditor {
         let solution = Memo::new(move || builder.read().build());
 
         let mut fertilizers_listing = FertilizersListing::new(storage);
+
+        fertilizers_listing.update_limit(8);
 
         fertilizers_listing.exclude_many(
             solution

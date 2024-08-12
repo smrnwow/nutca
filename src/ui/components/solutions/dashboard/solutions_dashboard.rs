@@ -1,13 +1,13 @@
 use super::{SolutionsListingControls, SolutionsListingTable};
 use crate::controller::reference::TopicId;
-use crate::repository::SolutionsListing;
+use crate::controller::solutions::SolutionsListing;
 use crate::ui::components::layout::Row;
 use crate::ui::components::utils::{Banner, Block, Card, Divider, Title};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionsDashboardProps {
-    solutions_listing: Memo<SolutionsListing>,
+    solutions_listing: Signal<SolutionsListing>,
     on_search: EventHandler<String>,
     on_add: EventHandler<()>,
     on_open: EventHandler<String>,

@@ -1,7 +1,7 @@
 use crate::model::chemistry::NutrientAmount;
 use crate::model::profiles::{Profile, ProfileBuilder};
 use crate::repository::{Error, RepositoryError};
-use rusqlite::{params, Connection};
+use rusqlite::{named_params, params, Connection};
 use std::rc::Rc;
 
 #[derive(Clone, Debug)]
@@ -15,8 +15,6 @@ impl Profiles {
 
         storage.setup()?;
 
-        storage.seed()?;
-
         Ok(storage)
     }
 
@@ -24,20 +22,20 @@ impl Profiles {
         let data = serde_json::to_string(&profile)?;
 
         self.connection.execute(
-            "INSERT INTO profiles (id, data) VALUES (?1, ?2)",
-            params![profile.id(), data],
+            "INSERT INTO profiles (id, name, data) VALUES (?1, ?2, ?3)",
+            params![profile.id(), profile.name().to_lowercase(), data],
         )?;
 
         Ok(())
     }
 
-    pub fn get(&self, profile_id: String) -> Result<Profile, Error> {
+    pub fn get(&self, profile_id: &str) -> Result<Profile, Error> {
         let mut statement = self
             .connection
             .prepare("SELECT * FROM profiles WHERE id = ?1")?;
 
         let response = statement.query_map(params![profile_id], |row| {
-            let data: String = row.get(1)?;
+            let data: String = row.get(2)?;
             Ok(data)
         })?;
 
@@ -51,8 +49,8 @@ impl Profiles {
         let data = serde_json::to_string(&profile)?;
 
         self.connection
-            .prepare("UPDATE profiles SET data = ?2 WHERE id = ?1")?
-            .execute(params![profile.id(), data])?;
+            .prepare("UPDATE profiles SET name = ?2, data = ?3 WHERE id = ?1")?
+            .execute(params![profile.id(), profile.name().to_lowercase(), data])?;
 
         Ok(())
     }
@@ -65,13 +63,20 @@ impl Profiles {
         Ok(())
     }
 
-    pub fn list(&self) -> Result<Vec<Profile>, Error> {
-        let mut statement = self.connection.prepare("SELECT * FROM profiles")?;
+    pub fn search(&self, query: &str, limit: usize, offset: usize) -> Result<Vec<Profile>, Error> {
+        let mut statement = self.connection.prepare("SELECT * FROM profiles WHERE name LIKE '%' || :search || '%' LIMIT :limit OFFSET :offset")?;
 
-        let response = statement.query_map([], |row| {
-            let data: String = row.get(1)?;
-            Ok(data)
-        })?;
+        let response = statement.query_map(
+            named_params! {
+                ":search": query,
+                ":limit": limit,
+                ":offset": offset,
+            },
+            |row| {
+                let data: String = row.get(2)?;
+                Ok(data)
+            },
+        )?;
 
         let mut profiles = vec![];
 
@@ -85,11 +90,43 @@ impl Profiles {
     }
 
     fn setup(&self) -> Result<(), Error> {
+        let mut statement = self
+            .connection
+            .prepare("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='profiles'")?;
+
+        let response = statement.query_map(params![], |row| {
+            let data: usize = row.get(0)?;
+            Ok(data)
+        })?;
+
+        match response.last() {
+            Some(res) => match res {
+                Ok(table_count) => {
+                    println!("table count = {}", table_count);
+
+                    if table_count == 0 {
+                        self.create_table()?;
+                        self.seed()?;
+                    }
+                }
+                Err(error) => println!("error = {:#?}", error),
+            },
+            None => {
+                self.create_table()?;
+                self.seed()?;
+            }
+        }
+
+        Ok(())
+    }
+
+    fn create_table(&self) -> Result<(), Error> {
         self.connection.execute(
             "CREATE TABLE profiles (
-                    id TEXT PRIMARY KEY,
-                    data TEXT NOT NULL
-                )",
+                id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                data TEXT NOT NULL
+            )",
             (),
         )?;
 

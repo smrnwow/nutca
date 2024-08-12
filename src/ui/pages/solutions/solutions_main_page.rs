@@ -9,11 +9,9 @@ pub fn SolutionsMainPage() -> Element {
 
     let mut dashboard = use_signal(|| Dashboard::new(storage));
 
-    let solutions_listing = use_memo(move || dashboard.read().list_solutions());
-
     rsx! {
         SolutionsDashboard {
-            solutions_listing,
+            solutions_listing: dashboard.read().listing(),
             on_search: move |search_query| {
                 dashboard.write().search_solution(search_query);
             },

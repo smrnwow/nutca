@@ -1,14 +1,14 @@
 use super::SolutionComposition;
-use crate::repository::ProfilesListing;
+use crate::controller::profiles::ProfilesListing;
+use crate::model::chemistry::NutrientAmount;
+use crate::model::profiles::Profile;
+use crate::model::solutions::Solution;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfileForm;
 use crate::ui::components::utils::{
     Badge, Block, ButtonsGroup, ButtonsGroupButton, Select, Text, Title,
 };
 use dioxus::prelude::*;
-use crate::model::chemistry::NutrientAmount;
-use crate::model::profiles::Profile;
-use crate::model::solutions::Solution;
 
 fn round(value: f64) -> String {
     format!("{:.3}", value)
@@ -87,7 +87,7 @@ pub fn SolutionProfile(props: SolutionProfileProps) -> Element {
                     placeholder: "выбрать готовый профиль",
                     value: profile_select_value,
                     options: props.profiles_listing.read()
-                        .list()
+                        .fetch()
                         .iter()
                         .map(|profile| (profile.id(), profile.name()))
                         .collect(),

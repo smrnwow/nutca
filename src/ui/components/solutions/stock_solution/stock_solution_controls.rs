@@ -1,6 +1,6 @@
+use crate::controller::solutions::SolutionsListing;
 use crate::model::chemistry::Volume;
 use crate::model::solutions::Solution;
-use crate::repository::SolutionsListing;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{NumberField, Select};
 use crate::ui::components::VolumeField;
@@ -25,7 +25,7 @@ pub fn StockSolutionControls(props: StockSolutionControlsProps) -> Element {
     let options = props
         .solutions_listing
         .read()
-        .list()
+        .fetch()
         .iter()
         .map(|solution| (solution.id(), solution.name()))
         .collect();

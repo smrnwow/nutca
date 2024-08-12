@@ -14,8 +14,6 @@ impl Fertilizers {
 
         storage.setup()?;
 
-        storage.seed()?;
-
         Ok(storage)
     }
 
@@ -30,7 +28,7 @@ impl Fertilizers {
         Ok(())
     }
 
-    pub fn get(&self, fertilizer_id: String) -> Result<Fertilizer, Error> {
+    pub fn get(&self, fertilizer_id: &str) -> Result<Fertilizer, Error> {
         let mut statement = self
             .connection
             .prepare("SELECT * FROM fertilizers WHERE id = ?1")?;
@@ -50,8 +48,12 @@ impl Fertilizers {
         let data = serde_json::to_string(&fertilizer)?;
 
         self.connection
-            .prepare("UPDATE fertilizers SET data = ?2 WHERE id = ?1")?
-            .execute(params![fertilizer.id(), data])?;
+            .prepare("UPDATE fertilizers SET name = ?2, data = ?3 WHERE id = ?1")?
+            .execute(params![
+                fertilizer.id(),
+                fertilizer.name().to_lowercase(),
+                data
+            ])?;
 
         Ok(())
     }
@@ -66,7 +68,7 @@ impl Fertilizers {
 
     pub fn search(
         &self,
-        query: String,
+        query: &str,
         not_in: &[String],
         limit: usize,
         offset: usize,
@@ -104,6 +106,37 @@ impl Fertilizers {
     }
 
     fn setup(&self) -> Result<(), Error> {
+        let mut statement = self.connection.prepare(
+            "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='fertilizers'",
+        )?;
+
+        let response = statement.query_map(params![], |row| {
+            let data: usize = row.get(0)?;
+            Ok(data)
+        })?;
+
+        match response.last() {
+            Some(res) => match res {
+                Ok(table_count) => {
+                    println!("table count = {}", table_count);
+
+                    if table_count == 0 {
+                        self.create_table()?;
+                        self.seed()?;
+                    }
+                }
+                Err(error) => println!("error = {:#?}", error),
+            },
+            None => {
+                self.create_table()?;
+                self.seed()?;
+            }
+        }
+
+        Ok(())
+    }
+
+    fn create_table(&self) -> Result<(), Error> {
         self.connection.execute(
             "CREATE TABLE fertilizers (
                 id TEXT PRIMARY KEY,

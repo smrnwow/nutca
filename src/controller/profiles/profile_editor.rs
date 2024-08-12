@@ -1,9 +1,9 @@
 use crate::controller::{Error, Validation};
+use crate::model::profiles::{Profile, ProfileBuilder};
 use crate::repository::Storage;
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
-use crate::model::profiles::{Profile, ProfileBuilder};
 
 pub struct ProfileEditor {
     is_draft: Signal<bool>,
@@ -39,7 +39,7 @@ impl ProfileEditor {
     }
 
     pub fn edit(storage: Signal<Storage>, profile_id: String) -> Self {
-        let profile = storage.read().profiles().get(profile_id);
+        let profile = storage.read().profiles().get(&profile_id);
 
         let builder = match profile {
             Ok(profile) => Signal::new(ProfileBuilder::from(profile)),

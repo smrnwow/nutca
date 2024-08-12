@@ -111,8 +111,6 @@ impl SolutionBuilder {
     pub fn build(&self) -> Solution {
         let profile = self.profile_builder.build();
 
-        println!("self.fertilizers {:#?}", self.fertilizers);
-
         let fertilizers_set = Solver::new(&profile, self.fertilizers()).solve();
 
         let nutrients = fertilizers_set.nutrients();

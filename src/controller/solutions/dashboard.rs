@@ -1,33 +1,32 @@
-use crate::repository::{SolutionsListing, Storage};
+use crate::controller::solutions::SolutionsListing;
+use crate::repository::Storage;
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
 pub struct Dashboard {
     storage: Signal<Storage>,
-    listing: SolutionsListing,
+    listing: Signal<SolutionsListing>,
 }
 
 impl Dashboard {
     pub fn new(storage: Signal<Storage>) -> Self {
-        let listing = match storage.read().solutions().list() {
-            Ok(listing) => listing,
-            Err(_) => SolutionsListing::new(vec![]),
-        };
-
-        Self { storage, listing }
+        Self {
+            storage,
+            listing: Signal::new(SolutionsListing::new(storage)),
+        }
     }
 
-    pub fn list_solutions(&self) -> SolutionsListing {
-        self.listing.clone()
+    pub fn listing(&self) -> Signal<SolutionsListing> {
+        self.listing
     }
 
     pub fn search_solution(&mut self, search_query: String) {
-        self.listing.search(search_query);
+        self.listing.write().search(search_query);
     }
 
     pub fn paginate(&mut self, page_index: usize) {
-        self.listing.paginate(page_index);
+        self.listing.write().paginate(page_index);
     }
 
     pub fn add_solution(&self) {
@@ -46,13 +45,7 @@ impl Dashboard {
 
     pub fn delete_solution(&mut self, solution_id: String) {
         match self.storage.read().solutions().delete(solution_id) {
-            Ok(_) => {
-                self.listing = match self.storage.read().solutions().list() {
-                    Ok(listing) => listing,
-                    Err(_) => SolutionsListing::new(vec![]),
-                };
-            }
-
+            Ok(_) => self.listing.write().refresh(),
             Err(_) => println!("error"),
         }
     }

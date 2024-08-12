@@ -18,13 +18,13 @@ impl FertilizersListing {
             excluded_ids: Vec::new(),
             search_query: String::new(),
             page_index: 1,
-            limit: 8,
+            limit: 10,
         }
     }
 
     pub fn fetch(&self) -> Vec<Fertilizer> {
         match self.storage.read().fertilizers().search(
-            self.search_query.clone(),
+            &self.search_query,
             self.excluded_ids.as_ref(),
             self.limit,
             self.limit * (self.page_index - 1),
@@ -34,12 +34,7 @@ impl FertilizersListing {
         }
     }
 
-    pub fn find(&self, fertilizer_id: String) -> Option<Fertilizer> {
-        match self.storage.read().fertilizers().get(fertilizer_id) {
-            Ok(fertilizer) => Some(fertilizer),
-            Err(_) => None,
-        }
-    }
+    pub fn refresh(&mut self) {}
 
     pub fn page_index(&self) -> usize {
         self.page_index
@@ -64,19 +59,21 @@ impl FertilizersListing {
     }
 
     pub fn exclude(&mut self, fertilizer_id: String) -> Option<Fertilizer> {
-        self.excluded_ids.push(fertilizer_id.clone());
-
-        self.find(fertilizer_id)
+        match self.find(&fertilizer_id) {
+            Some(fertilizer) => {
+                self.excluded_ids.push(fertilizer_id);
+                Some(fertilizer)
+            }
+            None => None,
+        }
     }
 
     pub fn include(&mut self, fertilizer_id: String) -> Option<Fertilizer> {
         match self.excluded_ids.iter().position(|id| *id == fertilizer_id) {
             Some(index) => {
                 self.excluded_ids.remove(index);
-
-                self.find(fertilizer_id)
+                self.find(&fertilizer_id)
             }
-
             None => None,
         }
     }
@@ -87,5 +84,12 @@ impl FertilizersListing {
 
     pub fn update_limit(&mut self, limit: usize) {
         self.limit = limit;
+    }
+
+    fn find(&self, fertilizer_id: &str) -> Option<Fertilizer> {
+        match self.storage.read().fertilizers().get(fertilizer_id) {
+            Ok(fertilizer) => Some(fertilizer),
+            Err(_) => None,
+        }
     }
 }

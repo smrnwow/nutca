@@ -39,7 +39,7 @@ impl FertilizerEditor {
     }
 
     pub fn edit(storage: Signal<Storage>, fertilizer_id: String) -> Self {
-        let fertilizer = storage.read().fertilizers().get(fertilizer_id);
+        let fertilizer = storage.read().fertilizers().get(&fertilizer_id);
 
         let builder = match fertilizer {
             Ok(fertilizer) => Signal::new(FertilizerBuilder::from(fertilizer)),

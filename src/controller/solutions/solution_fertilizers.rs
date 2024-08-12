@@ -20,10 +20,6 @@ impl SolutionFertilizers {
         self.fertilizers.len() == 0
     }
 
-    pub fn total(&self) -> usize {
-        self.fertilizers.len()
-    }
-
     pub fn page_index(&self) -> usize {
         self.page_index
     }

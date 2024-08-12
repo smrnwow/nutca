@@ -1,5 +1,5 @@
+use crate::controller::profiles::ProfilesListing;
 use crate::controller::reference::TopicId;
-use crate::repository::ProfilesListing;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfilesListingItem;
 use crate::ui::components::utils::icons::SearchIcon;
@@ -10,7 +10,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ProfilesListingProps {
-    profiles_listing: Memo<ProfilesListing>,
+    profiles_listing: Signal<ProfilesListing>,
     on_search: EventHandler<String>,
     on_add: EventHandler<()>,
     on_open: EventHandler<String>,
@@ -21,7 +21,7 @@ pub struct ProfilesListingProps {
 
 #[component]
 pub fn ProfilesListing(props: ProfilesListingProps) -> Element {
-    let profiles = use_memo(move || props.profiles_listing.read().list());
+    let profiles = use_memo(move || props.profiles_listing.read().fetch());
 
     rsx! {
         Card {

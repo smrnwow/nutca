@@ -1,6 +1,7 @@
+use crate::controller::solutions::SolutionsListing;
 use crate::model::chemistry::Volume;
 use crate::model::solutions::{FertilizerWeight, Solution, StockSolutionBuilder};
-use crate::repository::{SolutionsListing, Storage};
+use crate::repository::Storage;
 use dioxus::prelude::*;
 
 pub struct StockSolutionEditor {
@@ -11,17 +12,14 @@ pub struct StockSolutionEditor {
 
 impl StockSolutionEditor {
     pub fn new(storage: Signal<Storage>, solution_id: String) -> Self {
-        let solution = storage.read().solutions().get(solution_id);
+        let solution = storage.read().solutions().get(&solution_id);
 
         let builder = match solution {
             Ok(solution) => StockSolutionBuilder::from(solution),
             Err(_) => StockSolutionBuilder::new(),
         };
 
-        let solutions_listing = match storage.read().solutions().list() {
-            Ok(listing) => listing,
-            Err(_) => SolutionsListing::new(vec![]),
-        };
+        let solutions_listing = SolutionsListing::new(storage);
 
         let solution = builder.solution().clone();
 

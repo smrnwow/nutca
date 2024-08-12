@@ -1,11 +1,10 @@
-use crate::repository::storage::{Fertilizers, Profiles, Reference, Solutions};
+use crate::repository::{Fertilizers, Profiles, Solutions};
 use rusqlite::Connection;
 use std::rc::Rc;
 
 #[derive(Clone, Debug)]
 pub struct Storage {
     connection: Rc<Connection>,
-    reference: Reference,
     fertilizers: Fertilizers,
     profiles: Profiles,
     solutions: Solutions,
@@ -13,9 +12,7 @@ pub struct Storage {
 
 impl Storage {
     pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
-        let connection = Rc::new(Connection::open_in_memory()?);
-
-        let reference = Reference::new(Rc::clone(&connection))?;
+        let connection = Rc::new(Connection::open("./data/storage.db3")?);
 
         let fertilizers = Fertilizers::new(Rc::clone(&connection))?;
 
@@ -25,15 +22,10 @@ impl Storage {
 
         Ok(Self {
             connection,
-            reference,
             fertilizers,
             profiles,
             solutions,
         })
-    }
-
-    pub fn reference(&self) -> &Reference {
-        &self.reference
     }
 
     pub fn fertilizers(&self) -> &Fertilizers {

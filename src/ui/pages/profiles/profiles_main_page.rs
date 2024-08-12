@@ -9,11 +9,9 @@ pub fn ProfilesMainPage() -> Element {
 
     let mut dashboard = use_signal(|| Dashboard::new(storage));
 
-    let profiles_listing = use_memo(move || dashboard.read().listing());
-
     rsx! {
         ProfilesListing {
-            profiles_listing,
+            profiles_listing: dashboard.read().listing(),
             on_search: move |search_query| {
                 dashboard.write().search(search_query);
             },

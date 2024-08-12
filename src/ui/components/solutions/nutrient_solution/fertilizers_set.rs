@@ -1,7 +1,7 @@
 use super::FertilizersSetItem;
+use crate::controller::solutions::SolutionFertilizers;
 use crate::model::chemistry::Volume;
 use crate::model::solutions::Solution;
-use crate::repository::SolutionFertilizers;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{List, Pagination, Title};
 use crate::ui::components::VolumeField;
