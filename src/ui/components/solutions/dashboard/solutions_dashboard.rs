@@ -1,5 +1,4 @@
 use super::{SolutionsListingControls, SolutionsListingTable};
-use crate::controller::reference::TopicId;
 use crate::controller::solutions::SolutionsListing;
 use crate::ui::components::layout::Row;
 use crate::ui::components::utils::{Banner, Block, Card, Divider, Title};
@@ -23,7 +22,7 @@ pub fn SolutionsDashboard(props: SolutionsDashboardProps) -> Element {
             Block {
                 Row {
                     Title {
-                        {TopicId::SolutionsDashboard.title()},
+                        "Растворы",
                     }
                 }
             }

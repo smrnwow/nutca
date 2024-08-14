@@ -48,10 +48,6 @@ impl ProfilesListing {
         self.page_index = page_index;
     }
 
-    pub fn update_limit(&mut self, limit: usize) {
-        self.limit = limit;
-    }
-
     pub fn page_index(&self) -> usize {
         self.page_index
     }

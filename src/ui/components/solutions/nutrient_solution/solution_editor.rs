@@ -1,7 +1,6 @@
 use super::{FertilizersBrowser, FertilizersSet, SolutionProfile};
 use crate::controller::fertilizers::FertilizersListing;
 use crate::controller::profiles::ProfilesListing;
-use crate::controller::reference::TopicId;
 use crate::controller::Validation;
 use crate::model::chemistry::{NutrientAmount, Volume};
 use crate::model::profiles::Profile;
@@ -36,7 +35,7 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
             Block {
                 Row {
                     Title {
-                        {TopicId::NutrientSolutionEditor.title()},
+                        "Редактор питательного раствора",
                     }
                 }
             }

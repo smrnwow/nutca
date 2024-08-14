@@ -118,8 +118,6 @@ impl Fertilizers {
         match response.last() {
             Some(res) => match res {
                 Ok(table_count) => {
-                    println!("table count = {}", table_count);
-
                     if table_count == 0 {
                         self.create_table()?;
                         self.seed()?;

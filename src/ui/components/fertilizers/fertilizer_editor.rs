@@ -1,4 +1,3 @@
-use crate::controller::reference::TopicId;
 use crate::controller::Validation;
 use crate::model::fertilizers::{Fertilizer, LabelComponent, LabelUnits, SourceType};
 use crate::ui::components::fertilizers::{
@@ -30,7 +29,7 @@ pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
             Block {
                 Row {
                     Title {
-                        {TopicId::FertilizerEditor.title()},
+                        "Редактор удобрения",
                     }
                 }
             }

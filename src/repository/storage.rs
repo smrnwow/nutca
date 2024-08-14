@@ -1,9 +1,13 @@
 use crate::repository::{Fertilizers, Profiles, Solutions};
 use rusqlite::Connection;
+use std::env;
+use std::fs;
+use std::path::Path;
 use std::rc::Rc;
 
 #[derive(Clone, Debug)]
 pub struct Storage {
+    #[allow(unused)]
     connection: Rc<Connection>,
     fertilizers: Fertilizers,
     profiles: Profiles,
@@ -12,7 +16,22 @@ pub struct Storage {
 
 impl Storage {
     pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
-        let connection = Rc::new(Connection::open("./data/storage.db3")?);
+        let data_path = format!(
+            "{}/.local/share/nutca/storage.db3",
+            env::var("HOME").unwrap_or(String::from("/home"))
+        );
+
+        let path = Path::new(data_path.as_str());
+
+        if !path.exists() {
+            if let Some(parent) = path.parent() {
+                fs::create_dir_all(parent)?;
+            }
+
+            fs::File::create(path)?;
+        }
+
+        let connection = Rc::new(Connection::open(data_path)?);
 
         let fertilizers = Fertilizers::new(Rc::clone(&connection))?;
 

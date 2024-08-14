@@ -1,5 +1,4 @@
 use crate::controller::profiles::ProfilesListing;
-use crate::controller::reference::TopicId;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfilesListingItem;
 use crate::ui::components::utils::icons::SearchIcon;
@@ -28,7 +27,7 @@ pub fn ProfilesListing(props: ProfilesListingProps) -> Element {
             Block {
                 Row {
                     Title {
-                        {TopicId::ProfilesDashboard.title()}
+                        "Питательные составы",
                     }
                 }
             }

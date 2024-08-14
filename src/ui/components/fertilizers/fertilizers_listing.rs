@@ -1,5 +1,4 @@
 use crate::controller::fertilizers::FertilizersListing;
-use crate::controller::reference::TopicId;
 use crate::ui::components::fertilizers::FertilizersListingItem;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::SearchIcon;
@@ -27,7 +26,7 @@ pub fn FertilizersListing(props: FertilizersListingProps) -> Element {
             Block {
                 Row {
                     Title {
-                        {TopicId::FertilizersDashboard.title()},
+                        "Удобрения",
                     }
                 }
             }

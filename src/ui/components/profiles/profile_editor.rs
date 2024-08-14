@@ -1,4 +1,3 @@
-use crate::controller::reference::TopicId;
 use crate::controller::Validation;
 use crate::model::chemistry::NutrientAmount;
 use crate::model::profiles::Profile;
@@ -24,7 +23,7 @@ pub fn ProfileEditor(props: ProfileEditorProps) -> Element {
             Block {
                 Row {
                     Title {
-                        {TopicId::ProfileEditor.title()},
+                        "Редактор питательного состава",
                     }
                 }
             }

@@ -1,4 +1,3 @@
-use crate::controller::reference::TopicId;
 use crate::controller::solutions::SolutionsListing;
 use crate::model::chemistry::Volume;
 use crate::model::solutions::{FertilizerWeight, Solution};
@@ -28,7 +27,7 @@ pub fn StockSolutionEditor(props: StockSolutionEditorProps) -> Element {
             Block {
                 Row {
                     Title {
-                        {TopicId::NutrientSolutionEditor.title()},
+                        "Редактор рабочего раствора",
                     }
                 }
             }

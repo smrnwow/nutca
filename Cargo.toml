@@ -1,7 +1,12 @@
 [package]
-name = "nutca-desktop"
+name = "nutca"
 version = "0.1.0"
 edition = "2021"
+description = "nutrient calculator for hydroponics"
+
+[package.metadata.bundle]
+identifier = "com.nutca"
+short_description = "nutrient calculator for hydroponics"
 
 [dependencies]
 dioxus = { version = "0.5", features = ["desktop"] }
