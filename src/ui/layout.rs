@@ -26,8 +26,6 @@ pub fn Layout() -> Element {
         header {
             class: "header",
 
-            style { "{include_str!(\"./styles/index.css\")}" }
-
             nav {
                 class: "navigation",
 

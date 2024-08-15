@@ -11,6 +11,10 @@ pub fn App() -> Element {
     use_context_provider(|| Signal::new(Storage::new().unwrap()));
 
     rsx! {
+        style {
+            {include_str!("./assets/styles/index.css")}
+        }
+
         Router::<Route> {}
     }
 }

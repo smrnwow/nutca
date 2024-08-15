@@ -7,11 +7,11 @@ description = "nutrient calculator for hydroponics"
 [package.metadata.bundle]
 identifier = "com.nutca"
 short_description = "nutrient calculator for hydroponics"
+resources = ["assets"]
 
 [dependencies]
-dioxus = { version = "0.5", features = ["desktop"] }
+dioxus = { version = "0.5.2", features = ["desktop"] }
 dioxus-router = "0.5.0"
-manganis = "0.2.2"
 rusqlite = "0.31.0"
 serde = "1.0.203"
 serde_json = "1.0.117"
