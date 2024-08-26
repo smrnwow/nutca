@@ -33,6 +33,14 @@ impl SolutionEditor {
 
         let solution = Memo::new(move || builder.read().build());
 
+        let validation = Memo::new(move || {
+            return Validation::new(
+                !*is_draft.read(),
+                builder.read().validate(),
+                storage_error.read().clone(),
+            );
+        });
+
         let mut fertilizers_listing = FertilizersListing::new(storage);
 
         fertilizers_listing.update_limit(8);
@@ -42,13 +50,7 @@ impl SolutionEditor {
             storage,
             storage_error,
             builder,
-            validation: Memo::new(move || {
-                return Validation::new(
-                    !*is_draft.read(),
-                    builder.read().validate(),
-                    storage_error.read().clone(),
-                );
-            }),
+            validation,
             solution,
             profile: Memo::new(move || solution.read().profile()),
             fertilizers_listing: Signal::new(fertilizers_listing),
@@ -68,6 +70,14 @@ impl SolutionEditor {
 
         let solution = Memo::new(move || builder.read().build());
 
+        let validation = Memo::new(move || {
+            return Validation::new(
+                !*is_draft.read(),
+                builder.read().validate(),
+                storage_error.read().clone(),
+            );
+        });
+
         let mut fertilizers_listing = FertilizersListing::new(storage);
 
         fertilizers_listing.update_limit(8);
@@ -86,13 +96,7 @@ impl SolutionEditor {
             storage,
             storage_error,
             builder,
-            validation: Memo::new(move || {
-                return Validation::new(
-                    !*is_draft.read(),
-                    builder.read().validate(),
-                    storage_error.read().clone(),
-                );
-            }),
+            validation,
             solution,
             profile: Memo::new(move || solution.read().profile()),
             fertilizers_listing: Signal::new(fertilizers_listing),

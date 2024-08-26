@@ -1,3 +1,4 @@
+mod build_mode;
 mod calculation;
 mod exclusion_reason;
 mod fertilizer_weight;
@@ -8,6 +9,7 @@ mod solution_builder;
 mod solver;
 mod stock_solution_builder;
 
+pub use build_mode::BuildMode;
 pub use calculation::Calculation;
 pub use exclusion_reason::ExclusionReason;
 pub use fertilizer_weight::FertilizerWeight;

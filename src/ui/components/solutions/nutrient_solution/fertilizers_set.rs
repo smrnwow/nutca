@@ -11,7 +11,8 @@ use dioxus::prelude::*;
 pub struct FertilizersSetProps {
     solution: Memo<Solution>,
     on_volume_update: EventHandler<Volume>,
-    on_exclude: EventHandler<String>,
+    on_fertilizer_exclude: EventHandler<String>,
+    on_fertilizer_amount_update: EventHandler<(String, f64)>,
 }
 
 #[component]
@@ -62,7 +63,8 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
                     FertilizersSetItem {
                         key: "{fertilizer_weight.id()}",
                         fertilizer_weight: Signal::new(fertilizer_weight),
-                        on_exclude: props.on_exclude,
+                        on_exclude: props.on_fertilizer_exclude,
+                        on_amount_update: props.on_fertilizer_amount_update,
                     }
                 }
             }

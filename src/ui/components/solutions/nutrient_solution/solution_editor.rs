@@ -4,7 +4,7 @@ use crate::controller::profiles::ProfilesListing;
 use crate::controller::Validation;
 use crate::model::chemistry::{NutrientAmount, Volume};
 use crate::model::profiles::Profile;
-use crate::model::solutions::Solution;
+use crate::model::solutions::{BuildMode, Solution};
 use crate::ui::components::layout::Row;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
 use dioxus::prelude::*;
@@ -14,6 +14,7 @@ pub struct SolutionEditorProps {
     solution: Memo<Solution>,
     validation: Memo<Validation>,
     profile: Memo<Profile>,
+    build_mode: Memo<BuildMode>,
     profiles_listing: Signal<ProfilesListing>,
     fertilizers_listing: Signal<FertilizersListing>,
     on_name_update: EventHandler<String>,
@@ -23,6 +24,7 @@ pub struct SolutionEditorProps {
     on_profile_nutrient_update: EventHandler<NutrientAmount>,
     on_fertilizer_select: EventHandler<String>,
     on_fertilizer_exclude: EventHandler<String>,
+    on_fertilizer_amount_update: EventHandler<(String, f64)>,
     on_fertilizer_search: EventHandler<String>,
     on_fertilizers_paginate: EventHandler<usize>,
     on_save: EventHandler<()>,
@@ -56,6 +58,7 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
             SolutionProfile {
                 solution: props.solution,
                 profile: props.profile,
+                build_mode: props.build_mode,
                 profiles_listing: props.profiles_listing,
                 on_profile_change: props.on_profile_change,
                 on_profile_search: props.on_profile_search,
@@ -75,7 +78,8 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
 
                     FertilizersSet {
                         solution: props.solution,
-                        on_exclude: props.on_fertilizer_exclude,
+                        on_fertilizer_exclude: props.on_fertilizer_exclude,
+                        on_fertilizer_amount_update: props.on_fertilizer_amount_update,
                         on_volume_update: props.on_volume_update,
                     }
                 }

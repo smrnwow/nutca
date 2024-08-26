@@ -3,7 +3,7 @@ use crate::ui::components::fertilizers::FertilizersListingItem;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::SearchIcon;
 use crate::ui::components::utils::{
-    Banner, Block, Button, Card, Divider, List, Pagination, TextField, Title,
+    Block, Button, Card, Divider, List, Pagination, TextField, Title,
 };
 use dioxus::prelude::*;
 
@@ -34,37 +34,28 @@ pub fn FertilizersListing(props: FertilizersListingProps) -> Element {
             Divider {}
 
             Block {
-                Banner {
-                    text: "Удобрения - это источник основных питательных элементов. Набор качественных и совместимых удобрений обеспечит потребность растений в питании.",
-                    more_link: "#",
-                }
-            }
-
-            Block {
-                exclude_padding: "top",
-
-                Row {
-                    TextField {
-                        value: props.fertilizers_listing.read().search_query(),
-                        placeholder: "найти удобрение",
-                        on_input: props.on_search,
-                        icon_left: rsx! {
-                            SearchIcon {}
-                        },
-                    }
-
-                    Button {
-                        style: "primary",
-                        on_click: props.on_add,
-                        "Добавить удобрение",
-                    }
-                }
-            }
-
-            Block {
-                exclude_padding: "top",
-
                 Column {
+                    gap: "medium",
+
+                    Row {
+                        gap: "medium",
+
+                        TextField {
+                            value: props.fertilizers_listing.read().search_query(),
+                            placeholder: "найти удобрение",
+                            on_input: props.on_search,
+                            icon_left: rsx! {
+                                SearchIcon {}
+                            },
+                        }
+
+                        Button {
+                            style: "primary",
+                            on_click: props.on_add,
+                            "Добавить удобрение",
+                        }
+                    }
+
                     List {
                         limit: 10,
                         empty: fertilizers.read().len() == 0,

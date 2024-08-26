@@ -3,7 +3,7 @@ use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfilesListingItem;
 use crate::ui::components::utils::icons::SearchIcon;
 use crate::ui::components::utils::{
-    Banner, Block, Button, Card, Divider, List, Pagination, TextField, Title,
+    Block, Button, Card, Divider, List, Pagination, TextField, Title,
 };
 use dioxus::prelude::*;
 
@@ -35,37 +35,28 @@ pub fn ProfilesListing(props: ProfilesListingProps) -> Element {
             Divider {}
 
             Block {
-                Banner {
-                    text: "Питательный состав - это набор требований к объему основных питательных элементов, небходимых растениям для роста и развития. Сбалансированный питательный состав - залог успеха.",
-                    more_link: "#",
-                }
-            }
-
-            Block {
-                exclude_padding: "top",
-
-                Row {
-                    TextField {
-                        value: props.profiles_listing.read().search_query(),
-                        placeholder: "найти питательный состав",
-                        on_input: props.on_search,
-                        icon_left: rsx! {
-                            SearchIcon {}
-                        },
-                    }
-
-                    Button {
-                        style: "primary",
-                        on_click: props.on_add,
-                        "Добавить питательный состав",
-                    }
-                }
-            }
-
-            Block {
-                exclude_padding: "top",
-
                 Column {
+                    gap: "medium",
+
+                    Row {
+                        gap: "medium",
+
+                        TextField {
+                            value: props.profiles_listing.read().search_query(),
+                            placeholder: "найти питательный состав",
+                            on_input: props.on_search,
+                            icon_left: rsx! {
+                                SearchIcon {}
+                            },
+                        }
+
+                        Button {
+                            style: "primary",
+                            on_click: props.on_add,
+                            "Добавить питательный состав",
+                        }
+                    }
+
                     List {
                         limit: 10,
                         empty: profiles.read().len() == 0,

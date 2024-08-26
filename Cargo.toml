@@ -7,7 +7,7 @@ description = "nutrient calculator for hydroponics"
 [package.metadata.bundle]
 identifier = "com.nutca"
 short_description = "nutrient calculator for hydroponics"
-resources = ["assets"]
+resources = ["src/ui/assets/fonts"]
 
 [dependencies]
 dioxus = { version = "0.5.2", features = ["desktop"] }

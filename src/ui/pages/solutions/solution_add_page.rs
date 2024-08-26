@@ -24,6 +24,8 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
 
     let profile = solution_editor.read().profile();
 
+    let build_mode = use_memo(move || solution_builder.read().mode());
+
     use_effect(move || toaster.write().render(validation.read().list()));
 
     rsx! {
@@ -33,6 +35,7 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
             solution,
             validation,
             profile,
+            build_mode,
             on_profile_change: move |profile_id| {
                 solution_editor.write().change_profile(profile_id);
             },
@@ -41,6 +44,9 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
             },
             on_fertilizer_exclude: move |fertilizer_id| {
                 solution_editor.write().exclude_fertilizer(fertilizer_id);
+            },
+            on_fertilizer_amount_update: move |(fertilizer_id, amount)| {
+                solution_builder.write().update_fertilizer_amount(fertilizer_id, amount);
             },
             on_name_update: move |name| {
                 solution_builder.write().name(name);

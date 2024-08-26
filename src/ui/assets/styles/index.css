@@ -1,12 +1,25 @@
 @font-face {
     font-family: "Rubik";
-    src: url("src/ui/assets/fonts/Rubik-Italic-VariableFont_wght.ttf") format("truetype");
     font-style: italic;
+    src:
+        url("src/ui/assets/fonts/Rubik-Italic-VariableFont_wght.ttf") format("truetype"), 
+        url("/usr/lib/nutca/src/ui/assets/fonts/Rubik-Italic-VariableFont_wght.ttf") format("truetype");
 }
 
 @font-face {
     font-family: "Rubik";
-    src: url("src/ui/assets/fonts/Rubik-VariableFont_wght.ttf") format("truetype");
+    src:
+        url("src/ui/assets/fonts/Rubik-VariableFont_wght.ttf") format("truetype"), 
+        url("/usr/lib/nutca/src/ui/assets/fonts/Rubik-VariableFont_wght.ttf") format("truetype");
+}
+
+:root {
+    --primary-color: rgba(107, 168, 108, 1);
+    --primary-color-light: rgba(163, 194, 153, 1);
+    --primary-color-lighter: rgba(213, 226, 197, 1);
+    --secondary-color: rgba(249, 245, 231, 1);
+    --dark-color: rgba(26, 33, 43, 1);
+    --light-color: rgba(255, 255, 255, 1);
 }
 
 body {
@@ -38,13 +51,12 @@ body {
     line-height: 20px;
     cursor: pointer;
     text-decoration: none;
-    color: rgba(26, 33, 43, 1);
+    color: var(--dark-color);
     border-radius: 16px;
-    transition: .2s;
 }
 
 .navigation__link:hover {
-    background-color: rgba(179, 190, 255, 0.4);
+    background-color: var(--primary-color-lighter);
 }
 
 .navigation__link_active::after {
@@ -52,7 +64,7 @@ body {
     content: "";
     width: 16px;
     height: 4px;
-    background-color: #287f5b;
+    background-color: var(--primary-color);
     border-radius: 2px;
     bottom: 4px;
     left: calc(50% - 8px);
@@ -78,6 +90,17 @@ body {
     top: -7px;
     right: 5%;
     z-index: 11;
+}
+.fertilizers-set-item .text {
+    text-wrap: nowrap;
+}
+.fertilizers-set-item__amount {
+    width: 100%;
+}
+.fertilizers-set-item__amount .number-field__input {
+    max-width: 60px;
+    max-height: 32px!important;
+    padding: 6px 0px!important;
 }
 
 /* layout */
@@ -201,7 +224,7 @@ body {
 /* utils badge */
 .badge {
     border-radius: 50%;
-    color: #ffffff;
+    color: var(--light-color);
     font-weight: 500;
     font-family: "Rubik";
     text-align: center;
@@ -212,7 +235,7 @@ button .badge {
     right: 5%;
 }
 .badge_state-default {
-    background-color: rgba(92, 23, 229, 1);
+    background-color: var(--primary-color);
 }
 .badge_state-error {
     background-color: rgba(251, 55, 72, 1);
@@ -245,7 +268,7 @@ button .badge_size-small {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    background-color: #feee99;
+    background-color: var(--secondary-color);
     padding: 14px;
     border-radius: 8px;
 }
@@ -257,8 +280,8 @@ button .badge_size-small {
     font-size: 12px;
     font-weight: 300;
     line-height: 16px;
-    margin: 0px 0px 5px 0px;
-    color: rgba(14, 18, 27, 1);
+    margin: 0px 0px 4px 0px;
+    color: var(--dark-color);
 }
 .banner__links {
     display: flex;
@@ -268,7 +291,7 @@ button .badge_size-small {
     font-size: 12px;
     text-decoration: none;
     line-height: 16px;
-    color: rgba(14, 18, 27, 1);
+    color: var(--dark-color);
 }
 
 /* utils block */
@@ -297,6 +320,24 @@ button .badge_size-small {
     padding-left: 0px;
     padding-right: 0px;
 }
+.block_gap-large {
+    gap: 16px;
+}
+.block_gap-big {
+    gap: 12px;
+}
+.block_gap-medium {
+    gap: 8px;
+}
+.block_gap-small {
+    gap: 4px;
+}
+.block_gap-x-small {
+    gap: 2px;
+}
+.block_gap-none {
+    gap: 0px;
+}
 
 /* utils button */
 .button {
@@ -305,18 +346,17 @@ button .badge_size-small {
     line-height: 20px;
     border-radius: 8px;
     border: none;
-    transition: .1s ease-out;
     cursor: pointer;
     box-sizing: border-box;
 }
 .button_size-small {
-    padding: 6px;
+    padding: 6px 12px;
 }
 .button_size-medium {
-    padding: 8px;
+    padding: 8px 16px;
 }
 .button_size-big {
-    padding: 10px;
+    padding: 10px 20px;
 }
 .button_hidden-true {
     display: none !important;
@@ -325,16 +365,15 @@ button .badge_size-small {
 }
 .button:focus {
     outline: 2px solid rgba(153, 160, 174, 0.16);
-    outline-offset: 2px;   
 }
 .button_primary {
-    background-color: #287f5b;
+    background-color: var(--primary-color);
     color: #ffffff;    
 }
 .button_stroke {
-    border: 1px solid #287f5b;
+    border: 1px solid var(--primary-color);
     background-color: transparent;
-    color: #287f5b;
+    color: var(--primary-color);
 }
 .button_stroke:hover {
     background: rgba(245, 247, 250, 1);
@@ -436,7 +475,7 @@ button .badge_size-small {
     background-color: rgba(202, 207, 216, 1);
 }
 .checkbox__control:focus-within {
-    background-color: rgba(92, 23, 229, 1);
+    background-color: var(--primary-color);
 }
 .checkbox__input {
     margin: 0px;
@@ -467,7 +506,7 @@ button .badge_size-small {
     width: 16px;
     height: 16px;
     border-radius: 5px;
-    background-color: rgba(92, 23, 229, 1);
+    background-color: var(--primary-color);
 }
 .checkbox_checked-false .checkbox__check {
     background: #ffffff;
@@ -734,7 +773,6 @@ button .badge_size-small {
 .number-field__input:focus {
     border: 1px solid rgba(14, 18, 27, 1);
     outline: 2px solid rgba(153, 160, 174, 0.16);
-    outline-offset: 2px;
 }
 .number-field__input:hover {
     background-color: rgba(245, 247, 250, 1);
@@ -804,7 +842,6 @@ button .badge_size-small {
 .nutrient-value__value:focus {
     border: 1px solid rgba(14, 18, 27, 1);
     outline: 2px solid rgba(153, 160, 174, 0.16);
-    outline-offset: 2px;
 }
 .nutrient-value:focus-within::after {
     background-color: rgba(14, 18, 27, 1);
@@ -864,7 +901,7 @@ button .badge_size-small {
 }
 .pagination__cell_active {
     color: rgba(14, 18, 27, 1);
-    border: 1px solid rgba(92, 23, 229, 1);
+    border: 1px solid var(--primary-color);
 }
 .pagination__cell_disabled {
     color: rgba(202, 207, 216, 1);
@@ -883,7 +920,6 @@ button .badge_size-small {
     display: flex;
     align-items: center;
     cursor: pointer;
-    transition: .1s ease-out;
     border-radius: 8px;
     box-sizing: border-box;
 }
@@ -933,23 +969,21 @@ button .badge_size-small {
     position: relative;
 }
 .fertilizers-browser-tooltip__button {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    border-radius: 50%;
-    background-color: rgba(54, 0, 144, 1);
-    color: rgba(255, 255, 255, 1);
+    display: none;
+    background-color: var(--primary-color);
+    color: var(--light-color);
     font-size: 12px;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
+    width: 20px;
+    height: 20px;
     border: none;
     cursor: pointer;
+    border-radius: 6px;
 }
 .quick-action:hover .fertilizers-browser-tooltip__button {
-    opacity: 1;
-    visibility: visible;
-    border-radius: 6px;
+    display: block;
+}
+.quick-action:hover .tooltip__target .button_compact {
+    display: none;
 }
 
 /* utils radio */
@@ -991,8 +1025,8 @@ button .badge_size-small {
     transition: .1s ease-out;
 }
 .radio_checked-true .radio__control {
-    background-color:rgba(92, 23, 229, 1);
-    border: 2px solid rgba(92, 23, 229, 1);
+    background-color:var(--primary-color);
+    border: 2px solid var(--primary-color);
 }
 .radio_checked-true .radio__control_inner {
     transform: scale(0.6);
@@ -1063,7 +1097,6 @@ button .badge_size-small {
 .select__value:focus {
     border: 1px solid rgba(14, 18, 27, 1);
     outline: 2px solid rgba(153, 160, 174, 0.16);
-    outline-offset: 2px;
 }
 .select_size-small .select__value {
     padding: 6px 32px 6px 6px;
@@ -1102,7 +1135,6 @@ button .badge_size-small {
 .select__input:focus {
     border: 1px solid rgba(14, 18, 27, 1);
     outline: 2px solid rgba(153, 160, 174, 0.16);
-    outline-offset: 2px;
 }
 .select__input::placeholder {
     color: rgba(153, 160, 174, 1);
@@ -1147,7 +1179,6 @@ button .badge_size-small {
 .select__placeholder:focus {
     border: 1px solid rgba(14, 18, 27, 1);
     outline: 2px solid rgba(153, 160, 174, 0.16);
-    outline-offset: 2px;
 }
 .select_size-small .select__placeholder {
     padding: 6px 32px 6px 6px;
@@ -1224,7 +1255,7 @@ button .badge_size-small {
     display: flex;
     gap: 4px;
     padding: 4px;
-    background-color: rgba(92, 23, 229, 1);
+    background-color: var(--primary-color);
     border-radius: 4px;
     box-sizing: border-box;
 }
@@ -1255,6 +1286,7 @@ button .badge_size-small {
 }
 .text-field__input {
     width: 100%;
+    height: 32px;
     border: 1px solid rgba(225, 228, 234, 1);
     box-shadow: 0px 1px 2px 0px rgba(10, 13, 20, 0.03);
     color: rgba(14, 18, 27, 1);
@@ -1275,7 +1307,6 @@ button .badge_size-small {
 .text-field__input:focus {
     border: 1px solid rgba(14, 18, 27, 1);
     outline: 2px solid rgba(153, 160, 174, 0.16);
-    outline-offset: 2px;
 }
 .text-field__input:hover {
     background-color: rgba(245, 247, 250, 1);

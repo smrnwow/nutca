@@ -1,7 +1,10 @@
-use super::{SolutionsListingControls, SolutionsListingTable};
+use super::SolutionsListingItem;
 use crate::controller::solutions::SolutionsListing;
-use crate::ui::components::layout::Row;
-use crate::ui::components::utils::{Banner, Block, Card, Divider, Title};
+use crate::ui::components::layout::{Column, Row};
+use crate::ui::components::utils::icons::SearchIcon;
+use crate::ui::components::utils::{
+    Block, Button, Card, Divider, List, Pagination, TextField, Title,
+};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -17,6 +20,8 @@ pub struct SolutionsDashboardProps {
 
 #[component]
 pub fn SolutionsDashboard(props: SolutionsDashboardProps) -> Element {
+    let solutions = use_memo(move || props.solutions_listing.read().fetch());
+
     rsx! {
         Card {
             Block {
@@ -30,31 +35,50 @@ pub fn SolutionsDashboard(props: SolutionsDashboardProps) -> Element {
             Divider {}
 
             Block {
-                Banner {
-                    text: "Раствор - это рецепт в котором записан питательный состав, который требуется растению и набор удобрений с рассчитанным для него объемом.",
-                    more_link: "#",
-                }
-            }
+                Column {
+                    gap: "medium",
 
-            Block {
-                exclude_padding: "top",
+                    Row {
+                        gap: "medium",
 
-                SolutionsListingControls {
-                    search_query: props.solutions_listing.read().search_query(),
-                    on_search: props.on_search,
-                    on_add: props.on_add,
-                }
-            }
+                        TextField {
+                            value: props.solutions_listing.read().search_query(),
+                            placeholder: "найти раствор",
+                            on_input: props.on_search,
+                            icon_left: rsx! {
+                                SearchIcon {}
+                            },
+                        }
 
-            Block {
-                exclude_padding: "top",
+                        Button {
+                            style: "primary",
+                            on_click: props.on_add,
+                            "Добавить раствор",
+                        }
+                    }
 
-                SolutionsListingTable {
-                    solutions_listing: props.solutions_listing,
-                    on_open: props.on_open,
-                    on_stock: props.on_stock,
-                    on_delete: props.on_delete,
-                    on_paginate: props.on_paginate,
+                    List {
+                        limit: 10,
+                        empty: solutions.len() == 0,
+                        stub_text: "Сохраненные растворы отсутствуют",
+
+                        for solution in solutions.read().iter() {
+                            SolutionsListingItem {
+                                key: "{solution.id()}",
+                                solution: solution.clone(),
+                                on_open: props.on_open,
+                                on_stock: props.on_stock,
+                                on_delete: props.on_delete,
+                            }
+                        }
+                    }
+
+                    Pagination {
+                        page_index: props.solutions_listing.read().page_index(),
+                        limit: props.solutions_listing.read().limit(),
+                        items_count: solutions.read().len(),
+                        on_change: props.on_paginate,
+                    }
                 }
             }
         }

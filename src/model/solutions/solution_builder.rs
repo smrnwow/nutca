@@ -1,16 +1,17 @@
 use crate::model::chemistry::{NutrientAmount, Volume};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::{Profile, ProfileBuilder};
-use crate::model::solutions::{Solution, Solver};
+use crate::model::solutions::{BuildMode, FertilizerWeight, FertilizersSet, Solution, Solver};
 use crate::model::Error;
 use uuid::Uuid;
 
 /// A helper struct that enables to incremental building a solution
 pub struct SolutionBuilder {
+    build_mode: BuildMode,
     id: String,
     name: String,
     profile_builder: ProfileBuilder,
-    fertilizers: Vec<Fertilizer>,
+    fertilizer_amounts: Vec<FertilizerWeight>,
     volume: Volume,
 }
 
@@ -18,12 +19,18 @@ impl SolutionBuilder {
     /// Creates a new instance of the builder with default values
     pub fn new() -> Self {
         Self {
+            build_mode: BuildMode::Automatic,
             id: Uuid::new_v4().to_string(),
             name: String::new(),
             profile_builder: ProfileBuilder::new(),
-            fertilizers: Vec::new(),
+            fertilizer_amounts: Vec::new(),
             volume: Volume::default(),
         }
+    }
+
+    // return current build mode
+    pub fn mode(&self) -> BuildMode {
+        self.build_mode
     }
 
     /// Sets the solution's name
@@ -44,8 +51,14 @@ impl SolutionBuilder {
     /// If `profile` is `Some`, uses it; otherwise, sets a new empty one.
     pub fn profile(&mut self, profile: Option<Profile>) -> &mut Self {
         match profile {
-            Some(profile) => self.profile_builder = ProfileBuilder::from(profile),
-            None => self.profile_builder = ProfileBuilder::new(),
+            Some(profile) => {
+                self.profile_builder = ProfileBuilder::from(profile);
+                self.switch_build_mode(BuildMode::Automatic);
+            }
+            None => {
+                self.profile_builder = ProfileBuilder::new();
+                self.switch_build_mode(BuildMode::Manual);
+            }
         };
 
         self
@@ -67,12 +80,15 @@ impl SolutionBuilder {
 
         self.profile_builder.nutrient_requirement(nutrient_amount);
 
+        self.switch_build_mode(BuildMode::Automatic);
+
         self
     }
 
     /// Adds fertilizer to solution
     pub fn add_fertilizer(&mut self, fertilizer: Fertilizer) -> &mut Self {
-        self.fertilizers.push(fertilizer);
+        self.fertilizer_amounts
+            .push(FertilizerWeight::new(fertilizer, 0.0));
 
         self
     }
@@ -81,12 +97,28 @@ impl SolutionBuilder {
     /// `fertilizer_id`: The unique identifier for the fertilizer to be removed
     pub fn remove_fertilizer(&mut self, fertilizer_id: String) -> &mut Self {
         let position = self
-            .fertilizers
+            .fertilizer_amounts
             .iter()
-            .position(|fertilizer| fertilizer.id() == fertilizer_id);
+            .position(|fertilizer_amount| fertilizer_amount.id() == fertilizer_id);
 
         if let Some(index) = position {
-            self.fertilizers.remove(index);
+            self.fertilizer_amounts.remove(index);
+        }
+
+        self
+    }
+
+    pub fn update_fertilizer_amount(&mut self, fertilizer_id: String, amount: f64) -> &mut Self {
+        let position = self
+            .fertilizer_amounts
+            .iter()
+            .position(|fertilizer_amount| fertilizer_amount.id() == fertilizer_id);
+
+        if let Some(index) = position {
+            if let Some(fertilizer_amount) = self.fertilizer_amounts.get_mut(index) {
+                fertilizer_amount.update_amount(amount);
+                self.switch_build_mode(BuildMode::Manual);
+            }
         }
 
         self
@@ -107,36 +139,64 @@ impl SolutionBuilder {
         errors
     }
 
-    /// Builds the solution
+    /// build solution instance from given nutrient formulation and fertilizers set
     pub fn build(&self) -> Solution {
-        let profile = self.profile_builder.build();
+        match self.build_mode {
+            BuildMode::Manual => {
+                let fertilizers_set = FertilizersSet::new(self.fertilizer_amounts.clone());
 
-        let fertilizers_set = Solver::new(&profile, self.fertilizers()).solve();
+                let nutrients = fertilizers_set.nutrients();
 
-        let nutrients = fertilizers_set.nutrients();
+                Solution {
+                    id: self.id.clone(),
+                    name: self.name.clone(),
+                    profile: self.profile_builder.build(),
+                    volume: self.volume,
+                    fertilizers_set,
+                    nutrients,
+                }
+            }
+            BuildMode::Automatic => {
+                let profile = self.profile_builder.build();
 
-        Solution {
-            id: self.id.clone(),
-            name: self.name.clone(),
-            profile,
-            volume: self.volume,
-            fertilizers_set,
-            nutrients,
+                let fertilizers = self.fertilizers();
+
+                let fertilizers_set = Solver::new(&profile, fertilizers.iter().collect()).solve();
+
+                let nutrients = fertilizers_set.nutrients();
+
+                Solution {
+                    id: self.id.clone(),
+                    name: self.name.clone(),
+                    profile,
+                    volume: self.volume,
+                    fertilizers_set,
+                    nutrients,
+                }
+            }
         }
     }
 
-    fn fertilizers(&self) -> Vec<&Fertilizer> {
-        self.fertilizers.iter().collect()
+    fn fertilizers(&self) -> Vec<Fertilizer> {
+        self.fertilizer_amounts
+            .iter()
+            .map(|fertilizer_amount| fertilizer_amount.clone().into())
+            .collect()
+    }
+
+    fn switch_build_mode(&mut self, build_mode: BuildMode) {
+        self.build_mode = build_mode;
     }
 }
 
 impl From<Solution> for SolutionBuilder {
     fn from(solution: Solution) -> Self {
         Self {
+            build_mode: BuildMode::Automatic,
             id: solution.id(),
             name: solution.name(),
             profile_builder: ProfileBuilder::from(solution.profile()),
-            fertilizers: solution.fertilizers_set.into(),
+            fertilizer_amounts: solution.fertilizers_set.list().clone(),
             volume: Volume::default(),
         }
     }
@@ -145,10 +205,11 @@ impl From<Solution> for SolutionBuilder {
 impl From<Profile> for SolutionBuilder {
     fn from(profile: Profile) -> Self {
         Self {
+            build_mode: BuildMode::Automatic,
             id: Uuid::new_v4().to_string(),
             name: String::new(),
             profile_builder: ProfileBuilder::from(profile),
-            fertilizers: Vec::new(),
+            fertilizer_amounts: Vec::new(),
             volume: Volume::default(),
         }
     }
@@ -176,7 +237,7 @@ mod tests {
             .add_fertilizer(fertilizer_2.clone());
 
         assert!(solution_builder
-            .fertilizers
+            .fertilizer_amounts
             .iter()
             .find(|fertilizer| fertilizer.id() == fertilizer_1.id())
             .is_some());
@@ -184,13 +245,13 @@ mod tests {
         solution_builder.remove_fertilizer(fertilizer_1.id());
 
         assert!(solution_builder
-            .fertilizers
+            .fertilizer_amounts
             .iter()
             .find(|fertilizer| fertilizer.id() == fertilizer_1.id())
             .is_none());
 
         assert!(solution_builder
-            .fertilizers
+            .fertilizer_amounts
             .iter()
             .find(|fertilizer| fertilizer.id() == fertilizer_2.id())
             .is_some());

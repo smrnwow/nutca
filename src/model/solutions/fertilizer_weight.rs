@@ -52,6 +52,12 @@ impl FertilizerWeight {
         self.nutrients
     }
 
+    pub fn update_amount(&mut self, amount: f64) {
+        self.weight = amount;
+
+        self.nutrients = self.fertilizer.nutrients().multiply(amount);
+    }
+
     pub fn amount(&self) -> String {
         let units = match self.liquid {
             true => String::from("мл"),

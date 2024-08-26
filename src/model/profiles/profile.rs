@@ -24,6 +24,10 @@ impl Profile {
     pub fn nutrient_requirement(&self, nutrient: Nutrient) -> NutrientAmount {
         self.nutrients[nutrient]
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.nutrients.total_amount() == 0.0
+    }
 }
 
 impl Default for Profile {
