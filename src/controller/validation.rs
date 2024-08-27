@@ -1,7 +1,7 @@
 use crate::controller::Error;
 use crate::model::Error as ModelError;
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Validation {
     show_errors: bool,
     errors: Vec<Error>,
@@ -27,6 +27,14 @@ impl Validation {
             show_errors,
             errors,
         }
+    }
+
+    pub fn add_validation_error(&mut self, error: ModelError) {
+        self.errors.push(Error::ModelError(error));
+    }
+
+    pub fn add_storage_error(&mut self, error: Error) {
+        self.errors.push(error);
     }
 
     pub fn list(&self) -> Vec<String> {
@@ -58,5 +66,14 @@ impl Validation {
 
     pub fn is_empty(&self) -> bool {
         self.errors.len() == 0
+    }
+}
+
+impl Default for Validation {
+    fn default() -> Self {
+        Self {
+            show_errors: true,
+            errors: Vec::new(),
+        }
     }
 }

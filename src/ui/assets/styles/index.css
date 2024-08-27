@@ -91,11 +91,14 @@ body {
     right: 5%;
     z-index: 11;
 }
+.fertilizers-set-item .quick-action {
+    width: 100%;
+}
 .fertilizers-set-item .text {
     text-wrap: nowrap;
 }
 .fertilizers-set-item__amount {
-    width: 100%;
+    min-width: 60px;
 }
 .fertilizers-set-item__amount .number-field__input {
     max-width: 60px;

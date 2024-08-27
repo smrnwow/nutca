@@ -18,7 +18,7 @@ pub fn FertilizersSetItem(props: FertilizersSetItemProps) -> Element {
             class: "fertilizers-set-item",
 
             Row {
-                gap: "small",
+                gap: "x-small",
 
                 QuickAction {
                     warn: props.fertilizer_weight.read().is_redurant(),

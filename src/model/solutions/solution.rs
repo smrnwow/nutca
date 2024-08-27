@@ -34,6 +34,10 @@ impl Solution {
         self.volume
     }
 
+    pub fn composition(&self) -> Nutrients {
+        self.nutrients
+    }
+
     pub fn nutrient_value(&self, nutrient: Nutrient) -> NutrientAmount {
         self.nutrients.value_of(nutrient)
     }

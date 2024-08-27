@@ -1,8 +1,9 @@
 use super::SolutionComposition;
 use crate::controller::profiles::ProfilesListing;
+use crate::controller::solutions::EditMode;
 use crate::model::chemistry::NutrientAmount;
 use crate::model::profiles::Profile;
-use crate::model::solutions::{BuildMode, Solution};
+use crate::model::solutions::Solution;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfileForm;
 use crate::ui::components::utils::{
@@ -18,7 +19,7 @@ fn round(value: f64) -> String {
 pub struct SolutionProfileProps {
     solution: Memo<Solution>,
     profile: Memo<Profile>,
-    build_mode: Memo<BuildMode>,
+    edit_mode: Signal<EditMode>,
     profiles_listing: Signal<ProfilesListing>,
     on_profile_change: EventHandler<String>,
     on_profile_search: EventHandler<String>,
@@ -111,7 +112,7 @@ pub fn SolutionProfile(props: SolutionProfileProps) -> Element {
                     "solution-composition" => rsx! {
                         SolutionComposition {
                             solution: props.solution,
-                            build_mode: props.build_mode,
+                            edit_mode: props.edit_mode,
                         },
                     },
 

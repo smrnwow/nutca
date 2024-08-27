@@ -1,10 +1,11 @@
 use super::{FertilizersBrowser, FertilizersSet, SolutionProfile};
 use crate::controller::fertilizers::FertilizersListing;
 use crate::controller::profiles::ProfilesListing;
+use crate::controller::solutions::EditMode;
 use crate::controller::Validation;
 use crate::model::chemistry::{NutrientAmount, Volume};
 use crate::model::profiles::Profile;
-use crate::model::solutions::{BuildMode, Solution};
+use crate::model::solutions::Solution;
 use crate::ui::components::layout::Row;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
 use dioxus::prelude::*;
@@ -14,7 +15,7 @@ pub struct SolutionEditorProps {
     solution: Memo<Solution>,
     validation: Memo<Validation>,
     profile: Memo<Profile>,
-    build_mode: Memo<BuildMode>,
+    edit_mode: Signal<EditMode>,
     profiles_listing: Signal<ProfilesListing>,
     fertilizers_listing: Signal<FertilizersListing>,
     on_name_update: EventHandler<String>,
@@ -58,7 +59,7 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
             SolutionProfile {
                 solution: props.solution,
                 profile: props.profile,
-                build_mode: props.build_mode,
+                edit_mode: props.edit_mode,
                 profiles_listing: props.profiles_listing,
                 on_profile_change: props.on_profile_change,
                 on_profile_search: props.on_profile_search,

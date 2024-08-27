@@ -23,6 +23,34 @@ impl FertilizersSet {
         self.fertilizers.push(fertilizer_weight);
     }
 
+    pub fn update_fertilizer_amount(&mut self, fertilizer_id: String, amount: f64) -> &mut Self {
+        let position = self
+            .fertilizers
+            .iter()
+            .position(|fertilizer| fertilizer.id() == fertilizer_id);
+
+        if let Some(index) = position {
+            if let Some(fertilizer) = self.fertilizers.get_mut(index) {
+                fertilizer.update_amount(amount);
+            }
+        }
+
+        self
+    }
+
+    pub fn remove_fertilizer(&mut self, fertilizer_id: String) -> &mut Self {
+        let position = self
+            .fertilizers
+            .iter()
+            .position(|fertilizer| fertilizer.id() == fertilizer_id);
+
+        if let Some(index) = position {
+            self.fertilizers.remove(index);
+        }
+
+        self
+    }
+
     pub fn nutrients(&self) -> Nutrients {
         let mut nutrients = Nutrients::new();
 

@@ -9,6 +9,22 @@ pub struct Profile {
 }
 
 impl Profile {
+    pub fn extend(profile: &Self) -> Self {
+        Profile {
+            id: String::new(),
+            name: profile.name(),
+            nutrients: profile.nutrients(),
+        }
+    }
+
+    pub fn is_saved(&self) -> bool {
+        !self.id().is_empty()
+    }
+
+    pub fn update_nutrient_requirement(&mut self, nutrient_requirenent: NutrientAmount) {
+        self.nutrients[nutrient_requirenent.nutrient()] = nutrient_requirenent;
+    }
+
     pub fn id(&self) -> String {
         self.id.clone()
     }
@@ -23,10 +39,6 @@ impl Profile {
 
     pub fn nutrient_requirement(&self, nutrient: Nutrient) -> NutrientAmount {
         self.nutrients[nutrient]
-    }
-
-    pub fn is_empty(&self) -> bool {
-        self.nutrients.total_amount() == 0.0
     }
 }
 

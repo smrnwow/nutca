@@ -16,15 +16,11 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
 
     let mut fertilizers_listing = solution_editor.read().fertilizers_listing();
 
-    let mut solution_builder = solution_editor.read().builder();
+    let solution = use_memo(move || solution_editor.read().solution());
 
-    let solution = solution_editor.read().solution();
+    let profile = use_memo(move || solution.read().profile());
 
-    let validation = solution_editor.read().validation();
-
-    let profile = solution_editor.read().profile();
-
-    let build_mode = use_memo(move || solution_builder.read().mode());
+    let validation = use_memo(move || solution_editor.read().validation());
 
     use_effect(move || toaster.write().render(validation.read().list()));
 
@@ -35,7 +31,7 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
             solution,
             validation,
             profile,
-            build_mode,
+            edit_mode: solution_editor.read().edit_mode(),
             on_profile_change: move |profile_id| {
                 solution_editor.write().change_profile(profile_id);
             },
@@ -46,16 +42,16 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
                 solution_editor.write().exclude_fertilizer(fertilizer_id);
             },
             on_fertilizer_amount_update: move |(fertilizer_id, amount)| {
-                solution_builder.write().update_fertilizer_amount(fertilizer_id, amount);
+                solution_editor.write().update_fertilizer_amount(fertilizer_id, amount);
             },
             on_name_update: move |name| {
-                solution_builder.write().name(name);
+                solution_editor.write().update_name(name);
             },
-            on_profile_nutrient_update: move |nutrient| {
-                solution_builder.write().nutrient_requirement(nutrient);
+            on_profile_nutrient_update: move |nutrient_requirement| {
+                solution_editor.write().update_nutrient_requirement(nutrient_requirement);
             },
             on_volume_update: move |volume| {
-                solution_builder.write().volume(volume);
+                solution_editor.write().update_volume(volume);
             },
             on_profile_search: move |search_query| {
                 profiles_listing.write().search(search_query);

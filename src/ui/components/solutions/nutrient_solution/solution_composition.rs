@@ -1,6 +1,7 @@
 use super::SolutionCompositionNutrient;
+use crate::controller::solutions::EditMode;
 use crate::model::chemistry::Nutrient;
-use crate::model::solutions::{BuildMode, Solution};
+use crate::model::solutions::Solution;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::Text;
 use dioxus::prelude::*;
@@ -8,14 +9,14 @@ use dioxus::prelude::*;
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionCompositionProps {
     solution: Memo<Solution>,
-    build_mode: Memo<BuildMode>,
+    edit_mode: Signal<EditMode>,
 }
 
 #[component]
 pub fn SolutionComposition(props: SolutionCompositionProps) -> Element {
     let solution = props.solution.read();
 
-    let badge = props.build_mode.read().is_automatic() && !props.solution.read().is_empty();
+    let badge = props.edit_mode.read().is_automatic() && !props.solution.read().is_empty();
 
     rsx! {
         Column {
