@@ -45,7 +45,7 @@ impl FertilizerWeight {
     }
 
     pub fn weight(&self) -> f64 {
-        self.weight
+        self.weight / 10.
     }
 
     pub fn nutrients(&self) -> Nutrients {

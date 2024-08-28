@@ -1,6 +1,6 @@
 use crate::model::chemistry::{Nutrient, NutrientAmount, Nutrients, Volume};
 use crate::model::profiles::{Profile, ProfileBuilder};
-use crate::model::solutions::{FertilizerWeight, FertilizersSet, NutrientResult};
+use crate::model::solutions::{Conductivity, FertilizerWeight, FertilizersSet, NutrientResult};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
@@ -52,6 +52,8 @@ impl Solution {
     }
 
     pub fn ec(&self) -> f64 {
+        Conductivity::new(self.nutrients).conductivity()
+        /*
         let total_ppms: f64 = self
             .nutrients
             .list()
@@ -60,6 +62,7 @@ impl Solution {
             .sum();
 
         (total_ppms / 1000.) * 0.7
+        */
     }
 
     pub fn is_empty(&self) -> bool {

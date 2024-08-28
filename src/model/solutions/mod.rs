@@ -1,4 +1,5 @@
 mod calculation;
+mod conductivity;
 mod exclusion_reason;
 mod fertilizer_weight;
 mod fertilizers_set;
@@ -9,6 +10,7 @@ mod solver;
 mod stock_solution_builder;
 
 pub use calculation::Calculation;
+pub use conductivity::Conductivity;
 pub use exclusion_reason::ExclusionReason;
 pub use fertilizer_weight::FertilizerWeight;
 pub use fertilizers_set::FertilizersSet;
