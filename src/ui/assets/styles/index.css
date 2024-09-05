@@ -105,6 +105,53 @@ body {
     max-height: 32px!important;
     padding: 6px 0px!important;
 }
+/* concentrates */
+.concentrate__parts {
+    overflow-x: scroll;
+}
+.part-editor {
+    max-width: 305px;
+    width: 100%;
+}
+.concentrate-part__fertilizer {
+    position: relative;
+}
+.concentrate-part__add-fertilizer-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 8px;
+    box-sizing: border-box;
+    padding: 6px;
+    gap: 6px;
+    width: 100%;
+    background-color: var(--bg-weak-50, rgba(245, 247, 250, 1));
+    border: none;
+}
+.concentrate-part__delete-fertilizer {
+    position: absolute;
+    right: 6px;
+    top: calc(50% - 10px);
+}
+/* .concentrate-part__delete-fertilizer .icon, */
+.concentrate-part__add-fertilizer {
+    position: relative;
+}
+.concentrate-part__add-fertilizer .icon {
+    display: block;
+    width: 14px;
+    height: 14px;
+}
+.concentrate-part__add-fertilizer .dropdown__list {
+    left: 0;
+    bottom: calc(100% + 4px);
+    max-height: 112px;
+    z-index: 100;
+}
+.concentrate-part__add-fertilizer .dropdown__options {
+    overflow: scroll;
+}
 
 /* layout */
 .column {
@@ -412,6 +459,7 @@ button .badge_size-small {
     box-sizing: border-box;
     transition: .1s ease-out;
     cursor: pointer;
+    text-wrap: nowrap;
 }
 .buttons-group__button:hover {
     background: rgba(245, 247, 250, 1);
@@ -780,8 +828,12 @@ button .badge_size-small {
 .number-field__input:hover {
     background-color: rgba(245, 247, 250, 1);
 }
-.number-field_size-small .number-field__input {
+.number-field_controls-true.number-field_size-small .number-field__input {
     padding: 6px 32px;
+    max-height: 34px;
+}
+.number-field_controls-false.number-field_size-small .number-field__input {
+    padding: 6px 6px;
     max-height: 34px;
 }
 .number-field_size-medium .number-field__input {

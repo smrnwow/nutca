@@ -70,6 +70,10 @@ impl FertilizerWeight {
     pub fn is_redurant(&self) -> bool {
         self.weight == 0.
     }
+
+    pub fn fertilizer(&self) -> &Fertilizer {
+        &self.fertilizer
+    }
 }
 
 impl From<Fertilizer> for FertilizerWeight {

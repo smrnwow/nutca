@@ -19,7 +19,7 @@ pub fn NumberField(props: NumberFieldProps) -> Element {
 
     rsx! {
         div {
-            class: "number-field number-field_size-{size}",
+            class: "number-field number-field_size-{size} number-field_controls-true",
 
             if let Some(label) = props.label {
                 span {

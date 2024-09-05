@@ -3,23 +3,15 @@ use crate::model::chemistry::{Nutrient, NutrientAmount, Nutrients};
 pub struct Conductivity {
     solution_composition: Nutrients,
     ionic_strength: f64,
-    molarity: f64,
-    a_constant: f64,
 }
 
 impl Conductivity {
     pub fn new(solution_composition: Nutrients) -> Self {
         let ionic_strength = Self::ionic_strength(&solution_composition);
 
-        let molarity = Self::molarity(&solution_composition);
-
-        let a_constant = Self::a_constant(molarity);
-
         Self {
             solution_composition,
             ionic_strength,
-            molarity,
-            a_constant,
         }
     }
 
@@ -71,23 +63,24 @@ impl Conductivity {
             .sum::<f64>()
     }
 
-    fn molarity(solution_composition: &Nutrients) -> f64 {
-        solution_composition
+    fn a_constant(&self) -> f64 {
+        let molarity = self
+            .solution_composition
             .list()
             .iter()
             .map(|nutrient_amount| Self::ppms_to_moles(*nutrient_amount))
-            .sum::<f64>()
-    }
+            .sum::<f64>();
 
-    fn a_constant(molarity: f64) -> f64 {
-        0.5085 /* * molarity.powf(-0.5) */
+        0.5085 * molarity.powf(-0.5)
     }
 
     fn activity_coefficient(&self, nutrient: Nutrient) -> f64 {
         let charge = nutrient.ionic_charge().abs() as f64;
 
-        let coefficient =
-            -((10. as f64).ln()) * self.a_constant * (charge * charge) * self.ionic_strength.sqrt();
+        let coefficient = -((10. as f64).ln())
+            * self.a_constant()
+            * (charge * charge)
+            * self.ionic_strength.sqrt();
 
         /*
         println!(
@@ -138,10 +131,8 @@ mod tests {
         let conductivity = Conductivity::new(composition);
 
         println!(
-            "ionic strength: {:#?}, molarity: {:#?}, a_constant: {:#?}, conductivity: {:#?}",
+            "ionic strength: {:#?}, conductivity: {:#?}",
             conductivity.ionic_strength,
-            conductivity.molarity,
-            conductivity.a_constant,
             conductivity.conductivity()
         );
     }

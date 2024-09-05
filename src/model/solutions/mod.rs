@@ -7,7 +7,6 @@ mod nutrient_result;
 mod solution;
 mod solution_builder;
 mod solver;
-mod stock_solution_builder;
 
 pub use calculation::Calculation;
 pub use conductivity::Conductivity;
@@ -18,4 +17,3 @@ pub use nutrient_result::NutrientResult;
 pub use solution::Solution;
 pub use solution_builder::SolutionBuilder;
 pub use solver::Solver;
-pub use stock_solution_builder::StockSolutionBuilder;

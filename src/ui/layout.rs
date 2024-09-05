@@ -52,6 +52,12 @@ pub fn Layout() -> Element {
                     to: Route::SolutionsMainPage {},
                     "Растворы",
                 }
+
+                Link {
+                    class: link_class(&current_route, Route::MainConcentratesPage {}),
+                    to: Route::MainConcentratesPage {},
+                    "Концентраты",
+                }
             }
         }
 

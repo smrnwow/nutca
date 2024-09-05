@@ -1,4 +1,4 @@
-use crate::repository::{Fertilizers, Profiles, Solutions};
+use crate::repository::{Concentrates, Fertilizers, Profiles, Solutions};
 use rusqlite::Connection;
 use std::env;
 use std::fs;
@@ -12,6 +12,7 @@ pub struct Storage {
     fertilizers: Fertilizers,
     profiles: Profiles,
     solutions: Solutions,
+    concentrates: Concentrates,
 }
 
 impl Storage {
@@ -39,11 +40,14 @@ impl Storage {
 
         let solutions = Solutions::new(Rc::clone(&connection))?;
 
+        let concentrates = Concentrates::new(Rc::clone(&connection))?;
+
         Ok(Self {
             connection,
             fertilizers,
             profiles,
             solutions,
+            concentrates,
         })
     }
 
@@ -57,5 +61,9 @@ impl Storage {
 
     pub fn solutions(&self) -> &Solutions {
         &self.solutions
+    }
+
+    pub fn concentrates(&self) -> &Concentrates {
+        &self.concentrates
     }
 }

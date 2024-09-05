@@ -39,8 +39,8 @@ impl Dashboard {
         navigator().push(Route::SolutionEditPage { solution_id });
     }
 
-    pub fn open_stock_solution(&self, solution_id: String) {
-        navigator().push(Route::StockSolutionPage { solution_id });
+    pub fn create_concentrate(&self, solution_id: String) {
+        navigator().push(Route::CreateConcentratePage { solution_id });
     }
 
     pub fn delete_solution(&mut self, solution_id: String) {

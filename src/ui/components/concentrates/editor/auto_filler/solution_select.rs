@@ -1,25 +1,19 @@
 use crate::controller::solutions::SolutionsListing;
-use crate::model::chemistry::Volume;
 use crate::model::solutions::Solution;
-use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::utils::{NumberField, Select};
-use crate::ui::components::VolumeField;
+use crate::ui::components::layout::Row;
+use crate::ui::components::utils::Select;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
-pub struct StockSolutionControlsProps {
+pub struct SolutionSelectProps {
     solution: Memo<Solution>,
     solutions_listing: Memo<SolutionsListing>,
-    concentration: Memo<usize>,
-    volume: Memo<Volume>,
     on_solution_search: EventHandler<String>,
     on_solution_change: EventHandler<String>,
-    on_concentration_change: EventHandler<usize>,
-    on_volume_change: EventHandler<Volume>,
 }
 
 #[component]
-pub fn StockSolutionControls(props: StockSolutionControlsProps) -> Element {
+pub fn SolutionSelect(props: SolutionSelectProps) -> Element {
     let value = use_memo(move || (props.solution.read().id(), props.solution.read().name()));
 
     let options = props
@@ -31,7 +25,7 @@ pub fn StockSolutionControls(props: StockSolutionControlsProps) -> Element {
         .collect();
 
     rsx! {
-        Column {
+        Row {
             Select {
                 label: "Питательный раствор",
                 placeholder: "выбрать раствор",
@@ -39,20 +33,6 @@ pub fn StockSolutionControls(props: StockSolutionControlsProps) -> Element {
                 options,
                 on_search: props.on_solution_search,
                 on_change: props.on_solution_change,
-            }
-
-            Row {
-                NumberField {
-                    label: "Концентрация",
-                    value: *props.concentration.read(),
-                    on_change: props.on_concentration_change,
-                }
-
-                VolumeField {
-                    label: "Объем",
-                    volume: props.volume,
-                    on_change: props.on_volume_change,
-                }
             }
         }
     }

@@ -1,3 +1,4 @@
+use super::EditMode;
 use crate::controller::fertilizers::FertilizersListing;
 use crate::controller::profiles::ProfilesListing;
 use crate::controller::{Error, Validation};
@@ -12,8 +13,6 @@ use crate::repository::Storage;
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
-
-use super::EditMode;
 
 pub struct SolutionEditor {
     is_draft: Signal<bool>,

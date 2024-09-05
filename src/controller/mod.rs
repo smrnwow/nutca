@@ -1,3 +1,4 @@
+pub mod concentrates;
 mod error;
 pub mod fertilizers;
 pub mod profiles;

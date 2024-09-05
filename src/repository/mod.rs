@@ -1,9 +1,11 @@
+mod concentrates;
 mod error;
 mod fertilizers;
 mod profiles;
 mod solutions;
 mod storage;
 
+pub use concentrates::Concentrates;
 pub use error::{Error, RepositoryError};
 pub use fertilizers::Fertilizers;
 pub use profiles::Profiles;

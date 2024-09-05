@@ -1,13 +1,13 @@
-use dioxus::prelude::*;
-use dioxus_router::prelude::*;
-
+use super::pages::concentrates::{
+    Create as CreateConcentratePage, Edit as EditConcentratePage, Main as MainConcentratesPage,
+};
 use super::pages::fertilizers::{FertilizerAddPage, FertilizerEditPage, FertilizersMainPage};
 use super::pages::profiles::{ProfileAddPage, ProfileEditPage, ProfilesMainPage};
 use super::pages::reference::ReferenceMainPage;
-use super::pages::solutions::{
-    SolutionAddPage, SolutionEditPage, SolutionsMainPage, StockSolutionPage,
-};
+use super::pages::solutions::{SolutionAddPage, SolutionEditPage, SolutionsMainPage};
 use super::Layout;
+use dioxus::prelude::*;
+use dioxus_router::prelude::*;
 
 #[derive(Routable, PartialEq, Debug, Clone)]
 pub enum Route {
@@ -25,8 +25,14 @@ pub enum Route {
     #[route("/solutions/edit/:solution_id")]
     SolutionEditPage { solution_id: String },
 
-    #[route("/solutions/stock?:solution_id")]
-    StockSolutionPage { solution_id: String },
+    #[route("/concentrates/main")]
+    MainConcentratesPage {},
+
+    #[route("/concentrates/create?:solution_id")]
+    CreateConcentratePage { solution_id: String },
+
+    #[route("/concentrates/create?:concentrate_id")]
+    EditConcentratePage { concentrate_id: String },
 
     #[route("/profiles")]
     ProfilesMainPage {},

@@ -30,6 +30,19 @@ impl Solution {
         self.fertilizers_set.weight(self.volume)
     }
 
+    pub fn get_fertilizer_amount(&self, fertilizer_id: &String) -> Option<&FertilizerWeight> {
+        let fertilizers = self.fertilizers_set.list();
+
+        let position = fertilizers
+            .iter()
+            .position(|fertilizer| fertilizer.id() == *fertilizer_id);
+
+        match position {
+            Some(index) => fertilizers.get(index),
+            None => None,
+        }
+    }
+
     pub fn volume(&self) -> Volume {
         self.volume
     }

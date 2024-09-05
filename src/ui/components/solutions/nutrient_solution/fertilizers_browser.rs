@@ -15,8 +15,6 @@ pub struct FertilizersBrowserProps {
 
 #[component]
 pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
-    let mut show_reference = use_signal(|| false);
-
     let fertilizers = props.fertilizers_listing.read().fetch();
 
     let items_count = fertilizers.len();
@@ -24,7 +22,6 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
     rsx! {
         Column {
             gap: "medium",
-            on_hover: move |hovered| show_reference.set(hovered),
 
             Row {
                 Title {

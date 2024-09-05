@@ -22,7 +22,7 @@ pub fn SolutionsMainPage() -> Element {
                 dashboard.read().open_solution(solution_id);
             },
             on_stock: move |solution_id| {
-                dashboard.read().open_stock_solution(solution_id);
+                dashboard.read().create_concentrate(solution_id);
             },
             on_delete: move |solution_id| {
                 dashboard.write().delete_solution(solution_id);

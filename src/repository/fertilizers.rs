@@ -105,6 +105,32 @@ impl Fertilizers {
         Ok(fertilizers)
     }
 
+    pub fn filter(&self, ids: &Vec<String>) -> Result<Vec<Fertilizer>, Error> {
+        let in_ids = ids
+            .iter()
+            .map(|id| format!("\"{}\"", id))
+            .collect::<Vec<String>>()
+            .join(",");
+
+        let query_str = format!("SELECT * FROM fertilizers WHERE id IN ({})", in_ids);
+
+        let mut statement = self.connection.prepare(&query_str)?;
+
+        let response = statement.query_map([], |row| {
+            let data: String = row.get(2)?;
+            Ok(data)
+        })?;
+
+        let mut fertilizers = vec![];
+
+        for item in response {
+            let fertilizer = serde_json::from_str::<Fertilizer>(&item?)?;
+            fertilizers.push(fertilizer);
+        }
+
+        Ok(fertilizers)
+    }
+
     fn setup(&self) -> Result<(), Error> {
         let mut statement = self.connection.prepare(
             "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='fertilizers'",
