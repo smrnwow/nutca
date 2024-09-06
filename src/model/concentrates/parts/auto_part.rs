@@ -68,12 +68,11 @@ impl AutoPart {
         self.volume
     }
 
-    pub fn fertilizers(&self) -> Vec<FertilizerPercent> {
-        let coefficient = self.concentration as f64 * self.volume.to_litres();
+    pub fn coefficient(&self) -> f64 {
+        self.concentration as f64 * self.volume.to_litres()
+    }
 
-        self.fertilizers
-            .iter()
-            .map(|fertilizer| fertilizer.coefficient(coefficient))
-            .collect()
+    pub fn fertilizers(&self) -> &Vec<FertilizerPercent> {
+        &self.fertilizers
     }
 }

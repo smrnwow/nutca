@@ -1,19 +1,11 @@
 use super::ManualPart;
-use crate::controller::concentrates::FertilizersBrowser;
-use crate::controller::solutions::SolutionsListing;
+use crate::controller::concentrates::TanksSet;
 use crate::model::chemistry::Volume;
-use crate::model::concentrates::fillers::ManualFiller;
-use crate::model::solutions::Solution;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ManualFillerProps {
-    manual_filler: Memo<ManualFiller>,
-    solution: Memo<Solution>,
-    solutions_listing: Memo<SolutionsListing>,
-    on_solution_search: EventHandler<String>,
-    on_solution_change: EventHandler<String>,
-    fertilizers_browser: Memo<FertilizersBrowser>,
+    tanks_set: Memo<TanksSet>,
     on_part_name_update: EventHandler<(String, String)>,
     on_part_concentration_update: EventHandler<(String, usize)>,
     on_part_volume_update: EventHandler<(String, Volume)>,
@@ -24,14 +16,17 @@ pub struct ManualFillerProps {
 
 #[component]
 pub fn ManualFiller(props: ManualFillerProps) -> Element {
+    let fertilizers_browser =
+        use_memo(move || props.tanks_set.read().fertilizers_browser().clone());
+
     rsx! {
         div {
             class: "concentrate__parts",
 
-            for manual_part in props.manual_filler.read().parts().iter().map(|part| Signal::new(part.clone())) {
+            for manual_part in props.tanks_set.read().manual_parts() {
                 ManualPart {
                     manual_part,
-                    fertilizers_browser: props.fertilizers_browser,
+                    fertilizers_browser,
                     on_name_update: props.on_part_name_update,
                     on_concentration_update: props.on_part_concentration_update,
                     on_volume_update: props.on_part_volume_update,

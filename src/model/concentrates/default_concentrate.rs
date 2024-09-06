@@ -59,19 +59,13 @@ impl DefaultConcentrate {
             }
 
             if has_calcium || (!has_sulfur_or_phosphorus && micros_count < 3) {
-                self.part_a.add_fertilizer(FertilizerPercent::new(
-                    fertilizer_weight.id(),
-                    fertilizer_weight.weight(),
-                    100,
-                ));
+                self.part_a
+                    .add_fertilizer(FertilizerPercent::new(fertilizer_weight.id(), 100));
             }
 
             if has_sulfur_or_phosphorus || micros_count > 3 {
-                self.part_b.add_fertilizer(FertilizerPercent::new(
-                    fertilizer_weight.id(),
-                    fertilizer_weight.weight(),
-                    100,
-                ));
+                self.part_b
+                    .add_fertilizer(FertilizerPercent::new(fertilizer_weight.id(), 100));
             }
         });
     }

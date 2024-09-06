@@ -1,9 +1,7 @@
-use super::{FertilizersBrowser, FertilizersStack};
-use crate::controller::solutions::SolutionsListing;
+use super::{SolutionsBrowser, TanksSet};
 use crate::model::chemistry::Volume;
-use crate::model::concentrates::fillers::{AutoFiller, Filler, FillerVariant, ManualFiller};
+use crate::model::concentrates::fillers::{Filler, FillerVariant};
 use crate::model::concentrates::{Concentrate, StockSolutionBuilder};
-use crate::model::solutions::Solution;
 use crate::repository::Storage;
 use crate::ui::router::Route;
 use dioxus::prelude::*;
@@ -11,15 +9,10 @@ use dioxus_router::prelude::*;
 
 pub struct Editor {
     storage: Signal<Storage>,
-    solution: Solution,
-    solutions_listing: SolutionsListing,
-    fertilizers_stack: FertilizersStack,
-    fertilizers_browser: FertilizersBrowser,
+    solutions_browser: SolutionsBrowser,
+    tanks_set: TanksSet,
     id: Option<String>,
     name: String,
-    filler_variant: FillerVariant,
-    auto_filler: AutoFiller,
-    manual_filler: ManualFiller,
 }
 
 impl Editor {
@@ -29,120 +22,61 @@ impl Editor {
             Err(_) => Concentrate::default(),
         };
 
-        let solution = match concentrate.filler() {
-            Filler::Auto(auto_filler) => {
-                match storage.read().solutions().get(auto_filler.solution_id()) {
-                    Ok(solution) => solution,
-                    Err(_) => Solution::default(),
-                }
-            }
-            Filler::Manual(_) => Solution::default(),
-        };
+        let mut solutions_browser = SolutionsBrowser::new(storage);
 
-        let auto_filler = match concentrate.filler() {
-            Filler::Auto(auto_filler) => auto_filler.clone(),
-            Filler::Manual(_) => AutoFiller::new(&solution),
-        };
+        if let Filler::Auto(auto_filler) = concentrate.filler() {
+            solutions_browser.select(auto_filler.solution_id());
+        }
 
-        let manual_filler = match concentrate.filler() {
-            Filler::Auto(_) => ManualFiller::new(),
-            Filler::Manual(manual_filler) => manual_filler.clone(),
-        };
-
-        let filler_variant = match concentrate.filler() {
-            Filler::Auto(_) => FillerVariant::Auto,
-            Filler::Manual(_) => FillerVariant::Manual,
-        };
-
-        let mut fertilizers_stack = FertilizersStack::new(storage);
-
-        fertilizers_stack
-            .with_amounts(solution.fertilizers())
-            .with_stack(auto_filler.stack());
+        let tanks_set = TanksSet::from_concentrate(
+            storage,
+            &concentrate,
+            solutions_browser.selected_solution(),
+        );
 
         Self {
             storage,
-            solution,
-            solutions_listing: SolutionsListing::new(storage),
-            fertilizers_stack,
-            fertilizers_browser: FertilizersBrowser::new(storage),
+            solutions_browser,
+            tanks_set,
             id: Some(concentrate.id().clone()),
             name: concentrate.name().clone(),
-            filler_variant,
-            auto_filler,
-            manual_filler,
         }
     }
 
     pub fn from_solution(storage: Signal<Storage>, solution_id: String) -> Self {
-        let solution = match storage.read().solutions().get(&solution_id) {
-            Ok(solution) => solution,
-            Err(_) => Solution::default(),
-        };
+        let mut solutions_browser = SolutionsBrowser::new(storage);
 
-        let auto_filler = AutoFiller::new(&solution);
+        solutions_browser.select(&solution_id);
 
-        let mut fertilizers_stack = FertilizersStack::new(storage);
-
-        fertilizers_stack
-            .with_amounts(solution.fertilizers())
-            .with_stack(auto_filler.stack());
+        let tanks_set = TanksSet::from_solution(storage, solutions_browser.selected_solution());
 
         Self {
             storage,
-            solution,
-            solutions_listing: SolutionsListing::new(storage),
-            fertilizers_stack,
-            fertilizers_browser: FertilizersBrowser::new(storage),
+            solutions_browser,
+            tanks_set,
             id: None,
             name: String::new(),
-            filler_variant: FillerVariant::Auto,
-            auto_filler,
-            manual_filler: ManualFiller::new(),
         }
     }
 
-    pub fn list_solutions(&self) -> SolutionsListing {
-        self.solutions_listing.clone()
+    pub fn solutions_browser(&self) -> &SolutionsBrowser {
+        &self.solutions_browser
     }
 
-    pub fn fertilizers_stack(&self) -> &FertilizersStack {
-        &self.fertilizers_stack
-    }
-
-    pub fn fertilizers_browser(&self) -> &FertilizersBrowser {
-        &self.fertilizers_browser
-    }
-
-    pub fn solution(&self) -> &Solution {
-        &self.solution
-    }
-
-    pub fn filler_variant(&self) -> FillerVariant {
-        self.filler_variant
-    }
-
-    pub fn auto_filler(&self) -> &AutoFiller {
-        &self.auto_filler
-    }
-
-    pub fn manual_filler(&self) -> &ManualFiller {
-        &self.manual_filler
+    pub fn tanks_set(&self) -> &TanksSet {
+        &self.tanks_set
     }
 
     pub fn concentrate(&self) -> Concentrate {
-        let mut builder = StockSolutionBuilder::new();
-
-        builder
+        StockSolutionBuilder::new()
             .with_id(self.id.clone())
-            .with_name(self.name.clone());
+            .with_name(self.name.clone())
+            .with_filler(self.tanks_set.composition())
+            .build()
+    }
 
-        match self.filler_variant {
-            FillerVariant::Auto => builder.with_auto_filler(self.auto_filler.clone()),
-            FillerVariant::Manual => builder.with_manual_filler(self.manual_filler.clone()),
-        };
-
-        builder.build()
+    pub fn search_solution(&mut self, search_query: String) {
+        self.solutions_browser.search(search_query);
     }
 
     pub fn update_name(&mut self, name: String) {
@@ -150,114 +84,45 @@ impl Editor {
     }
 
     pub fn change_filler_variant(&mut self, filler_variant: FillerVariant) {
-        self.filler_variant = filler_variant;
-    }
-
-    pub fn search_solution(&mut self, search_query: String) {
-        self.solutions_listing.search(search_query);
+        self.tanks_set.change_filler_variant(filler_variant);
     }
 
     pub fn change_solution(&mut self, solution_id: String) {
-        if let Some(solution) = self.solutions_listing.find(solution_id) {
-            self.auto_filler = AutoFiller::new(&solution);
+        self.solutions_browser.select(&solution_id);
 
-            self.solution = solution;
-
-            self.fertilizers_stack
-                .with_amounts(self.solution.fertilizers())
-                .with_stack(self.auto_filler.stack());
-        }
+        self.tanks_set
+            .change_solution(self.solutions_browser.selected_solution());
     }
 
     pub fn add_part(&mut self) {
-        match self.filler_variant {
-            FillerVariant::Auto => self.auto_filler.add_part(),
-            FillerVariant::Manual => self.manual_filler.add_part(),
-        };
+        self.tanks_set.add_part();
     }
 
     pub fn delete_part(&mut self, part_id: String) {
-        match self.filler_variant {
-            FillerVariant::Auto => {
-                self.auto_filler.delete_part(part_id);
-
-                self.fertilizers_stack.with_stack(self.auto_filler.stack());
-            }
-            FillerVariant::Manual => self.manual_filler.delete_part(part_id),
-        };
+        self.tanks_set.delete_part(part_id);
     }
 
-    pub fn update_part_name(&mut self, part_id: String, name: String) -> Option<()> {
-        match self.filler_variant {
-            FillerVariant::Auto => {
-                self.auto_filler.get_part(&part_id)?.update_name(name);
-                Some(())
-            }
-
-            FillerVariant::Manual => self
-                .manual_filler
-                .get_part(&part_id)
-                .and_then(|part| Some(part.update_name(name))),
-        }
+    pub fn update_part_name(&mut self, part_id: String, name: String) {
+        self.tanks_set.update_part_name(part_id, name);
     }
 
     pub fn update_part_concentration(&mut self, part_id: String, concentration: usize) {
-        match self.filler_variant {
-            FillerVariant::Auto => self
-                .auto_filler
-                .update_part_concentration(part_id, concentration),
-            FillerVariant::Manual => self
-                .manual_filler
-                .update_part_concentration(part_id, concentration),
-        };
+        self.tanks_set
+            .update_part_concentration(part_id, concentration);
     }
 
     pub fn update_part_volume(&mut self, part_id: String, volume: Volume) {
-        match self.filler_variant {
-            FillerVariant::Auto => self.auto_filler.update_part_volume(part_id, volume),
-            FillerVariant::Manual => self.manual_filler.update_part_volume(part_id, volume),
-        };
+        self.tanks_set.update_part_volume(part_id, volume);
     }
 
     pub fn add_part_fertilizer(&mut self, part_id: String, fertilizer_id: String, value: f64) {
-        match self.filler_variant {
-            FillerVariant::Auto => {
-                let fertilizer_weight = self.solution.get_fertilizer_amount(&fertilizer_id);
-
-                if let Some(fertilizer_weight) = fertilizer_weight {
-                    self.auto_filler.add_fertilizer(
-                        part_id,
-                        fertilizer_weight.id(),
-                        fertilizer_weight.weight(),
-                        value as usize,
-                    );
-
-                    self.fertilizers_stack.with_stack(self.auto_filler.stack());
-                }
-            }
-
-            FillerVariant::Manual => {
-                let fertilizer = self.fertilizers_browser.get(&fertilizer_id);
-
-                if let Some(fertilizer) = fertilizer {
-                    self.manual_filler
-                        .add_part_fertilizer(part_id, fertilizer, value);
-                }
-            }
-        };
+        self.tanks_set
+            .add_part_fertilizer(part_id, fertilizer_id, value);
     }
 
     pub fn delete_part_fertilizer(&mut self, part_id: String, fertilizer_id: String) {
-        match self.filler_variant {
-            FillerVariant::Auto => {
-                self.auto_filler.delete_fertilizer(part_id, fertilizer_id);
-
-                self.fertilizers_stack.with_stack(self.auto_filler.stack());
-            }
-            FillerVariant::Manual => self
-                .manual_filler
-                .delete_part_fertilizer(part_id, fertilizer_id),
-        };
+        self.tanks_set
+            .delete_part_fertilizer(part_id, fertilizer_id);
     }
 
     pub fn create_concentrate(&self) {

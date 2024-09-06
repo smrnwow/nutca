@@ -113,6 +113,13 @@ body {
     max-width: 305px;
     width: 100%;
 }
+.part-editor .icon {
+    display: block;
+}
+.part-settings__delete .button_compact {
+    padding: 7px;
+    height: auto;
+}
 .concentrate-part__fertilizer {
     position: relative;
 }
@@ -128,11 +135,6 @@ body {
     width: 100%;
     background-color: var(--bg-weak-50, rgba(245, 247, 250, 1));
     border: none;
-}
-.concentrate-part__delete-fertilizer {
-    position: absolute;
-    right: 6px;
-    top: calc(50% - 10px);
 }
 /* .concentrate-part__delete-fertilizer .icon, */
 .concentrate-part__add-fertilizer {
@@ -974,6 +976,7 @@ button .badge_size-small {
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
     cursor: pointer;
     border-radius: 8px;
     box-sizing: border-box;

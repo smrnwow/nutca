@@ -1,5 +1,6 @@
 use crate::model::fertilizers::Fertilizer;
-use crate::ui::components::utils::icons::Close;
+use crate::ui::components::layout::Row;
+use crate::ui::components::utils::icons::Delete;
 use crate::ui::components::utils::{Button, QuickAction, Text};
 use dioxus::prelude::*;
 
@@ -12,9 +13,9 @@ pub struct FertilizerItemProps {
 #[component]
 pub fn FertilizerItem(props: FertilizerItemProps) -> Element {
     rsx! {
-        div {
-            key: "{props.fertilizer_item.read().0.id()}",
-            class: "concentrate-part__fertilizer",
+        Row {
+            gap: "x-small",
+            vertical: "center",
 
             QuickAction {
                 Text {
@@ -24,21 +25,17 @@ pub fn FertilizerItem(props: FertilizerItemProps) -> Element {
 
                 Text {
                     size: "x-small",
-                    {props.fertilizer_item.read().1.to_string()},
+                    "{props.fertilizer_item.read().1.to_string()} {props.fertilizer_item.read().0.units()}",
                 }
             }
 
-            div {
-                class: "concentrate-part__delete-fertilizer",
-
-                Button {
-                    style: "compact",
-                    on_click: move |_| {
-                        let fertilizer_id = props.fertilizer_item.read().0.id();
-                        props.on_delete.call(fertilizer_id);
-                    },
-                    Close {},
-                }
+            Button {
+                style: "compact",
+                on_click: move |_| {
+                    let fertilizer_id = props.fertilizer_item.read().0.id();
+                    props.on_delete.call(fertilizer_id);
+                },
+                Delete {},
             }
         }
     }

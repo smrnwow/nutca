@@ -89,19 +89,9 @@ impl AutoFiller {
         }
     }
 
-    pub fn add_fertilizer(
-        &mut self,
-        part_id: String,
-        fertilizer_id: String,
-        fertilizer_weight: f64,
-        percent: usize,
-    ) {
+    pub fn add_fertilizer(&mut self, part_id: String, fertilizer_id: String, percent: usize) {
         if let Some(part) = self.find_part(&part_id) {
-            part.add_fertilizer(FertilizerPercent::new(
-                fertilizer_id.clone(),
-                fertilizer_weight,
-                percent,
-            ));
+            part.add_fertilizer(FertilizerPercent::new(fertilizer_id.clone(), percent));
 
             self.decrement_percent(&fertilizer_id, percent);
         }

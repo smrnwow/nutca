@@ -1,36 +1,26 @@
-use crate::controller::solutions::SolutionsListing;
-use crate::model::solutions::Solution;
+use crate::controller::concentrates::SolutionsBrowser;
 use crate::ui::components::layout::Row;
 use crate::ui::components::utils::Select;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionSelectProps {
-    solution: Memo<Solution>,
-    solutions_listing: Memo<SolutionsListing>,
+    solutions_browser: Memo<SolutionsBrowser>,
     on_solution_search: EventHandler<String>,
     on_solution_change: EventHandler<String>,
 }
 
 #[component]
 pub fn SolutionSelect(props: SolutionSelectProps) -> Element {
-    let value = use_memo(move || (props.solution.read().id(), props.solution.read().name()));
-
-    let options = props
-        .solutions_listing
-        .read()
-        .fetch()
-        .iter()
-        .map(|solution| (solution.id(), solution.name()))
-        .collect();
+    let value = use_memo(move || props.solutions_browser.read().value());
 
     rsx! {
         Row {
             Select {
-                label: "Питательный раствор",
+                label: "Раствор",
                 placeholder: "выбрать раствор",
                 value,
-                options,
+                options: props.solutions_browser.read().options(),
                 on_search: props.on_solution_search,
                 on_change: props.on_solution_change,
             }

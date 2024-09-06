@@ -1,6 +1,6 @@
 use crate::model::chemistry::Volume;
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::utils::icons::Close;
+use crate::ui::components::utils::icons::Delete;
 use crate::ui::components::utils::{Button, NumberField, TextField};
 use crate::ui::components::VolumeField;
 use dioxus::prelude::*;
@@ -25,16 +25,22 @@ pub fn PartSettings(props: PartSettingsProps) -> Element {
             gap: "medium",
 
             Row {
+                vertical: "end",
+
                 TextField {
                     label: "Название",
                     value: props.name,
                     on_input: move |value| props.on_name_update.call(value),
                 }
 
-                Button {
-                    style: "compact",
-                    on_click: move |_| props.on_delete.call(()),
-                    Close {},
+                div {
+                    class: "part-settings__delete",
+
+                    Button {
+                        style: "compact",
+                        on_click: move |_| props.on_delete.call(()),
+                        Delete {},
+                    }
                 }
             }
 

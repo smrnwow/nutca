@@ -1,10 +1,8 @@
 use super::{auto_filler::AutoFiller, manual_filler::ManualFiller};
-use crate::controller::concentrates::{FertilizersBrowser, FertilizersStack};
-use crate::controller::solutions::SolutionsListing;
+use crate::controller::concentrates::{SolutionsBrowser, TanksSet};
 use crate::model::chemistry::Volume;
-use crate::model::concentrates::fillers::{AutoFiller, FillerVariant, ManualFiller};
+use crate::model::concentrates::fillers::FillerVariant;
 use crate::model::concentrates::Concentrate;
-use crate::model::solutions::Solution;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::Plus;
 use crate::ui::components::utils::{
@@ -14,14 +12,9 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ConcentrateEditorProps {
-    fertilizers_stack: Memo<FertilizersStack>,
-    fertilizers_browser: Memo<FertilizersBrowser>,
+    solutions_browser: Memo<SolutionsBrowser>,
+    tanks_set: Memo<TanksSet>,
     concentrate: Memo<Concentrate>,
-    filler_variant: Memo<FillerVariant>,
-    auto_filler: Memo<AutoFiller>,
-    manual_filler: Memo<ManualFiller>,
-    solution: Memo<Solution>,
-    solutions_listing: Memo<SolutionsListing>,
     on_solution_search: EventHandler<String>,
     on_solution_change: EventHandler<String>,
     on_filler_variant_change: EventHandler<FillerVariant>,
@@ -43,7 +36,7 @@ pub fn ConcentrateEditor(props: ConcentrateEditorProps) -> Element {
             Block {
                 Row {
                     Title {
-                        "Редактор рабочего раствора",
+                        "Редактор концентрата",
                     }
                 }
             }
@@ -68,7 +61,7 @@ pub fn ConcentrateEditor(props: ConcentrateEditorProps) -> Element {
                         Row {
                             Title {
                                 size: "small",
-                                "Части",
+                                "Резервуары",
                             }
 
                             Button {
@@ -79,7 +72,7 @@ pub fn ConcentrateEditor(props: ConcentrateEditorProps) -> Element {
                         }
 
                         ButtonsGroup {
-                            value: props.filler_variant.read().to_string(),
+                            value: props.tanks_set.read().filler_variant().to_string(),
                             buttons: vec![
                                 ButtonsGroupButton {
                                     label: String::from("Из раствора"),
@@ -96,15 +89,13 @@ pub fn ConcentrateEditor(props: ConcentrateEditorProps) -> Element {
                         }
                     }
 
-                    match *props.filler_variant.read() {
+                    match props.tanks_set.read().filler_variant() {
                         FillerVariant::Auto => rsx! {
                             AutoFiller {
-                                solution: props.solution,
-                                solutions_listing: props.solutions_listing,
-                                fertilizers_stack: props.fertilizers_stack,
+                                tanks_set: props.tanks_set,
+                                solutions_browser: props.solutions_browser,
                                 on_solution_search: props.on_solution_search,
-                                on_solution_change: props.on_solution_search,
-                                auto_filler: props.auto_filler,
+                                on_solution_change: props.on_solution_change,
                                 on_part_name_update: props.on_part_name_update,
                                 on_part_concentration_update: props.on_part_concentration_update,
                                 on_part_volume_update: props.on_part_volume_update,
@@ -115,12 +106,7 @@ pub fn ConcentrateEditor(props: ConcentrateEditorProps) -> Element {
                         },
                         FillerVariant::Manual => rsx! {
                             ManualFiller {
-                                manual_filler: props.manual_filler,
-                                solution: props.solution,
-                                solutions_listing: props.solutions_listing,
-                                on_solution_search: props.on_solution_search,
-                                on_solution_change: props.on_solution_search,
-                                fertilizers_browser: props.fertilizers_browser,
+                                tanks_set: props.tanks_set,
                                 on_part_name_update: props.on_part_name_update,
                                 on_part_concentration_update: props.on_part_concentration_update,
                                 on_part_volume_update: props.on_part_volume_update,

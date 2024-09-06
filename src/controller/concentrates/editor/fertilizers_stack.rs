@@ -8,7 +8,7 @@ use std::collections::HashMap;
 #[derive(Clone, Debug, PartialEq)]
 pub struct FertilizersStack {
     storage: Signal<Storage>,
-    amounts: Vec<FertilizerWeight>,
+    amounts: HashMap<String, f64>,
     fertilizers: HashMap<String, Fertilizer>,
     stack: Vec<(String, usize)>,
 }
@@ -17,16 +17,19 @@ impl FertilizersStack {
     pub fn new(storage: Signal<Storage>) -> Self {
         Self {
             storage,
-            amounts: Vec::new(),
+            amounts: HashMap::new(),
             fertilizers: HashMap::new(),
             stack: Vec::new(),
         }
     }
 
     pub fn with_amounts(&mut self, amounts: Vec<FertilizerWeight>) -> &mut Self {
-        self.amounts = amounts;
+        amounts.iter().for_each(|fertilizer_weight| {
+            self.amounts
+                .insert(fertilizer_weight.id(), fertilizer_weight.weight());
+        });
 
-        self.load_fertilizers(self.amounts.iter().map(|amount| amount.id()).collect());
+        self.load_fertilizers(amounts.iter().map(|amount| amount.id()).collect());
 
         self
     }
@@ -57,10 +60,14 @@ impl FertilizersStack {
 
         part.fertilizers().iter().for_each(|fertilizer_percent| {
             if let Some(fertilizer) = self.fertilizers.get(&fertilizer_percent.id()) {
-                list.push(Signal::new((
-                    fertilizer.clone(),
-                    fertilizer_percent.amount(),
-                )));
+                if let Some(amount) = self.amounts.get(&fertilizer_percent.id()) {
+                    let value = fertilizer_percent.amount(*amount) * part.coefficient();
+
+                    list.push(Signal::new((
+                        fertilizer.clone(),
+                        format!("{:.3}", value).parse().unwrap_or(0.0),
+                    )));
+                }
             }
         });
 

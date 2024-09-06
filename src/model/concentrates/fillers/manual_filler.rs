@@ -15,6 +15,18 @@ impl ManualFiller {
         }
     }
 
+    pub fn fertilizers_ids(&self) -> Vec<String> {
+        self.parts.iter().fold(Vec::new(), |mut fertilizers, part| {
+            part.fertilizers()
+                .into_iter()
+                .for_each(|fertilizer_amount| {
+                    fertilizers.push(fertilizer_amount.id());
+                });
+
+            fertilizers
+        })
+    }
+
     pub fn parts(&self) -> &Vec<ManualPart> {
         &self.parts
     }

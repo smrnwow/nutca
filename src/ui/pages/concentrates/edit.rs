@@ -9,32 +9,17 @@ pub fn Edit(concentrate_id: String) -> Element {
 
     let mut editor = use_signal(|| Editor::from_concentrate(storage, concentrate_id));
 
-    let solutions_listing = use_memo(move || editor.read().list_solutions());
+    let solutions_browser = use_memo(move || editor.read().solutions_browser().clone());
 
-    let fertilizers_browser = use_memo(move || editor.read().fertilizers_browser().clone());
-
-    let fertilizers_stack = use_memo(move || editor.read().fertilizers_stack().clone());
-
-    let solution = use_memo(move || editor.read().solution().clone());
+    let tanks_set = use_memo(move || editor.read().tanks_set().clone());
 
     let concentrate = use_memo(move || editor.read().concentrate());
 
-    let filler_variant = use_memo(move || editor.read().filler_variant());
-
-    let auto_filler = use_memo(move || editor.read().auto_filler().clone());
-
-    let manual_filler = use_memo(move || editor.read().manual_filler().clone());
-
     rsx! {
         ConcentrateEditor {
-            solution,
-            solutions_listing,
             concentrate,
-            filler_variant,
-            auto_filler,
-            manual_filler,
-            fertilizers_stack,
-            fertilizers_browser,
+            tanks_set,
+            solutions_browser,
             on_solution_search: move |search_query| {
                 editor.write().search_solution(search_query);
             },

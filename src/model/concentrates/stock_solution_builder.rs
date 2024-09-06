@@ -31,6 +31,11 @@ impl StockSolutionBuilder {
         self
     }
 
+    pub fn with_filler(&mut self, filler: Filler) -> &mut Self {
+        self.filler = filler;
+        self
+    }
+
     pub fn with_auto_filler(&mut self, auto_filler: AutoFiller) -> &mut Self {
         self.filler = Filler::Auto(auto_filler);
         self
