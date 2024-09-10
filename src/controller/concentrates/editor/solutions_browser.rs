@@ -1,3 +1,4 @@
+use super::PickedSolution;
 use crate::model::solutions::Solution;
 use crate::repository::Storage;
 use dioxus::prelude::*;
@@ -8,7 +9,7 @@ pub struct SolutionsBrowser {
     search_query: String,
     page_index: usize,
     limit: usize,
-    selected_solution: Solution,
+    picked_solution: PickedSolution,
 }
 
 impl SolutionsBrowser {
@@ -18,23 +19,25 @@ impl SolutionsBrowser {
             search_query: String::new(),
             page_index: 1,
             limit: 10,
-            selected_solution: Solution::default(),
+            picked_solution: PickedSolution::new(storage),
         }
     }
 
     pub fn select(&mut self, solution_id: &String) {
-        self.selected_solution = match self.storage.read().solutions().get(solution_id) {
-            Ok(solution) => solution,
-            Err(_) => Solution::default(),
+        match self.storage.read().solutions().get(solution_id) {
+            Ok(solution) => self.picked_solution.change(solution),
+            Err(_) => {
+                // maybe notification here
+            }
         }
     }
 
-    pub fn selected_solution(&self) -> &Solution {
-        &self.selected_solution
+    pub fn picked_solution(&self) -> &PickedSolution {
+        &self.picked_solution
     }
 
     pub fn value(&self) -> (String, String) {
-        (self.selected_solution.id(), self.selected_solution.name())
+        (self.picked_solution.id(), self.picked_solution.name())
     }
 
     pub fn options(&self) -> Vec<(String, String)> {

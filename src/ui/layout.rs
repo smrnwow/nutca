@@ -58,6 +58,12 @@ pub fn Layout() -> Element {
                     to: Route::MainConcentratesPage {},
                     "Концентраты",
                 }
+
+                Link {
+                    class: link_class(&current_route, Route::MainWaterAnalysisPage {}),
+                    to: Route::MainWaterAnalysisPage {},
+                    "Анализы воды",
+                }
             }
         }
 

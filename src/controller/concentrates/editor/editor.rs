@@ -28,11 +28,8 @@ impl Editor {
             solutions_browser.select(auto_filler.solution_id());
         }
 
-        let tanks_set = TanksSet::from_concentrate(
-            storage,
-            &concentrate,
-            solutions_browser.selected_solution(),
-        );
+        let tanks_set =
+            TanksSet::from_concentrate(storage, &concentrate, solutions_browser.picked_solution());
 
         Self {
             storage,
@@ -48,7 +45,7 @@ impl Editor {
 
         solutions_browser.select(&solution_id);
 
-        let tanks_set = TanksSet::from_solution(storage, solutions_browser.selected_solution());
+        let tanks_set = TanksSet::from_solution(storage, solutions_browser.picked_solution());
 
         Self {
             storage,
@@ -91,7 +88,7 @@ impl Editor {
         self.solutions_browser.select(&solution_id);
 
         self.tanks_set
-            .change_solution(self.solutions_browser.selected_solution());
+            .change_solution(self.solutions_browser.picked_solution());
     }
 
     pub fn add_part(&mut self) {

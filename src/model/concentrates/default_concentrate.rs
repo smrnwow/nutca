@@ -1,6 +1,6 @@
 use crate::model::chemistry::Nutrient;
 use crate::model::concentrates::parts::{AutoPart, FertilizerPercent};
-use crate::model::solutions::Solution;
+use crate::model::solutions::FertilizerWeight;
 
 pub struct DefaultConcentrate {
     part_a: AutoPart,
@@ -8,13 +8,13 @@ pub struct DefaultConcentrate {
 }
 
 impl DefaultConcentrate {
-    pub fn new(solution: &Solution) -> Self {
+    pub fn new(fertilizers: &Vec<FertilizerWeight>) -> Self {
         let mut concentrate = Self {
             part_a: AutoPart::new("A"),
             part_b: AutoPart::new("B"),
         };
 
-        concentrate.calculate(solution);
+        concentrate.calculate(fertilizers);
 
         concentrate
     }
@@ -23,8 +23,8 @@ impl DefaultConcentrate {
         vec![&self.part_a, &self.part_b]
     }
 
-    fn calculate(&mut self, solution: &Solution) {
-        solution.fertilizers().iter().for_each(|fertilizer_weight| {
+    fn calculate(&mut self, fertilizers: &Vec<FertilizerWeight>) {
+        fertilizers.iter().for_each(|fertilizer_weight| {
             let mut has_calcium = false;
 
             let mut has_sulfur_or_phosphorus = false;

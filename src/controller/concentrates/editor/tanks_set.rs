@@ -1,9 +1,8 @@
-use super::{FertilizersBrowser, FertilizersStack};
+use super::{FertilizersBrowser, FertilizersStack, PickedSolution};
 use crate::model::chemistry::Volume;
 use crate::model::concentrates::fillers::{AutoFiller, Filler, FillerVariant, ManualFiller};
 use crate::model::concentrates::parts::{AutoPart, ManualPart};
 use crate::model::concentrates::Concentrate;
-use crate::model::solutions::Solution;
 use crate::repository::Storage;
 use dioxus::prelude::*;
 
@@ -20,11 +19,13 @@ impl TanksSet {
     pub fn from_concentrate(
         storage: Signal<Storage>,
         concentrate: &Concentrate,
-        solution: &Solution,
+        picked_solution: &PickedSolution,
     ) -> Self {
         let auto_filler = match concentrate.filler() {
             Filler::Auto(auto_filler) => auto_filler.clone(),
-            Filler::Manual(_) => AutoFiller::new(solution),
+            Filler::Manual(_) => {
+                AutoFiller::new(picked_solution.id(), picked_solution.fertilizers())
+            }
         };
 
         let manual_filler = match concentrate.filler() {
@@ -40,7 +41,7 @@ impl TanksSet {
         let mut fertilizers_stack = FertilizersStack::new(storage);
 
         fertilizers_stack
-            .with_amounts(solution.fertilizers())
+            .with_amounts(picked_solution.fertilizers())
             .with_stack(auto_filler.stack());
 
         let mut fertilizers_browser = FertilizersBrowser::new(storage);
@@ -56,8 +57,8 @@ impl TanksSet {
         }
     }
 
-    pub fn from_solution(storage: Signal<Storage>, solution: &Solution) -> Self {
-        let auto_filler = AutoFiller::new(solution);
+    pub fn from_solution(storage: Signal<Storage>, solution: &PickedSolution) -> Self {
+        let auto_filler = AutoFiller::new(solution.id(), solution.fertilizers());
 
         let mut fertilizers_stack = FertilizersStack::new(storage);
 
@@ -67,7 +68,7 @@ impl TanksSet {
 
         Self {
             filler_variant: FillerVariant::Auto,
-            auto_filler: AutoFiller::new(solution),
+            auto_filler,
             manual_filler: ManualFiller::new(),
             fertilizers_stack,
             fertilizers_browser: FertilizersBrowser::new(storage),
@@ -111,8 +112,8 @@ impl TanksSet {
         }
     }
 
-    pub fn change_solution(&mut self, solution: &Solution) {
-        self.auto_filler = AutoFiller::new(solution);
+    pub fn change_solution(&mut self, solution: &PickedSolution) {
+        self.auto_filler = AutoFiller::new(solution.id(), solution.fertilizers());
 
         self.fertilizers_stack
             .with_amounts(solution.fertilizers())

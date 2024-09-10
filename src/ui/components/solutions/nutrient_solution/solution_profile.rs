@@ -1,6 +1,5 @@
 use super::SolutionComposition;
-use crate::controller::profiles::ProfilesListing;
-use crate::controller::solutions::EditMode;
+use crate::controller::solutions::{EditMode, NutritionProgramBrowser};
 use crate::model::chemistry::NutrientAmount;
 use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
@@ -20,7 +19,7 @@ pub struct SolutionProfileProps {
     solution: Memo<Solution>,
     profile: Memo<Profile>,
     edit_mode: Signal<EditMode>,
-    profiles_listing: Signal<ProfilesListing>,
+    nutrition_program_browser: Memo<NutritionProgramBrowser>,
     on_profile_change: EventHandler<String>,
     on_profile_search: EventHandler<String>,
     on_profile_nutrient_update: EventHandler<NutrientAmount>,
@@ -88,7 +87,7 @@ pub fn SolutionProfile(props: SolutionProfileProps) -> Element {
                 Select {
                     placeholder: "выбрать готовый профиль",
                     value: profile_select_value,
-                    options: props.profiles_listing.read()
+                    options: props.nutrition_program_browser.read()
                         .fetch()
                         .iter()
                         .map(|profile| (profile.id(), profile.name()))

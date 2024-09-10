@@ -7,7 +7,6 @@ use std::collections::HashMap;
 #[derive(Clone, Debug, PartialEq)]
 pub struct FertilizersBrowser {
     storage: Signal<Storage>,
-    excluded_ids: Vec<String>,
     search_query: String,
     page_index: usize,
     limit: usize,
@@ -18,7 +17,6 @@ impl FertilizersBrowser {
     pub fn new(storage: Signal<Storage>) -> Self {
         Self {
             storage,
-            excluded_ids: Vec::new(),
             search_query: String::new(),
             page_index: 1,
             limit: 10,
@@ -70,7 +68,7 @@ impl FertilizersBrowser {
     pub fn fetch(&self) -> Vec<Fertilizer> {
         match self.storage.read().fertilizers().search(
             &self.search_query,
-            self.excluded_ids.as_ref(),
+            &[],
             self.limit,
             self.limit * (self.page_index - 1),
         ) {

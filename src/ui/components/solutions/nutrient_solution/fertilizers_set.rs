@@ -1,5 +1,5 @@
 use super::FertilizersSetItem;
-use crate::controller::solutions::SolutionFertilizers;
+use crate::controller::solutions::FertilizersPicker;
 use crate::model::chemistry::Volume;
 use crate::model::solutions::Solution;
 use crate::ui::components::layout::{Column, Row};
@@ -10,28 +10,22 @@ use dioxus::prelude::*;
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersSetProps {
     solution: Memo<Solution>,
+    fertilizers_picker: Memo<FertilizersPicker>,
     on_volume_update: EventHandler<Volume>,
     on_fertilizer_exclude: EventHandler<String>,
     on_fertilizer_amount_update: EventHandler<(String, f64)>,
+    on_paginate: EventHandler<usize>,
 }
 
 #[component]
 pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
-    let mut page_index = use_signal(|| 1);
-
-    let solution_fertilizers = use_memo(move || {
-        let fertilizers = props.solution.read().fertilizers();
-
-        let mut solution_fertilizers = SolutionFertilizers::new(fertilizers);
-
-        solution_fertilizers.paginate(*page_index.read());
-
-        solution_fertilizers
-    });
-
     let volume = use_memo(move || props.solution.read().volume());
 
-    let fertilizers_weights = solution_fertilizers.read().items();
+    let fertilizers_weights = props
+        .fertilizers_picker
+        .read()
+        .selected_set
+        .items(*volume.read());
 
     let items_count = fertilizers_weights.len();
 
@@ -55,8 +49,8 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
             }
 
             List {
-                limit: solution_fertilizers.read().limit(),
-                empty: solution_fertilizers.read().is_empty(),
+                limit: props.fertilizers_picker.read().selected_set.limit(),
+                empty: props.fertilizers_picker.read().selected_set.is_empty(),
                 stub_text: "Выберите удобрения из списка",
 
                 for fertilizer_weight in fertilizers_weights {
@@ -70,12 +64,10 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
             }
 
             Pagination {
-                page_index: solution_fertilizers.read().page_index(),
-                limit: solution_fertilizers.read().limit(),
+                page_index: props.fertilizers_picker.read().selected_set.page_index(),
+                limit: props.fertilizers_picker.read().selected_set.limit(),
                 items_count,
-                on_change: move |next_page| {
-                    *page_index.write() = next_page;
-                },
+                on_change: move |next_page| props.on_paginate.call(next_page),
             }
         }
     }

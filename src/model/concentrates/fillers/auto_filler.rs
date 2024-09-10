@@ -1,7 +1,7 @@
 use crate::model::chemistry::Volume;
 use crate::model::concentrates::parts::{AutoPart, FertilizerPercent};
 use crate::model::concentrates::DefaultConcentrate;
-use crate::model::solutions::Solution;
+use crate::model::solutions::FertilizerWeight;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -13,14 +13,14 @@ pub struct AutoFiller {
 }
 
 impl AutoFiller {
-    pub fn new(solution: &Solution) -> Self {
+    pub fn new(solution_id: String, fertilizers: &Vec<FertilizerWeight>) -> Self {
         let mut stack: HashMap<String, usize> = HashMap::new();
 
-        solution.fertilizers().iter().for_each(|fertilizer_weight| {
+        fertilizers.iter().for_each(|fertilizer_weight| {
             stack.insert(fertilizer_weight.id(), 100);
         });
 
-        let parts: Vec<AutoPart> = DefaultConcentrate::new(&solution)
+        let parts: Vec<AutoPart> = DefaultConcentrate::new(fertilizers)
             .parts()
             .iter()
             .map(|part| (*part).clone())
@@ -35,7 +35,7 @@ impl AutoFiller {
         });
 
         Self {
-            solution_id: solution.id(),
+            solution_id,
             parts,
             stack,
         }

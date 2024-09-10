@@ -20,8 +20,6 @@ impl Concentrates {
     pub fn add(&self, concentrate: Concentrate) -> Result<(), Error> {
         let data = serde_json::to_string(&concentrate)?;
 
-        println!("data {:#?}", data);
-
         self.connection.execute(
             "INSERT INTO concentrates (id, name, data) VALUES (?1, ?2, ?3)",
             params![concentrate.id(), concentrate.name().to_lowercase(), data],

@@ -1,7 +1,9 @@
+use super::CalculationResult;
 use crate::model::chemistry::{Nutrient, NutrientAmount, Nutrients, Volume};
 use crate::model::profiles::{Profile, ProfileBuilder};
-use crate::model::solutions::{Conductivity, FertilizerWeight, FertilizersSet, NutrientResult};
+use crate::model::solutions::{Conductivity, NutrientResult};
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Solution {
@@ -9,7 +11,7 @@ pub struct Solution {
     pub(super) name: String,
     pub(super) profile: Profile,
     pub(super) volume: Volume,
-    pub(super) fertilizers_set: FertilizersSet,
+    pub(super) fertilizers: HashMap<String, CalculationResult>,
     pub(super) nutrients: Nutrients,
 }
 
@@ -26,8 +28,15 @@ impl Solution {
         self.profile.clone()
     }
 
-    pub fn fertilizers(&self) -> Vec<FertilizerWeight> {
-        self.fertilizers_set.weight(self.volume)
+    pub fn fertilizers(&self) -> &HashMap<String, CalculationResult> {
+        &self.fertilizers
+    }
+
+    pub fn fertilizer(&self, fertilizer_id: &String) -> Option<CalculationResult> {
+        match self.fertilizers.get(fertilizer_id) {
+            Some(calculation_result) => Some(*calculation_result),
+            None => None,
+        }
     }
 
     pub fn volume(&self) -> Volume {
@@ -56,7 +65,7 @@ impl Solution {
     }
 
     pub fn is_empty(&self) -> bool {
-        self.fertilizers_set.is_empty()
+        self.fertilizers.is_empty()
     }
 }
 
@@ -68,7 +77,7 @@ impl From<Profile> for Solution {
             profile,
             nutrients: Nutrients::new(),
             volume: Volume::default(),
-            fertilizers_set: FertilizersSet::default(),
+            fertilizers: HashMap::new(),
         }
     }
 }
@@ -81,7 +90,7 @@ impl Default for Solution {
             profile: ProfileBuilder::new().build(),
             nutrients: Nutrients::new(),
             volume: Volume::default(),
-            fertilizers_set: FertilizersSet::default(),
+            fertilizers: HashMap::new(),
         }
     }
 }

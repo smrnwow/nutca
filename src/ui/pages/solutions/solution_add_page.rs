@@ -12,9 +12,10 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
 
     let mut solution_editor = use_signal(|| SolutionEditor::new(storage, profile_id));
 
-    let mut profiles_listing = solution_editor.read().profiles_listing();
+    let nutrition_program_browser =
+        use_memo(move || solution_editor.read().nutrition_program_browser().clone());
 
-    let mut fertilizers_listing = solution_editor.read().fertilizers_listing();
+    let fertilizers_picker = use_memo(move || solution_editor.read().fertilizers_picker().clone());
 
     let solution = use_memo(move || solution_editor.read().solution());
 
@@ -26,8 +27,8 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
 
     rsx! {
         SolutionEditor {
-            profiles_listing,
-            fertilizers_listing,
+            nutrition_program_browser,
+            fertilizers_picker,
             solution,
             validation,
             profile,
@@ -54,13 +55,16 @@ pub fn SolutionAddPage(profile_id: String) -> Element {
                 solution_editor.write().update_volume(volume);
             },
             on_profile_search: move |search_query| {
-                profiles_listing.write().search(search_query);
+                solution_editor.write().search_nutrient_program(search_query);
             },
             on_fertilizer_search: move |search_query| {
-                fertilizers_listing.write().search(search_query);
+                solution_editor.write().search_fertilizer(search_query);
             },
             on_fertilizers_paginate: move |page_index| {
-                fertilizers_listing.write().paginate(page_index);
+                solution_editor.write().paginate_fertilizers_browser(page_index);
+            },
+            on_selected_set_paginate: move |page_index| {
+                solution_editor.write().paginate_selected_set(page_index);
             },
             on_save: move |_| {
                 solution_editor.write().create();

@@ -23,7 +23,7 @@ impl FertilizersStack {
         }
     }
 
-    pub fn with_amounts(&mut self, amounts: Vec<FertilizerWeight>) -> &mut Self {
+    pub fn with_amounts(&mut self, amounts: &Vec<FertilizerWeight>) -> &mut Self {
         amounts.iter().for_each(|fertilizer_weight| {
             self.amounts
                 .insert(fertilizer_weight.id(), fertilizer_weight.weight());

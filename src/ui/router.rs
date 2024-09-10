@@ -5,6 +5,7 @@ use super::pages::fertilizers::{FertilizerAddPage, FertilizerEditPage, Fertilize
 use super::pages::profiles::{ProfileAddPage, ProfileEditPage, ProfilesMainPage};
 use super::pages::reference::ReferenceMainPage;
 use super::pages::solutions::{SolutionAddPage, SolutionEditPage, SolutionsMainPage};
+use super::pages::water_analysis::Main as MainWaterAnalysisPage;
 use super::Layout;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
@@ -25,14 +26,17 @@ pub enum Route {
     #[route("/solutions/edit/:solution_id")]
     SolutionEditPage { solution_id: String },
 
-    #[route("/concentrates/main")]
+    #[route("/concentrates")]
     MainConcentratesPage {},
 
     #[route("/concentrates/create?:solution_id")]
     CreateConcentratePage { solution_id: String },
 
-    #[route("/concentrates/create?:concentrate_id")]
+    #[route("/concentrates/edit?:concentrate_id")]
     EditConcentratePage { concentrate_id: String },
+
+    #[route("/water-analysis")]
+    MainWaterAnalysisPage {},
 
     #[route("/profiles")]
     ProfilesMainPage {},

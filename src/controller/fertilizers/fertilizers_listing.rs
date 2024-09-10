@@ -25,7 +25,7 @@ impl FertilizersListing {
     pub fn fetch(&self) -> Vec<Fertilizer> {
         match self.storage.read().fertilizers().search(
             &self.search_query,
-            self.excluded_ids.as_ref(),
+            &[],
             self.limit,
             self.limit * (self.page_index - 1),
         ) {

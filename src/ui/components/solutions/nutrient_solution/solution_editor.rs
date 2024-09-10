@@ -1,7 +1,5 @@
 use super::{FertilizersBrowser, FertilizersSet, SolutionProfile};
-use crate::controller::fertilizers::FertilizersListing;
-use crate::controller::profiles::ProfilesListing;
-use crate::controller::solutions::EditMode;
+use crate::controller::solutions::{EditMode, FertilizersPicker, NutritionProgramBrowser};
 use crate::controller::Validation;
 use crate::model::chemistry::{NutrientAmount, Volume};
 use crate::model::profiles::Profile;
@@ -16,8 +14,8 @@ pub struct SolutionEditorProps {
     validation: Memo<Validation>,
     profile: Memo<Profile>,
     edit_mode: Signal<EditMode>,
-    profiles_listing: Signal<ProfilesListing>,
-    fertilizers_listing: Signal<FertilizersListing>,
+    nutrition_program_browser: Memo<NutritionProgramBrowser>,
+    fertilizers_picker: Memo<FertilizersPicker>,
     on_name_update: EventHandler<String>,
     on_volume_update: EventHandler<Volume>,
     on_profile_change: EventHandler<String>,
@@ -28,6 +26,7 @@ pub struct SolutionEditorProps {
     on_fertilizer_amount_update: EventHandler<(String, f64)>,
     on_fertilizer_search: EventHandler<String>,
     on_fertilizers_paginate: EventHandler<usize>,
+    on_selected_set_paginate: EventHandler<usize>,
     on_save: EventHandler<()>,
 }
 
@@ -60,7 +59,7 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
                 solution: props.solution,
                 profile: props.profile,
                 edit_mode: props.edit_mode,
-                profiles_listing: props.profiles_listing,
+                nutrition_program_browser: props.nutrition_program_browser,
                 on_profile_change: props.on_profile_change,
                 on_profile_search: props.on_profile_search,
                 on_profile_nutrient_update: props.on_profile_nutrient_update,
@@ -71,7 +70,7 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
             Block {
                 Row {
                     FertilizersBrowser {
-                        fertilizers_listing: props.fertilizers_listing,
+                        fertilizers_picker: props.fertilizers_picker,
                         on_select: props.on_fertilizer_select,
                         on_search: props.on_fertilizer_search,
                         on_paginate: props.on_fertilizers_paginate,
@@ -79,8 +78,10 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
 
                     FertilizersSet {
                         solution: props.solution,
+                        fertilizers_picker: props.fertilizers_picker,
                         on_fertilizer_exclude: props.on_fertilizer_exclude,
                         on_fertilizer_amount_update: props.on_fertilizer_amount_update,
+                        on_paginate: props.on_selected_set_paginate,
                         on_volume_update: props.on_volume_update,
                     }
                 }

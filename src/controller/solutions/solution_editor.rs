@@ -1,13 +1,8 @@
-use super::EditMode;
-use crate::controller::fertilizers::FertilizersListing;
-use crate::controller::profiles::ProfilesListing;
+use super::{EditMode, FertilizersPicker, NutritionProgramBrowser};
 use crate::controller::{Error, Validation};
-use crate::model::chemistry::{NutrientAmount, Nutrients, Volume};
-use crate::model::fertilizers::Fertilizer;
+use crate::model::chemistry::{NutrientAmount, Volume};
 use crate::model::profiles::Profile;
-use crate::model::solutions::{
-    FertilizerWeight, FertilizersSet, Solution, SolutionBuilder, Solver,
-};
+use crate::model::solutions::{NutrientComposition, Solution, SolutionBuilder, Solver};
 use crate::model::Error as ModelError;
 use crate::repository::Storage;
 use crate::ui::router::Route;
@@ -22,11 +17,10 @@ pub struct SolutionEditor {
     id: Option<String>,
     name: String,
     profile: Profile,
-    fertilizers_set: FertilizersSet,
     volume: Volume,
-    composition: Nutrients,
-    fertilizers_listing: Signal<FertilizersListing>,
-    profiles_listing: Signal<ProfilesListing>,
+    composition: NutrientComposition,
+    nutrition_program_browser: NutritionProgramBrowser,
+    fertilizers_picker: FertilizersPicker,
 }
 
 impl SolutionEditor {
@@ -38,10 +32,6 @@ impl SolutionEditor {
 
         let is_draft = Signal::new(true);
 
-        let mut fertilizers_listing = FertilizersListing::new(storage);
-
-        fertilizers_listing.update_limit(8);
-
         Self {
             is_draft,
             edit_mode: Signal::new(EditMode::default()),
@@ -50,11 +40,10 @@ impl SolutionEditor {
             id: None,
             name: String::new(),
             volume: Volume::default(),
-            composition: Nutrients::new(),
+            composition: NutrientComposition::new(),
             profile,
-            fertilizers_set: FertilizersSet::new(Vec::new()),
-            fertilizers_listing: Signal::new(fertilizers_listing),
-            profiles_listing: Signal::new(ProfilesListing::new(storage)),
+            fertilizers_picker: FertilizersPicker::new(storage),
+            nutrition_program_browser: NutritionProgramBrowser::new(storage),
         }
     }
 
@@ -66,19 +55,9 @@ impl SolutionEditor {
 
         let is_draft = Signal::new(true);
 
-        let mut fertilizers_listing = FertilizersListing::new(storage);
+        let mut fertilizers_picker = FertilizersPicker::new(storage);
 
-        fertilizers_listing.update_limit(8);
-
-        fertilizers_listing.exclude_many(
-            solution
-                .fertilizers()
-                .iter()
-                .map(|fertilizer| fertilizer.id())
-                .collect(),
-        );
-
-        let fertilizers_set = FertilizersSet::new(solution.fertilizers());
+        fertilizers_picker.with_picked_fertilizers(solution.fertilizers());
 
         Self {
             is_draft,
@@ -89,10 +68,9 @@ impl SolutionEditor {
             name: solution.name(),
             volume: solution.volume(),
             profile: solution.profile(),
-            fertilizers_set,
-            composition: solution.composition(),
-            fertilizers_listing: Signal::new(fertilizers_listing),
-            profiles_listing: Signal::new(ProfilesListing::new(storage)),
+            composition: NutrientComposition::from(solution.composition()),
+            fertilizers_picker,
+            nutrition_program_browser: NutritionProgramBrowser::new(storage),
         }
     }
 
@@ -105,8 +83,12 @@ impl SolutionEditor {
             .with_id(self.id.clone())
             .with_name(self.name.clone())
             .with_profile(self.profile.clone())
-            .with_fertilizers_set(self.fertilizers_set.clone())
-            .with_composition(self.composition)
+            .with_fertilizers(
+                self.fertilizers_picker
+                    .selected_set
+                    .list_fertilizers_amounts(),
+            )
+            .with_composition(self.composition.nutrients().clone())
             .with_volume(self.volume)
             .build()
     }
@@ -115,12 +97,28 @@ impl SolutionEditor {
         self.validation.clone()
     }
 
-    pub fn fertilizers_listing(&self) -> Signal<FertilizersListing> {
-        self.fertilizers_listing
+    pub fn fertilizers_picker(&self) -> &FertilizersPicker {
+        &self.fertilizers_picker
     }
 
-    pub fn profiles_listing(&self) -> Signal<ProfilesListing> {
-        self.profiles_listing
+    pub fn nutrition_program_browser(&self) -> &NutritionProgramBrowser {
+        &self.nutrition_program_browser
+    }
+
+    pub fn search_nutrient_program(&mut self, search_query: String) {
+        self.nutrition_program_browser.search(search_query);
+    }
+
+    pub fn search_fertilizer(&mut self, search_query: String) {
+        self.fertilizers_picker.browser.search(search_query);
+    }
+
+    pub fn paginate_fertilizers_browser(&mut self, page_index: usize) {
+        self.fertilizers_picker.browser.paginate(page_index);
+    }
+
+    pub fn paginate_selected_set(&mut self, page_index: usize) {
+        self.fertilizers_picker.selected_set.paginate(page_index);
     }
 
     pub fn update_name(&mut self, name: String) {
@@ -142,9 +140,7 @@ impl SolutionEditor {
     }
 
     pub fn change_profile(&mut self, profile_id: String) {
-        let profile = self.profiles_listing.read().find(profile_id);
-
-        match profile {
+        match self.nutrition_program_browser.find(profile_id) {
             Some(profile) => {
                 self.profile = profile;
 
@@ -163,33 +159,24 @@ impl SolutionEditor {
     }
 
     pub fn select_fertilizer(&mut self, fertilizer_id: String) {
-        let fertilizer = self.fertilizers_listing.write().exclude(fertilizer_id);
+        self.fertilizers_picker.pick_fertilizer(&fertilizer_id);
 
-        if let Some(fertilizer) = fertilizer {
-            self.fertilizers_set
-                .add_fertilizer_weight(FertilizerWeight::new(fertilizer, 0.0));
-
-            self.calculate_composition();
-        }
+        self.calculate_composition();
     }
 
     pub fn exclude_fertilizer(&mut self, fertilizer_id: String) {
-        let fertilizer = self.fertilizers_listing.write().include(fertilizer_id);
+        self.fertilizers_picker.exclude_fertilizer(&fertilizer_id);
 
-        if let Some(fertilizer) = fertilizer {
-            self.fertilizers_set.remove_fertilizer(fertilizer.id());
-
-            self.calculate_composition();
-        }
+        self.calculate_composition();
     }
 
     pub fn update_fertilizer_amount(&mut self, fertilizer_id: String, amount: f64) {
-        self.fertilizers_set
-            .update_fertilizer_amount(fertilizer_id, amount);
-
-        self.profile = Profile::default();
+        self.fertilizers_picker
+            .update_fertilizer_amount(&fertilizer_id, amount);
 
         self.switch_edit_mode(EditMode::Manual);
+
+        self.profile = Profile::default();
 
         self.calculate_composition();
     }
@@ -248,24 +235,23 @@ impl SolutionEditor {
     }
 
     fn calculate_composition(&mut self) {
-        match *self.edit_mode.read() {
-            EditMode::Manual => {
-                self.composition = self.fertilizers_set.nutrients();
-            }
+        if let EditMode::Automatic = *self.edit_mode.read() {
+            let calculation_results = Solver::new(
+                &self.profile,
+                self.fertilizers_picker
+                    .selected_set
+                    .list_selected_fertilizers(),
+            )
+            .solve();
 
-            EditMode::Automatic => {
-                let fertilizers = self
-                    .fertilizers_set
-                    .list()
-                    .iter()
-                    .map(|fertilizer_amount| fertilizer_amount.clone().into())
-                    .collect::<Vec<Fertilizer>>();
-
-                self.fertilizers_set =
-                    Solver::new(&self.profile, fertilizers.iter().collect()).solve();
-
-                self.composition = self.fertilizers_set.nutrients();
-            }
+            self.fertilizers_picker
+                .with_picked_fertilizers(&calculation_results);
         }
+
+        self.composition = NutrientComposition::from(
+            self.fertilizers_picker
+                .selected_set
+                .list_fertilizers_amounts(),
+        );
     }
 }

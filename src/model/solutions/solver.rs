@@ -1,13 +1,13 @@
+use super::{Calculation, CalculationResult};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
-use crate::model::solutions::{Calculation, ExclusionReason, FertilizerWeight, FertilizersSet};
 use std::collections::HashMap;
 
 pub struct Solver<'a> {
     profile: &'a Profile,
     fertilizers: Vec<&'a Fertilizer>,
     sources: HashMap<String, String>,
-    excluded_fertilizers: HashMap<String, ExclusionReason>,
+    excluded_fertilizers: HashMap<String, CalculationResult>,
 }
 
 impl<'a> Solver<'a> {
@@ -26,28 +26,26 @@ impl<'a> Solver<'a> {
         solver
     }
 
-    pub fn solve(&mut self) -> FertilizersSet {
+    pub fn solve(&mut self) -> HashMap<String, CalculationResult> {
         loop {
             let calculation = Calculation::new(&self.profile, self.fertilizers());
 
             match calculation.calculate() {
-                Ok(fertilizers_weights) => match self.test_negative(&fertilizers_weights) {
+                Ok(mut calculation_results) => match self.test_negative(&calculation_results) {
                     Some(fertilizer_id) => {
-                        self.exclude_fertilizer(fertilizer_id, ExclusionReason::NegativeAmount);
+                        self.exclude_fertilizer(fertilizer_id, CalculationResult::NegativeAmount);
                         continue;
                     }
 
                     None => {
-                        let mut fertilizers_set = FertilizersSet::new(fertilizers_weights);
+                        self.excluded_fertilizers.iter().for_each(
+                            |(fertilizer_id, calculation_result)| {
+                                calculation_results
+                                    .insert(fertilizer_id.clone(), *calculation_result);
+                            },
+                        );
 
-                        self.excluded_fertilizers.iter().for_each(|exclusion| {
-                            if let Some(fertilizer) = self.find_fertilizer(exclusion.0) {
-                                let fertilizer_weight = FertilizerWeight::from(fertilizer.clone());
-                                fertilizers_set.add_fertilizer_weight(fertilizer_weight);
-                            }
-                        });
-
-                        return fertilizers_set;
+                        return calculation_results;
                     }
                 },
 
@@ -60,12 +58,27 @@ impl<'a> Solver<'a> {
                         Some(fertilizer) => {
                             self.exclude_fertilizer(
                                 fertilizer.id(),
-                                ExclusionReason::RedurantFertilizer,
+                                CalculationResult::RedurantFertilizer,
                             );
                         }
 
                         None => {
-                            return FertilizersSet::from(&self.fertilizers);
+                            let mut calculation_results: HashMap<String, CalculationResult> =
+                                HashMap::new();
+
+                            fertilizers.iter().for_each(|fertilizer| {
+                                calculation_results
+                                    .insert(fertilizer.id(), CalculationResult::RedurantFertilizer);
+                            });
+
+                            self.excluded_fertilizers.iter().for_each(
+                                |(fertilizer_id, calculation_result)| {
+                                    calculation_results
+                                        .insert(fertilizer_id.clone(), *calculation_result);
+                                },
+                            );
+
+                            return calculation_results;
                         }
                     }
                 }
@@ -77,16 +90,19 @@ impl<'a> Solver<'a> {
         self.test_nutrients_source_duplication(fertilizer);
 
         if self.test_nullish_nutrient_requirement(fertilizer) {
-            self.exclude_fertilizer(fertilizer.id(), ExclusionReason::NullishNutrientRequirement);
+            self.exclude_fertilizer(
+                fertilizer.id(),
+                CalculationResult::NullishNutrientRequirement,
+            );
         }
 
         self.fertilizers.push(fertilizer);
     }
 
-    fn exclude_fertilizer(&mut self, fertilizer_id: String, reason: ExclusionReason) {
+    fn exclude_fertilizer(&mut self, fertilizer_id: String, calculation_result: CalculationResult) {
         self.excluded_fertilizers
             .entry(fertilizer_id)
-            .or_insert(reason);
+            .or_insert(calculation_result);
     }
 
     fn test_nutrients_source_duplication(&mut self, fertilizer: &Fertilizer) {
@@ -98,14 +114,14 @@ impl<'a> Solver<'a> {
                     if fertilizer.compare(other_fertilizer) {
                         self.exclude_fertilizer(
                             other_fertilizer.id(),
-                            ExclusionReason::DuplicatedNutrientSource,
+                            CalculationResult::DuplicatedNutrientSource,
                         );
 
                         self.sources.insert(nutrients_string, fertilizer.id());
                     } else {
                         self.exclude_fertilizer(
                             fertilizer.id(),
-                            ExclusionReason::DuplicatedNutrientSource,
+                            CalculationResult::DuplicatedNutrientSource,
                         );
                     }
                 }
@@ -137,20 +153,23 @@ impl<'a> Solver<'a> {
         has_nullish_requirement
     }
 
-    fn test_negative(&self, fertilizers_weights: &Vec<FertilizerWeight>) -> Option<String> {
-        let mut negatives: Vec<&FertilizerWeight> = fertilizers_weights
+    fn test_negative(
+        &self,
+        calculation_results: &HashMap<String, CalculationResult>,
+    ) -> Option<String> {
+        let mut negatives: Vec<(&String, &CalculationResult)> = calculation_results
             .iter()
-            .filter(|fertilizers_weight| fertilizers_weight.weight().is_sign_negative())
+            .filter(|(_, calculation_result)| calculation_result.amount().is_sign_negative())
             .collect();
 
         if negatives.len() == 0 {
             return None;
         }
 
-        negatives.sort_by(|a, b| a.weight().partial_cmp(&b.weight()).unwrap());
+        negatives.sort_by(|a, b| a.1.amount().partial_cmp(&b.1.amount()).unwrap());
 
         match negatives.get(0) {
-            Some(negative) => Some(negative.id()),
+            Some(negative) => Some(negative.0.clone()),
             None => None,
         }
     }
@@ -179,7 +198,7 @@ impl<'a> Solver<'a> {
 #[cfg(test)]
 mod tests {
     use super::Solver;
-    use crate::model::chemistry::{Nutrient, NutrientAmount};
+    use crate::model::chemistry::NutrientAmount;
     use crate::model::fertilizers::{FertilizerBuilder, LabelComponent};
     use crate::model::profiles::ProfileBuilder;
 
@@ -213,31 +232,25 @@ mod tests {
         assert_eq!(
             0.0,
             fertilizers_weights
-                .list()
-                .iter()
-                .find(|fertilizer| fertilizer.id() == fertilizer_1.id())
+                .get(&fertilizer_1.id())
                 .unwrap()
-                .weight()
+                .amount()
         );
 
         assert_eq!(
             0.5,
             fertilizers_weights
-                .list()
-                .iter()
-                .find(|fertilizer| fertilizer.id() == fertilizer_2.id())
+                .get(&fertilizer_2.id())
                 .unwrap()
-                .weight()
+                .amount()
         );
 
         assert_eq!(
             0.0,
             fertilizers_weights
-                .list()
-                .iter()
-                .find(|fertilizer| fertilizer.id() == fertilizer_3.id())
+                .get(&fertilizer_3.id())
                 .unwrap()
-                .weight()
+                .amount()
         );
     }
 
@@ -273,82 +286,25 @@ mod tests {
         assert_eq!(
             0.0,
             fertilizers_weights
-                .list()
-                .iter()
-                .find(|fertilizer| fertilizer.id() == fertilizer_1.id())
+                .get(&fertilizer_1.id())
                 .unwrap()
-                .weight()
+                .amount()
         );
 
         assert_eq!(
             0.0,
             fertilizers_weights
-                .list()
-                .iter()
-                .find(|fertilizer| fertilizer.id() == fertilizer_2.id())
+                .get(&fertilizer_2.id())
                 .unwrap()
-                .weight()
+                .amount()
         );
 
         assert_eq!(
             0.5,
             fertilizers_weights
-                .list()
-                .iter()
-                .find(|fertilizer| fertilizer.id() == fertilizer_3.id())
+                .get(&fertilizer_3.id())
                 .unwrap()
-                .weight()
-        );
-    }
-
-    #[test]
-    fn desired_and_result_profiles_equals() {
-        let profile = ProfileBuilder::new()
-            .nutrient_requirement(NutrientAmount::Nitrogen(10.0))
-            .nutrient_requirement(NutrientAmount::NitrogenNitrate(10.0))
-            .nutrient_requirement(NutrientAmount::Potassium(20.0))
-            .nutrient_requirement(NutrientAmount::Calcium(20.0))
-            .build();
-
-        let fertilizer_1 = FertilizerBuilder::new()
-            .label_component(LabelComponent::Calcium(10.0))
-            .build();
-
-        let fertilizer_2 = FertilizerBuilder::new()
-            .label_component(LabelComponent::Phosphorus(20.0))
-            .label_component(LabelComponent::Potassium(40.0))
-            .build();
-
-        let fertilizer_3 = FertilizerBuilder::new()
-            .label_component(LabelComponent::Nitrogen(20.0))
-            .label_component(LabelComponent::Potassium(40.0))
-            .label_component(LabelComponent::Phosphorus(10.0))
-            .label_component(LabelComponent::Calcium(10.0))
-            .label_component(LabelComponent::Sulfur(10.0))
-            .build();
-
-        let mut solver = Solver::new(&profile, vec![&fertilizer_1, &fertilizer_2, &fertilizer_3]);
-
-        let nutrients = solver.solve().nutrients();
-
-        assert_eq!(
-            NutrientAmount::Nitrogen(10.0),
-            nutrients.value_of(Nutrient::Nitrogen)
-        );
-
-        assert_eq!(
-            NutrientAmount::NitrogenNitrate(10.0),
-            nutrients.value_of(Nutrient::NitrogenNitrate)
-        );
-
-        assert_eq!(
-            NutrientAmount::Potassium(20.0),
-            nutrients.value_of(Nutrient::Potassium)
-        );
-
-        assert_eq!(
-            NutrientAmount::Calcium(20.0),
-            nutrients.value_of(Nutrient::Calcium)
+                .amount()
         );
     }
 }

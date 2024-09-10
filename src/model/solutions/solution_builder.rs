@@ -1,13 +1,15 @@
+use super::CalculationResult;
 use crate::model::chemistry::{Nutrients, Volume};
 use crate::model::profiles::Profile;
-use crate::model::solutions::{FertilizerWeight, FertilizersSet, Solution};
+use crate::model::solutions::{FertilizerWeight, Solution};
+use std::collections::HashMap;
 use uuid::Uuid;
 
 pub struct SolutionBuilder {
     id: String,
     name: String,
     profile: Profile,
-    fertilizer_amounts: Vec<FertilizerWeight>,
+    fertilizers: HashMap<String, CalculationResult>,
     volume: Volume,
     composition: Nutrients,
 }
@@ -18,7 +20,7 @@ impl SolutionBuilder {
             id: Uuid::new_v4().to_string(),
             name: String::new(),
             profile: Profile::default(),
-            fertilizer_amounts: Vec::new(),
+            fertilizers: HashMap::new(),
             volume: Volume::default(),
             composition: Nutrients::new(),
         }
@@ -50,14 +52,26 @@ impl SolutionBuilder {
         self
     }
 
-    pub fn with_fertilizers_set(&mut self, fertilizers_set: FertilizersSet) -> &mut Self {
-        self.fertilizer_amounts = fertilizers_set.list().clone();
+    pub fn with_fertilizers(&mut self, fertilizers: Vec<&FertilizerWeight>) -> &mut Self {
+        fertilizers.iter().for_each(|fertilizer_weight| {
+            let calculation_result = match fertilizer_weight.weight() {
+                0.0 => CalculationResult::RedurantFertilizer,
+                amount => CalculationResult::Calculated(amount),
+            };
+
+            self.fertilizers
+                .insert(fertilizer_weight.id(), calculation_result);
+        });
 
         self
     }
 
-    pub fn with_fertilizer_amount(&mut self, fertilizer_amount: FertilizerWeight) -> &mut Self {
-        self.fertilizer_amounts.push(fertilizer_amount);
+    pub fn with_fertilizer(
+        &mut self,
+        fertilizer_id: String,
+        calculation_result: CalculationResult,
+    ) -> &mut Self {
+        self.fertilizers.insert(fertilizer_id, calculation_result);
 
         self
     }
@@ -74,7 +88,7 @@ impl SolutionBuilder {
             name: self.name.clone(),
             profile: self.profile.clone(),
             volume: self.volume,
-            fertilizers_set: FertilizersSet::new(self.fertilizer_amounts.clone()),
+            fertilizers: self.fertilizers.clone(),
             nutrients: self.composition,
         }
     }

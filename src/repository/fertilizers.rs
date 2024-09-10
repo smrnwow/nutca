@@ -69,7 +69,7 @@ impl Fertilizers {
     pub fn search(
         &self,
         query: &str,
-        not_in: &[String],
+        not_in: &[&String],
         limit: usize,
         offset: usize,
     ) -> Result<Vec<Fertilizer>, Error> {

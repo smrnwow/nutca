@@ -1,7 +1,7 @@
+use super::CalculationResult;
 use crate::model::chemistry::{Nutrient, NutrientAmount};
 use crate::model::fertilizers::Fertilizer;
 use crate::model::profiles::Profile;
-use crate::model::solutions::FertilizerWeight;
 use ellp::{problem::VariableId, Bound, ConstraintOp, DualSimplexSolver, Problem, SolverResult};
 use std::collections::HashMap;
 
@@ -12,7 +12,6 @@ pub struct Calculation<'a> {
 }
 
 impl<'a> Calculation<'a> {
-    /// create new calculation instance and setup linear programming problem
     pub fn new(profile: &Profile, fertilizers: Vec<&'a Fertilizer>) -> Self {
         let mut calculation = Self {
             fertilizers: Vec::new(),
@@ -35,22 +34,19 @@ impl<'a> Calculation<'a> {
         calculation
     }
 
-    /// calculate fertilizers weights to achieve desired nutrients profile
-    pub fn calculate(self) -> Result<Vec<FertilizerWeight>, ()> {
+    pub fn calculate(self) -> Result<HashMap<String, CalculationResult>, ()> {
         if let Ok(result) = DualSimplexSolver::default().solve(self.problem) {
             if let SolverResult::Optimal(solution) = result {
-                let mut fertilizers_weights = Vec::new();
+                let mut calculation_results = HashMap::new();
 
                 solution.x().iter().enumerate().for_each(|(index, amount)| {
                     if let Some(fertilizer) = self.fertilizers.get(index) {
-                        let fertilizer = *fertilizer;
-
-                        fertilizers_weights
-                            .push(FertilizerWeight::new(fertilizer.clone(), *amount));
+                        calculation_results
+                            .insert(fertilizer.id(), CalculationResult::Calculated(*amount));
                     }
                 });
 
-                return Ok(fertilizers_weights);
+                return Ok(calculation_results);
             }
         }
 
@@ -134,7 +130,7 @@ mod tests {
 
         assert_eq!(1, result.len());
 
-        assert_eq!(1.0, result.get(0).unwrap().weight());
+        assert_eq!(1.0, result.get(&fertilizer.id()).unwrap().amount());
     }
 
     #[test]
@@ -162,9 +158,9 @@ mod tests {
 
         assert_eq!(2, result.len());
 
-        assert_eq!(1.0, result.get(0).unwrap().weight());
+        assert_eq!(1.0, result.get(&fertilizer_1.id()).unwrap().amount());
 
-        assert_eq!(1.0, result.get(1).unwrap().weight());
+        assert_eq!(1.0, result.get(&fertilizer_2.id()).unwrap().amount());
     }
 
     #[test]
@@ -206,12 +202,12 @@ mod tests {
 
         assert_eq!(4, result.len());
 
-        assert_eq!(1.0, result.get(0).unwrap().weight());
+        assert_eq!(1.0, result.get(&fertilizer_1.id()).unwrap().amount());
 
-        assert_eq!(0.5, result.get(1).unwrap().weight());
+        assert_eq!(0.5, result.get(&fertilizer_2.id()).unwrap().amount());
 
-        assert_eq!(1.0, result.get(2).unwrap().weight());
+        assert_eq!(1.0, result.get(&fertilizer_3.id()).unwrap().amount());
 
-        assert_eq!(1.5, result.get(3).unwrap().weight());
+        assert_eq!(1.5, result.get(&fertilizer_4.id()).unwrap().amount());
     }
 }
