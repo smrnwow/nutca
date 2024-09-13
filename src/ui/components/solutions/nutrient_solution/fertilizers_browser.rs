@@ -35,7 +35,7 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
 
                 TextField {
                     placeholder: "название удобрения",
-                    value: props.fertilizers_picker.read().browser.search_query(),
+                    value: props.fertilizers_picker.read().search_query(),
                     icon_left: rsx! {
                         SearchIcon {}
                     },
@@ -58,12 +58,10 @@ pub fn FertilizersBrowser(props: FertilizersBrowserProps) -> Element {
             }
 
             Pagination {
-                page_index: props.fertilizers_picker.read().browser.page_index(),
-                limit: props.fertilizers_picker.read().browser.limit(),
+                page_index: props.fertilizers_picker.read().page_index(),
+                limit: props.fertilizers_picker.read().limit(),
                 items_count,
-                on_change: move |next_page| {
-                    props.on_paginate.call(next_page);
-                },
+                on_change: move |next_page| props.on_paginate.call(next_page),
             }
         }
     }

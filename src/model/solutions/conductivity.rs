@@ -1,12 +1,12 @@
 use crate::model::chemistry::{Nutrient, NutrientAmount, Nutrients};
 
-pub struct Conductivity {
-    solution_composition: Nutrients,
+pub struct Conductivity<'a> {
+    solution_composition: &'a Nutrients,
     ionic_strength: f64,
 }
 
-impl Conductivity {
-    pub fn new(solution_composition: Nutrients) -> Self {
+impl<'a> Conductivity<'a> {
+    pub fn new(solution_composition: &'a Nutrients) -> Self {
         let ionic_strength = Self::ionic_strength(&solution_composition);
 
         Self {
@@ -128,7 +128,7 @@ mod tests {
         composition.add(NutrientAmount::Sulfur(71.));
         composition.add(NutrientAmount::Iron(2.0));
 
-        let conductivity = Conductivity::new(composition);
+        let conductivity = Conductivity::new(&composition);
 
         println!(
             "ionic strength: {:#?}, conductivity: {:#?}",

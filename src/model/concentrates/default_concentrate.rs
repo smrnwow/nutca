@@ -8,7 +8,7 @@ pub struct DefaultConcentrate {
 }
 
 impl DefaultConcentrate {
-    pub fn new(fertilizers: &Vec<FertilizerWeight>) -> Self {
+    pub fn new(fertilizers: Vec<&FertilizerWeight>) -> Self {
         let mut concentrate = Self {
             part_a: AutoPart::new("A"),
             part_b: AutoPart::new("B"),
@@ -23,7 +23,7 @@ impl DefaultConcentrate {
         vec![&self.part_a, &self.part_b]
     }
 
-    fn calculate(&mut self, fertilizers: &Vec<FertilizerWeight>) {
+    fn calculate(&mut self, fertilizers: Vec<&FertilizerWeight>) {
         fertilizers.iter().for_each(|fertilizer_weight| {
             let mut has_calcium = false;
 

@@ -13,5 +13,4 @@ pub enum Component {
     Boron(f64),
     Zinc(f64),
     Copper(f64),
-
 }

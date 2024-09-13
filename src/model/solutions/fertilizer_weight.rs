@@ -2,7 +2,6 @@ use crate::model::chemistry::Nutrients;
 use crate::model::fertilizers::Fertilizer;
 use serde::{Deserialize, Serialize};
 
-/// Amount (in grams or milliliters) of fertilizer for the solution.
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct FertilizerWeight {
     id: String,
@@ -45,7 +44,7 @@ impl FertilizerWeight {
     }
 
     pub fn weight(&self) -> f64 {
-        self.weight / 10.
+        self.weight
     }
 
     pub fn nutrients(&self) -> Nutrients {
@@ -64,7 +63,7 @@ impl FertilizerWeight {
             false => String::from("г"),
         };
 
-        format!("{:.3} {}", self.weight / 10., units)
+        format!("{:.3} {}", self.weight, units)
     }
 
     pub fn is_redurant(&self) -> bool {

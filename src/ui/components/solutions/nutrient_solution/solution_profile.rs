@@ -1,7 +1,6 @@
 use super::SolutionComposition;
-use crate::controller::solutions::{EditMode, NutritionProgramBrowser};
+use crate::controller::solutions::NutritionProgramBrowser;
 use crate::model::chemistry::NutrientAmount;
-use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfileForm;
@@ -17,8 +16,6 @@ fn round(value: f64) -> String {
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionProfileProps {
     solution: Memo<Solution>,
-    profile: Memo<Profile>,
-    edit_mode: Signal<EditMode>,
     nutrition_program_browser: Memo<NutritionProgramBrowser>,
     on_profile_change: EventHandler<String>,
     on_profile_search: EventHandler<String>,
@@ -29,8 +26,21 @@ pub struct SolutionProfileProps {
 pub fn SolutionProfile(props: SolutionProfileProps) -> Element {
     let mut profile_tab = use_signal(|| String::from("profile"));
 
-    let profile_select_value =
-        use_memo(move || (props.profile.read().id(), props.profile.read().name()));
+    let nutrition_program = use_memo(move || {
+        props
+            .solution
+            .read()
+            .composition()
+            .nutrition_program()
+            .clone()
+    });
+
+    let profile_select_value = use_memo(move || {
+        (
+            nutrition_program.read().id(),
+            nutrition_program.read().name(),
+        )
+    });
 
     rsx! {
         Block {
@@ -103,7 +113,7 @@ pub fn SolutionProfile(props: SolutionProfileProps) -> Element {
                 match profile_tab.read().as_str() {
                     "profile" => rsx! {
                         ProfileForm {
-                            profile: props.profile,
+                            profile: nutrition_program,
                             on_nutrient_update: props.on_profile_nutrient_update,
                         },
                     },
@@ -111,7 +121,6 @@ pub fn SolutionProfile(props: SolutionProfileProps) -> Element {
                     "solution-composition" => rsx! {
                         SolutionComposition {
                             solution: props.solution,
-                            edit_mode: props.edit_mode,
                         },
                     },
 

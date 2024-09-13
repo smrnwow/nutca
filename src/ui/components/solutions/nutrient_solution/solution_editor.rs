@@ -1,8 +1,8 @@
 use super::{FertilizersBrowser, FertilizersSet, SolutionProfile};
-use crate::controller::solutions::{EditMode, FertilizersPicker, NutritionProgramBrowser};
-use crate::controller::Validation;
+use crate::controller::solutions::{
+    FertilizersPicker, FertilizersUsed, NutritionProgramBrowser, SolutionValidator,
+};
 use crate::model::chemistry::{NutrientAmount, Volume};
-use crate::model::profiles::Profile;
 use crate::model::solutions::Solution;
 use crate::ui::components::layout::Row;
 use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
@@ -11,11 +11,10 @@ use dioxus::prelude::*;
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionEditorProps {
     solution: Memo<Solution>,
-    validation: Memo<Validation>,
-    profile: Memo<Profile>,
-    edit_mode: Signal<EditMode>,
+    validator: Memo<SolutionValidator>,
     nutrition_program_browser: Memo<NutritionProgramBrowser>,
     fertilizers_picker: Memo<FertilizersPicker>,
+    fertilizers_used: Memo<FertilizersUsed>,
     on_name_update: EventHandler<String>,
     on_volume_update: EventHandler<Volume>,
     on_profile_change: EventHandler<String>,
@@ -48,7 +47,7 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
                 TextField {
                     label: "Название",
                     value: props.solution.read().name(),
-                    error: props.validation.read().get("solution-name"),
+                    error: props.validator.read().name(),
                     on_input: props.on_name_update,
                 }
             }
@@ -57,8 +56,6 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
 
             SolutionProfile {
                 solution: props.solution,
-                profile: props.profile,
-                edit_mode: props.edit_mode,
                 nutrition_program_browser: props.nutrition_program_browser,
                 on_profile_change: props.on_profile_change,
                 on_profile_search: props.on_profile_search,
@@ -78,7 +75,7 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
 
                     FertilizersSet {
                         solution: props.solution,
-                        fertilizers_picker: props.fertilizers_picker,
+                        fertilizers_used: props.fertilizers_used,
                         on_fertilizer_exclude: props.on_fertilizer_exclude,
                         on_fertilizer_amount_update: props.on_fertilizer_amount_update,
                         on_paginate: props.on_selected_set_paginate,

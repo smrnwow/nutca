@@ -68,7 +68,7 @@ impl<'a> Calculation<'a> {
             .list()
             .iter()
             .for_each(|nutrient_amount| {
-                let coefficient = (variable_id, nutrient_amount.value());
+                let coefficient = (variable_id, nutrient_amount.value() * 10.);
 
                 self.coefficients
                     .entry(nutrient_amount.nutrient())

@@ -11,7 +11,7 @@ pub fn SolutionsMainPage() -> Element {
 
     rsx! {
         SolutionsDashboard {
-            solutions_listing: dashboard.read().listing(),
+            listing: dashboard.read().listing(),
             on_search: move |search_query| {
                 dashboard.write().search_solution(search_query);
             },

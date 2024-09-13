@@ -1,23 +1,23 @@
-use crate::controller::solutions::SolutionsListing;
-use crate::repository::Storage;
+use super::Listing;
+use crate::repository::{SolutionsRepository, Storage};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
 pub struct Dashboard {
     storage: Signal<Storage>,
-    listing: Signal<SolutionsListing>,
+    listing: Signal<Listing>,
 }
 
 impl Dashboard {
     pub fn new(storage: Signal<Storage>) -> Self {
         Self {
             storage,
-            listing: Signal::new(SolutionsListing::new(storage)),
+            listing: Signal::new(Listing::new(SolutionsRepository::new(storage))),
         }
     }
 
-    pub fn listing(&self) -> Signal<SolutionsListing> {
+    pub fn listing(&self) -> Signal<Listing> {
         self.listing
     }
 

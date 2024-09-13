@@ -1,6 +1,8 @@
 use crate::model::chemistry::{Nutrient, NutrientAmount, Nutrients};
 use serde::{Deserialize, Serialize};
 
+use super::ProfileSummary;
+
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Profile {
     pub(super) id: String,
@@ -21,8 +23,8 @@ impl Profile {
         !self.id().is_empty()
     }
 
-    pub fn update_nutrient_requirement(&mut self, nutrient_requirenent: NutrientAmount) {
-        self.nutrients[nutrient_requirenent.nutrient()] = nutrient_requirenent;
+    pub fn update_nutrient_requirement(&mut self, nutrient_requirement: NutrientAmount) {
+        self.nutrients[nutrient_requirement.nutrient()] = nutrient_requirement;
     }
 
     pub fn id(&self) -> String {
@@ -48,6 +50,25 @@ impl Default for Profile {
             id: String::new(),
             name: String::new(),
             nutrients: Nutrients::new(),
+        }
+    }
+}
+
+impl From<Nutrients> for Profile {
+    fn from(nutrients: Nutrients) -> Self {
+        Self {
+            id: String::new(),
+            name: String::new(),
+            nutrients,
+        }
+    }
+}
+
+impl Into<ProfileSummary> for Profile {
+    fn into(self) -> ProfileSummary {
+        ProfileSummary {
+            id: self.id,
+            name: self.name,
         }
     }
 }

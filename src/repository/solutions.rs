@@ -1,4 +1,4 @@
-use crate::model::solutions::Solution;
+use super::schemas::SolutionSchema;
 use crate::repository::{Error, RepositoryError};
 use rusqlite::{named_params, params, Connection};
 use std::rc::Rc;
@@ -17,18 +17,18 @@ impl Solutions {
         Ok(storage)
     }
 
-    pub fn add(&self, solution: Solution) -> Result<(), Error> {
+    pub fn add(&self, solution: SolutionSchema) -> Result<(), Error> {
         let data = serde_json::to_string(&solution)?;
 
         self.connection.execute(
             "INSERT INTO solutions (id, name, data) VALUES (?1, ?2, ?3)",
-            params![solution.id(), solution.name().to_lowercase(), data],
+            params![solution.id, solution.name.to_lowercase(), data],
         )?;
 
         Ok(())
     }
 
-    pub fn get(&self, solution_id: &str) -> Result<Solution, Error> {
+    pub fn get(&self, solution_id: &str) -> Result<SolutionSchema, Error> {
         let mut statement = self
             .connection
             .prepare("SELECT * FROM solutions WHERE id = ?1")?;
@@ -44,12 +44,12 @@ impl Solutions {
         }
     }
 
-    pub fn update(&self, solution: Solution) -> Result<(), Error> {
+    pub fn update(&self, solution: SolutionSchema) -> Result<(), Error> {
         let data = serde_json::to_string(&solution)?;
 
         self.connection
             .prepare("UPDATE solutions SET name = ?2, data = ?3 WHERE id = ?1")?
-            .execute(params![solution.id(), solution.name().to_lowercase(), data])?;
+            .execute(params![solution.id, solution.name.to_lowercase(), data])?;
 
         Ok(())
     }
@@ -62,7 +62,12 @@ impl Solutions {
         Ok(())
     }
 
-    pub fn search(&self, query: &str, limit: usize, offset: usize) -> Result<Vec<Solution>, Error> {
+    pub fn search(
+        &self,
+        query: &str,
+        limit: usize,
+        offset: usize,
+    ) -> Result<Vec<SolutionSchema>, Error> {
         let mut statement = self.connection.prepare("SELECT * FROM solutions WHERE name LIKE '%' || :search || '%' LIMIT :limit OFFSET :offset")?;
 
         let response = statement.query_map(
@@ -80,7 +85,7 @@ impl Solutions {
         let mut solutions = vec![];
 
         for item in response {
-            let solution: Solution = serde_json::from_str(&item?)?;
+            let solution: SolutionSchema = serde_json::from_str(&item?)?;
 
             solutions.push(solution);
         }

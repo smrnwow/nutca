@@ -13,7 +13,7 @@ pub struct AutoFiller {
 }
 
 impl AutoFiller {
-    pub fn new(solution_id: String, fertilizers: &Vec<FertilizerWeight>) -> Self {
+    pub fn new(solution_id: String, fertilizers: Vec<&FertilizerWeight>) -> Self {
         let mut stack: HashMap<String, usize> = HashMap::new();
 
         fertilizers.iter().for_each(|fertilizer_weight| {

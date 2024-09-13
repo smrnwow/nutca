@@ -2,7 +2,7 @@ use super::{SolutionsBrowser, TanksSet};
 use crate::model::chemistry::Volume;
 use crate::model::concentrates::fillers::{Filler, FillerVariant};
 use crate::model::concentrates::{Concentrate, StockSolutionBuilder};
-use crate::repository::Storage;
+use crate::repository::{SolutionsRepository, Storage};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
@@ -22,7 +22,7 @@ impl Editor {
             Err(_) => Concentrate::default(),
         };
 
-        let mut solutions_browser = SolutionsBrowser::new(storage);
+        let mut solutions_browser = SolutionsBrowser::new(SolutionsRepository::new(storage));
 
         if let Filler::Auto(auto_filler) = concentrate.filler() {
             solutions_browser.select(auto_filler.solution_id());
@@ -41,7 +41,7 @@ impl Editor {
     }
 
     pub fn from_solution(storage: Signal<Storage>, solution_id: String) -> Self {
-        let mut solutions_browser = SolutionsBrowser::new(storage);
+        let mut solutions_browser = SolutionsBrowser::new(SolutionsRepository::new(storage));
 
         solutions_browser.select(&solution_id);
 

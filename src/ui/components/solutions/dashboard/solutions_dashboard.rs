@@ -1,5 +1,5 @@
 use super::SolutionsListingItem;
-use crate::controller::solutions::SolutionsListing;
+use crate::controller::solutions::Listing;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::SearchIcon;
 use crate::ui::components::utils::{
@@ -9,7 +9,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionsDashboardProps {
-    solutions_listing: Signal<SolutionsListing>,
+    listing: Signal<Listing>,
     on_search: EventHandler<String>,
     on_add: EventHandler<()>,
     on_open: EventHandler<String>,
@@ -20,7 +20,7 @@ pub struct SolutionsDashboardProps {
 
 #[component]
 pub fn SolutionsDashboard(props: SolutionsDashboardProps) -> Element {
-    let solutions = use_memo(move || props.solutions_listing.read().fetch());
+    let solutions = use_memo(move || props.listing.read().fetch());
 
     rsx! {
         Card {
@@ -42,7 +42,7 @@ pub fn SolutionsDashboard(props: SolutionsDashboardProps) -> Element {
                         gap: "medium",
 
                         TextField {
-                            value: props.solutions_listing.read().search_query(),
+                            value: props.listing.read().search_query(),
                             placeholder: "найти раствор",
                             on_input: props.on_search,
                             icon_left: rsx! {
@@ -59,7 +59,7 @@ pub fn SolutionsDashboard(props: SolutionsDashboardProps) -> Element {
 
                     List {
                         limit: 10,
-                        empty: solutions.len() == 0,
+                        empty: solutions.read().len() == 0,
                         stub_text: "Сохраненные растворы отсутствуют",
 
                         for solution in solutions.read().iter() {
@@ -74,8 +74,8 @@ pub fn SolutionsDashboard(props: SolutionsDashboardProps) -> Element {
                     }
 
                     Pagination {
-                        page_index: props.solutions_listing.read().page_index(),
-                        limit: props.solutions_listing.read().limit(),
+                        page_index: props.listing.read().page_index(),
+                        limit: props.listing.read().limit(),
                         items_count: solutions.read().len(),
                         on_change: props.on_paginate,
                     }
