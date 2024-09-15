@@ -45,10 +45,10 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
                 empty: props.fertilizers_used.read().is_empty(),
                 stub_text: "Выберите удобрения из списка",
 
-                for fertilizer_weight in props.fertilizers_used.read().items() {
+                for fertilizer_amount in props.fertilizers_used.read().items().into_iter().map(|f| Signal::new(f)) {
                     FertilizersSetItem {
-                        key: "{fertilizer_weight.id()}",
-                        fertilizer_weight: Signal::new(fertilizer_weight),
+                        key: "{fertilizer_amount.read().fertilizer().id()}",
+                        fertilizer_amount,
                         on_exclude: props.on_fertilizer_exclude,
                         on_amount_update: props.on_fertilizer_amount_update,
                     }

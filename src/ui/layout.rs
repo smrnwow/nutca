@@ -23,8 +23,8 @@ pub fn Layout() -> Element {
     let toasts = use_memo(move || toaster.read().list());
 
     rsx! {
-        header {
-            class: "header",
+        div {
+            class: "content",
 
             nav {
                 class: "navigation",
@@ -65,23 +65,23 @@ pub fn Layout() -> Element {
                     "Анализы воды",
                 }
             }
-        }
 
-        main {
-            class: "content",
+            main {
+                class: "content",
 
-            Page {
-                Section {
-                    Outlet::<Route> { },
+                Page {
+                    Section {
+                        Outlet::<Route> { },
+                    }
                 }
-            }
 
-            Notifications {
-                notifications: toasts,
-                on_close: move |notification_id| {
-                    toaster.write().remove(notification_id);
+                Notifications {
+                    notifications: toasts,
+                    on_close: move |notification_id| {
+                        toaster.write().remove(notification_id);
+                    },
                 },
-            },
+            }
         }
     }
 }

@@ -52,10 +52,10 @@ pub fn FromFertilizers(props: FromFertilizersProps) -> Element {
                         Column {
                             gap: "x-small",
 
-                            for fertilizer in props.composition.read().fertilizers_by_part(&part.read()).into_iter().map(|f| Signal::new(f)) {
+                            for fertilizer_amount in props.composition.read().fertilizers_by_part(&part.read()).into_iter().cloned().map(|f| Signal::new(f)) {
                                 FertilizerItem {
-                                    key: "{fertilizer.read().id()}",
-                                    fertilizer,
+                                    key: "{fertilizer_amount.read().fertilizer().id()}",
+                                    fertilizer_amount,
                                     on_delete: move |fertilizer_id| {
                                         let part_id = part.read().id().clone();
 

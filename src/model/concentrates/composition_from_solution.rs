@@ -1,5 +1,6 @@
 use super::Part;
-use crate::model::solutions::{FertilizerWeight, Solution};
+use crate::model::fertilizers::FertilizerAmount;
+use crate::model::solutions::Solution;
 use std::collections::HashMap;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -93,14 +94,20 @@ impl CompositionFromSolution {
         }
     }
 
-    pub fn fertilizers_by_part(&self, part: &Part) -> Vec<FertilizerWeight> {
+    pub fn fertilizers_by_part(&self, part: &Part) -> Vec<FertilizerAmount> {
         match self.distribution.get(part.id()) {
             Some(part_distribution) => {
-                let mut fertilizers: Vec<FertilizerWeight> = Vec::new();
+                let mut fertilizers: Vec<FertilizerAmount> = Vec::new();
 
                 part_distribution.keys().for_each(|fertilizer_id| {
-                    if let Some(fertilizer) = self.solution.fertilizer(fertilizer_id) {
-                        fertilizers.push(fertilizer.volume(part.volume().to_litres()));
+                    if let Some(fertilizer_amount) = self.solution.fertilizer(fertilizer_id) {
+                        let mut fertilizer_amount = fertilizer_amount.clone();
+
+                        fertilizer_amount.concentration(part.concentration());
+
+                        fertilizer_amount.volume(part.volume());
+
+                        fertilizers.push(fertilizer_amount);
                     }
                 });
 
@@ -115,8 +122,12 @@ impl CompositionFromSolution {
         let mut fertilizers_usage: Vec<(String, String, usize)> = Vec::new();
 
         self.usage.iter().for_each(|(fertilizer_id, percent)| {
-            if let Some(fertilizer) = self.solution.fertilizer(fertilizer_id) {
-                fertilizers_usage.push((fertilizer.id(), fertilizer.name(), *percent));
+            if let Some(fertilizer_amount) = self.solution.fertilizer(fertilizer_id) {
+                fertilizers_usage.push((
+                    fertilizer_amount.fertilizer().id(),
+                    fertilizer_amount.fertilizer().name(),
+                    *percent,
+                ));
             }
         });
 

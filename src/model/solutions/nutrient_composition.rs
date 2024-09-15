@@ -1,5 +1,6 @@
-use super::{FertilizerWeight, NutrientResult};
+use super::NutrientResult;
 use crate::model::chemistry::{Nutrient, NutrientAmount, Nutrients};
+use crate::model::fertilizers::FertilizerAmount;
 use crate::model::profiles::Profile;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -40,6 +41,10 @@ impl NutrientComposition {
     }
 
     pub fn with_nutrient_requirement(&mut self, nutrient_requirement: NutrientAmount) {
+        if self.nutrition_program.is_saved() {
+            self.nutrition_program = Profile::extend(&self.nutrition_program);
+        }
+
         self.nutrition_program
             .update_nutrient_requirement(nutrient_requirement);
     }
@@ -51,7 +56,7 @@ impl NutrientComposition {
         }
     }
 
-    pub fn with_fertilizers_amounts(&mut self, fertilizers_amounts: Vec<&FertilizerWeight>) {
+    pub fn with_fertilizers_amounts(&mut self, fertilizers_amounts: Vec<&FertilizerAmount>) {
         let mut nutrients = Nutrients::new();
 
         fertilizers_amounts.iter().for_each(|fertilizer_amount| {

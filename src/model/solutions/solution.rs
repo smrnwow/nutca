@@ -1,5 +1,6 @@
-use super::{FertilizerWeight, NutrientComposition, Solver};
+use super::{NutrientComposition, Solver};
 use crate::model::chemistry::{NutrientAmount, Volume};
+use crate::model::fertilizers::FertilizerAmount;
 use crate::model::profiles::Profile;
 use crate::model::solutions::Conductivity;
 use std::collections::HashMap;
@@ -10,7 +11,7 @@ pub struct Solution {
     pub(super) id: String,
     pub(super) name: String,
     pub(super) composition: NutrientComposition,
-    pub(super) fertilizers: HashMap<String, FertilizerWeight>,
+    pub(super) fertilizers: HashMap<String, FertilizerAmount>,
     pub(super) volume: Volume,
 }
 
@@ -19,9 +20,13 @@ impl Solution {
         id: String,
         name: String,
         composition: NutrientComposition,
-        fertilizers: HashMap<String, FertilizerWeight>,
+        mut fertilizers: HashMap<String, FertilizerAmount>,
         volume: Volume,
     ) -> Self {
+        fertilizers.values_mut().for_each(|fertilizer_amount| {
+            fertilizer_amount.volume(volume);
+        });
+
         Self {
             id,
             name,
@@ -43,18 +48,11 @@ impl Solution {
         &self.composition
     }
 
-    pub fn fertilizers(&self) -> &HashMap<String, FertilizerWeight> {
+    pub fn fertilizers(&self) -> &HashMap<String, FertilizerAmount> {
         &self.fertilizers
     }
 
-    pub fn fertilizers_by_volume(&self) -> Vec<FertilizerWeight> {
-        self.fertilizers
-            .values()
-            .map(|fertilizer_weight| fertilizer_weight.volume(self.volume.to_litres()))
-            .collect()
-    }
-
-    pub fn fertilizer(&self, fertilizer_id: &String) -> Option<&FertilizerWeight> {
+    pub fn fertilizer(&self, fertilizer_id: &String) -> Option<&FertilizerAmount> {
         self.fertilizers.get(fertilizer_id)
     }
 
@@ -64,6 +62,10 @@ impl Solution {
 
     pub fn update_volume(&mut self, volume: Volume) {
         self.volume = volume;
+
+        self.fertilizers.values_mut().for_each(|fertilizer_amount| {
+            fertilizer_amount.volume(volume);
+        });
     }
 
     pub fn change_nutrition_program(&mut self, nutrition_program: Option<Profile>) {
@@ -79,16 +81,16 @@ impl Solution {
         self.calculate_fertilizers_weights();
     }
 
-    pub fn add_fertilizer(&mut self, fertilizer: impl Into<FertilizerWeight>) {
+    pub fn add_fertilizer(&mut self, fertilizer: impl Into<FertilizerAmount>) {
         let fertilizer_weight = fertilizer.into();
 
         self.fertilizers
-            .insert(fertilizer_weight.id(), fertilizer_weight);
+            .insert(fertilizer_weight.fertilizer().id(), fertilizer_weight);
 
         self.calculate_fertilizers_weights();
     }
 
-    pub fn remove_fertilizer(&mut self, fertilizer_id: &String) -> Option<FertilizerWeight> {
+    pub fn remove_fertilizer(&mut self, fertilizer_id: &String) -> Option<FertilizerAmount> {
         match self.fertilizers.remove(fertilizer_id) {
             Some(fertilizer_weight) => {
                 self.calculate_fertilizers_weights();

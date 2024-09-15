@@ -22,9 +22,11 @@ pub struct FromSolutionProps {
 
 #[component]
 pub fn FromSolution(props: FromSolutionProps) -> Element {
+    let solution = use_signal(|| props.composition.read().solution().clone());
+
     rsx! {
         SolutionSelect {
-            composition: props.composition,
+            solution,
             solutions_browser: props.solutions_browser,
             on_solution_search: props.on_solution_search,
             on_solution_change: props.on_solution_change,
@@ -61,10 +63,10 @@ pub fn FromSolution(props: FromSolutionProps) -> Element {
                         Column {
                             gap: "xx-small",
 
-                            for fertilizer in props.composition.read().fertilizers_by_part(&part.read()).into_iter().map(|f| Signal::new(f)) {
+                            for fertilizer_amount in props.composition.read().fertilizers_by_part(&part.read()).into_iter().map(|f| Signal::new(f)) {
                                 FertilizerItem {
-                                    key: "{fertilizer.read().id()}",
-                                    fertilizer,
+                                    key: "{fertilizer_amount.read().fertilizer().id()}",
+                                    fertilizer_amount,
                                     on_delete: move |fertilizer_id| {
                                         let part_id = part.read().id().clone();
 

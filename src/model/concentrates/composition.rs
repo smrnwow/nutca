@@ -1,5 +1,5 @@
 use super::{CompositionFromFertilizers, CompositionFromSolution};
-use crate::model::solutions::FertilizerWeight;
+use crate::model::fertilizers::FertilizerAmount;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Composition {
@@ -8,7 +8,7 @@ pub enum Composition {
 }
 
 impl Composition {
-    pub fn update_fertilizer_amount(&mut self, part_id: &String, fertilizer: FertilizerWeight) {
+    pub fn update_fertilizer_amount(&mut self, part_id: &String, fertilizer: FertilizerAmount) {
         if let Self::FromFertilizers(composition) = self {
             composition.update_fertilizer_amount(part_id, fertilizer);
         }

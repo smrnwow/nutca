@@ -1,9 +1,9 @@
+use crate::model::chemistry::NutrientAmount;
+use crate::model::fertilizers::FertilizerAmount;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::ArrowLeft;
 use crate::ui::components::utils::{Button, Tag, Text, Tooltip};
 use dioxus::prelude::*;
-use crate::model::chemistry::NutrientAmount;
-use crate::model::solutions::FertilizerWeight;
 
 fn tag_text(nutrient: NutrientAmount) -> Vec<String> {
     vec![
@@ -14,16 +14,16 @@ fn tag_text(nutrient: NutrientAmount) -> Vec<String> {
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersSetTooltipProps {
-    fertilizer_weight: Signal<FertilizerWeight>,
+    fertilizer_amount: Signal<FertilizerAmount>,
 }
 
 #[component]
 pub fn FertilizersSetTooltip(props: FertilizersSetTooltipProps) -> Element {
-    let macros = props.fertilizer_weight.read().nutrients().macros();
+    let macros = props.fertilizer_amount.read().nutrients().macros();
 
-    let nitrogen_forms = props.fertilizer_weight.read().nutrients().nitrogen_forms();
+    let nitrogen_forms = props.fertilizer_amount.read().nutrients().nitrogen_forms();
 
-    let micros = props.fertilizer_weight.read().nutrients().micros();
+    let micros = props.fertilizer_amount.read().nutrients().micros();
 
     rsx! {
         Tooltip {
@@ -47,7 +47,7 @@ pub fn FertilizersSetTooltip(props: FertilizersSetTooltipProps) -> Element {
                 Column {
                     gap: "medium",
 
-                    if props.fertilizer_weight.read().is_redurant() {
+                    if props.fertilizer_amount.read().is_redurant() {
                         Text {
                             size: "x-small",
                             "Удобрение не вносит питательных веществ в раствор и исключено из расчета",
@@ -57,7 +57,7 @@ pub fn FertilizersSetTooltip(props: FertilizersSetTooltipProps) -> Element {
                     Text {
                         size: "x-small",
                         bold: true,
-                        "Исключить: {props.fertilizer_weight.read().name()}",
+                        "Исключить: {props.fertilizer_amount.read().fertilizer().name()}",
                     }
 
                     Column {

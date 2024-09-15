@@ -2,7 +2,7 @@ use crate::model::concentrates::{
     Composition, CompositionFromFertilizers, CompositionFromSolution, Concentrate,
     ConcentrateSummary,
 };
-use crate::model::solutions::FertilizerWeight;
+use crate::model::fertilizers::FertilizerAmount;
 use crate::repository::schemas::{ConcentrateCompositionSchema, ConcentrateSchema};
 use crate::repository::Error;
 use crate::repository::{FertilizersRepository, SolutionsRepository, Storage};
@@ -31,11 +31,11 @@ impl ConcentratesRepository {
                 let fertilizers_ids = concentrate_document.composition.fertilizers_ids();
                 let fertilizers = fertilizers_repository.find_by_ids(fertilizers_ids);
 
-                let mut full_distribution: HashMap<String, HashMap<String, FertilizerWeight>> =
+                let mut full_distribution: HashMap<String, HashMap<String, FertilizerAmount>> =
                     HashMap::new();
 
                 distribution.keys().for_each(|part_id| {
-                    let mut part_distribution: HashMap<String, FertilizerWeight> = HashMap::new();
+                    let mut part_distribution: HashMap<String, FertilizerAmount> = HashMap::new();
 
                     distribution.get(part_id).unwrap().iter().for_each(
                         |(fertilizer_id, amount)| {
@@ -46,7 +46,7 @@ impl ConcentratesRepository {
 
                             part_distribution.insert(
                                 fertilizer_id.clone(),
-                                FertilizerWeight::new(fertilizer.clone(), *amount),
+                                FertilizerAmount::new(fertilizer.clone(), *amount),
                             );
                         },
                     );

@@ -1,4 +1,5 @@
 mod fertilizer;
+mod fertilizer_amount;
 mod fertilizer_builder;
 mod formula;
 mod label;
@@ -9,6 +10,7 @@ mod source_composition;
 mod source_type;
 
 pub use fertilizer::Fertilizer;
+pub use fertilizer_amount::FertilizerAmount;
 pub use fertilizer_builder::FertilizerBuilder;
 pub use formula::Formula;
 pub use label::Label;

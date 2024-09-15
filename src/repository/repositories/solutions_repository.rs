@@ -1,7 +1,8 @@
 use super::{FertilizersRepository, NutritionProgramsRepository};
 use crate::model::chemistry::Nutrients;
+use crate::model::fertilizers::FertilizerAmount;
 use crate::model::profiles::Profile;
-use crate::model::solutions::{FertilizerWeight, NutrientComposition, Solution, SolutionSummary};
+use crate::model::solutions::{NutrientComposition, Solution, SolutionSummary};
 use crate::repository::schemas::{NutritionProgramSchema, SolutionSchema};
 use crate::repository::Error;
 use crate::repository::Storage;
@@ -49,7 +50,7 @@ impl SolutionsRepository {
                 {
                     acc.insert(
                         fertilizer.id(),
-                        FertilizerWeight::new(fertilizer, *fertilizer_amount),
+                        FertilizerAmount::new(fertilizer, *fertilizer_amount),
                     );
                 }
 

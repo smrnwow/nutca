@@ -1,7 +1,7 @@
 use super::{CompositionType, ConcentrateComposition, FertilizersBrowser, SolutionsBrowser};
 use crate::model::chemistry::Volume;
 use crate::model::concentrates::Concentrate;
-use crate::model::solutions::FertilizerWeight;
+use crate::model::fertilizers::FertilizerAmount;
 use crate::repository::ConcentratesRepository;
 use crate::ui::router::Route;
 use dioxus_router::prelude::*;
@@ -119,7 +119,7 @@ impl Editor {
         if let Some(fertilizer) = self.fertilizers_browser.get(&fertilizer_id) {
             self.concentrate
                 .composition_mut()
-                .update_fertilizer_amount(&part_id, FertilizerWeight::new(fertilizer, amount));
+                .update_fertilizer_amount(&part_id, FertilizerAmount::new(fertilizer, amount));
         }
     }
 

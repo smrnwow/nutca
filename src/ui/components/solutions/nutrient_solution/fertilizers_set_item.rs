@@ -1,12 +1,12 @@
 use super::FertilizersSetTooltip;
-use crate::model::solutions::FertilizerWeight;
+use crate::model::fertilizers::FertilizerAmount;
 use crate::ui::components::layout::Row;
 use crate::ui::components::utils::{FloatField, QuickAction, Text};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizersSetItemProps {
-    fertilizer_weight: Signal<FertilizerWeight>,
+    fertilizer_amount: Signal<FertilizerAmount>,
     on_exclude: EventHandler<String>,
     on_amount_update: EventHandler<(String, f64)>,
 }
@@ -21,19 +21,19 @@ pub fn FertilizersSetItem(props: FertilizersSetItemProps) -> Element {
                 gap: "x-small",
 
                 QuickAction {
-                    warn: props.fertilizer_weight.read().is_redurant(),
+                    warn: props.fertilizer_amount.read().is_redurant(),
                     action_left: rsx! {
                         FertilizersSetTooltip {
-                            fertilizer_weight: props.fertilizer_weight,
+                            fertilizer_amount: props.fertilizer_amount,
                         },
                     },
                     on_click: move |_| {
-                        props.on_exclude.call(props.fertilizer_weight.read().id());
+                        props.on_exclude.call(props.fertilizer_amount.read().fertilizer().id());
                     },
 
                     Text {
                         size: "x-small",
-                        {props.fertilizer_weight.read().name()},
+                        {props.fertilizer_amount.read().fertilizer().name()},
                     }
                 }
 
@@ -41,9 +41,9 @@ pub fn FertilizersSetItem(props: FertilizersSetItemProps) -> Element {
                     class: "fertilizers-set-item__amount",
 
                     FloatField {
-                        value: props.fertilizer_weight.read().weight(),
+                        value: props.fertilizer_amount.read().amount(),
                         on_change: move |value| {
-                            props.on_amount_update.call((props.fertilizer_weight.read().id(), value));
+                            props.on_amount_update.call((props.fertilizer_amount.read().fertilizer().id(), value));
                         },
                     }
                 }

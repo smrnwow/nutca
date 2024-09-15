@@ -33,26 +33,32 @@ body {
 
 #main {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+.content {
+    display: flex;
+    gap: 12px;
 }
 
 .navigation {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     gap: 8px;
-    padding: 12px;
 }
 
 .navigation__link {
     position: relative;
-    padding: 12px 16px;
+    padding: 6px 8px;
     font-size: 14px;
     line-height: 20px;
     cursor: pointer;
     text-decoration: none;
     color: var(--dark-color);
-    border-radius: 16px;
+    border-radius: 8px;
 }
 
 .navigation__link:hover {
@@ -268,6 +274,7 @@ body {
 
 .section {
     max-width: 660px;
+    min-width: 660px;
     width: 100%;
 }
 

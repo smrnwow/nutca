@@ -1,12 +1,12 @@
 use crate::controller::concentrates::SolutionsBrowser;
-use crate::model::concentrates::CompositionFromSolution;
+use crate::model::solutions::Solution;
 use crate::ui::components::layout::Row;
 use crate::ui::components::utils::Select;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionSelectProps {
-    composition: Signal<CompositionFromSolution>,
+    solution: Signal<Solution>,
     solutions_browser: Memo<SolutionsBrowser>,
     on_solution_search: EventHandler<String>,
     on_solution_change: EventHandler<String>,
@@ -16,8 +16,8 @@ pub struct SolutionSelectProps {
 pub fn SolutionSelect(props: SolutionSelectProps) -> Element {
     let value = use_memo(move || {
         (
-            props.composition.read().solution().id().clone(),
-            props.composition.read().solution().name().clone(),
+            props.solution.read().id().clone(),
+            props.solution.read().name().clone(),
         )
     });
 

@@ -22,7 +22,10 @@ impl From<Solution> for SolutionSchema {
             fertilizers: solution.fertilizers().values().fold(
                 HashMap::new(),
                 |mut fertilizers, fertilizer_amount| {
-                    fertilizers.insert(fertilizer_amount.id(), fertilizer_amount.weight());
+                    fertilizers.insert(
+                        fertilizer_amount.fertilizer().id(),
+                        fertilizer_amount.amount_base(),
+                    );
 
                     fertilizers
                 },

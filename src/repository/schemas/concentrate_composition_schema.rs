@@ -41,7 +41,7 @@ impl From<Composition> for ConcentrateCompositionSchema {
                         let mut part: HashMap<String, f64> = HashMap::new();
 
                         part_distribution.values().for_each(|fertilizer| {
-                            part.insert(fertilizer.id(), fertilizer.weight());
+                            part.insert(fertilizer.fertilizer().id(), fertilizer.amount_base());
                         });
 
                         distribution.insert(part_id.clone(), part);
