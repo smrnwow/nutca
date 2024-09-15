@@ -1,8 +1,9 @@
-use super::{auto_filler::AutoFiller, manual_filler::ManualFiller};
-use crate::controller::concentrates::{SolutionsBrowser, TanksSet};
+use super::{FromFertilizers, FromSolution};
+use crate::controller::concentrates::{
+    CompositionType, ConcentrateComposition, FertilizersBrowser, SolutionsBrowser,
+};
 use crate::model::chemistry::Volume;
-use crate::model::concentrates::fillers::FillerVariant;
-use crate::model::concentrates::Concentrate;
+use crate::model::concentrates::{Composition, Concentrate};
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::Plus;
 use crate::ui::components::utils::{
@@ -12,20 +13,22 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ConcentrateEditorProps {
-    solutions_browser: Memo<SolutionsBrowser>,
-    tanks_set: Memo<TanksSet>,
     concentrate: Memo<Concentrate>,
+    concentrate_composition: Memo<ConcentrateComposition>,
+    solutions_browser: Memo<SolutionsBrowser>,
+    fertilizers_browser: Memo<FertilizersBrowser>,
     on_solution_search: EventHandler<String>,
     on_solution_change: EventHandler<String>,
-    on_filler_variant_change: EventHandler<FillerVariant>,
+    on_composition_type_change: EventHandler<CompositionType>,
     on_name_update: EventHandler<String>,
     on_part_add: EventHandler<()>,
-    on_part_delete: EventHandler<String>,
+    on_part_remove: EventHandler<String>,
     on_part_name_update: EventHandler<(String, String)>,
     on_part_concentration_update: EventHandler<(String, usize)>,
     on_part_volume_update: EventHandler<(String, Volume)>,
-    on_part_fertilizer_add: EventHandler<(String, String, f64)>,
-    on_part_fertilizer_delete: EventHandler<(String, String)>,
+    on_fertilizer_amount_update: EventHandler<(String, String, f64)>,
+    on_fertilizer_percent_update: EventHandler<(String, String, usize)>,
+    on_fertilizer_remove: EventHandler<(String, String)>,
     on_save: EventHandler<()>,
 }
 
@@ -46,7 +49,7 @@ pub fn ConcentrateEditor(props: ConcentrateEditorProps) -> Element {
             Block {
                 TextField {
                     label: "Название",
-                    value: props.concentrate.read().name(),
+                    value: props.concentrate.read().name().clone(),
                     on_input: props.on_name_update,
                 }
             }
@@ -72,47 +75,53 @@ pub fn ConcentrateEditor(props: ConcentrateEditorProps) -> Element {
                         }
 
                         ButtonsGroup {
-                            value: props.tanks_set.read().filler_variant().to_string(),
+                            value: props.concentrate_composition.read().composition_type().to_string(),
                             buttons: vec![
                                 ButtonsGroupButton {
-                                    label: String::from("Из раствора"),
-                                    value: FillerVariant::Auto.to_string(),
+                                    label: CompositionType::FromFertilizers.label(),
+                                    value: CompositionType::FromFertilizers.to_string(),
                                     badge: None,
                                 },
                                 ButtonsGroupButton {
-                                    label: String::from("Из удобрений"),
-                                    value: FillerVariant::Manual.to_string(),
+                                    label: CompositionType::FromSolution.label(),
+                                    value: CompositionType::FromSolution.to_string(),
                                     badge: None,
                                 },
                             ],
-                            on_change: move |tab_value| props.on_filler_variant_change.call(FillerVariant::from(tab_value)),
+                            on_change: move |tab_value| {
+                                props.on_composition_type_change.call(CompositionType::from(tab_value));
+                            },
                         }
                     }
 
-                    match props.tanks_set.read().filler_variant() {
-                        FillerVariant::Auto => rsx! {
-                            AutoFiller {
-                                tanks_set: props.tanks_set,
+                    match props.concentrate.read().composition().clone() {
+                        Composition::FromFertilizers(composition) => rsx! {
+                            FromFertilizers {
+                                concentrate: props.concentrate,
+                                composition: Signal::new(composition),
+                                fertilizers_browser: props.fertilizers_browser,
+                                on_part_name_update: props.on_part_name_update,
+                                on_part_concentration_update: props.on_part_concentration_update,
+                                on_part_volume_update: props.on_part_volume_update,
+                                on_part_remove: props.on_part_remove,
+                                on_fertilizer_amount_update: props.on_fertilizer_amount_update,
+                                on_fertilizer_remove: props.on_fertilizer_remove,
+                            }
+                        },
+
+                        Composition::FromSolution(composition) => rsx! {
+                            FromSolution {
+                                concentrate: props.concentrate,
+                                composition: Signal::new(composition),
                                 solutions_browser: props.solutions_browser,
                                 on_solution_search: props.on_solution_search,
                                 on_solution_change: props.on_solution_change,
                                 on_part_name_update: props.on_part_name_update,
                                 on_part_concentration_update: props.on_part_concentration_update,
                                 on_part_volume_update: props.on_part_volume_update,
-                                on_part_delete: props.on_part_delete,
-                                on_part_fertilizer_add: props.on_part_fertilizer_add,
-                                on_part_fertilizer_delete: props.on_part_fertilizer_delete,
-                            }
-                        },
-                        FillerVariant::Manual => rsx! {
-                            ManualFiller {
-                                tanks_set: props.tanks_set,
-                                on_part_name_update: props.on_part_name_update,
-                                on_part_concentration_update: props.on_part_concentration_update,
-                                on_part_volume_update: props.on_part_volume_update,
-                                on_part_delete: props.on_part_delete,
-                                on_part_fertilizer_add: props.on_part_fertilizer_add,
-                                on_part_fertilizer_delete: props.on_part_fertilizer_delete,
+                                on_part_remove: props.on_part_remove,
+                                on_fertilizer_percent_update: props.on_fertilizer_percent_update,
+                                on_fertilizer_remove: props.on_fertilizer_remove,
                             }
                         },
                     }

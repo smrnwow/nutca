@@ -1,11 +1,13 @@
+mod composition_type;
+mod concentrate_composition;
 mod editor;
+mod editor_factory;
 mod fertilizers_browser;
-mod fertilizers_stack;
 mod solutions_browser;
-mod tanks_set;
 
+pub use composition_type::CompositionType;
+pub use concentrate_composition::ConcentrateComposition;
 pub use editor::Editor;
+pub use editor_factory::EditorFactory;
 pub use fertilizers_browser::FertilizersBrowser;
-pub use fertilizers_stack::FertilizersStack;
 pub use solutions_browser::SolutionsBrowser;
-pub use tanks_set::TanksSet;

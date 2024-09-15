@@ -5,13 +5,13 @@ use crate::ui::components::utils::{Button, Dropdown, DropdownOption, FloatField,
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
-pub struct FertilizerWeightButtonProps {
+pub struct FertilizerAmountButtonProps {
     fertilizers_browser: Memo<FertilizersBrowser>,
     on_fertilizer_add: EventHandler<(String, f64)>,
 }
 
 #[component]
-pub fn FertilizerWeightButton(props: FertilizerWeightButtonProps) -> Element {
+pub fn FertilizerAmountButton(props: FertilizerAmountButtonProps) -> Element {
     let mut selected_fertilizer_id = use_signal(|| String::new());
     let mut selected_fertilizer_name = use_signal(|| String::new());
     let mut selected_weight = use_signal(|| 0.0);

@@ -1,22 +1,21 @@
-use crate::model::concentrates::Concentrate;
-use crate::repository::Storage;
-use dioxus::prelude::*;
+use crate::model::concentrates::ConcentrateSummary;
+use crate::repository::ConcentratesRepository;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Listing {
-    storage: Signal<Storage>,
+    concentrates_repository: ConcentratesRepository,
     search_query: String,
-    page_index: usize,
     limit: usize,
+    page_index: usize,
 }
 
 impl Listing {
-    pub fn new(storage: Signal<Storage>) -> Self {
+    pub fn new(concentrates_repository: ConcentratesRepository) -> Self {
         Self {
-            storage,
+            concentrates_repository,
             search_query: String::new(),
-            page_index: 1,
             limit: 10,
+            page_index: 1,
         }
     }
 
@@ -30,22 +29,9 @@ impl Listing {
 
     pub fn refresh(&mut self) {}
 
-    pub fn fetch(&self) -> Vec<Concentrate> {
-        match self.storage.read().concentrates().search(
-            &self.search_query,
-            self.limit,
-            self.limit * (self.page_index - 1),
-        ) {
-            Ok(concentrates) => concentrates,
-            Err(_) => Vec::new(),
-        }
-    }
-
-    pub fn find(&self, concentrate_id: String) -> Option<Concentrate> {
-        match self.storage.read().concentrates().get(&concentrate_id) {
-            Ok(concentrate) => Some(concentrate),
-            Err(_) => None,
-        }
+    pub fn fetch(&self) -> Vec<ConcentrateSummary> {
+        self.concentrates_repository
+            .search(&self.search_query, self.limit, self.page_index)
     }
 
     pub fn page_index(&self) -> usize {

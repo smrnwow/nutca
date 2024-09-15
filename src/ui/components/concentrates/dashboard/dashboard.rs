@@ -63,7 +63,7 @@ pub fn Dashboard(props: DashboardProps) -> Element {
 
                         for concentrate in concentrates.read().iter() {
                             ListItem {
-                                key: "{concentrate.id()}",
+                                key: "{concentrate.id}",
                                 concentrate: concentrate.clone(),
                                 on_open: props.on_open,
                                 on_delete: props.on_delete,

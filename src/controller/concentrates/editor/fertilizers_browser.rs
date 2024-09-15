@@ -1,12 +1,10 @@
-use crate::model::concentrates::parts::ManualPart;
 use crate::model::fertilizers::Fertilizer;
-use crate::repository::Storage;
-use dioxus::prelude::*;
+use crate::repository::FertilizersRepository;
 use std::collections::HashMap;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct FertilizersBrowser {
-    storage: Signal<Storage>,
+    fertilizers_repository: FertilizersRepository,
     search_query: String,
     page_index: usize,
     limit: usize,
@@ -14,9 +12,9 @@ pub struct FertilizersBrowser {
 }
 
 impl FertilizersBrowser {
-    pub fn new(storage: Signal<Storage>) -> Self {
+    pub fn new(fertilizers_repository: FertilizersRepository) -> Self {
         Self {
-            storage,
+            fertilizers_repository,
             search_query: String::new(),
             page_index: 1,
             limit: 10,
@@ -24,56 +22,16 @@ impl FertilizersBrowser {
         }
     }
 
-    pub fn with_fertilizers(&mut self, fertilizers_ids: Vec<String>) {
-        let fertilizers = match self.storage.read().fertilizers().filter(&fertilizers_ids) {
-            Ok(fertilizers) => fertilizers,
-            Err(_) => Vec::new(),
-        };
-
-        fertilizers.into_iter().for_each(|fertilizer| {
-            self.fertilizers.insert(fertilizer.id(), fertilizer);
-        });
-    }
-
-    pub fn list(&self, part: &ManualPart) -> Vec<Signal<(Fertilizer, f64)>> {
-        let mut list = Vec::new();
-
-        part.fertilizers().iter().for_each(|fertilizer_amount| {
-            if let Some(fertilizer) = self.fertilizers.get(&fertilizer_amount.id()) {
-                list.push(Signal::new((
-                    fertilizer.clone(),
-                    fertilizer_amount.amount(),
-                )));
-            }
-        });
-
-        list
-    }
-
     pub fn get(&mut self, fertilizer_id: &String) -> Option<Fertilizer> {
-        match self.fertilizers.get(fertilizer_id) {
-            Some(fertilizer) => Some(fertilizer.clone()),
-            None => match self.storage.read().fertilizers().get(fertilizer_id) {
-                Ok(fertilizer) => {
-                    self.fertilizers
-                        .insert(fertilizer_id.clone(), fertilizer.clone());
-
-                    Some(fertilizer)
-                }
-                Err(_) => None,
-            },
-        }
+        self.fertilizers_repository.find(fertilizer_id)
     }
 
     pub fn fetch(&self) -> Vec<Fertilizer> {
-        match self.storage.read().fertilizers().search(
+        self.fertilizers_repository.search(
             &self.search_query,
-            &[],
+            &Vec::new(),
             self.limit,
-            self.limit * (self.page_index - 1),
-        ) {
-            Ok(fertilizers) => fertilizers,
-            Err(_) => Vec::new(),
-        }
+            self.page_index,
+        )
     }
 }

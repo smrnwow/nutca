@@ -1,4 +1,4 @@
-use crate::model::concentrates::Concentrate;
+use crate::repository::schemas::ConcentrateSchema;
 use crate::repository::{Error, RepositoryError};
 use rusqlite::{named_params, params, Connection};
 use std::rc::Rc;
@@ -17,18 +17,18 @@ impl Concentrates {
         Ok(storage)
     }
 
-    pub fn add(&self, concentrate: Concentrate) -> Result<(), Error> {
+    pub fn add(&self, concentrate: ConcentrateSchema) -> Result<(), Error> {
         let data = serde_json::to_string(&concentrate)?;
 
         self.connection.execute(
             "INSERT INTO concentrates (id, name, data) VALUES (?1, ?2, ?3)",
-            params![concentrate.id(), concentrate.name().to_lowercase(), data],
+            params![concentrate.id, concentrate.name.to_lowercase(), data],
         )?;
 
         Ok(())
     }
 
-    pub fn get(&self, concentrate_id: &str) -> Result<Concentrate, Error> {
+    pub fn get(&self, concentrate_id: &str) -> Result<ConcentrateSchema, Error> {
         let mut statement = self
             .connection
             .prepare("SELECT * FROM concentrates WHERE id = ?1")?;
@@ -44,14 +44,14 @@ impl Concentrates {
         }
     }
 
-    pub fn update(&self, concentrate: Concentrate) -> Result<(), Error> {
+    pub fn update(&self, concentrate: ConcentrateSchema) -> Result<(), Error> {
         let data = serde_json::to_string(&concentrate)?;
 
         self.connection
             .prepare("UPDATE concentrates SET name = ?2, data = ?3 WHERE id = ?1")?
             .execute(params![
-                concentrate.id(),
-                concentrate.name().to_lowercase(),
+                concentrate.id,
+                concentrate.name.to_lowercase(),
                 data
             ])?;
 
@@ -71,7 +71,7 @@ impl Concentrates {
         query: &str,
         limit: usize,
         offset: usize,
-    ) -> Result<Vec<Concentrate>, Error> {
+    ) -> Result<Vec<ConcentrateSchema>, Error> {
         let query_str = "SELECT * FROM concentrates WHERE name LIKE '%' || :search || '%' LIMIT :limit OFFSET :offset";
 
         let mut statement = self.connection.prepare(query_str)?;
@@ -91,7 +91,7 @@ impl Concentrates {
         let mut concentrates = vec![];
 
         for item in response {
-            let concentrate = serde_json::from_str::<Concentrate>(&item?)?;
+            let concentrate = serde_json::from_str::<ConcentrateSchema>(&item?)?;
             concentrates.push(concentrate);
         }
 

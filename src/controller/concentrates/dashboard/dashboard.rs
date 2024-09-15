@@ -1,5 +1,5 @@
 use super::Listing;
-use crate::repository::Storage;
+use crate::repository::{ConcentratesRepository, Storage};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
@@ -13,7 +13,7 @@ impl Dashboard {
     pub fn new(storage: Signal<Storage>) -> Self {
         Self {
             storage,
-            listing: Signal::new(Listing::new(storage)),
+            listing: Signal::new(Listing::new(ConcentratesRepository::new(storage))),
         }
     }
 

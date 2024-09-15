@@ -1,11 +1,11 @@
-use crate::model::concentrates::Concentrate;
+use crate::model::concentrates::ConcentrateSummary;
 use crate::ui::components::utils::icons::More;
 use crate::ui::components::utils::{Button, Dropdown, DropdownOption, QuickAction, Text};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct ListItemProps {
-    concentrate: Concentrate,
+    concentrate: ConcentrateSummary,
     on_open: EventHandler<String>,
     on_delete: EventHandler<String>,
 }
@@ -28,14 +28,14 @@ pub fn ListItem(props: ListItemProps) -> Element {
                     options: rsx! {
                         DropdownOption {
                             on_click: move |_| {
-                                props.on_open.call(concentrate.read().id().clone());
+                                props.on_open.call(concentrate.read().id.clone());
                             },
                             "Открыть",
                         }
 
                         DropdownOption {
                             on_click: move |_| {
-                                props.on_delete.call(concentrate.read().id().clone());
+                                props.on_delete.call(concentrate.read().id.clone());
                             },
                             "Удалить",
                         }
@@ -45,7 +45,7 @@ pub fn ListItem(props: ListItemProps) -> Element {
 
             Text {
                 size: "x-small",
-                {concentrate.read().name().clone()},
+                {concentrate.read().name.clone()},
             }
         }
     }

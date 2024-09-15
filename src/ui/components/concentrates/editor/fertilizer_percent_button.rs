@@ -1,5 +1,4 @@
-use crate::controller::concentrates::FertilizersStack;
-use crate::model::concentrates::parts::AutoPart;
+use crate::model::concentrates::CompositionFromSolution;
 use crate::ui::components::layout::Row;
 use crate::ui::components::utils::icons::{Check, Close, Plus};
 use crate::ui::components::utils::{Button, Dropdown, DropdownOption, NumberField, Text};
@@ -7,17 +6,16 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerPercentButtonProps {
-    auto_part: Signal<AutoPart>,
-    fertilizers_stack: Memo<FertilizersStack>,
-    on_fertilizer_add: EventHandler<(String, String, f64)>,
+    composition: Signal<CompositionFromSolution>,
+    on_fertilizer_percent_update: EventHandler<(String, usize)>,
 }
 
 #[component]
 pub fn FertilizerPercentButton(props: FertilizerPercentButtonProps) -> Element {
     let list = props
-        .fertilizers_stack
+        .composition
         .read()
-        .stack()
+        .usage()
         .into_iter()
         .map(|item| Signal::new(item));
 
@@ -46,14 +44,14 @@ pub fn FertilizerPercentButton(props: FertilizerPercentButtonProps) -> Element {
                     options: rsx! {
                         for item in list {
                             DropdownOption {
-                                key: "{item.read().0.id()}",
+                                key: "{item.read().0.clone()}",
                                 on_click: move |_| {
-                                    selected_fertilizer_id.set(item.read().0.id());
-                                    selected_fertilizer_name.set(item.read().0.name());
-                                    selected_percent.set(item.read().1);
-                                    available_percent.set(item.read().1);
+                                    selected_fertilizer_id.set(item.read().0.clone());
+                                    selected_fertilizer_name.set(item.read().1.clone());
+                                    selected_percent.set(item.read().2);
+                                    available_percent.set(item.read().2);
                                 },
-                                "{item.read().0.name()} {item.read().1}",
+                                "{item.read().1.clone()} {item.read().2}",
                             }
                         }
                     }
@@ -78,11 +76,10 @@ pub fn FertilizerPercentButton(props: FertilizerPercentButtonProps) -> Element {
                     Button {
                         style: "compact",
                         on_click: move |_| {
-                            let part_id = props.auto_part.read().id().clone();
                             let fertilizer_id = selected_fertilizer_id.read().clone();
                             let percent = *selected_percent.read();
 
-                            props.on_fertilizer_add.call((part_id, fertilizer_id, percent as f64));
+                            props.on_fertilizer_percent_update.call((fertilizer_id, percent));
 
                             selected_fertilizer_id.set(String::new());
                             selected_fertilizer_name.set(String::new());

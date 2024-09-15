@@ -1,12 +1,16 @@
-use crate::model::fertilizers::Fertilizer;
+use crate::model::solutions::FertilizerWeight;
 use crate::ui::components::layout::Row;
 use crate::ui::components::utils::icons::Delete;
 use crate::ui::components::utils::{Button, QuickAction, Text};
 use dioxus::prelude::*;
 
+fn round(value: f64) -> String {
+    format!("{:.3}", value)
+}
+
 #[derive(Props, PartialEq, Clone)]
 pub struct FertilizerItemProps {
-    fertilizer_item: Signal<(Fertilizer, f64)>,
+    fertilizer: Signal<FertilizerWeight>,
     on_delete: EventHandler<String>,
 }
 
@@ -20,19 +24,19 @@ pub fn FertilizerItem(props: FertilizerItemProps) -> Element {
             QuickAction {
                 Text {
                     size: "x-small",
-                    {props.fertilizer_item.read().0.name()},
+                    {props.fertilizer.read().name()},
                 }
 
                 Text {
                     size: "x-small",
-                    "{props.fertilizer_item.read().1.to_string()} {props.fertilizer_item.read().0.units()}",
+                    "{round(props.fertilizer.read().weight())}",
                 }
             }
 
             Button {
                 style: "compact",
                 on_click: move |_| {
-                    let fertilizer_id = props.fertilizer_item.read().0.id();
+                    let fertilizer_id = props.fertilizer.read().id();
                     props.on_delete.call(fertilizer_id);
                 },
                 Delete {},

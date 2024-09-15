@@ -7,7 +7,6 @@ pub struct SolutionsBrowser {
     search_query: String,
     page_index: usize,
     limit: usize,
-    picked_solution: Solution,
 }
 
 impl SolutionsBrowser {
@@ -17,23 +16,11 @@ impl SolutionsBrowser {
             search_query: String::new(),
             page_index: 1,
             limit: 10,
-            picked_solution: Solution::default(),
         }
     }
 
-    pub fn select(&mut self, solution_id: &String) {
-        self.picked_solution = self.solutions_repository.get(solution_id);
-    }
-
-    pub fn picked_solution(&self) -> &Solution {
-        &self.picked_solution
-    }
-
-    pub fn value(&self) -> (String, String) {
-        (
-            self.picked_solution.id().clone(),
-            self.picked_solution.name().clone(),
-        )
+    pub fn select(&mut self, solution_id: &String) -> Solution {
+        self.solutions_repository.get(solution_id)
     }
 
     pub fn options(&self) -> Vec<(String, String)> {

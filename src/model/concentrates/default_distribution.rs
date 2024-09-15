@@ -1,37 +1,33 @@
+use super::{CompositionFromSolution, Part};
 use crate::model::chemistry::Nutrient;
-use crate::model::concentrates::parts::{AutoPart, FertilizerPercent};
-use crate::model::solutions::FertilizerWeight;
+use crate::model::solutions::Solution;
 
-pub struct DefaultConcentrate {
-    part_a: AutoPart,
-    part_b: AutoPart,
+pub struct DefaultDistribution {
+    solution: Solution,
+    part_a: Part,
+    part_b: Part,
+    composition: CompositionFromSolution,
 }
 
-impl DefaultConcentrate {
-    pub fn new(fertilizers: Vec<&FertilizerWeight>) -> Self {
-        let mut concentrate = Self {
-            part_a: AutoPart::new("A"),
-            part_b: AutoPart::new("B"),
-        };
-
-        concentrate.calculate(fertilizers);
-
-        concentrate
+impl DefaultDistribution {
+    pub fn new(solution: Solution) -> Self {
+        Self {
+            solution: solution.clone(),
+            part_a: Part::new("A"),
+            part_b: Part::new("B"),
+            composition: CompositionFromSolution::from(solution),
+        }
     }
 
-    pub fn parts(&self) -> Vec<&AutoPart> {
-        vec![&self.part_a, &self.part_b]
-    }
-
-    fn calculate(&mut self, fertilizers: Vec<&FertilizerWeight>) {
-        fertilizers.iter().for_each(|fertilizer_weight| {
+    pub fn distribute(mut self) -> (CompositionFromSolution, Vec<Part>) {
+        self.solution.fertilizers().values().for_each(|fertilizer| {
             let mut has_calcium = false;
 
             let mut has_sulfur_or_phosphorus = false;
 
             let mut micros_count = 0;
 
-            for nutrient_amount in fertilizer_weight.nutrients().list() {
+            for nutrient_amount in fertilizer.nutrients().list() {
                 match nutrient_amount.nutrient() {
                     Nutrient::Calcium => {
                         has_calcium = true;
@@ -59,14 +55,16 @@ impl DefaultConcentrate {
             }
 
             if has_calcium || (!has_sulfur_or_phosphorus && micros_count < 3) {
-                self.part_a
-                    .add_fertilizer(FertilizerPercent::new(fertilizer_weight.id(), 100));
+                self.composition
+                    .update_fertilizer_percent(self.part_a.id(), &fertilizer.id(), 100);
             }
 
             if has_sulfur_or_phosphorus || micros_count > 3 {
-                self.part_b
-                    .add_fertilizer(FertilizerPercent::new(fertilizer_weight.id(), 100));
+                self.composition
+                    .update_fertilizer_percent(self.part_b.id(), &fertilizer.id(), 100);
             }
         });
+
+        (self.composition, vec![self.part_a, self.part_b])
     }
 }

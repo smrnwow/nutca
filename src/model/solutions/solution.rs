@@ -54,6 +54,10 @@ impl Solution {
             .collect()
     }
 
+    pub fn fertilizer(&self, fertilizer_id: &String) -> Option<&FertilizerWeight> {
+        self.fertilizers.get(fertilizer_id)
+    }
+
     pub fn update_name(&mut self, name: String) {
         self.name = name;
     }
