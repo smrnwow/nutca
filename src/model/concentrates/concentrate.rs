@@ -1,4 +1,4 @@
-use super::{Composition, DefaultDistribution, Part};
+use super::{Composition, CompositionFromSolution, Part};
 use crate::model::solutions::Solution;
 use uuid::Uuid;
 
@@ -7,16 +7,14 @@ pub struct Concentrate {
     id: String,
     name: String,
     composition: Composition,
-    parts: Vec<Part>,
 }
 
 impl Concentrate {
-    pub fn new(id: String, name: String, composition: Composition, parts: Vec<Part>) -> Self {
+    pub fn new(id: String, name: String, composition: Composition) -> Self {
         Self {
             id,
             name,
             composition,
-            parts,
         }
     }
 
@@ -41,7 +39,7 @@ impl Concentrate {
     }
 
     pub fn parts(&self) -> Vec<&Part> {
-        self.parts.iter().collect()
+        self.composition.parts()
     }
 
     pub fn update_name(&mut self, name: String) {
@@ -50,49 +48,33 @@ impl Concentrate {
 
     pub fn change_solution(&mut self, solution: Solution) {
         if let Composition::FromSolution(_) = &mut self.composition {
-            let (composition, parts) = DefaultDistribution::new(solution).distribute();
+            let composition = CompositionFromSolution::from(solution);
 
             self.composition = Composition::FromSolution(composition);
-
-            self.parts = parts;
         }
     }
 
     pub fn add_part(&mut self) {
-        if self.parts.len() < 5 {
-            self.parts.push(Part::new(""));
-        }
+        self.composition.add_part(Part::new(""));
     }
 
     pub fn get_part(&mut self, part_id: &String) -> Option<&mut Part> {
-        let position = self.parts.iter().position(|part| *part.id() == *part_id);
-
-        match position {
-            Some(index) => self.parts.get_mut(index),
-            None => None,
-        }
+        self.composition.get_part(part_id)
     }
 
     pub fn remove_part(&mut self, part_id: &String) {
-        let position = self.parts.iter().position(|part| *part.id() == *part_id);
-
-        if let Some(index) = position {
-            self.parts.remove(index);
-
-            self.composition.remove_part(part_id);
-        }
+        self.composition.remove_part(part_id)
     }
 }
 
 impl From<Solution> for Concentrate {
     fn from(solution: Solution) -> Self {
-        let (composition, parts) = DefaultDistribution::new(solution).distribute();
+        let composition = CompositionFromSolution::from(solution);
 
         Self {
             id: Uuid::new_v4().to_string(),
             name: String::new(),
             composition: Composition::FromSolution(composition),
-            parts,
         }
     }
 }
@@ -103,7 +85,6 @@ impl Default for Concentrate {
             id: Uuid::new_v4().to_string(),
             name: String::new(),
             composition: Composition::default(),
-            parts: Vec::new(),
         }
     }
 }

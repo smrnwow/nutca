@@ -7,8 +7,8 @@ pub enum CompositionType {
 impl CompositionType {
     pub fn label(&self) -> String {
         match self {
-            Self::FromFertilizers => String::from("из удобрений"),
-            Self::FromSolution => String::from("из раствора"),
+            Self::FromFertilizers => String::from("Из удобрений"),
+            Self::FromSolution => String::from("Из раствора"),
         }
     }
 }

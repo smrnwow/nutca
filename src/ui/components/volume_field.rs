@@ -1,7 +1,7 @@
+use crate::model::chemistry::{Volume, VolumeUnits};
 use crate::ui::components::layout::Row;
 use crate::ui::components::utils::{FloatField, Label, Select};
 use dioxus::prelude::*;
-use crate::model::chemistry::{Volume, VolumeUnits};
 
 fn round(value: f64) -> f64 {
     format!("{:.2}", value).parse().unwrap()
@@ -25,13 +25,6 @@ pub fn VolumeField(props: VolumeFieldProps) -> Element {
         ]
     });
 
-    let value = use_memo(move || {
-        (
-            props.volume.read().units().into(),
-            props.volume.read().units().label(),
-        )
-    });
-
     rsx! {
         Row {
             gap: "small",
@@ -49,7 +42,10 @@ pub fn VolumeField(props: VolumeFieldProps) -> Element {
             }
 
             Select {
-                value,
+                value: Signal::new((
+                    props.volume.read().units().into(),
+                    props.volume.read().units().label(),
+                )),
                 options: options.read().clone(),
                 on_change: move |units: String| {
                     props.on_change.call(volume.convert(VolumeUnits::from(units)));

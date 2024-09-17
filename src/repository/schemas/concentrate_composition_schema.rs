@@ -52,7 +52,7 @@ impl From<Composition> for ConcentrateCompositionSchema {
 
             Composition::FromSolution(composition) => ConcentrateCompositionSchema::FromSolution(
                 composition.solution().id().clone(),
-                composition.distribution().clone(),
+                composition.distribution().distribution().clone(),
             ),
         }
     }

@@ -22,7 +22,7 @@ pub struct FromSolutionProps {
 
 #[component]
 pub fn FromSolution(props: FromSolutionProps) -> Element {
-    let solution = use_signal(|| props.composition.read().solution().clone());
+    let solution = use_memo(move || props.composition.read().solution().clone());
 
     rsx! {
         SolutionSelect {

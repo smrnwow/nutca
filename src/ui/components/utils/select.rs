@@ -1,153 +1,151 @@
 use super::icons::{ArrowDown, ArrowUp, Check, Close, SearchIcon};
 use dioxus::prelude::*;
+use std::rc::Rc;
 
 fn select_list_class(opened: bool) -> String {
+    /*
     if opened {
         String::from("select__list select__list_opened")
     } else {
         String::from("select__list")
     }
+    */
+
+    String::from("select__list")
 }
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SelectProps {
-    value: Memo<(String, String)>,
+    value: Signal<(String, String)>,
+    options: Vec<(String, String)>,
     placeholder: Option<String>,
     search_query: Option<String>,
-    label: Option<String>,
     size: Option<String>,
-    options: Vec<(String, String)>,
     on_search: Option<EventHandler<String>>,
     on_change: EventHandler<String>,
 }
 
 #[component]
 pub fn Select(props: SelectProps) -> Element {
+    println!(
+        "props value: {:#?}, text: {:#?}",
+        props.value.read().0,
+        props.value.read().1
+    );
+
     let size = props.size.unwrap_or(String::from("small"));
 
     let mut is_opened = use_signal(|| false);
 
+    let show_value = use_memo(move || props.value.read().0.len() > 0 && !*is_opened.read());
+
+    let mut search_input: Signal<Option<Rc<MountedData>>> = use_signal(|| None);
+
     let search_query = use_signal(|| props.search_query.unwrap_or(String::new()));
+
+    let show_search = use_memo(move || props.on_search.is_some() && !*show_value.read());
 
     let placeholder = use_signal(|| props.placeholder.unwrap_or(String::from("выберите")));
 
-    let value = use_memo(move || props.value.read().0.clone());
+    println!(
+        "show value: {:#?} = {:#?} {:#?}",
+        show_value.read(),
+        props.value.read().0.len() > 0,
+        !*is_opened.read(),
+    );
 
-    let text = use_memo(move || props.value.read().1.clone());
-
-    let show_value = use_memo(move || value.read().len() > 0 && !*is_opened.read());
-
-    let show_cancel = use_memo(move || props.on_search.is_some() && value.read().len() > 0);
-
-    let show_search = use_memo(move || props.on_search.is_some() && *is_opened.read());
+    let show_cancel = use_memo(move || props.on_search.is_some() && props.value.read().0.len() > 0);
 
     let show_placeholder = use_memo(move || !*show_value.read() && !*show_search.read());
 
     rsx! {
         div {
             class: "select select_size-{size}",
-            onfocusout: move |_| {
-                // *is_opened.write() = false;
-            },
 
-            if let Some(label) = props.label {
-                span {
-                    class: "select__label",
-                    {label},
-                }
-            }
+            label {
+                class: "select__header",
 
-            SelectHead {
-                arrow_direction_up: is_opened,
-                show_value,
-                show_cancel,
-                show_search,
-                show_placeholder,
-                search_query,
-                text,
-                placeholder,
-                on_change: props.on_change,
-                on_open: move |_| {
-                    is_opened.set(true);
-                },
-                on_cancel: move |_| {
-                    props.on_change.call(String::new());
-
-                    is_opened.set(true);
-                },
-                on_search: move |search_query| {
-                    if let Some(on_search) = props.on_search {
-                        on_search.call(search_query);
+                if props.value.read().0.len() > 0 && !*is_opened.read() {
+                    button {
+                        class: "select__value",
+                        onclick: move |_| async move {
+                            is_opened.set(true);
+                        },
+                        onfocusin: move |_| {
+                            is_opened.set(true);
+                        },
+                        {props.value.read().1.clone()},
                     }
-                },
+                }
+
+                if props.on_search.is_some() && (*is_opened.read() || props.value.read().0.len() == 0) {
+                    label {
+                        class: "select__search",
+                        onclick: move |_| {
+                            is_opened.set(true);
+                        },
+
+                        div {
+                            class: "select__icon",
+                            SearchIcon {},
+                        }
+
+                        input {
+                            class: "select__input",
+                            r#type: "text",
+                            placeholder: placeholder,
+                            value: search_query,
+                            onmounted: move |event| async move {
+                                if *is_opened.read() {
+                                    let _ = event.data().set_focus(true).await;
+                                }
+                            },
+                            oninput: move |search_query| {
+                                if let Some(on_search) = props.on_search {
+                                    on_search.call(search_query.value());
+                                }
+                            },
+                        }
+                    }
+                }
+
+                /*
+                if *show_placeholder.read() {
+                    button {
+                        class: "select__placeholder",
+                        onclick: move |_| {
+                            is_opened.set(true);
+                        },
+                        onfocusin: move |_| {
+                            is_opened.set(true);
+                        },
+                        {placeholder},
+                    }
+                }
+                */
+
+                SelectControls {
+                    show_cancel,
+                    arrow_direction_up: is_opened,
+                    on_cancel: move |_| {
+                        props.on_change.call(String::new());
+
+                        is_opened.set(true);
+                    },
+                }
             }
 
             SelectList {
                 is_opened,
                 options: props.options,
-                value,
+                value: props.value.read().1.clone(),
                 on_select: move |new_value| {
-                    if new_value != *value.read() {
+                    if new_value != *props.value.read().1 {
                         props.on_change.call(new_value);
                     }
 
                     is_opened.set(false);
                 },
-            }
-        }
-    }
-}
-
-#[component]
-fn SelectHead(
-    arrow_direction_up: Signal<bool>,
-    show_value: Memo<bool>,
-    show_cancel: Memo<bool>,
-    show_search: Memo<bool>,
-    show_placeholder: Memo<bool>,
-    text: Memo<String>,
-    search_query: Signal<String>,
-    placeholder: Signal<String>,
-    on_open: EventHandler<()>,
-    on_change: EventHandler<String>,
-    on_cancel: EventHandler<()>,
-    on_search: EventHandler<String>,
-) -> Element {
-    rsx! {
-        label {
-            class: "select__header",
-
-            if *show_value.read() {
-                button {
-                    class: "select__value",
-                    onclick: move |_| on_open.call(()),
-                    onfocusin: move |_| on_open.call(()),
-                    {text},
-                }
-            }
-
-            if *show_search.read() {
-                SelectSearch {
-                    search_query,
-                    placeholder,
-                    on_open,
-                    on_search,
-                }
-            }
-
-            if *show_placeholder.read() {
-                button {
-                    class: "select__placeholder",
-                    onclick: move |_| on_open.call(()),
-                    onfocusin: move |_| on_open.call(()),
-                    {placeholder},
-                }
-            }
-
-            SelectControls {
-                show_cancel,
-                arrow_direction_up,
-                on_cancel,
             }
         }
     }
@@ -160,29 +158,7 @@ fn SelectSearch(
     on_open: EventHandler<()>,
     on_search: EventHandler<String>,
 ) -> Element {
-    rsx! {
-        label {
-            class: "select__search",
-            onclick: move |_| {
-                on_open.call(());
-            },
-
-            div {
-                class: "select__icon",
-                SearchIcon {},
-            }
-
-            input {
-                class: "select__input",
-                r#type: "text",
-                placeholder: placeholder,
-                value: search_query,
-                oninput: move |event| {
-                    on_search.call(event.value());
-                },
-            }
-        }
-    }
+    rsx! {}
 }
 
 #[component]

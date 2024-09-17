@@ -1,6 +1,6 @@
 use crate::model::concentrates::{
     Composition, CompositionFromFertilizers, CompositionFromSolution, Concentrate,
-    ConcentrateSummary,
+    ConcentrateSummary, Distribution,
 };
 use crate::model::fertilizers::FertilizerAmount;
 use crate::repository::schemas::{ConcentrateCompositionSchema, ConcentrateSchema};
@@ -54,36 +54,41 @@ impl ConcentratesRepository {
                     full_distribution.insert(part_id.clone(), part_distribution);
                 });
 
-                let composition = CompositionFromFertilizers::new(full_distribution);
+                let parts = concentrate_document
+                    .parts
+                    .iter()
+                    .cloned()
+                    .map(|part| part.into())
+                    .collect();
+
+                let composition = CompositionFromFertilizers::new(parts, full_distribution);
 
                 Concentrate::new(
                     concentrate_document.id,
                     concentrate_document.name,
                     Composition::FromFertilizers(composition),
-                    concentrate_document
-                        .parts
-                        .iter()
-                        .cloned()
-                        .map(|part| part.into())
-                        .collect(),
                 )
             }
 
             ConcentrateCompositionSchema::FromSolution(solution_id, distribution) => {
                 let solutions_repository = SolutionsRepository::new(self.storage);
                 let solution = solutions_repository.get(&solution_id);
-                let composition = CompositionFromSolution::restore(solution, distribution.clone());
+
+                let parts = concentrate_document
+                    .parts
+                    .iter()
+                    .cloned()
+                    .map(|part| part.into())
+                    .collect();
+
+                let distr = Distribution::restore(&solution, distribution.clone());
+
+                let composition = CompositionFromSolution::restore(solution, distr, parts);
 
                 Concentrate::new(
                     concentrate_document.id,
                     concentrate_document.name,
                     Composition::FromSolution(composition),
-                    concentrate_document
-                        .parts
-                        .iter()
-                        .cloned()
-                        .map(|part| part.into())
-                        .collect(),
                 )
             }
         }

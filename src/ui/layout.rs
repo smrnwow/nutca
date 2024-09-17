@@ -1,10 +1,11 @@
-use crate::controller::Toaster;
-use crate::ui::components::layout::{Page, Section};
-use crate::ui::components::utils::Notifications;
-use dioxus::prelude::*;
-use dioxus_router::prelude::*;
-
 use super::router::Route;
+use crate::controller::Toaster;
+use crate::ui::components::layout::{Page, Row, Section};
+use crate::ui::components::utils::Notifications;
+use crate::ui::components::utils::{Block, Divider};
+use dioxus::prelude::*;
+
+use dioxus_router::prelude::*;
 
 fn link_class(current_route: &Route, path: Route) -> &str {
     if current_route.is_child_of(&path) {
@@ -29,23 +30,21 @@ pub fn Layout() -> Element {
             nav {
                 class: "navigation",
 
-                Link {
-                    class: link_class(&current_route, Route::ReferenceMainPage {}),
-                    to: Route::ReferenceMainPage {},
-                    "Справка",
+                Block {
+                    Row {
+                        Link {
+                            to: Route::ReferenceMainPage {},
+                            "Справка",
+                        }
+
+                        Link {
+                            to: Route::FertilizersMainPage {},
+                            "Расчеты",
+                        }
+                    }
                 }
 
-                Link {
-                    class: link_class(&current_route, Route::ProfilesMainPage {}),
-                    to: Route::ProfilesMainPage {},
-                    "Питательные составы",
-                }
-
-                Link {
-                    class: link_class(&current_route, Route::FertilizersMainPage {}),
-                    to: Route::FertilizersMainPage {},
-                    "Удобрения",
-                }
+                Divider {}
 
                 Link {
                     class: link_class(&current_route, Route::SolutionsMainPage {}),
@@ -60,6 +59,18 @@ pub fn Layout() -> Element {
                 }
 
                 Link {
+                    class: link_class(&current_route, Route::FertilizersMainPage {}),
+                    to: Route::FertilizersMainPage {},
+                    "Удобрения",
+                }
+
+                Link {
+                    class: link_class(&current_route, Route::ProfilesMainPage {}),
+                    to: Route::ProfilesMainPage {},
+                    "Питательные составы",
+                }
+
+                Link {
                     class: link_class(&current_route, Route::MainWaterAnalysisPage {}),
                     to: Route::MainWaterAnalysisPage {},
                     "Анализы воды",
@@ -67,8 +78,6 @@ pub fn Layout() -> Element {
             }
 
             main {
-                class: "content",
-
                 Page {
                     Section {
                         Outlet::<Route> { },

@@ -35,13 +35,6 @@ pub fn SolutionProfile(props: SolutionProfileProps) -> Element {
             .clone()
     });
 
-    let profile_select_value = use_memo(move || {
-        (
-            nutrition_program.read().id(),
-            nutrition_program.read().name(),
-        )
-    });
-
     rsx! {
         Block {
             Column {
@@ -96,7 +89,10 @@ pub fn SolutionProfile(props: SolutionProfileProps) -> Element {
 
                 Select {
                     placeholder: "выбрать готовый профиль",
-                    value: profile_select_value,
+                    value: Signal::new((
+                        nutrition_program.read().id(),
+                        nutrition_program.read().name(),
+                    )),
                     options: props.nutrition_program_browser.read()
                         .fetch()
                         .iter()

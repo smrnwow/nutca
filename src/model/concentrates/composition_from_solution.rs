@@ -1,40 +1,35 @@
-use super::Part;
+use super::{DefaultDistribution, Distribution, Part};
 use crate::model::fertilizers::FertilizerAmount;
 use crate::model::solutions::Solution;
-use std::collections::HashMap;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct CompositionFromSolution {
     solution: Solution,
-    distribution: HashMap<String, HashMap<String, usize>>,
-    usage: HashMap<String, usize>,
+    distribution: Distribution,
+    parts: Vec<Part>,
 }
 
 impl CompositionFromSolution {
-    pub fn restore(
-        solution: Solution,
-        distribution: HashMap<String, HashMap<String, usize>>,
-    ) -> Self {
-        let mut usage: HashMap<String, usize> = HashMap::new();
-
-        solution.fertilizers().keys().for_each(|fertilizer_id| {
-            usage.insert(fertilizer_id.clone(), 100);
-        });
-
-        distribution.values().for_each(|part_distribution| {
-            part_distribution
-                .iter()
-                .for_each(|(fertilizer_id, amount)| {
-                    if let Some(fertilizer_usage) = usage.get_mut(fertilizer_id) {
-                        *fertilizer_usage -= *amount;
-                    }
-                });
-        });
-
+    pub fn restore(solution: Solution, distribution: Distribution, parts: Vec<Part>) -> Self {
         Self {
             solution,
+            parts,
             distribution,
-            usage,
+        }
+    }
+
+    pub fn add_part(&mut self, part: Part) {
+        if self.parts.len() < 5 {
+            self.parts.push(part);
+        }
+    }
+
+    pub fn get_part(&mut self, part_id: &String) -> Option<&mut Part> {
+        let position = self.parts.iter().position(|part| *part.id() == *part_id);
+
+        match position {
+            Some(index) => self.parts.get_mut(index),
+            None => None,
         }
     }
 
@@ -44,58 +39,27 @@ impl CompositionFromSolution {
         fertilizer_id: &String,
         usage_percent: usize,
     ) {
-        match self.distribution.get_mut(part_id) {
-            Some(part_distribution) => match part_distribution.get_mut(fertilizer_id) {
-                Some(fertilizer_usage) => {
-                    *fertilizer_usage += usage_percent;
-                }
-
-                None => {
-                    part_distribution.insert(fertilizer_id.clone(), usage_percent);
-                }
-            },
-
-            None => {
-                let mut part_distribution: HashMap<String, usize> = HashMap::new();
-
-                part_distribution.insert(fertilizer_id.clone(), usage_percent);
-
-                self.distribution.insert(part_id.clone(), part_distribution);
-            }
-        }
-
-        if let Some(fertilizer_usage) = self.usage.get_mut(fertilizer_id) {
-            *fertilizer_usage -= usage_percent;
-        }
+        self.distribution.add(part_id, fertilizer_id, usage_percent);
     }
 
     pub fn remove_fertilizer(&mut self, part_id: &String, fertilizer_id: &String) {
-        if let Some(part_distribution) = self.distribution.get_mut(part_id) {
-            let freed_percent = match part_distribution.remove(fertilizer_id) {
-                Some(fertilizer_usage) => fertilizer_usage,
-                None => 0,
-            };
-
-            if let Some(fertilizer_usage) = self.usage.get_mut(fertilizer_id) {
-                *fertilizer_usage += freed_percent;
-            }
-        }
+        self.distribution.free(part_id, fertilizer_id);
     }
 
     pub fn remove_part(&mut self, part_id: &String) {
-        if let Some(part_distribution) = self.distribution.remove(part_id) {
-            part_distribution
-                .iter()
-                .for_each(|(fertilizer_id, usage_percent)| {
-                    if let Some(fertilizer_usage) = self.usage.get_mut(fertilizer_id) {
-                        *fertilizer_usage += *usage_percent;
-                    }
-                });
+        self.distribution.free_part(part_id);
+
+        if let Some(index) = self.parts.iter().position(|part| *part.id() == *part_id) {
+            self.parts.remove(index);
         }
     }
 
+    pub fn parts(&self) -> Vec<&Part> {
+        self.parts.iter().collect()
+    }
+
     pub fn fertilizers_by_part(&self, part: &Part) -> Vec<FertilizerAmount> {
-        match self.distribution.get(part.id()) {
+        match self.distribution.get_part(part.id()) {
             Some(part_distribution) => {
                 let mut fertilizers: Vec<FertilizerAmount> = Vec::new();
 
@@ -121,15 +85,18 @@ impl CompositionFromSolution {
     pub fn usage(&self) -> Vec<(String, String, usize)> {
         let mut fertilizers_usage: Vec<(String, String, usize)> = Vec::new();
 
-        self.usage.iter().for_each(|(fertilizer_id, percent)| {
-            if let Some(fertilizer_amount) = self.solution.fertilizer(fertilizer_id) {
-                fertilizers_usage.push((
-                    fertilizer_amount.fertilizer().id(),
-                    fertilizer_amount.fertilizer().name(),
-                    *percent,
-                ));
-            }
-        });
+        self.distribution
+            .usage()
+            .iter()
+            .for_each(|(fertilizer_id, percent)| {
+                if let Some(fertilizer_amount) = self.solution.fertilizer(fertilizer_id) {
+                    fertilizers_usage.push((
+                        fertilizer_amount.fertilizer().id(),
+                        fertilizer_amount.fertilizer().name(),
+                        *percent,
+                    ));
+                }
+            });
 
         fertilizers_usage
     }
@@ -138,23 +105,19 @@ impl CompositionFromSolution {
         &self.solution
     }
 
-    pub fn distribution(&self) -> &HashMap<String, HashMap<String, usize>> {
+    pub fn distribution(&self) -> &Distribution {
         &self.distribution
     }
 }
 
 impl From<Solution> for CompositionFromSolution {
     fn from(solution: Solution) -> Self {
-        let mut usage: HashMap<String, usize> = HashMap::new();
-
-        solution.fertilizers().keys().for_each(|fertilizer_id| {
-            usage.insert(fertilizer_id.clone(), 100);
-        });
+        let (distribution, parts) = DefaultDistribution::distribute(&solution);
 
         Self {
             solution,
-            distribution: HashMap::new(),
-            usage,
+            distribution,
+            parts,
         }
     }
 }
@@ -163,8 +126,8 @@ impl Default for CompositionFromSolution {
     fn default() -> Self {
         Self {
             solution: Solution::default(),
-            distribution: HashMap::new(),
-            usage: HashMap::new(),
+            parts: Vec::new(),
+            distribution: Distribution::default(),
         }
     }
 }

@@ -64,14 +64,17 @@ impl<'a> Conductivity<'a> {
     }
 
     fn a_constant(&self) -> f64 {
+        /*
         let molarity = self
             .solution_composition
             .list()
             .iter()
             .map(|nutrient_amount| Self::ppms_to_moles(*nutrient_amount))
             .sum::<f64>();
-
         0.5085 * molarity.powf(-0.5)
+        */
+
+        0.5085
     }
 
     fn activity_coefficient(&self, nutrient: Nutrient) -> f64 {

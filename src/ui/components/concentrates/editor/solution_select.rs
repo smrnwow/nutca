@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SolutionSelectProps {
-    solution: Signal<Solution>,
+    solution: Memo<Solution>,
     solutions_browser: Memo<SolutionsBrowser>,
     on_solution_search: EventHandler<String>,
     on_solution_change: EventHandler<String>,
@@ -14,17 +14,20 @@ pub struct SolutionSelectProps {
 
 #[component]
 pub fn SolutionSelect(props: SolutionSelectProps) -> Element {
-    let value = use_memo(move || {
+    let value = use_signal(|| {
         (
             props.solution.read().id().clone(),
             props.solution.read().name().clone(),
         )
     });
 
+    println!("solution {:#?}", value);
+
     rsx! {
         Row {
+
             Select {
-                label: "Раствор",
+                // label: "Раствор",
                 placeholder: "выбрать раствор",
                 value,
                 options: props.solutions_browser.read().options(),

@@ -41,7 +41,11 @@ body {
 
 .content {
     display: flex;
-    gap: 12px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid rgba(225, 228, 234, 1);
+    box-shadow: 0px 1px 2px 0px rgba(10, 13, 20, 0.03);
+    box-sizing: border-box;
 }
 
 .navigation {
@@ -58,7 +62,6 @@ body {
     cursor: pointer;
     text-decoration: none;
     color: var(--dark-color);
-    border-radius: 8px;
 }
 
 .navigation__link:hover {
@@ -68,12 +71,11 @@ body {
 .navigation__link_active::after {
     position: absolute;
     content: "";
-    width: 16px;
-    height: 4px;
+    height: 100%;
+    width: 4px;
     background-color: var(--primary-color);
-    border-radius: 2px;
-    bottom: 4px;
-    left: calc(50% - 8px);
+    left: 0px;
+    top: 0px;
 }
 
 /* formulations */
@@ -216,6 +218,7 @@ body {
     gap: 16px;
     align-items: flex-start;
     width: 100%;
+    box-shadow: -10px 0px 20px 0px rgba(10, 13, 20, 0.03);
 }
 
 .row {
@@ -1122,6 +1125,10 @@ button .badge_size-small {
 .select__header {
     position: relative;
     display: block;
+    border: none;
+    background: transparent;
+    width: 100%;
+    padding: 0px;
 }
 .select__controls {
     position: absolute;
@@ -1276,7 +1283,7 @@ button .badge_size-small {
     box-shadow: 0px 16px 32px -12px rgba(14, 18, 27, 0.1);
 }
 .select__list_opened,
-.select:focus-within ~ .select__list {
+.select:focus-within .select__list {
     visibility: visible;
     opacity: 1;
     margin-top: 4px;

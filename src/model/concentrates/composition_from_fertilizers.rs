@@ -4,12 +4,34 @@ use std::collections::HashMap;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct CompositionFromFertilizers {
+    parts: Vec<Part>,
     distribution: HashMap<String, HashMap<String, FertilizerAmount>>,
 }
 
 impl CompositionFromFertilizers {
-    pub fn new(distribution: HashMap<String, HashMap<String, FertilizerAmount>>) -> Self {
-        Self { distribution }
+    pub fn new(
+        parts: Vec<Part>,
+        distribution: HashMap<String, HashMap<String, FertilizerAmount>>,
+    ) -> Self {
+        Self {
+            parts,
+            distribution,
+        }
+    }
+
+    pub fn add_part(&mut self, part: Part) {
+        if self.parts.len() < 5 {
+            self.parts.push(part);
+        }
+    }
+
+    pub fn get_part(&mut self, part_id: &String) -> Option<&mut Part> {
+        let position = self.parts.iter().position(|part| *part.id() == *part_id);
+
+        match position {
+            Some(index) => self.parts.get_mut(index),
+            None => None,
+        }
     }
 
     pub fn update_fertilizer_amount(&mut self, part_id: &String, fertilizer: FertilizerAmount) {
@@ -44,6 +66,16 @@ impl CompositionFromFertilizers {
 
     pub fn remove_part(&mut self, part_id: &String) {
         self.distribution.remove(part_id);
+
+        let position = self.parts.iter().position(|part| *part.id() == *part_id);
+
+        if let Some(index) = position {
+            self.parts.remove(index);
+        }
+    }
+
+    pub fn parts(&self) -> Vec<&Part> {
+        self.parts.iter().collect()
     }
 
     pub fn fertilizers_by_part(&self, part: &Part) -> Vec<&FertilizerAmount> {
@@ -61,6 +93,7 @@ impl CompositionFromFertilizers {
 impl Default for CompositionFromFertilizers {
     fn default() -> Self {
         Self {
+            parts: Vec::from([Part::new("")]),
             distribution: HashMap::new(),
         }
     }
