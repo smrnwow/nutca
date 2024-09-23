@@ -29,11 +29,11 @@ pub fn ProfilesListing(props: ProfilesListingProps) -> Element {
             }
         }
 
-        Divider {}
-
         Block {
+            exclude_padding: "top",
+
             Column {
-                gap: "medium",
+                Divider {}
 
                 Row {
                     gap: "medium",

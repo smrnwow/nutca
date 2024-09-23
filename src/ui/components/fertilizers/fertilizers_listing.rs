@@ -28,11 +28,11 @@ pub fn FertilizersListing(props: FertilizersListingProps) -> Element {
             }
         }
 
-        Divider {}
-
         Block {
+            exclude_padding: "top",
+
             Column {
-                gap: "medium",
+                Divider {}
 
                 Row {
                     gap: "medium",

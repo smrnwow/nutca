@@ -1,12 +1,5 @@
 use dioxus::prelude::*;
 
-fn block_class(exclude_padding: Option<String>) -> String {
-    match exclude_padding {
-        Some(padding_side) => format!("block block_exclude-{padding_side}"),
-        None => String::from("block"),
-    }
-}
-
 #[derive(Props, PartialEq, Clone)]
 pub struct BlockProps {
     exclude_padding: Option<String>,
@@ -26,9 +19,11 @@ pub fn Block(props: BlockProps) -> Element {
 
     let gap_horizontal = props.gap_horizontal.unwrap_or(gap.clone());
 
+    let exclude_padding = props.exclude_padding.unwrap_or(String::from("none"));
+
     rsx! {
         div {
-            class: "block block-gap_{gap} block-gap-vertical_{gap_vertical} block-gap-horizontal_{gap_horizontal}",
+            class: "block block-gap_{gap} block-gap-vertical_{gap_vertical} block-gap-horizontal_{gap_horizontal} block_exclude-{exclude_padding}",
             onmouseover: move |_| {
                 if let Some(on_hover_in) = props.on_hover_in {
                     on_hover_in.call(());

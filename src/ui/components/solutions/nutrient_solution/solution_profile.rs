@@ -36,92 +36,90 @@ pub fn SolutionProfile(props: SolutionProfileProps) -> Element {
     });
 
     rsx! {
-        Block {
-            Column {
-                gap: "medium",
+        Column {
+            gap: "medium",
+
+            Row {
+                horizontal: "space-between",
+                vertical: "center",
 
                 Row {
-                    horizontal: "space-between",
+                    Title {
+                        size: "small",
+                        "Профиль питания",
+                    }
+                }
+
+                Row {
+                    horizontal: "end",
                     vertical: "center",
 
-                    Row {
-                        Title {
-                            size: "small",
-                            "Профиль питания",
-                        }
+                    Text {
+                        size: "x-small",
+                        "~EC {round(props.solution.read().ec())}",
                     }
 
-                    Row {
-                        horizontal: "end",
-                        vertical: "center",
-
-                        Text {
-                            size: "x-small",
-                            "~EC {round(props.solution.read().ec())}",
-                        }
-
-                        ButtonsGroup {
-                            value: profile_tab.read().clone(),
-                            buttons: vec![
-                                ButtonsGroupButton {
-                                    label: String::from("Желаемый"),
-                                    value: String::from("profile"),
-                                    badge: None
-                                },
-                                ButtonsGroupButton {
-                                    label: String::from("Рассчитанный"),
-                                    value: String::from("solution-composition"),
-                                    badge: rsx! {
-                                        if !props.solution.read().is_empty() {
-                                            Badge {
-                                                size: "small",
-                                                text: "!",
-                                                state: "error",
-                                            }
+                    ButtonsGroup {
+                        value: profile_tab.read().clone(),
+                        buttons: vec![
+                            ButtonsGroupButton {
+                                label: String::from("Желаемый"),
+                                value: String::from("profile"),
+                                badge: None
+                            },
+                            ButtonsGroupButton {
+                                label: String::from("Рассчитанный"),
+                                value: String::from("solution-composition"),
+                                badge: rsx! {
+                                    if !props.solution.read().is_empty() {
+                                        Badge {
+                                            size: "small",
+                                            text: "!",
+                                            state: "error",
                                         }
                                     }
-                                },
-                            ],
-                            on_change: move |value| profile_tab.set(value),
-                        }
+                                }
+                            },
+                        ],
+                        on_change: move |value| profile_tab.set(value),
                     }
                 }
+            }
 
-                Select {
-                    placeholder: "выбрать готовый профиль",
-                    value: Signal::new((
-                        nutrition_program.read().id(),
-                        nutrition_program.read().name(),
-                    )),
-                    options: props.nutrition_program_browser.read()
-                        .fetch()
-                        .iter()
-                        .map(|profile| (profile.id(), profile.name()))
-                        .collect(),
-                    on_search: move |search_query| {
-                        props.on_profile_search.call(search_query);
-                    },
-                    on_change: move |profile_id| {
-                        props.on_profile_change.call(profile_id);
-                    },
-                }
+            Select {
+                placeholder: "выбрать готовый профиль",
+                value: Signal::new((
+                    nutrition_program.read().id(),
+                    nutrition_program.read().name(),
+                )),
+                options: props.nutrition_program_browser.read()
+                    .fetch()
+                    .iter()
+                    .map(|profile| (profile.id(), profile.name()))
+                    .collect(),
+                on_search: move |search_query| {
+                    props.on_profile_search.call(search_query);
+                },
+                on_change: move |profile_id| {
+                    props.on_profile_change.call(profile_id);
+                },
+            }
 
-                match profile_tab.read().as_str() {
-                    "profile" => rsx! {
-                        ProfileForm {
-                            profile: nutrition_program,
-                            on_nutrient_update: props.on_profile_nutrient_update,
-                        },
+            match profile_tab.read().as_str() {
+                "profile" => rsx! {
+                    ProfileForm {
+                        profile: nutrition_program,
+                        on_nutrient_update: props.on_profile_nutrient_update,
                     },
+                },
 
-                    "solution-composition" => rsx! {
-                        SolutionComposition {
-                            solution: props.solution,
-                        },
+                "solution-composition" => rsx! {
+                    SolutionComposition {
+                        solution: props.solution,
                     },
+                },
 
-                    _ => None,
-                }
+                _ => None,
             }
         }
     }

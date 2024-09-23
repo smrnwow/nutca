@@ -1,7 +1,7 @@
 use crate::controller::Validation;
 use crate::model::chemistry::NutrientAmount;
 use crate::model::profiles::Profile;
-use crate::ui::components::layout::Row;
+use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfileNutrients;
 use crate::ui::components::utils::{Block, Button, Divider, TextField, Title};
 use dioxus::prelude::*;
@@ -27,42 +27,42 @@ pub fn ProfileEditor(props: ProfileEditorProps) -> Element {
             }
         }
 
-        Divider {}
-
         Block {
-            TextField {
-                label: "Название",
-                value: props.profile.read().name(),
-                error: props.validation.read().get("profile-name"),
-                on_input: props.on_name_update,
-            }
-        }
+            exclude_padding: "top",
 
-        Divider {}
+            Column {
+                Divider {}
 
-        Block {
-            ProfileNutrients {
-                profile: props.profile,
-                on_nutrient_update: props.on_nutrient_update,
-            }
-        }
-
-        Divider {}
-
-        Block {
-            Row {
-                horizontal: "end",
-
-                Button {
-                    style: "stroke",
-                    on_click: props.on_cancel,
-                    "Сбросить",
+                TextField {
+                    label: "Название",
+                    value: props.profile.read().name(),
+                    error: props.validation.read().get("profile-name"),
+                    on_input: props.on_name_update,
                 }
 
-                Button {
-                    style: "primary",
-                    on_click: props.on_save,
-                    "Сохранить",
+                Divider {}
+
+                ProfileNutrients {
+                    profile: props.profile,
+                    on_nutrient_update: props.on_nutrient_update,
+                }
+
+                Divider {}
+
+                Row {
+                    horizontal: "end",
+
+                    Button {
+                        style: "stroke",
+                        on_click: props.on_cancel,
+                        "Сбросить",
+                    }
+
+                    Button {
+                        style: "primary",
+                        on_click: props.on_save,
+                        "Сохранить",
+                    }
                 }
             }
         }

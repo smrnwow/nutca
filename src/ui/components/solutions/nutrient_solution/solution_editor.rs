@@ -4,7 +4,7 @@ use crate::controller::solutions::{
 };
 use crate::model::chemistry::{NutrientAmount, Volume};
 use crate::model::solutions::Solution;
-use crate::ui::components::layout::Row;
+use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::{Block, Button, Divider, TextField, Title};
 use dioxus::prelude::*;
 
@@ -40,59 +40,59 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
             }
         }
 
-        Divider {}
-
         Block {
-            TextField {
-                label: "Название",
-                value: props.solution.read().name(),
-                error: props.validator.read().name(),
-                on_input: props.on_name_update,
-            }
-        }
+            exclude_padding: "top",
 
-        Divider {}
+            Column {
+                Divider {}
 
-        SolutionProfile {
-            solution: props.solution,
-            nutrition_program_browser: props.nutrition_program_browser,
-            on_profile_change: props.on_profile_change,
-            on_profile_search: props.on_profile_search,
-            on_profile_nutrient_update: props.on_profile_nutrient_update,
-        }
-
-        Divider {}
-
-        Block {
-            Row {
-                FertilizersBrowser {
-                    fertilizers_picker: props.fertilizers_picker,
-                    on_select: props.on_fertilizer_select,
-                    on_search: props.on_fertilizer_search,
-                    on_paginate: props.on_fertilizers_paginate,
+                TextField {
+                    label: "Название",
+                    value: props.solution.read().name(),
+                    error: props.validator.read().name(),
+                    on_input: props.on_name_update,
                 }
 
-                FertilizersSet {
+                Divider {}
+
+                SolutionProfile {
                     solution: props.solution,
-                    fertilizers_used: props.fertilizers_used,
-                    on_fertilizer_exclude: props.on_fertilizer_exclude,
-                    on_fertilizer_amount_update: props.on_fertilizer_amount_update,
-                    on_paginate: props.on_selected_set_paginate,
-                    on_volume_update: props.on_volume_update,
+                    nutrition_program_browser: props.nutrition_program_browser,
+                    on_profile_change: props.on_profile_change,
+                    on_profile_search: props.on_profile_search,
+                    on_profile_nutrient_update: props.on_profile_nutrient_update,
                 }
-            }
-        }
 
-        Divider {}
+                Divider {}
 
-        Block {
-            Row {
-                horizontal: "end",
+                Row {
+                    FertilizersBrowser {
+                        fertilizers_picker: props.fertilizers_picker,
+                        on_select: props.on_fertilizer_select,
+                        on_search: props.on_fertilizer_search,
+                        on_paginate: props.on_fertilizers_paginate,
+                    }
 
-                Button {
-                    style: "primary",
-                    on_click: props.on_save,
-                    "Сохранить",
+                    FertilizersSet {
+                        solution: props.solution,
+                        fertilizers_used: props.fertilizers_used,
+                        on_fertilizer_exclude: props.on_fertilizer_exclude,
+                        on_fertilizer_amount_update: props.on_fertilizer_amount_update,
+                        on_paginate: props.on_selected_set_paginate,
+                        on_volume_update: props.on_volume_update,
+                    }
+                }
+
+                Divider {}
+
+                Row {
+                    horizontal: "end",
+
+                    Button {
+                        style: "primary",
+                        on_click: props.on_save,
+                        "Сохранить",
+                    }
                 }
             }
         }

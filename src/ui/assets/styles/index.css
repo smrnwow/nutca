@@ -33,8 +33,8 @@ body {
 
 #main {
     display: flex;
-    justify-content: center;
     align-items: flex-start;
+    justify-content: center;
     width: 100%;
     padding: 12px;
     box-sizing: border-box;
@@ -42,7 +42,6 @@ body {
 
 .layout {
     display: flex;
-    align-items: flex-start;
     background-color: #ffffff;
     border-radius: 12px;
     border: 1px solid rgba(225, 228, 234, 1);
@@ -85,6 +84,7 @@ body {
     flex-direction: column;
     padding: 0px 12px;
     box-sizing: border-box;
+    border-right: 1px solid rgba(225, 228, 234, 1);
 }
 
 .sidebar__switch {
