@@ -18,6 +18,7 @@ pub enum Route {
         #[nest("/reference")]
             #[route("/intro")]
             ReferenceMainPage {},
+        #[end_nest]
     #[end_layout]
     #[layout(Calculations)]
         #[nest("/calculations")]

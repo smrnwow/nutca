@@ -1,7 +1,7 @@
 use crate::controller::Toaster;
-use crate::ui::components::layout::{Page, Row, Section};
+use crate::ui::components::layout::{Page, Section};
+use crate::ui::components::utils::Divider;
 use crate::ui::components::utils::Notifications;
-use crate::ui::components::utils::{Block, Divider};
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
@@ -26,53 +26,59 @@ pub fn Calculations() -> Element {
         div {
             class: "layout layout_calculations",
 
-            nav {
-                class: "navigation",
+            aside {
+                class: "sidebar",
 
-                Block {
-                    Row {
-                        Link {
-                            to: Route::ReferenceMainPage {},
-                            "Справка",
-                        }
+                div {
+                    class: "sidebar__switch",
 
-                        Link {
-                            to: Route::SolutionsMainPage {},
-                            "Расчеты",
-                        }
+                    Link {
+                        class: "layout__link",
+                        to: Route::ReferenceMainPage {},
+                        "Справка",
+                    }
+
+                    Link {
+                        class: "layout__link layout__link_active",
+                        to: Route::SolutionsMainPage {},
+                        "Расчеты",
                     }
                 }
 
                 Divider {}
 
-                Link {
-                    class: link_class(&current_route, Route::SolutionsMainPage {}),
-                    to: Route::SolutionsMainPage {},
-                    "Растворы",
-                }
+                nav {
+                    class: "navigation",
 
-                Link {
-                    class: link_class(&current_route, Route::MainConcentratesPage {}),
-                    to: Route::MainConcentratesPage {},
-                    "Концентраты",
-                }
+                    Link {
+                        class: link_class(&current_route, Route::SolutionsMainPage {}),
+                        to: Route::SolutionsMainPage {},
+                        "Растворы",
+                    }
 
-                Link {
-                    class: link_class(&current_route, Route::FertilizersMainPage {}),
-                    to: Route::FertilizersMainPage {},
-                    "Удобрения",
-                }
+                    Link {
+                        class: link_class(&current_route, Route::MainConcentratesPage {}),
+                        to: Route::MainConcentratesPage {},
+                        "Концентраты",
+                    }
 
-                Link {
-                    class: link_class(&current_route, Route::ProfilesMainPage {}),
-                    to: Route::ProfilesMainPage {},
-                    "Питательные составы",
-                }
+                    Link {
+                        class: link_class(&current_route, Route::FertilizersMainPage {}),
+                        to: Route::FertilizersMainPage {},
+                        "Удобрения",
+                    }
 
-                Link {
-                    class: link_class(&current_route, Route::MainWaterAnalysisPage {}),
-                    to: Route::MainWaterAnalysisPage {},
-                    "Анализы воды",
+                    Link {
+                        class: link_class(&current_route, Route::ProfilesMainPage {}),
+                        to: Route::ProfilesMainPage {},
+                        "Питательные составы",
+                    }
+
+                    Link {
+                        class: link_class(&current_route, Route::MainWaterAnalysisPage {}),
+                        to: Route::MainWaterAnalysisPage {},
+                        "Анализы воды",
+                    }
                 }
             }
 

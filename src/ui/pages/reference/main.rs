@@ -1,61 +1,59 @@
 use crate::ui::components::layout::Column;
-use crate::ui::components::utils::{Block, Card, Divider, Text, Title};
+use crate::ui::components::utils::{Block, Divider, Text, Title};
 use dioxus::prelude::*;
 
 #[component]
 pub fn ReferenceMainPage() -> Element {
     rsx! {
-        Card {
-            Block {
-                Title {
-                    "Справка",
-                }
+        Block {
+            Title {
+                "Справка",
             }
+        }
 
-            Divider {}
+        Divider {}
 
-            Block {
+        Block {
+            Column {
                 Column {
-                    Column {
-                        gap: "x-small",
+                    gap: "x-small",
 
-                        Title {
-                            size: "small",
-                            "Питательные составы",
-                        }
-
-                        Text {
-                            size: "x-small",
-                            "В питательном составе собраны потребности растения в основных питательных элементах.",
-                        }
+                    Title {
+                        size: "small",
+                        "Питательные составы",
                     }
 
-                    Column {
-                        gap: "x-small",
+                    Text {
+                        size: "x-small",
+                        "В питательном составе собраны потребности растения в основных питательных элементах.",
+                    }
+                }
 
-                        Title {
-                            size: "small",
-                            "Удобрения",
-                        }
+                Column {
+                    gap: "x-small",
 
-                        Text {
-                            size: "x-small",
-                            "Удобрения - это источник основных питательных элементов. Набор качественных и совместимых удобрений обеспечит потребность растений в питании.",
-                        }
+                    Title {
+                        size: "small",
+                        "Удобрения",
                     }
 
-                    Column {
-                        gap: "x-small",
+                    Text {
+                        size: "x-small",
+                        "Удобрения - это источник основных питательных элементов. Набор качественных и совместимых удобрений обеспечит потребность растений в питании.",
+                    }
+                }
 
-                        Title {
-                            size: "small",
-                            "Растворы",
-                        }
+                Column {
+                    gap: "x-small",
 
-                        Text {
-                            size: "x-small",
-                            "Раствор - это рецепт в котором записан питательный состав, который требуется растению и набор удобрений с рассчитанным для него объемом.",
-                        }
+                    Title {
+                        size: "small",
+                        "Растворы",
+                    }
+
+                    Text {
+                        size: "x-small",
+                        "Раствор - это рецепт в котором записан питательный состав, который требуется растению и набор удобрений с рассчитанным для него объемом.",
                     }
                 }
             }

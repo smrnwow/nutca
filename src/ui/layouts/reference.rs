@@ -1,5 +1,5 @@
-use crate::ui::components::layout::{Page, Row, Section};
-use crate::ui::components::utils::{Block, Divider};
+use crate::ui::components::layout::{Page, Section};
+use crate::ui::components::utils::Divider;
 use crate::ui::router::Route;
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
@@ -20,29 +20,35 @@ pub fn Reference() -> Element {
         div {
             class: "layout layout_reference",
 
-            nav {
-                class: "navigation",
+            aside {
+                class: "sidebar",
 
-                Block {
-                    Row {
-                        Link {
-                            to: Route::ReferenceMainPage {},
-                            "Справка",
-                        }
+                div {
+                    class: "sidebar__switch",
 
-                        Link {
-                            to: Route::SolutionsMainPage {},
-                            "Расчеты",
-                        }
+                    Link {
+                        class: "layout__link layout__link_active",
+                        to: Route::ReferenceMainPage {},
+                        "Справка",
+                    }
+
+                    Link {
+                        class: "layout__link",
+                        to: Route::SolutionsMainPage {},
+                        "Расчеты",
                     }
                 }
 
                 Divider {}
 
-                Link {
-                    class: link_class(&current_route, Route::ReferenceMainPage {}),
-                    to: Route::ReferenceMainPage {},
-                    "Введение",
+                nav {
+                    class: "navigation",
+
+                    Link {
+                        class: link_class(&current_route, Route::ReferenceMainPage {}),
+                        to: Route::ReferenceMainPage {},
+                        "Введение",
+                    }
                 }
             }
 
