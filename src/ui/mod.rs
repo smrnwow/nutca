@@ -1,11 +1,7 @@
 mod app;
-pub use app::App;
-
-mod layout;
-use layout::Layout;
-
-mod pages;
-
 pub mod components;
-
+mod layouts;
+mod pages;
 pub mod router;
+
+pub use app::App;

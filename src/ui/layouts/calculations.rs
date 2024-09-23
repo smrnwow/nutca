@@ -1,10 +1,9 @@
-use super::router::Route;
 use crate::controller::Toaster;
 use crate::ui::components::layout::{Page, Row, Section};
 use crate::ui::components::utils::Notifications;
 use crate::ui::components::utils::{Block, Divider};
+use crate::ui::router::Route;
 use dioxus::prelude::*;
-
 use dioxus_router::prelude::*;
 
 fn link_class(current_route: &Route, path: Route) -> &str {
@@ -16,7 +15,7 @@ fn link_class(current_route: &Route, path: Route) -> &str {
 }
 
 #[component]
-pub fn Layout() -> Element {
+pub fn Calculations() -> Element {
     let current_route = use_route::<Route>();
 
     let mut toaster = use_context::<Signal<Toaster>>();
@@ -25,7 +24,7 @@ pub fn Layout() -> Element {
 
     rsx! {
         div {
-            class: "content",
+            class: "layout layout_calculations",
 
             nav {
                 class: "navigation",
@@ -38,7 +37,7 @@ pub fn Layout() -> Element {
                         }
 
                         Link {
-                            to: Route::FertilizersMainPage {},
+                            to: Route::SolutionsMainPage {},
                             "Расчеты",
                         }
                     }

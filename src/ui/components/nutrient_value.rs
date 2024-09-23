@@ -24,7 +24,7 @@ pub fn NutrientValue(props: NutrientValueProps) -> Element {
 
             span {
                 class: "nutrient-value__symbol",
-                "{props.symbol}"
+                {props.symbol},
             }
 
             match props.on_change {
