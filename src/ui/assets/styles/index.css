@@ -34,6 +34,7 @@ body {
 #main {
     display: flex;
     justify-content: center;
+    align-items: flex-start;
     width: 100%;
     padding: 12px;
     box-sizing: border-box;
@@ -41,6 +42,7 @@ body {
 
 .content {
     display: flex;
+    align-items: flex-start;
     background-color: #ffffff;
     border-radius: 12px;
     border: 1px solid rgba(225, 228, 234, 1);
@@ -52,6 +54,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    box-shadow: -10px 0px 20px 0px rgba(10, 13, 20, 0.03);
 }
 
 .navigation__link {
@@ -218,7 +221,6 @@ body {
     gap: 16px;
     align-items: flex-start;
     width: 100%;
-    box-shadow: -10px 0px 20px 0px rgba(10, 13, 20, 0.03);
 }
 
 .row {

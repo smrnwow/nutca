@@ -17,6 +17,17 @@ impl Concentrates {
         Ok(storage)
     }
 
+    pub fn save_draft(&self, concentrate: ConcentrateSchema) -> Result<String, Error> {
+        let data = serde_json::to_string(&concentrate)?;
+
+        self.connection.execute(
+            "INSERT INTO concentrates (id, name, data) VALUES (?1, ?2, ?3)",
+            params![concentrate.id, data],
+        )?;
+
+        Ok(concentrate.id)
+    }
+
     pub fn add(&self, concentrate: ConcentrateSchema) -> Result<(), Error> {
         let data = serde_json::to_string(&concentrate)?;
 
@@ -129,7 +140,7 @@ impl Concentrates {
 
     fn create_table(&self) -> Result<(), Error> {
         self.connection.execute(
-            "CREATE TABLE concentrates (
+            "CREATE TABLE IF NOT EXISTS concentrates (
                 id TEXT PRIMARY KEY,
                 name TEXT NOT NULL,
                 data TEXT NOT NULL

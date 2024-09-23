@@ -20,8 +20,11 @@ pub enum Route {
     #[route("/solutions")]
     SolutionsMainPage {},
 
-    #[route("/solutions/add?:profile_id")]
-    SolutionAddPage { profile_id: String },
+    #[route("/solutions/add?:profile_id&:concentrate_id")]
+    SolutionAddPage {
+        profile_id: String,
+        concentrate_id: String,
+    },
 
     #[route("/solutions/edit/:solution_id")]
     SolutionEditPage { solution_id: String },

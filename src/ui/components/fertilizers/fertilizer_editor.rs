@@ -4,7 +4,7 @@ use crate::ui::components::fertilizers::{
     FertilizerComposition, FertilizerDetails, FertilizerSource,
 };
 use crate::ui::components::layout::Row;
-use crate::ui::components::utils::{Block, Button, Card, Divider, Title};
+use crate::ui::components::utils::{Block, Button, Divider, Title};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -25,64 +25,62 @@ pub struct FertilizerEditorProps {
 #[component]
 pub fn FertilizerEditor(props: FertilizerEditorProps) -> Element {
     rsx! {
-        Card {
-            Block {
-                Row {
-                    Title {
-                        "Редактор удобрения",
-                    }
+        Block {
+            Row {
+                Title {
+                    "Редактор удобрения",
                 }
             }
+        }
 
-            Divider {}
+        Divider {}
 
-            Block {
-                FertilizerDetails {
-                    fertilizer: props.fertilizer,
-                    validation: props.validation,
-                    on_name_update: props.on_name_update,
-                    on_vendor_update: props.on_vendor_update,
-                    on_liquid_update: props.on_liquid_update,
-                }
+        Block {
+            FertilizerDetails {
+                fertilizer: props.fertilizer,
+                validation: props.validation,
+                on_name_update: props.on_name_update,
+                on_vendor_update: props.on_vendor_update,
+                on_liquid_update: props.on_liquid_update,
             }
+        }
 
-            Divider {}
+        Divider {}
 
-            Block {
-                FertilizerSource {
-                    fertilizer: props.fertilizer,
-                    on_source_type_update: props.on_source_type_update,
-                    on_label_units_update: props.on_label_units_update,
-                    on_label_component_update: props.on_label_component_update,
-                    on_formula_update: props.on_formula_update,
-                }
+        Block {
+            FertilizerSource {
+                fertilizer: props.fertilizer,
+                on_source_type_update: props.on_source_type_update,
+                on_label_units_update: props.on_label_units_update,
+                on_label_component_update: props.on_label_component_update,
+                on_formula_update: props.on_formula_update,
             }
+        }
 
-            Divider {}
+        Divider {}
 
-            Block {
-                FertilizerComposition {
-                    fertilizer: props.fertilizer
-                }
+        Block {
+            FertilizerComposition {
+                fertilizer: props.fertilizer
             }
+        }
 
-            Divider {}
+        Divider {}
 
-            Block {
-                Row {
-                    horizontal: "end",
+        Block {
+            Row {
+                horizontal: "end",
 
-                    Button {
-                        style: "stroke",
-                        on_click: props.on_cancel,
-                        "Сбросить",
-                    }
+                Button {
+                    style: "stroke",
+                    on_click: props.on_cancel,
+                    "Сбросить",
+                }
 
-                    Button {
-                        style: "primary",
-                        on_click: props.on_save,
-                        "Сохранить",
-                    }
+                Button {
+                    style: "primary",
+                    on_click: props.on_save,
+                    "Сохранить",
                 }
             }
         }

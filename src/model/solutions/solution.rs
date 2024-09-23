@@ -1,5 +1,6 @@
 use super::{NutrientComposition, Solver};
 use crate::model::chemistry::{NutrientAmount, Volume};
+use crate::model::concentrates::Concentrate;
 use crate::model::fertilizers::FertilizerAmount;
 use crate::model::profiles::Profile;
 use crate::model::solutions::Conductivity;
@@ -167,6 +168,18 @@ impl From<NutrientComposition> for Solution {
             id: Uuid::new_v4().to_string(),
             name: String::new(),
             composition,
+            fertilizers: HashMap::new(),
+            volume: Volume::default(),
+        }
+    }
+}
+
+impl From<Concentrate> for Solution {
+    fn from(concentrate: Concentrate) -> Self {
+        Self {
+            id: Uuid::new_v4().to_string(),
+            name: String::new(),
+            composition: NutrientComposition::default(),
             fertilizers: HashMap::new(),
             volume: Volume::default(),
         }

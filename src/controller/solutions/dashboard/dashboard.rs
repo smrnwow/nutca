@@ -32,6 +32,7 @@ impl Dashboard {
     pub fn add_solution(&self) {
         navigator().push(Route::SolutionAddPage {
             profile_id: String::new(),
+            concentrate_id: String::new(),
         });
     }
 

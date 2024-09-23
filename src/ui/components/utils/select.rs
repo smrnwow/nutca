@@ -27,12 +27,6 @@ pub struct SelectProps {
 
 #[component]
 pub fn Select(props: SelectProps) -> Element {
-    println!(
-        "props value: {:#?}, text: {:#?}",
-        props.value.read().0,
-        props.value.read().1
-    );
-
     let size = props.size.unwrap_or(String::from("small"));
 
     let mut is_opened = use_signal(|| false);
@@ -46,13 +40,6 @@ pub fn Select(props: SelectProps) -> Element {
     let show_search = use_memo(move || props.on_search.is_some() && !*show_value.read());
 
     let placeholder = use_signal(|| props.placeholder.unwrap_or(String::from("выберите")));
-
-    println!(
-        "show value: {:#?} = {:#?} {:#?}",
-        show_value.read(),
-        props.value.read().0.len() > 0,
-        !*is_opened.read(),
-    );
 
     let show_cancel = use_memo(move || props.on_search.is_some() && props.value.read().0.len() > 0);
 

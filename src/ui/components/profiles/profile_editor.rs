@@ -3,7 +3,7 @@ use crate::model::chemistry::NutrientAmount;
 use crate::model::profiles::Profile;
 use crate::ui::components::layout::Row;
 use crate::ui::components::profiles::ProfileNutrients;
-use crate::ui::components::utils::{Block, Button, Card, Divider, TextField, Title};
+use crate::ui::components::utils::{Block, Button, Divider, TextField, Title};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -19,52 +19,50 @@ pub struct ProfileEditorProps {
 #[component]
 pub fn ProfileEditor(props: ProfileEditorProps) -> Element {
     rsx! {
-        Card {
-            Block {
-                Row {
-                    Title {
-                        "Редактор питательного состава",
-                    }
+        Block {
+            Row {
+                Title {
+                    "Редактор питательного состава",
                 }
             }
+        }
 
-            Divider {}
+        Divider {}
 
-            Block {
-                TextField {
-                    label: "Название",
-                    value: props.profile.read().name(),
-                    error: props.validation.read().get("profile-name"),
-                    on_input: props.on_name_update,
-                }
+        Block {
+            TextField {
+                label: "Название",
+                value: props.profile.read().name(),
+                error: props.validation.read().get("profile-name"),
+                on_input: props.on_name_update,
             }
+        }
 
-            Divider {}
+        Divider {}
 
-            Block {
-                ProfileNutrients {
-                    profile: props.profile,
-                    on_nutrient_update: props.on_nutrient_update,
-                }
+        Block {
+            ProfileNutrients {
+                profile: props.profile,
+                on_nutrient_update: props.on_nutrient_update,
             }
+        }
 
-            Divider {}
+        Divider {}
 
-            Block {
-                Row {
-                    horizontal: "end",
+        Block {
+            Row {
+                horizontal: "end",
 
-                    Button {
-                        style: "stroke",
-                        on_click: props.on_cancel,
-                        "Сбросить",
-                    }
+                Button {
+                    style: "stroke",
+                    on_click: props.on_cancel,
+                    "Сбросить",
+                }
 
-                    Button {
-                        style: "primary",
-                        on_click: props.on_save,
-                        "Сохранить",
-                    }
+                Button {
+                    style: "primary",
+                    on_click: props.on_save,
+                    "Сохранить",
                 }
             }
         }

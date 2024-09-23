@@ -2,9 +2,7 @@ use super::SolutionsListingItem;
 use crate::controller::solutions::Listing;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::SearchIcon;
-use crate::ui::components::utils::{
-    Block, Button, Card, Divider, List, Pagination, TextField, Title,
-};
+use crate::ui::components::utils::{Block, Button, Divider, List, Pagination, TextField, Title};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]

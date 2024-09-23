@@ -94,6 +94,15 @@ impl ConcentratesRepository {
         }
     }
 
+    pub fn save_draft(&self, concentrate: Concentrate) -> Result<String, Error> {
+        let concentrate_document = ConcentrateSchema::from(concentrate);
+
+        self.storage
+            .read()
+            .concentrates()
+            .save_draft(concentrate_document)
+    }
+
     pub fn create(&self, concentrate: Concentrate) -> Result<(), Error> {
         let concentrate_document = ConcentrateSchema::from(concentrate);
 

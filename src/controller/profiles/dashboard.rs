@@ -34,7 +34,10 @@ impl Dashboard {
     }
 
     pub fn add_solution(&mut self, profile_id: String) {
-        navigator().push(Route::SolutionAddPage { profile_id });
+        navigator().push(Route::SolutionAddPage {
+            profile_id,
+            concentrate_id: String::new(),
+        });
     }
 
     pub fn delete(&mut self, profile_id: String) {

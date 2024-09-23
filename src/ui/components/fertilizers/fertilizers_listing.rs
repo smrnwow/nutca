@@ -2,9 +2,7 @@ use crate::controller::fertilizers::FertilizersListing;
 use crate::ui::components::fertilizers::FertilizersListingItem;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::SearchIcon;
-use crate::ui::components::utils::{
-    Block, Button, Card, Divider, List, Pagination, TextField, Title,
-};
+use crate::ui::components::utils::{Block, Button, Divider, List, Pagination, TextField, Title};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -22,61 +20,59 @@ pub fn FertilizersListing(props: FertilizersListingProps) -> Element {
     let fertilizers = use_memo(move || props.fertilizers_listing.read().fetch());
 
     rsx! {
-        Card {
-            Block {
-                Row {
-                    Title {
-                        "Удобрения",
-                    }
+        Block {
+            Row {
+                Title {
+                    "Удобрения",
                 }
             }
+        }
 
-            Divider {}
+        Divider {}
 
-            Block {
-                Column {
+        Block {
+            Column {
+                gap: "medium",
+
+                Row {
                     gap: "medium",
 
-                    Row {
-                        gap: "medium",
-
-                        TextField {
-                            value: props.fertilizers_listing.read().search_query(),
-                            placeholder: "найти удобрение",
-                            on_input: props.on_search,
-                            icon_left: rsx! {
-                                SearchIcon {}
-                            },
-                        }
-
-                        Button {
-                            style: "primary",
-                            on_click: props.on_add,
-                            "Добавить удобрение",
-                        }
+                    TextField {
+                        value: props.fertilizers_listing.read().search_query(),
+                        placeholder: "найти удобрение",
+                        on_input: props.on_search,
+                        icon_left: rsx! {
+                            SearchIcon {}
+                        },
                     }
 
-                    List {
-                        limit: 10,
-                        empty: fertilizers.read().len() == 0,
-                        stub_text: "Сохраненные удобрения отсутствуют",
+                    Button {
+                        style: "primary",
+                        on_click: props.on_add,
+                        "Добавить удобрение",
+                    }
+                }
 
-                        for fertilizer in fertilizers.read().clone() {
-                            FertilizersListingItem {
-                                key: "{fertilizer.id()}",
-                                fertilizer,
-                                on_open: props.on_open,
-                                on_delete: props.on_delete,
-                            }
+                List {
+                    limit: 10,
+                    empty: fertilizers.read().len() == 0,
+                    stub_text: "Сохраненные удобрения отсутствуют",
+
+                    for fertilizer in fertilizers.read().clone() {
+                        FertilizersListingItem {
+                            key: "{fertilizer.id()}",
+                            fertilizer,
+                            on_open: props.on_open,
+                            on_delete: props.on_delete,
                         }
                     }
+                }
 
-                    Pagination {
-                        page_index: props.fertilizers_listing.read().page_index(),
-                        limit: props.fertilizers_listing.read().limit(),
-                        items_count: fertilizers.read().len(),
-                        on_change: props.on_paginate,
-                    }
+                Pagination {
+                    page_index: props.fertilizers_listing.read().page_index(),
+                    limit: props.fertilizers_listing.read().limit(),
+                    items_count: fertilizers.read().len(),
+                    on_change: props.on_paginate,
                 }
             }
         }

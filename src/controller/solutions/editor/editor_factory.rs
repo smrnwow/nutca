@@ -2,7 +2,8 @@ use super::{Editor, FertilizersPicker, NutritionProgramBrowser, SolutionValidato
 use crate::controller::Toaster;
 use crate::model::solutions::{NutrientComposition, Solution};
 use crate::repository::{
-    FertilizersRepository, NutritionProgramsRepository, SolutionsRepository, Storage,
+    ConcentratesRepository, FertilizersRepository, NutritionProgramsRepository,
+    SolutionsRepository, Storage,
 };
 use dioxus::prelude::*;
 
@@ -16,20 +17,20 @@ impl EditorFactory {
         Self { storage, toaster }
     }
 
-    pub fn create(&self, nutrition_program_id: String) -> Editor {
+    pub fn create(&self, nutrition_program_id: String, concentrate_id: String) -> Editor {
+        self.from_nutrition_program(&nutrition_program_id)
+    }
+
+    pub fn edit(&self, solution_id: String) -> Editor {
         let solutions_repository = SolutionsRepository::new(self.storage);
+        let solution = solutions_repository.get(&solution_id);
 
         let nutrition_programs_repository = NutritionProgramsRepository::new(self.storage);
         let nutrition_program_browser = NutritionProgramBrowser::new(nutrition_programs_repository);
-        let nutrition_program = nutrition_program_browser.find(&nutrition_program_id);
 
         let fertilizers_repository = FertilizersRepository::new(self.storage);
-        let fertilizers_picker = FertilizersPicker::new(fertilizers_repository);
-
-        let mut nutrient_composition = NutrientComposition::default();
-        nutrient_composition.with_nutrition_program(nutrition_program);
-
-        let solution = Solution::from(nutrient_composition);
+        let mut fertilizers_picker = FertilizersPicker::new(fertilizers_repository);
+        fertilizers_picker.set_projection(solution.fertilizers().keys().collect());
 
         let mut solution_validator = SolutionValidator::new(self.toaster);
         solution_validator.init(&solution);
@@ -43,16 +44,20 @@ impl EditorFactory {
         )
     }
 
-    pub fn edit(&self, solution_id: String) -> Editor {
+    fn from_nutrition_program(&self, nutrition_program_id: &String) -> Editor {
         let solutions_repository = SolutionsRepository::new(self.storage);
-        let solution = solutions_repository.get(&solution_id);
 
         let nutrition_programs_repository = NutritionProgramsRepository::new(self.storage);
         let nutrition_program_browser = NutritionProgramBrowser::new(nutrition_programs_repository);
+        let nutrition_program = nutrition_program_browser.find(&nutrition_program_id);
 
         let fertilizers_repository = FertilizersRepository::new(self.storage);
-        let mut fertilizers_picker = FertilizersPicker::new(fertilizers_repository);
-        fertilizers_picker.set_projection(solution.fertilizers().keys().collect());
+        let fertilizers_picker = FertilizersPicker::new(fertilizers_repository);
+
+        let mut nutrient_composition = NutrientComposition::default();
+        nutrient_composition.with_nutrition_program(nutrition_program);
+
+        let solution = Solution::from(nutrient_composition);
 
         let mut solution_validator = SolutionValidator::new(self.toaster);
         solution_validator.init(&solution);

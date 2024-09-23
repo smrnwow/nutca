@@ -2,9 +2,7 @@ use crate::controller::profiles::ProfilesListing;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::profiles::ProfilesListingItem;
 use crate::ui::components::utils::icons::SearchIcon;
-use crate::ui::components::utils::{
-    Block, Button, Card, Divider, List, Pagination, TextField, Title,
-};
+use crate::ui::components::utils::{Block, Button, Divider, List, Pagination, TextField, Title};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -23,62 +21,60 @@ pub fn ProfilesListing(props: ProfilesListingProps) -> Element {
     let profiles = use_memo(move || props.profiles_listing.read().fetch());
 
     rsx! {
-        Card {
-            Block {
-                Row {
-                    Title {
-                        "Питательные составы",
-                    }
+        Block {
+            Row {
+                Title {
+                    "Питательные составы",
                 }
             }
+        }
 
-            Divider {}
+        Divider {}
 
-            Block {
-                Column {
+        Block {
+            Column {
+                gap: "medium",
+
+                Row {
                     gap: "medium",
 
-                    Row {
-                        gap: "medium",
-
-                        TextField {
-                            value: props.profiles_listing.read().search_query(),
-                            placeholder: "найти питательный состав",
-                            on_input: props.on_search,
-                            icon_left: rsx! {
-                                SearchIcon {}
-                            },
-                        }
-
-                        Button {
-                            style: "primary",
-                            on_click: props.on_add,
-                            "Добавить питательный состав",
-                        }
+                    TextField {
+                        value: props.profiles_listing.read().search_query(),
+                        placeholder: "найти питательный состав",
+                        on_input: props.on_search,
+                        icon_left: rsx! {
+                            SearchIcon {}
+                        },
                     }
 
-                    List {
-                        limit: 10,
-                        empty: profiles.read().len() == 0,
-                        stub_text: "Сохраненные питательные составы отсутствуют",
+                    Button {
+                        style: "primary",
+                        on_click: props.on_add,
+                        "Добавить питательный состав",
+                    }
+                }
 
-                        for profile in profiles.read().clone() {
-                            ProfilesListingItem {
-                                key: "{profile.id()}",
-                                profile,
-                                on_open: props.on_open,
-                                on_use: props.on_use,
-                                on_delete: props.on_delete,
-                            }
+                List {
+                    limit: 10,
+                    empty: profiles.read().len() == 0,
+                    stub_text: "Сохраненные питательные составы отсутствуют",
+
+                    for profile in profiles.read().clone() {
+                        ProfilesListingItem {
+                            key: "{profile.id()}",
+                            profile,
+                            on_open: props.on_open,
+                            on_use: props.on_use,
+                            on_delete: props.on_delete,
                         }
                     }
+                }
 
-                    Pagination {
-                        page_index: props.profiles_listing.read().page_index(),
-                        limit: props.profiles_listing.read().limit(),
-                        items_count: profiles.read().len(),
-                        on_change: props.on_paginate,
-                    }
+                Pagination {
+                    page_index: props.profiles_listing.read().page_index(),
+                    limit: props.profiles_listing.read().limit(),
+                    items_count: profiles.read().len(),
+                    on_change: props.on_paginate,
                 }
             }
         }

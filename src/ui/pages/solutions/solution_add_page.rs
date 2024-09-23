@@ -5,12 +5,13 @@ use crate::ui::components::solutions::SolutionEditor;
 use dioxus::prelude::*;
 
 #[component]
-pub fn SolutionAddPage(profile_id: String) -> Element {
+pub fn SolutionAddPage(profile_id: String, concentrate_id: String) -> Element {
     let toaster = consume_context::<Signal<Toaster>>();
 
     let storage = consume_context::<Signal<Storage>>();
 
-    let mut editor = use_signal(|| EditorFactory::new(storage, toaster).create(profile_id));
+    let mut editor =
+        use_signal(|| EditorFactory::new(storage, toaster).create(profile_id, concentrate_id));
 
     let nutrition_program_browser =
         use_memo(move || editor.read().nutrition_program_browser().clone());
