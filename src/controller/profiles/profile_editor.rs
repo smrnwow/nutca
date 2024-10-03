@@ -1,5 +1,5 @@
 use crate::controller::{Error, Validation};
-use crate::model::profiles::{Profile, ProfileBuilder};
+use crate::model::profiles::{NutritionProgram, Profile, ProfileBuilder};
 use crate::repository::Storage;
 use crate::ui::router::Route;
 use dioxus::prelude::*;
@@ -72,6 +72,10 @@ impl ProfileEditor {
 
     pub fn profile(&self) -> Memo<Profile> {
         self.profile
+    }
+
+    pub fn nutrition_program(&self) -> NutritionProgram {
+        NutritionProgram::new()
     }
 
     pub fn validation(&self) -> Memo<Validation> {

@@ -52,44 +52,7 @@ impl FertilizersListing {
         self.search_query = search_query.to_lowercase();
     }
 
-    pub fn exclude_many(&mut self, fertilizers_ids: Vec<String>) {
-        for fertilizer_id in fertilizers_ids {
-            self.excluded_ids.push(fertilizer_id);
-        }
-    }
-
-    pub fn exclude(&mut self, fertilizer_id: String) -> Option<Fertilizer> {
-        match self.find(&fertilizer_id) {
-            Some(fertilizer) => {
-                self.excluded_ids.push(fertilizer_id);
-                Some(fertilizer)
-            }
-            None => None,
-        }
-    }
-
-    pub fn include(&mut self, fertilizer_id: String) -> Option<Fertilizer> {
-        match self.excluded_ids.iter().position(|id| *id == fertilizer_id) {
-            Some(index) => {
-                self.excluded_ids.remove(index);
-                self.find(&fertilizer_id)
-            }
-            None => None,
-        }
-    }
-
     pub fn paginate(&mut self, page_index: usize) {
         self.page_index = page_index;
-    }
-
-    pub fn update_limit(&mut self, limit: usize) {
-        self.limit = limit;
-    }
-
-    fn find(&self, fertilizer_id: &str) -> Option<Fertilizer> {
-        match self.storage.read().fertilizers().get(fertilizer_id) {
-            Ok(fertilizer) => Some(fertilizer),
-            Err(_) => None,
-        }
     }
 }

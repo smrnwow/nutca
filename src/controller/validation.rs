@@ -29,14 +29,6 @@ impl Validation {
         }
     }
 
-    pub fn add_validation_error(&mut self, error: ModelError) {
-        self.errors.push(Error::ModelError(error));
-    }
-
-    pub fn add_storage_error(&mut self, error: Error) {
-        self.errors.push(error);
-    }
-
     pub fn list(&self) -> Vec<String> {
         if self.show_errors {
             self.errors.iter().map(|error| error.message()).collect()

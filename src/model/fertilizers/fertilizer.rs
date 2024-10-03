@@ -31,13 +31,6 @@ impl Fertilizer {
         self.liquid
     }
 
-    pub fn units(&self) -> String {
-        match self.liquid {
-            true => String::from("мл"),
-            false => String::from("г"),
-        }
-    }
-
     /// Returns the source composition from which the nutrient content was derived
     pub fn source_composition(&self) -> &SourceComposition {
         &self.source_composition

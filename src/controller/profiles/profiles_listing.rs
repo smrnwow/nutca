@@ -31,13 +31,6 @@ impl ProfilesListing {
         }
     }
 
-    pub fn find(&self, profile_id: String) -> Option<Profile> {
-        match self.storage.read().profiles().get(&profile_id) {
-            Ok(profile) => Some(profile),
-            Err(_) => None,
-        }
-    }
-
     pub fn refresh(&mut self) {}
 
     pub fn search(&mut self, search_query: String) {

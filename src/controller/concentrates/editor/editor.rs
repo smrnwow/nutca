@@ -157,7 +157,7 @@ impl Editor {
         }
     }
 
-    pub fn open_solution(&self) {
+    pub fn _open_solution(&self) {
         match self
             .concentrates_repository
             .save_draft(self.concentrate.clone())

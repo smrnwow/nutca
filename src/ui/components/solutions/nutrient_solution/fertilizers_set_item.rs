@@ -46,6 +46,11 @@ pub fn FertilizersSetItem(props: FertilizersSetItemProps) -> Element {
                             props.on_amount_update.call((props.fertilizer_amount.read().fertilizer().id(), value));
                         },
                     }
+
+                    span {
+                        class: "fertilizers-set-item__units",
+                        {props.fertilizer_amount.read().units()},
+                    }
                 }
             }
         }

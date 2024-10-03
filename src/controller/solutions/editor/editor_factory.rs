@@ -2,8 +2,7 @@ use super::{Editor, FertilizersPicker, NutritionProgramBrowser, SolutionValidato
 use crate::controller::Toaster;
 use crate::model::solutions::{NutrientComposition, Solution};
 use crate::repository::{
-    ConcentratesRepository, FertilizersRepository, NutritionProgramsRepository,
-    SolutionsRepository, Storage,
+    FertilizersRepository, NutritionProgramsRepository, SolutionsRepository, Storage,
 };
 use dioxus::prelude::*;
 
@@ -17,7 +16,7 @@ impl EditorFactory {
         Self { storage, toaster }
     }
 
-    pub fn create(&self, nutrition_program_id: String, concentrate_id: String) -> Editor {
+    pub fn create(&self, nutrition_program_id: String, _concentrate_id: String) -> Editor {
         self.from_nutrition_program(&nutrition_program_id)
     }
 

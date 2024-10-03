@@ -1,7 +1,6 @@
+use super::ProfileSummary;
 use crate::model::chemistry::{Nutrient, NutrientAmount, Nutrients};
 use serde::{Deserialize, Serialize};
-
-use super::ProfileSummary;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Profile {

@@ -16,7 +16,7 @@ pub struct NutrientValueProps {
 pub fn NutrientValue(props: NutrientValueProps) -> Element {
     let state = props.state.unwrap_or(String::from("default"));
 
-    let mut value = use_signal(|| props.value.to_string());
+    let mut value = use_signal(|| round(&props.value.to_string()));
 
     rsx! {
         div {
@@ -34,10 +34,6 @@ pub fn NutrientValue(props: NutrientValueProps) -> Element {
                         r#type: "text",
                         size: 1,
                         value,
-                        onmounted: move |_| {
-                            let new_value = round(&value.read());
-                            value.set(new_value);
-                        },
                         oninput: move |event| {
                             let new_value = event.value().parse().unwrap_or(0.0);
                             value.set(event.value());

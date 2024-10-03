@@ -44,6 +44,13 @@ impl FertilizerAmount {
         self.amount * self.volume.to_litres() * self.concentration as f64
     }
 
+    pub fn units(&self) -> &str {
+        match self.fertilizer.liquid {
+            true => "мл",
+            false => "г",
+        }
+    }
+
     pub fn fertilizer(&self) -> &Fertilizer {
         &self.fertilizer
     }
