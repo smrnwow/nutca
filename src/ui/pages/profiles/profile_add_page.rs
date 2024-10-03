@@ -12,9 +12,9 @@ pub fn ProfileAddPage() -> Element {
 
     let mut profile_editor = use_signal(|| ProfileEditor::new(storage));
 
-    let mut profile_builder = profile_editor.read().builder();
-
     let profile = profile_editor.read().profile();
+
+    let nutrition_program = use_memo(move || profile_editor.read().nutrition_program().clone());
 
     let validation = profile_editor.read().validation();
 
@@ -23,12 +23,19 @@ pub fn ProfileAddPage() -> Element {
     rsx! {
         ProfileEditor {
             profile,
+            nutrition_program,
             validation,
-            on_nutrient_update: move |nutrient_amount| {
-                profile_builder.write().nutrient_requirement(nutrient_amount);
+            on_nutrient_update: move |(stage_id, nutrient_amount)| {
+                profile_editor.write().update_nutrient(stage_id, nutrient_amount);
             },
             on_name_update: move |name| {
-                profile_builder.write().name(name);
+                profile_editor.write().update_name(name);
+            },
+            on_stage_name_update: move |(stage_id, name)| {
+                profile_editor.write().update_stage_name(stage_id, name);
+            },
+            on_stage_delete: move |stage_id| {
+                profile_editor.write().remove_stage(stage_id);
             },
             on_save: move |_| {
                 profile_editor.write().create();

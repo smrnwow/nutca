@@ -1,5 +1,6 @@
 use crate::controller::{Error, Validation};
-use crate::model::profiles::{NutritionProgram, Profile, ProfileBuilder};
+use crate::model::chemistry::NutrientAmount;
+use crate::model::profiles::{NutritionProgram, Profile, ProfileBuilder, Stage};
 use crate::repository::Storage;
 use crate::ui::router::Route;
 use dioxus::prelude::*;
@@ -12,6 +13,7 @@ pub struct ProfileEditor {
     builder: Signal<ProfileBuilder>,
     validation: Memo<Validation>,
     profile: Memo<Profile>,
+    nutrition_program: NutritionProgram,
 }
 
 impl ProfileEditor {
@@ -35,6 +37,7 @@ impl ProfileEditor {
                 );
             }),
             profile: Memo::new(move || builder.read().build()),
+            nutrition_program: NutritionProgram::new(),
         }
     }
 
@@ -63,6 +66,7 @@ impl ProfileEditor {
                 );
             }),
             profile: Memo::new(move || builder.read().build()),
+            nutrition_program: NutritionProgram::new(),
         }
     }
 
@@ -74,8 +78,29 @@ impl ProfileEditor {
         self.profile
     }
 
-    pub fn nutrition_program(&self) -> NutritionProgram {
-        NutritionProgram::new()
+    pub fn nutrition_program(&self) -> &NutritionProgram {
+        &self.nutrition_program
+    }
+
+    pub fn update_name(&mut self, name: String) {
+        self.nutrition_program.update_name(name);
+    }
+
+    pub fn add_stage(&mut self) {
+        self.nutrition_program.add_stage(Stage::new());
+    }
+
+    pub fn update_stage_name(&mut self, stage_id: String, name: String) {
+        self.nutrition_program.update_stage_name(&stage_id, name);
+    }
+
+    pub fn update_nutrient(&mut self, stage_id: String, nutrient_amount: NutrientAmount) {
+        self.nutrition_program
+            .update_nutrient(&stage_id, nutrient_amount);
+    }
+
+    pub fn remove_stage(&mut self, stage_id: String) {
+        self.nutrition_program.remove_stage(&stage_id);
     }
 
     pub fn validation(&self) -> Memo<Validation> {
