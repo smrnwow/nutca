@@ -1,5 +1,5 @@
 use crate::model::chemistry::NutrientAmount;
-use crate::model::profiles::{Profile, ProfileBuilder};
+use crate::model::profiles::Profile;
 use crate::repository::{Error, RepositoryError};
 use rusqlite::{named_params, params, Connection};
 use std::rc::Rc;
@@ -132,6 +132,7 @@ impl Profiles {
     }
 
     fn seed(&self) -> Result<(), Error> {
+        /*
         let profiles = vec![
             ProfileBuilder::new()
                 .new_id()
@@ -207,9 +208,10 @@ impl Profiles {
                 .build(),
         ];
 
-        for profile in profiles {
-            self.add(profile)?;
+        for _profile in profiles {
+            // self.add(profile)?;
         }
+        */
 
         Ok(())
     }

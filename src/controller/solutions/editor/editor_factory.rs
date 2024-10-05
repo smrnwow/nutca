@@ -1,9 +1,7 @@
-use super::{Editor, FertilizersPicker, NutritionProgramBrowser, SolutionValidator};
+use super::{Editor, FertilizersPicker, ProfilesBrowser, SolutionValidator};
 use crate::controller::Toaster;
-use crate::model::solutions::{NutrientComposition, Solution};
-use crate::repository::{
-    FertilizersRepository, NutritionProgramsRepository, SolutionsRepository, Storage,
-};
+use crate::model::solutions::{ProfileRequirement, Solution};
+use crate::repository::{FertilizersRepository, ProfilesRepository, SolutionsRepository, Storage};
 use dioxus::prelude::*;
 
 pub struct EditorFactory {
@@ -16,16 +14,16 @@ impl EditorFactory {
         Self { storage, toaster }
     }
 
-    pub fn create(&self, nutrition_program_id: String, _concentrate_id: String) -> Editor {
-        self.from_nutrition_program(&nutrition_program_id)
+    pub fn create(&self, profile_id: String, _concentrate_id: String) -> Editor {
+        self.from_profile(&profile_id)
     }
 
     pub fn edit(&self, solution_id: String) -> Editor {
         let solutions_repository = SolutionsRepository::new(self.storage);
         let solution = solutions_repository.get(&solution_id);
 
-        let nutrition_programs_repository = NutritionProgramsRepository::new(self.storage);
-        let nutrition_program_browser = NutritionProgramBrowser::new(nutrition_programs_repository);
+        let profiles_repository = ProfilesRepository::new(self.storage);
+        let profiles_browser = ProfilesBrowser::new(profiles_repository);
 
         let fertilizers_repository = FertilizersRepository::new(self.storage);
         let mut fertilizers_picker = FertilizersPicker::new(fertilizers_repository);
@@ -38,25 +36,27 @@ impl EditorFactory {
             solutions_repository,
             solution,
             solution_validator,
-            nutrition_program_browser,
+            profiles_browser,
             fertilizers_picker,
         )
     }
 
-    fn from_nutrition_program(&self, nutrition_program_id: &String) -> Editor {
+    fn from_profile(&self, profile_id: &String) -> Editor {
         let solutions_repository = SolutionsRepository::new(self.storage);
 
-        let nutrition_programs_repository = NutritionProgramsRepository::new(self.storage);
-        let nutrition_program_browser = NutritionProgramBrowser::new(nutrition_programs_repository);
-        let nutrition_program = nutrition_program_browser.find(&nutrition_program_id);
+        let profiles_repository = ProfilesRepository::new(self.storage);
+        let profiles_browser = ProfilesBrowser::new(profiles_repository);
+        let profile = profiles_browser.find(&profile_id);
 
         let fertilizers_repository = FertilizersRepository::new(self.storage);
         let fertilizers_picker = FertilizersPicker::new(fertilizers_repository);
 
-        let mut nutrient_composition = NutrientComposition::default();
-        nutrient_composition.with_nutrition_program(nutrition_program);
+        let mut profile_requirement = ProfileRequirement::new();
+        if let Some(profile) = profile {
+            profile_requirement.set_profile(profile);
+        }
 
-        let solution = Solution::from(nutrient_composition);
+        let solution = Solution::from(profile_requirement);
 
         let mut solution_validator = SolutionValidator::new(self.toaster);
         solution_validator.init(&solution);
@@ -65,7 +65,7 @@ impl EditorFactory {
             solutions_repository,
             solution,
             solution_validator,
-            nutrition_program_browser,
+            profiles_browser,
             fertilizers_picker,
         )
     }

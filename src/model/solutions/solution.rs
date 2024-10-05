@@ -1,6 +1,5 @@
-use super::{NutrientComposition, Solver};
-use crate::model::chemistry::{NutrientAmount, Volume};
-use crate::model::concentrates::Concentrate;
+use super::{Diff, NutritionContent, ProfileRequirement, Solver};
+use crate::model::chemistry::{Nutrient, NutrientAmount, Volume};
 use crate::model::fertilizers::FertilizerAmount;
 use crate::model::profiles::Profile;
 use crate::model::solutions::Conductivity;
@@ -9,18 +8,19 @@ use uuid::Uuid;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Solution {
-    pub(super) id: String,
-    pub(super) name: String,
-    pub(super) composition: NutrientComposition,
-    pub(super) fertilizers: HashMap<String, FertilizerAmount>,
-    pub(super) volume: Volume,
+    id: String,
+    name: String,
+    profile_requirement: ProfileRequirement,
+    fertilizers: HashMap<String, FertilizerAmount>,
+    volume: Volume,
+    nutrition_content: NutritionContent,
 }
 
 impl Solution {
     pub fn new(
         id: String,
         name: String,
-        composition: NutrientComposition,
+        profile_requirement: ProfileRequirement,
         mut fertilizers: HashMap<String, FertilizerAmount>,
         volume: Volume,
     ) -> Self {
@@ -28,12 +28,16 @@ impl Solution {
             fertilizer_amount.volume(volume);
         });
 
+        let nutrition_content =
+            NutritionContent::from(fertilizers.values().collect::<Vec<&FertilizerAmount>>());
+
         Self {
             id,
             name,
-            composition,
+            profile_requirement,
             fertilizers,
             volume,
+            nutrition_content,
         }
     }
 
@@ -45,8 +49,8 @@ impl Solution {
         &self.name
     }
 
-    pub fn composition(&self) -> &NutrientComposition {
-        &self.composition
+    pub fn profile_requirement(&self) -> &ProfileRequirement {
+        &self.profile_requirement
     }
 
     pub fn fertilizers(&self) -> &HashMap<String, FertilizerAmount> {
@@ -55,6 +59,21 @@ impl Solution {
 
     pub fn fertilizer(&self, fertilizer_id: &String) -> Option<&FertilizerAmount> {
         self.fertilizers.get(fertilizer_id)
+    }
+
+    pub fn nutrition_content(&self) -> &NutritionContent {
+        &self.nutrition_content
+    }
+
+    pub fn diff(&self) -> Diff {
+        Diff::new(
+            *self.profile_requirement.nutrients(),
+            *self.nutrition_content.nutrients(),
+        )
+    }
+
+    pub fn nutrient_value(&self, nutrient: Nutrient) -> NutrientAmount {
+        self.nutrition_content.value_of(nutrient)
     }
 
     pub fn update_name(&mut self, name: String) {
@@ -69,15 +88,17 @@ impl Solution {
         });
     }
 
-    pub fn change_nutrition_program(&mut self, nutrition_program: Option<Profile>) {
-        self.composition.with_nutrition_program(nutrition_program);
+    pub fn change_profile(&mut self, profile: Option<Profile>) {
+        match profile {
+            Some(profile) => self.profile_requirement.set_profile(profile),
+            None => self.profile_requirement.drop_profile(),
+        };
 
         self.calculate_fertilizers_weights();
     }
 
-    pub fn update_nutrient_requirement(&mut self, nutrient_requirement: NutrientAmount) {
-        self.composition
-            .with_nutrient_requirement(nutrient_requirement);
+    pub fn update_nutrient_requirement(&mut self, nutrient_amount: NutrientAmount) {
+        self.profile_requirement.update_nutrient(nutrient_amount);
 
         self.calculate_fertilizers_weights();
     }
@@ -116,7 +137,7 @@ impl Solution {
     }
 
     pub fn ec(&self) -> f64 {
-        Conductivity::new(self.composition.nutrients()).conductivity()
+        Conductivity::new(self.nutrition_content.nutrients()).conductivity()
     }
 
     pub fn is_empty(&self) -> bool {
@@ -125,7 +146,7 @@ impl Solution {
 
     fn calculate_fertilizers_weights(&mut self) {
         let calculation_results = Solver::new(
-            self.composition.nutrition_program(),
+            self.profile_requirement.nutrients(),
             self.fertilizers
                 .values()
                 .map(|fertilizer_weight| fertilizer_weight.fertilizer())
@@ -145,8 +166,8 @@ impl Solution {
     }
 
     fn calculate_nutrients(&mut self) {
-        self.composition
-            .with_fertilizers_amounts(self.fertilizers.values().collect())
+        self.nutrition_content
+            .calculate(self.fertilizers.values().collect())
     }
 }
 
@@ -155,33 +176,23 @@ impl Default for Solution {
         Self {
             id: Uuid::new_v4().to_string(),
             name: String::new(),
-            composition: NutrientComposition::default(),
+            profile_requirement: ProfileRequirement::new(),
             fertilizers: HashMap::new(),
             volume: Volume::default(),
+            nutrition_content: NutritionContent::new(),
         }
     }
 }
 
-impl From<NutrientComposition> for Solution {
-    fn from(composition: NutrientComposition) -> Self {
+impl From<ProfileRequirement> for Solution {
+    fn from(profile_requirement: ProfileRequirement) -> Self {
         Self {
             id: Uuid::new_v4().to_string(),
             name: String::new(),
-            composition,
+            profile_requirement,
             fertilizers: HashMap::new(),
             volume: Volume::default(),
-        }
-    }
-}
-
-impl From<Concentrate> for Solution {
-    fn from(concentrate: Concentrate) -> Self {
-        Self {
-            id: Uuid::new_v4().to_string(),
-            name: String::new(),
-            composition: NutrientComposition::default(),
-            fertilizers: HashMap::new(),
-            volume: Volume::default(),
+            nutrition_content: NutritionContent::new(),
         }
     }
 }

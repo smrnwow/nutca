@@ -1,6 +1,6 @@
 use super::{FertilizersBrowser, FertilizersSet, SolutionProfile};
 use crate::controller::solutions::{
-    FertilizersPicker, FertilizersUsed, NutritionProgramBrowser, SolutionValidator,
+    FertilizersPicker, FertilizersUsed, ProfilesBrowser, SolutionValidator,
 };
 use crate::model::chemistry::{NutrientAmount, Volume};
 use crate::model::solutions::Solution;
@@ -12,7 +12,7 @@ use dioxus::prelude::*;
 pub struct SolutionEditorProps {
     solution: Memo<Solution>,
     validator: Memo<SolutionValidator>,
-    nutrition_program_browser: Memo<NutritionProgramBrowser>,
+    profiles_browser: Memo<ProfilesBrowser>,
     fertilizers_picker: Memo<FertilizersPicker>,
     fertilizers_used: Memo<FertilizersUsed>,
     on_name_update: EventHandler<String>,
@@ -57,7 +57,7 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
 
                 SolutionProfile {
                     solution: props.solution,
-                    nutrition_program_browser: props.nutrition_program_browser,
+                    profiles_browser: props.profiles_browser,
                     on_profile_change: props.on_profile_change,
                     on_profile_search: props.on_profile_search,
                     on_profile_nutrient_update: props.on_profile_nutrient_update,

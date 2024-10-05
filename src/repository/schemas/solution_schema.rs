@@ -1,4 +1,4 @@
-use super::NutritionProgramSchema;
+use super::ProfileRequirementSchema;
 use crate::model::chemistry::Volume;
 use crate::model::solutions::{Solution, SolutionSummary};
 use serde::{Deserialize, Serialize};
@@ -8,7 +8,7 @@ use std::collections::HashMap;
 pub struct SolutionSchema {
     pub(crate) id: String,
     pub(crate) name: String,
-    pub(crate) nutrition_program: NutritionProgramSchema,
+    pub(crate) profile_requirement: ProfileRequirementSchema,
     pub(crate) fertilizers: HashMap<String, f64>,
     pub(crate) volume: Volume,
 }
@@ -18,7 +18,9 @@ impl From<Solution> for SolutionSchema {
         Self {
             id: solution.id().clone(),
             name: solution.name().clone(),
-            nutrition_program: NutritionProgramSchema::from(solution.composition().clone()),
+            profile_requirement: ProfileRequirementSchema::from(
+                solution.profile_requirement().clone(),
+            ),
             fertilizers: solution.fertilizers().values().fold(
                 HashMap::new(),
                 |mut fertilizers, fertilizer_amount| {
@@ -46,7 +48,7 @@ impl Default for SolutionSchema {
         Self {
             id: String::new(),
             name: String::new(),
-            nutrition_program: NutritionProgramSchema::default(),
+            profile_requirement: ProfileRequirementSchema::default(),
             fertilizers: HashMap::new(),
             volume: Volume::default(),
         }

@@ -1,3 +1,4 @@
+mod chemistry;
 pub mod concentrates;
 pub mod fertilizers;
 pub mod layout;
@@ -7,5 +8,6 @@ pub mod solutions;
 pub mod utils;
 mod volume_field;
 
+pub use chemistry::Nutrients;
 pub use nutrient_value::NutrientValue;
 pub use volume_field::VolumeField;

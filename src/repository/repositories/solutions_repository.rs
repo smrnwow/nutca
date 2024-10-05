@@ -1,9 +1,7 @@
-use super::{FertilizersRepository, NutritionProgramsRepository};
-use crate::model::chemistry::Nutrients;
+use super::{FertilizersRepository, ProfilesRepository};
 use crate::model::fertilizers::FertilizerAmount;
-use crate::model::profiles::Profile;
-use crate::model::solutions::{NutrientComposition, Solution, SolutionSummary};
-use crate::repository::schemas::{NutritionProgramSchema, SolutionSchema};
+use crate::model::solutions::{NutritionContent, ProfileRequirement, Solution, SolutionSummary};
+use crate::repository::schemas::{ProfileRequirementSchema, SolutionSchema};
 use crate::repository::Error;
 use crate::repository::Storage;
 use dioxus::prelude::*;
@@ -20,7 +18,7 @@ impl SolutionsRepository {
     }
 
     pub fn get(&self, solution_id: &String) -> Solution {
-        let nutrition_programs_repository = NutritionProgramsRepository::new(self.storage);
+        let profiles_repository = ProfilesRepository::new(self.storage);
 
         let fertilizers_repository = FertilizersRepository::new(self.storage);
 
@@ -29,16 +27,15 @@ impl SolutionsRepository {
             Err(_) => SolutionSchema::default(),
         };
 
-        let nutrition_program = match solution_document.nutrition_program {
-            NutritionProgramSchema::Saved(nutrition_program_id) => {
-                nutrition_programs_repository.find_or_default(&nutrition_program_id)
+        let profile_requirement = match solution_document.profile_requirement {
+            ProfileRequirementSchema::Saved(profile_id, stage_id) => {
+                let profile = profiles_repository.find_or_default(&profile_id);
+
+                ProfileRequirement::from((profile, stage_id))
             }
 
-            NutritionProgramSchema::ByValue(nutrients) => Profile::from(nutrients),
+            ProfileRequirementSchema::ByValue(nutrients) => ProfileRequirement::from(nutrients),
         };
-
-        let mut nutrient_composition =
-            NutrientComposition::new(nutrition_program, Nutrients::new());
 
         let fertilizers =
             fertilizers_repository.find_by_ids(solution_document.fertilizers.keys().collect());
@@ -57,12 +54,13 @@ impl SolutionsRepository {
                 acc
             });
 
-        nutrient_composition.with_fertilizers_amounts(fertilizers.values().collect());
+        let mut nutrition_content = NutritionContent::new();
+        nutrition_content.calculate(fertilizers.values().collect());
 
         Solution::new(
             solution_document.id,
             solution_document.name,
-            nutrient_composition,
+            profile_requirement,
             fertilizers,
             solution_document.volume,
         )

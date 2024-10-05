@@ -3,7 +3,7 @@ use crate::model::chemistry::NutrientAmount;
 use crate::model::profiles::Stage;
 use crate::ui::components::layout::{Column, Row};
 use crate::ui::components::utils::icons::Delete;
-use crate::ui::components::utils::{Button, TextField, Title};
+use crate::ui::components::utils::{Button, TextField};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -26,7 +26,7 @@ pub fn MultiStage(props: MultiStageProps) -> Element {
                 vertical: "end",
 
                 TextField {
-                    label: "Название",
+                    label: "Название стадии",
                     value: props.stage.read().name(),
                     on_input: move |value| props.on_name_update.call(value),
                 }
@@ -42,12 +42,14 @@ pub fn MultiStage(props: MultiStageProps) -> Element {
                 }
             }
 
+            /*
             Row {
                 Title {
                     size: "small",
                     "Питательные элементы",
                 }
             }
+            */
 
             StageNutrients {
                 nutrients,

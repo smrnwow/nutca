@@ -1,18 +1,18 @@
 use crate::model::profiles::Profile;
-use crate::repository::NutritionProgramsRepository;
+use crate::repository::ProfilesRepository;
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct NutritionProgramBrowser {
-    nutrition_programs_repository: NutritionProgramsRepository,
+pub struct ProfilesBrowser {
+    profiles_repository: ProfilesRepository,
     search_query: String,
     page_index: usize,
     limit: usize,
 }
 
-impl NutritionProgramBrowser {
-    pub fn new(nutrition_programs_repository: NutritionProgramsRepository) -> Self {
+impl ProfilesBrowser {
+    pub fn new(profiles_repository: ProfilesRepository) -> Self {
         Self {
-            nutrition_programs_repository,
+            profiles_repository,
             search_query: String::new(),
             page_index: 1,
             limit: 10,
@@ -20,12 +20,12 @@ impl NutritionProgramBrowser {
     }
 
     pub fn fetch(&self) -> Vec<Profile> {
-        self.nutrition_programs_repository
+        self.profiles_repository
             .search(&self.search_query, self.limit, self.page_index)
     }
 
     pub fn find(&self, profile_id: &String) -> Option<Profile> {
-        self.nutrition_programs_repository.find(profile_id)
+        self.profiles_repository.find(profile_id)
     }
 
     pub fn search(&mut self, search_query: String) {

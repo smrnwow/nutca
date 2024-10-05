@@ -1,4 +1,4 @@
-use super::{FertilizersPicker, FertilizersUsed, NutritionProgramBrowser, SolutionValidator};
+use super::{FertilizersPicker, FertilizersUsed, ProfilesBrowser, SolutionValidator};
 use crate::model::chemistry::{NutrientAmount, Volume};
 use crate::model::solutions::Solution;
 use crate::repository::SolutionsRepository;
@@ -9,7 +9,7 @@ pub struct Editor {
     solutions_repository: SolutionsRepository,
     solution: Solution,
     solution_validator: SolutionValidator,
-    nutrition_program_browser: NutritionProgramBrowser,
+    profiles_browser: ProfilesBrowser,
     fertilizers_picker: FertilizersPicker,
     fertilizers_used: FertilizersUsed,
 }
@@ -19,7 +19,7 @@ impl Editor {
         solutions_repository: SolutionsRepository,
         solution: Solution,
         solution_validator: SolutionValidator,
-        nutrition_program_browser: NutritionProgramBrowser,
+        profiles_browser: ProfilesBrowser,
         fertilizers_picker: FertilizersPicker,
     ) -> Self {
         let fertilizers_used = FertilizersUsed::new(solution.fertilizers().values().collect());
@@ -28,7 +28,7 @@ impl Editor {
             solutions_repository,
             solution,
             solution_validator,
-            nutrition_program_browser,
+            profiles_browser,
             fertilizers_picker,
             fertilizers_used,
         }
@@ -46,16 +46,16 @@ impl Editor {
         &self.fertilizers_picker
     }
 
-    pub fn nutrition_program_browser(&self) -> &NutritionProgramBrowser {
-        &self.nutrition_program_browser
+    pub fn profiles_browser(&self) -> &ProfilesBrowser {
+        &self.profiles_browser
     }
 
     pub fn fertilizers_used(&self) -> &FertilizersUsed {
         &self.fertilizers_used
     }
 
-    pub fn search_nutrient_program(&mut self, search_query: String) {
-        self.nutrition_program_browser.search(search_query);
+    pub fn search_profile(&mut self, search_query: String) {
+        self.profiles_browser.search(search_query);
     }
 
     pub fn search_fertilizer(&mut self, search_query: String) {
@@ -83,10 +83,10 @@ impl Editor {
             .set_fertilizers(self.solution.fertilizers().values().collect());
     }
 
-    pub fn change_nutrition_program(&mut self, profile_id: String) {
-        let nutrition_program = self.nutrition_program_browser.find(&profile_id);
+    pub fn change_profile(&mut self, profile_id: String) {
+        let profile = self.profiles_browser.find(&profile_id);
 
-        self.solution.change_nutrition_program(nutrition_program);
+        self.solution.change_profile(profile);
 
         self.fertilizers_used
             .set_fertilizers(self.solution.fertilizers().values().collect());

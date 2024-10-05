@@ -1,7 +1,7 @@
 mod dashboard;
-mod profile_editor;
+mod editor;
 mod profiles_listing;
 
 pub use dashboard::Dashboard;
-pub use profile_editor::ProfileEditor;
+pub use editor::{Editor, EditorFactory, ProfileValidator};
 pub use profiles_listing::ProfilesListing;
