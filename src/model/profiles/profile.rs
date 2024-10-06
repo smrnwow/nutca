@@ -19,10 +19,6 @@ impl Profile {
         }
     }
 
-    pub fn is_saved(&self) -> bool {
-        !self.id().is_empty()
-    }
-
     pub fn id(&self) -> &str {
         &self.id
     }

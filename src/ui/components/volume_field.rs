@@ -18,6 +18,13 @@ pub struct VolumeFieldProps {
 pub fn VolumeField(props: VolumeFieldProps) -> Element {
     let volume = *props.volume.read();
 
+    let value = use_memo(move || {
+        (
+            props.volume.read().units().into(),
+            props.volume.read().units().label(),
+        )
+    });
+
     let options = use_signal(|| {
         vec![
             (VolumeUnits::Litres.into(), VolumeUnits::Litres.label()),
@@ -42,10 +49,7 @@ pub fn VolumeField(props: VolumeFieldProps) -> Element {
             }
 
             Select {
-                value: Signal::new((
-                    props.volume.read().units().into(),
-                    props.volume.read().units().label(),
-                )),
+                value,
                 options: options.read().clone(),
                 on_change: move |units: String| {
                     props.on_change.call(volume.convert(VolumeUnits::from(units)));

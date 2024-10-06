@@ -16,7 +16,7 @@ fn select_list_class(opened: bool) -> String {
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SelectProps {
-    value: Signal<(String, String)>,
+    value: Memo<(String, String)>,
     options: Vec<(String, String)>,
     placeholder: Option<String>,
     search_query: Option<String>,

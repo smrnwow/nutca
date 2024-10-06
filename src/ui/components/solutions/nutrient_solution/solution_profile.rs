@@ -32,7 +32,7 @@ pub fn SolutionProfile(props: SolutionProfileProps) -> Element {
 
     let nutrients = use_memo(move || profile_requirement.read().nutrients().clone());
 
-    let profile = use_signal(|| match profile_requirement.read().profile() {
+    let profile = use_memo(move || match profile_requirement.read().profile() {
         Some((profile, _)) => (profile.id().to_string(), profile.name().to_string()),
         None => (String::new(), String::new()),
     });

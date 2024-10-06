@@ -14,14 +14,12 @@ pub struct SolutionSelectProps {
 
 #[component]
 pub fn SolutionSelect(props: SolutionSelectProps) -> Element {
-    let value = use_signal(|| {
+    let value = use_memo(move || {
         (
             props.solution.read().id().clone(),
             props.solution.read().name().clone(),
         )
     });
-
-    println!("solution {:#?}", value);
 
     rsx! {
         Row {

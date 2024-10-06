@@ -34,7 +34,11 @@ impl ProfileRequirement {
     }
 
     pub fn drop_profile(&mut self) {
-        self.profile = None;
+        if let Some(_) = &mut self.profile {
+            self.profile = None;
+
+            self.nutrients = Nutrients::new();
+        }
     }
 
     pub fn update_nutrient(&mut self, nutrient_amount: NutrientAmount) {
