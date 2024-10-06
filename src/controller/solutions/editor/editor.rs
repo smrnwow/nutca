@@ -92,6 +92,13 @@ impl Editor {
             .set_fertilizers(self.solution.fertilizers().values().collect());
     }
 
+    pub fn change_profile_stage(&mut self, stage_id: String) {
+        self.solution.change_profile_stage(stage_id);
+
+        self.fertilizers_used
+            .set_fertilizers(self.solution.fertilizers().values().collect());
+    }
+
     pub fn update_nutrient_requirement(&mut self, nutrient_requirement: NutrientAmount) {
         self.solution
             .update_nutrient_requirement(nutrient_requirement);

@@ -4,7 +4,9 @@ use crate::model::chemistry::NutrientAmount;
 use crate::model::solutions::Solution;
 use crate::ui::components::chemistry::Nutrients;
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::utils::{Badge, ButtonsGroup, ButtonsGroupButton, Select, Text, Title};
+use crate::ui::components::utils::{
+    Badge, ButtonsGroup, ButtonsGroupButton, SearchableSelect, Select, Text, Title,
+};
 use dioxus::prelude::*;
 
 fn round(value: f64) -> String {
@@ -16,6 +18,7 @@ pub struct SolutionProfileProps {
     solution: Memo<Solution>,
     profiles_browser: Memo<ProfilesBrowser>,
     on_profile_change: EventHandler<String>,
+    on_profile_stage_change: EventHandler<String>,
     on_profile_search: EventHandler<String>,
     on_profile_nutrient_update: EventHandler<NutrientAmount>,
 }
@@ -36,6 +39,23 @@ pub fn SolutionProfile(props: SolutionProfileProps) -> Element {
         Some((profile, _)) => (profile.id().to_string(), profile.name().to_string()),
         None => (String::new(), String::new()),
     });
+
+    let stage = use_memo(move || match profile_requirement.read().profile() {
+        Some((profile, stage_id)) => (
+            stage_id.clone(),
+            profile.stage(stage_id).unwrap().name().to_string(),
+        ),
+        None => (String::new(), String::new()),
+    });
+
+    let stages = match profile_requirement.read().profile() {
+        Some((profile, _)) => profile
+            .stages()
+            .iter()
+            .map(|stage| (stage.id().to_string(), stage.name().to_string()))
+            .collect(),
+        None => Vec::new(),
+    };
 
     rsx! {
         Column {
@@ -88,20 +108,32 @@ pub fn SolutionProfile(props: SolutionProfileProps) -> Element {
                 }
             }
 
-            Select {
-                placeholder: "выбрать готовый профиль",
-                value: profile,
-                options: props.profiles_browser.read()
-                    .fetch()
-                    .iter()
-                    .map(|profile| (profile.id().to_string(), profile.name().to_string()))
-                    .collect(),
-                on_search: move |search_query| {
-                    props.on_profile_search.call(search_query);
-                },
-                on_change: move |profile_id| {
-                    props.on_profile_change.call(profile_id);
-                },
+            div {
+                class: "profile-picker",
+
+                SearchableSelect {
+                    placeholder: "выбрать готовый профиль",
+                    value: profile,
+                    options: props.profiles_browser.read()
+                        .fetch()
+                        .iter()
+                        .map(|profile| (profile.id().to_string(), profile.name().to_string()))
+                        .collect(),
+                    on_search: move |search_query| {
+                        props.on_profile_search.call(search_query);
+                    },
+                    on_change: move |profile_id| {
+                        props.on_profile_change.call(profile_id);
+                    },
+                }
+
+                if stages.len() > 1 {
+                    Select {
+                        value: stage,
+                        options: stages,
+                        on_change: props.on_profile_stage_change,
+                    }
+                }
             }
 
             match profile_tab.read().as_str() {

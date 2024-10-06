@@ -18,6 +18,7 @@ pub struct SolutionEditorProps {
     on_name_update: EventHandler<String>,
     on_volume_update: EventHandler<Volume>,
     on_profile_change: EventHandler<String>,
+    on_profile_stage_change: EventHandler<String>,
     on_profile_search: EventHandler<String>,
     on_profile_nutrient_update: EventHandler<NutrientAmount>,
     on_fertilizer_select: EventHandler<String>,
@@ -59,6 +60,7 @@ pub fn SolutionEditor(props: SolutionEditorProps) -> Element {
                     solution: props.solution,
                     profiles_browser: props.profiles_browser,
                     on_profile_change: props.on_profile_change,
+                    on_profile_stage_change: props.on_profile_stage_change,
                     on_profile_search: props.on_profile_search,
                     on_profile_nutrient_update: props.on_profile_nutrient_update,
                 }

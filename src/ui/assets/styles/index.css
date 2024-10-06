@@ -186,6 +186,7 @@ body {
 /* volume input */
 .volume-input {
     display: flex;
+    width: max-content;
     border: 1px solid rgba(225, 228, 234, 1);
     border-radius: 8px;
     font-size: 12px;
@@ -194,8 +195,10 @@ body {
 }
 
 .volume-input .input {
-    width: 100%;
+    /*
     flex-grow: 1;
+    */
+    max-width: 50px;
     font-size: 12px;
     line-height: 16px;
     text-align: center;
@@ -203,11 +206,18 @@ body {
     margin: 0px;
     outline: none;
     border: none;
+    border-radius: 8px;
     box-sizing: border-box;
 }
+.volume-input .select {
+    width: auto;
+}
+.volume-input .select__value {
+    border: none!important;
+}
 
-.sel__list {
-    display: none;
+.profile-picker {
+    display: flex;
 }
 
 /* concentrates */
@@ -765,15 +775,14 @@ button .badge_size-small {
 
 /* utils label */
 .label {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
     width: 100%;
 }
 .label__text {
+    display: block;
     font-size: 12px;
     line-height: 16px;
     font-weight: 500;
+    margin-bottom: 4px;
 }
 
 /* utils list */

@@ -1,7 +1,7 @@
 use crate::controller::concentrates::SolutionsBrowser;
 use crate::model::solutions::Solution;
 use crate::ui::components::layout::Row;
-use crate::ui::components::utils::Select;
+use crate::ui::components::utils::SearchableSelect;
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
@@ -24,7 +24,7 @@ pub fn SolutionSelect(props: SolutionSelectProps) -> Element {
     rsx! {
         Row {
 
-            Select {
+            SearchableSelect {
                 // label: "Раствор",
                 placeholder: "выбрать раствор",
                 value,

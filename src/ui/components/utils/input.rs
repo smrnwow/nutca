@@ -15,7 +15,6 @@ pub fn Input(props: InputProps) -> Element {
         input {
             class: "input input_size-{size}",
             r#type: "text",
-            size: 1,
             value: props.value,
             oninput: move |event| {
                 props.on_change.call(event.value());

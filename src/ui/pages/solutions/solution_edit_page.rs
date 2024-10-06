@@ -32,6 +32,9 @@ pub fn SolutionEditPage(solution_id: String) -> Element {
             on_profile_change: move |profile_id| {
                 editor.write().change_profile(profile_id);
             },
+            on_profile_stage_change: move |stage_id| {
+                editor.write().change_profile_stage(stage_id);
+            },
             on_fertilizer_select: move |fertilizer_id| {
                 editor.write().select_fertilizer(fertilizer_id);
             },

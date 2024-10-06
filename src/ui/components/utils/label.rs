@@ -9,7 +9,7 @@ pub struct LabelProps {
 #[component]
 pub fn Label(props: LabelProps) -> Element {
     rsx! {
-        label {
+        div {
             class: "label",
 
             span {

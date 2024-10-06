@@ -1,4 +1,4 @@
-use super::{Input, Sel};
+use super::{Input, Select};
 use crate::model::chemistry::{Volume, VolumeUnits};
 use dioxus::prelude::*;
 
@@ -15,6 +15,13 @@ pub struct VolumeInputProps {
 #[component]
 pub fn VolumeInput(props: VolumeInputProps) -> Element {
     let volume = *props.volume.read();
+
+    let value = use_memo(move || {
+        (
+            props.volume.read().units().into(),
+            props.volume.read().units().label(),
+        )
+    });
 
     let options = use_signal(|| {
         vec![
@@ -36,11 +43,8 @@ pub fn VolumeInput(props: VolumeInputProps) -> Element {
                 },
             }
 
-            Sel {
-                value: Signal::new((
-                    props.volume.read().units().into(),
-                    props.volume.read().units().label(),
-                )),
+            Select {
+                value,
                 options: options.read().clone(),
                 on_change: move |units: String| {
                     props.on_change.call(volume.convert(VolumeUnits::from(units)));

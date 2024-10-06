@@ -97,6 +97,12 @@ impl Solution {
         self.calculate_fertilizers_weights();
     }
 
+    pub fn change_profile_stage(&mut self, stage_id: String) {
+        self.profile_requirement.change_profile_stage(stage_id);
+
+        self.calculate_fertilizers_weights();
+    }
+
     pub fn update_nutrient_requirement(&mut self, nutrient_amount: NutrientAmount) {
         self.profile_requirement.update_nutrient(nutrient_amount);
 

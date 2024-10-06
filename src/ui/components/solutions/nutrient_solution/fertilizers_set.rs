@@ -3,7 +3,7 @@ use crate::controller::solutions::FertilizersUsed;
 use crate::model::chemistry::Volume;
 use crate::model::solutions::Solution;
 use crate::ui::components::layout::{Column, Row};
-use crate::ui::components::utils::{List, Pagination, Title, VolumeInput};
+use crate::ui::components::utils::{Label, List, Pagination, Title, VolumeInput};
 use crate::ui::components::VolumeField;
 use dioxus::prelude::*;
 
@@ -34,9 +34,13 @@ pub fn FertilizersSet(props: FertilizersSetProps) -> Element {
                 }
             }
 
-            VolumeInput {
-                volume,
-                on_change: props.on_volume_update,
+            Label {
+                text: "Объем раствора",
+
+                VolumeInput {
+                    volume,
+                    on_change: props.on_volume_update,
+                }
             }
 
             /*
