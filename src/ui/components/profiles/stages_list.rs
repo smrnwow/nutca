@@ -39,9 +39,7 @@ pub fn StagesList(props: StagesListProps) -> Element {
             1 => rsx! {
                 SingleStage {
                     profile: props.profile,
-                    on_nutrient_update: move |nutrient_amount| {
-                        props.on_nutrient_update.call((String::new(), nutrient_amount));
-                    },
+                    on_nutrient_update: props.on_nutrient_update,
                 }
             },
             _ => rsx! {

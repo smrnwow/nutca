@@ -7,7 +7,7 @@ use dioxus::prelude::*;
 #[derive(Props, PartialEq, Clone)]
 pub struct SingleStageProps {
     profile: Memo<Profile>,
-    on_nutrient_update: EventHandler<NutrientAmount>,
+    on_nutrient_update: EventHandler<(String, NutrientAmount)>,
 }
 
 #[component]
@@ -31,7 +31,9 @@ pub fn SingleStage(props: SingleStageProps) -> Element {
 
             StageNutrients {
                 nutrients,
-                on_nutrient_update: props.on_nutrient_update,
+                on_nutrient_update: move |nutrient_amount| {
+                    props.on_nutrient_update.call((stage.read().id().to_string(), nutrient_amount));
+                },
             }
         }
     }
