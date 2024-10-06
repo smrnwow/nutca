@@ -1,13 +1,13 @@
 use dioxus::prelude::*;
 
-fn round(value: &String) -> String {
+fn round(value: String) -> String {
     format!("{:.3}", value.parse::<f64>().unwrap())
 }
 
 #[derive(Props, PartialEq, Clone)]
 pub struct NutrientValueProps {
     symbol: String,
-    value: f64,
+    value: Signal<f64>,
     state: Option<String>,
     on_change: Option<EventHandler<f64>>,
 }
@@ -16,7 +16,16 @@ pub struct NutrientValueProps {
 pub fn NutrientValue(props: NutrientValueProps) -> Element {
     let state = props.state.unwrap_or(String::from("default"));
 
-    let mut value = use_signal(|| round(&props.value.to_string()));
+    let mut focused = use_signal(|| false);
+
+    let mut local_value = use_signal(|| round(props.value.read().to_string()));
+
+    let props_value = round(props.value.read().to_string());
+
+    let value = match *focused.read() {
+        true => local_value.read().clone(),
+        false => props_value,
+    };
 
     rsx! {
         div {
@@ -34,14 +43,19 @@ pub fn NutrientValue(props: NutrientValueProps) -> Element {
                         r#type: "text",
                         size: 1,
                         value,
+                        onfocusin: move |_| {
+                            local_value.set(round(props.value.read().to_string()));
+                            focused.set(true);
+                        },
                         oninput: move |event| {
                             let new_value = event.value().parse().unwrap_or(0.0);
-                            value.set(event.value());
+                            local_value.set(event.value());
                             on_change.call(new_value);
                         },
                         onfocusout: move |_| {
-                            let new_value = round(&value.read());
-                            value.set(new_value);
+                            let new_value = round(local_value.read().clone());
+                            local_value.set(new_value);
+                            focused.set(false);
                         },
                     }
                 },

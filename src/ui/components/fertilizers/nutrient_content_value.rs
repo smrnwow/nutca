@@ -12,7 +12,7 @@ pub fn NutrientContentValue(props: NutrientContentValueProps) -> Element {
     rsx! {
         NutrientValue {
             symbol: props.nutrient.nutrient().symbol(),
-            value: props.nutrient.value(),
+            value: Signal::new(props.nutrient.value()),
         }
     }
 }

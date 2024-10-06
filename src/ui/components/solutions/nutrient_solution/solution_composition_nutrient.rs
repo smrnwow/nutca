@@ -81,7 +81,7 @@ pub fn SolutionCompositionNutrient(props: SolutionCompositionNutrientProps) -> E
             NutrientValue {
                 state: diff_state,
                 symbol: props.nutrient.nutrient().symbol(),
-                value: props.nutrient.value(),
+                value: Signal::new(props.nutrient.value()),
             }
         }
     }

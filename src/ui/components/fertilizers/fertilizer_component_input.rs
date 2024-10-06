@@ -13,7 +13,7 @@ pub fn FertilizerComponentInput(props: FertilizerComponentInputProps) -> Element
     rsx! {
         NutrientValue {
             symbol: props.component.symbol(),
-            value: props.component.value(),
+            value: Signal::new(props.component.value()),
             on_change: move |value| props.on_update.call(props.component.new(value)),
         }
     }
