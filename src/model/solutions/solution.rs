@@ -72,10 +72,6 @@ impl Solution {
         )
     }
 
-    pub fn nutrient_value(&self, nutrient: Nutrient) -> NutrientAmount {
-        self.nutrition_content.value_of(nutrient)
-    }
-
     pub fn update_name(&mut self, name: String) {
         self.name = name;
     }
