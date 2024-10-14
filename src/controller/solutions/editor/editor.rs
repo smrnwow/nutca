@@ -22,7 +22,9 @@ impl Editor {
         profiles_browser: ProfilesBrowser,
         fertilizers_picker: FertilizersPicker,
     ) -> Self {
-        let fertilizers_used = FertilizersUsed::new(solution.fertilizers().values().collect());
+        let mut fertilizers_used = FertilizersUsed::new();
+
+        fertilizers_used.with_fertilizers(solution.fertilizers().values().collect());
 
         Self {
             solutions_repository,
@@ -80,7 +82,7 @@ impl Editor {
         self.solution.update_volume(volume);
 
         self.fertilizers_used
-            .set_fertilizers(self.solution.fertilizers().values().collect());
+            .with_fertilizers(self.solution.fertilizers().values().collect());
     }
 
     pub fn change_profile(&mut self, profile_id: String) {
@@ -89,14 +91,14 @@ impl Editor {
         self.solution.change_profile(profile);
 
         self.fertilizers_used
-            .set_fertilizers(self.solution.fertilizers().values().collect());
+            .with_fertilizers(self.solution.fertilizers().values().collect());
     }
 
     pub fn change_profile_stage(&mut self, stage_id: String) {
         self.solution.change_profile_stage(stage_id);
 
         self.fertilizers_used
-            .set_fertilizers(self.solution.fertilizers().values().collect());
+            .with_fertilizers(self.solution.fertilizers().values().collect());
     }
 
     pub fn update_nutrient_requirement(&mut self, nutrient_requirement: NutrientAmount) {
@@ -104,7 +106,7 @@ impl Editor {
             .update_nutrient_requirement(nutrient_requirement);
 
         self.fertilizers_used
-            .set_fertilizers(self.solution.fertilizers().values().collect());
+            .with_fertilizers(self.solution.fertilizers().values().collect());
     }
 
     pub fn select_fertilizer(&mut self, fertilizer_id: String) {
@@ -112,7 +114,7 @@ impl Editor {
             self.solution.add_fertilizer(fertilizer);
 
             self.fertilizers_used
-                .set_fertilizers(self.solution.fertilizers().values().collect());
+                .with_fertilizers(self.solution.fertilizers().values().collect());
         }
     }
 
@@ -122,7 +124,7 @@ impl Editor {
         self.fertilizers_picker.remove_projection(&fertilizer_id);
 
         self.fertilizers_used
-            .set_fertilizers(self.solution.fertilizers().values().collect());
+            .with_fertilizers(self.solution.fertilizers().values().collect());
     }
 
     pub fn update_fertilizer_amount(&mut self, fertilizer_id: String, amount: f64) {
@@ -130,7 +132,7 @@ impl Editor {
             .update_fertilizer_amount(&fertilizer_id, amount);
 
         self.fertilizers_used
-            .set_fertilizers(self.solution.fertilizers().values().collect());
+            .with_fertilizers(self.solution.fertilizers().values().collect());
     }
 
     pub fn create(&mut self) {

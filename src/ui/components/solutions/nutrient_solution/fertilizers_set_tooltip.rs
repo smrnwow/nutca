@@ -8,7 +8,7 @@ use dioxus::prelude::*;
 fn tag_text(nutrient: NutrientAmount) -> Vec<String> {
     vec![
         nutrient.nutrient().symbol().to_string(),
-        format!("{:.1}PPM", nutrient.value() / 10.),
+        format!("{:.1}PPM", nutrient.factor()),
     ]
 }
 

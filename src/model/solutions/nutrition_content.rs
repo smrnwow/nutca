@@ -22,7 +22,7 @@ impl NutritionContent {
                 .list()
                 .iter()
                 .for_each(|nutrient_amount| {
-                    nutrients.add(nutrient_amount.new(nutrient_amount.value() * 10.));
+                    nutrients.add(nutrient_amount.new(nutrient_amount.factor()));
                 });
         });
 

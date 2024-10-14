@@ -58,6 +58,10 @@ impl NutrientAmount {
         }
     }
 
+    pub fn factor(&self) -> f64 {
+        self.value() * 10.
+    }
+
     pub fn new(&self, value: f64) -> Self {
         match self {
             Self::Nitrogen(_) => Self::Nitrogen(value),

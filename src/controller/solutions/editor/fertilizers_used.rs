@@ -1,23 +1,34 @@
 use crate::model::fertilizers::FertilizerAmount;
+use crate::model::chemistry::Volume;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct FertilizersUsed {
     fertilizers: Vec<FertilizerAmount>,
+    volume: Volume,
     limit: usize,
     page_index: usize,
 }
 
 impl FertilizersUsed {
-    pub fn new(fertilizers: Vec<&FertilizerAmount>) -> Self {
+    pub fn new() -> Self {
         Self {
-            fertilizers: fertilizers.into_iter().cloned().collect(),
+            fertilizers: Vec::new(),
+            volume: Volume::default(),
             limit: 8,
             page_index: 1,
         }
     }
 
-    pub fn set_fertilizers(&mut self, fertilizers: Vec<&FertilizerAmount>) {
+    pub fn with_fertilizers(&mut self, fertilizers: Vec<&FertilizerAmount>) -> &mut Self {
         self.fertilizers = fertilizers.into_iter().cloned().collect();
+
+        self
+    }
+
+    pub fn with_volume(&mut self, volume: Volume) -> &mut Self {
+        self.volume = volume;
+
+        self
     }
 
     pub fn page_index(&self) -> usize {

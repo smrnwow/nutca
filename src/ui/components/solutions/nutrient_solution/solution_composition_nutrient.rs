@@ -16,12 +16,12 @@ fn tooltip_text(nutrient_result: NutrientResult) -> String {
 
     if diff_percent < 5. {
         return format!(
-            "Рассчитанное значение равно установленному. Разница ({:.2}PPM) находится в пределах погрешности.", diff
+            "Рассчитанное значение равно установленному. Разница ({:.2}PPM) находится в пределах погрешности.", diff.abs()
         );
     }
 
     if diff < 0. {
-        return format!("Установленное значение превышено на {:.2}PPM", diff);
+        return format!("Установленное значение превышено на {:.2}PPM", diff.abs());
     } else {
         return format!("До установленного значение не хватает {:.2}PPM", diff.abs());
     }

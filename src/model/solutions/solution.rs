@@ -106,20 +106,22 @@ impl Solution {
     }
 
     pub fn add_fertilizer(&mut self, fertilizer: impl Into<FertilizerAmount>) {
-        let fertilizer_weight = fertilizer.into();
+        let mut fertilizer_amount: FertilizerAmount = fertilizer.into();
+
+        fertilizer_amount.volume(self.volume);
 
         self.fertilizers
-            .insert(fertilizer_weight.fertilizer().id(), fertilizer_weight);
+            .insert(fertilizer_amount.fertilizer().id(), fertilizer_amount);
 
         self.calculate_fertilizers_weights();
     }
 
     pub fn remove_fertilizer(&mut self, fertilizer_id: &String) -> Option<FertilizerAmount> {
         match self.fertilizers.remove(fertilizer_id) {
-            Some(fertilizer_weight) => {
+            Some(fertilizer_amount) => {
                 self.calculate_fertilizers_weights();
 
-                Some(fertilizer_weight)
+                Some(fertilizer_amount)
             }
 
             None => None,
@@ -127,8 +129,10 @@ impl Solution {
     }
 
     pub fn update_fertilizer_amount(&mut self, fertilizer_id: &String, amount: f64) {
-        if let Some(fertilizer_weight) = self.fertilizers.get_mut(fertilizer_id) {
-            fertilizer_weight.update_amount(amount);
+        if let Some(fertilizer_amount) = self.fertilizers.get_mut(fertilizer_id) {
+            let amount = amount / self.volume.to_litres();
+            
+            fertilizer_amount.update_amount(amount);
 
             self.calculate_nutrients();
         }
@@ -151,7 +155,7 @@ impl Solution {
             self.profile_requirement.nutrients(),
             self.fertilizers
                 .values()
-                .map(|fertilizer_weight| fertilizer_weight.fertilizer())
+                .map(|fertilizer_amount| fertilizer_amount.fertilizer())
                 .collect(),
         )
         .solve();
@@ -159,8 +163,8 @@ impl Solution {
         calculation_results
             .iter()
             .for_each(|(fertilizer_id, value)| {
-                if let Some(fertilizer_weight) = self.fertilizers.get_mut(fertilizer_id) {
-                    fertilizer_weight.update_amount(value.amount());
+                if let Some(fertilizer_amount) = self.fertilizers.get_mut(fertilizer_id) {
+                    fertilizer_amount.update_amount(value.amount());
                 }
             });
 

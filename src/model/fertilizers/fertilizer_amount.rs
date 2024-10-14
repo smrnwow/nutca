@@ -29,7 +29,7 @@ impl FertilizerAmount {
     }
 
     pub fn update_amount(&mut self, amount: f64) {
-        self.amount = amount / self.volume.to_litres() / self.concentration as f64;
+        self.amount = amount;
     }
 
     pub fn add(&mut self, fertilizer_amount: &FertilizerAmount) {
