@@ -4,7 +4,9 @@ mod fertilizer_item;
 mod fertilizer_percent_button;
 mod from_fertilizers;
 mod from_solution;
+mod part_editor;
 mod part_settings;
+mod parts_list;
 mod solution_select;
 
 pub use concentrate_editor::ConcentrateEditor;
@@ -13,5 +15,7 @@ use fertilizer_item::FertilizerItem;
 use fertilizer_percent_button::FertilizerPercentButton;
 use from_fertilizers::FromFertilizers;
 use from_solution::FromSolution;
+use part_editor::PartEditor;
 use part_settings::PartSettings;
+use parts_list::PartsList;
 use solution_select::SolutionSelect;

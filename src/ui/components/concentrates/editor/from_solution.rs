@@ -1,23 +1,23 @@
-use super::{FertilizerItem, FertilizerPercentButton, PartSettings, SolutionSelect};
-use crate::controller::concentrates::SolutionsBrowser;
+use super::{PartsList, SolutionSelect};
+use crate::controller::concentrates::{FertilizersBrowser, SolutionsBrowser};
 use crate::model::chemistry::Volume;
 use crate::model::concentrates::{CompositionFromSolution, Concentrate};
-use crate::ui::components::layout::{Column, Row};
 use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct FromSolutionProps {
-    concentrate: Memo<Concentrate>,
-    composition: Signal<CompositionFromSolution>,
+    fertilizers_browser: Memo<FertilizersBrowser>,
     solutions_browser: Memo<SolutionsBrowser>,
+    composition: Signal<CompositionFromSolution>,
+    concentrate: Memo<Concentrate>,
     on_solution_search: EventHandler<String>,
     on_solution_change: EventHandler<String>,
     on_part_name_update: EventHandler<(String, String)>,
     on_part_concentration_update: EventHandler<(String, usize)>,
     on_part_volume_update: EventHandler<(String, Volume)>,
-    on_part_remove: EventHandler<String>,
-    on_fertilizer_percent_update: EventHandler<(String, String, usize)>,
-    on_fertilizer_remove: EventHandler<(String, String)>,
+    on_part_delete: EventHandler<String>,
+    on_fertilizer_delete: EventHandler<(String, String)>,
+    on_fertilizer_percent_distribute: EventHandler<(String, String, usize)>,
 }
 
 #[component]
@@ -32,61 +32,16 @@ pub fn FromSolution(props: FromSolutionProps) -> Element {
             on_solution_change: props.on_solution_change,
         }
 
-        div {
-            class: "concentrate__parts",
-
-            Row {
-                for part in props.concentrate.read().parts().into_iter().cloned().map(|p| Signal::new(p)) {
-                    div {
-                        class: "part-editor",
-
-                        Column {
-                            gap: "x-small",
-
-                            PartSettings {
-                                name: part.read().name().clone(),
-                                concentration: part.read().concentration().clone(),
-                                volume: part.read().volume().clone(),
-                                on_name_update: move |name| {
-                                    props.on_part_name_update.call((part.read().id().clone(), name));
-                                },
-                                on_concentration_update: move |concentration| {
-                                    props.on_part_concentration_update.call((part.read().id().clone(), concentration));
-                                },
-                                on_volume_update: move |volume| {
-                                    props.on_part_volume_update.call((part.read().id().clone(), volume));
-                                },
-                                on_delete: move |_| props.on_part_remove.call(part.read().id().clone()),
-                            }
-                        }
-
-                        Column {
-                            gap: "xx-small",
-
-                            for fertilizer_amount in props.composition.read().fertilizers_by_part(&part.read()).into_iter().map(|f| Signal::new(f)) {
-                                FertilizerItem {
-                                    key: "{fertilizer_amount.read().fertilizer().id()}",
-                                    fertilizer_amount,
-                                    on_delete: move |fertilizer_id| {
-                                        let part_id = part.read().id().clone();
-
-                                        props.on_fertilizer_remove.call((part_id, fertilizer_id));
-                                    },
-                                }
-                            }
-                        }
-
-                        FertilizerPercentButton {
-                            composition: props.composition,
-                            on_fertilizer_percent_update: move |(fertilizer_id, percent)| {
-                                let part_id = part.read().id().clone();
-
-                                props.on_fertilizer_percent_update.call((part_id, fertilizer_id, percent));
-                            },
-                        }
-                    }
-                }
-            }
+        PartsList {
+            fertilizers_browser: props.fertilizers_browser,
+            composition_from_solution: props.composition,
+            concentrate: props.concentrate,
+            on_part_name_update: props.on_part_name_update,
+            on_part_concentration_update: props.on_part_concentration_update,
+            on_part_volume_update: props.on_part_volume_update,
+            on_part_delete: props.on_part_delete,
+            on_fertilizer_delete: props.on_fertilizer_delete,
+            on_fertilizer_percent_distribute: props.on_fertilizer_percent_distribute,
         }
     }
 }

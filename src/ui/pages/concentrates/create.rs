@@ -35,7 +35,7 @@ pub fn Create(solution_id: String) -> Element {
             on_part_add: move |_| {
                 editor.write().add_part();
             },
-            on_part_remove: move |part_id| {
+            on_part_delete: move |part_id| {
                 editor.write().delete_part(part_id);
             },
             on_name_update: move |name| {
@@ -50,13 +50,13 @@ pub fn Create(solution_id: String) -> Element {
             on_part_volume_update: move |(part_id, volume)| {
                 editor.write().update_part_volume(part_id, volume);
             },
-            on_fertilizer_percent_update: move |(part_id, fertilizer_id, percent)| {
+            on_fertilizer_percent_distribute: move |(part_id, fertilizer_id, percent)| {
                 editor.write().update_fertilizer_percent(part_id, fertilizer_id, percent);
             },
-            on_fertilizer_amount_update: move |(part_id, fertilizer_id, percent)| {
+            on_fertilizer_amount_add: move |(part_id, fertilizer_id, percent)| {
                 editor.write().update_fertilizer_amount(part_id, fertilizer_id, percent);
             },
-            on_fertilizer_remove: move |(part_id, fertilizer_id)| {
+            on_fertilizer_delete: move |(part_id, fertilizer_id)| {
                 editor.write().remove_fertilizer(part_id, fertilizer_id);
             },
             on_save: move |_| {

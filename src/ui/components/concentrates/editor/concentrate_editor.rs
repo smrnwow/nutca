@@ -22,13 +22,13 @@ pub struct ConcentrateEditorProps {
     on_composition_type_change: EventHandler<CompositionType>,
     on_name_update: EventHandler<String>,
     on_part_add: EventHandler<()>,
-    on_part_remove: EventHandler<String>,
+    on_part_delete: EventHandler<String>,
     on_part_name_update: EventHandler<(String, String)>,
     on_part_concentration_update: EventHandler<(String, usize)>,
     on_part_volume_update: EventHandler<(String, Volume)>,
-    on_fertilizer_amount_update: EventHandler<(String, String, f64)>,
-    on_fertilizer_percent_update: EventHandler<(String, String, usize)>,
-    on_fertilizer_remove: EventHandler<(String, String)>,
+    on_fertilizer_amount_add: EventHandler<(String, String, f64)>,
+    on_fertilizer_percent_distribute: EventHandler<(String, String, usize)>,
+    on_fertilizer_delete: EventHandler<(String, String)>,
     on_save: EventHandler<()>,
 }
 
@@ -97,31 +97,32 @@ pub fn ConcentrateEditor(props: ConcentrateEditorProps) -> Element {
                     match props.concentrate.read().composition().clone() {
                         Composition::FromFertilizers(composition) => rsx! {
                             FromFertilizers {
-                                concentrate: props.concentrate,
-                                composition: Signal::new(composition),
                                 fertilizers_browser: props.fertilizers_browser,
+                                composition: Signal::new(composition),
+                                concentrate: props.concentrate,
                                 on_part_name_update: props.on_part_name_update,
                                 on_part_concentration_update: props.on_part_concentration_update,
                                 on_part_volume_update: props.on_part_volume_update,
-                                on_part_remove: props.on_part_remove,
-                                on_fertilizer_amount_update: props.on_fertilizer_amount_update,
-                                on_fertilizer_remove: props.on_fertilizer_remove,
+                                on_part_delete: props.on_part_delete,
+                                on_fertilizer_amount_add: props.on_fertilizer_amount_add,
+                                on_fertilizer_delete: props.on_fertilizer_delete,
                             }
                         },
 
                         Composition::FromSolution(composition) => rsx! {
                             FromSolution {
-                                concentrate: props.concentrate,
+                                fertilizers_browser: props.fertilizers_browser,
                                 composition: Signal::new(composition),
+                                concentrate: props.concentrate,
                                 solutions_browser: props.solutions_browser,
                                 on_solution_search: props.on_solution_search,
                                 on_solution_change: props.on_solution_change,
                                 on_part_name_update: props.on_part_name_update,
                                 on_part_concentration_update: props.on_part_concentration_update,
                                 on_part_volume_update: props.on_part_volume_update,
-                                on_part_remove: props.on_part_remove,
-                                on_fertilizer_percent_update: props.on_fertilizer_percent_update,
-                                on_fertilizer_remove: props.on_fertilizer_remove,
+                                on_part_delete: props.on_part_delete,
+                                on_fertilizer_percent_distribute: props.on_fertilizer_percent_distribute,
+                                on_fertilizer_delete: props.on_fertilizer_delete,
                             }
                         },
                     }

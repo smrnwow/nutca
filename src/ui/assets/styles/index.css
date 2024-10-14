@@ -222,7 +222,7 @@ body {
 
 /* concentrates */
 .concentrate__parts {
-    overflow-x: scroll;
+    /* overflow-x: scroll; */
 }
 
 .part-editor {

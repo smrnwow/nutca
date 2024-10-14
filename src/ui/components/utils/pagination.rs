@@ -22,9 +22,11 @@ pub struct PaginationProps {
 pub fn Pagination(props: PaginationProps) -> Element {
     let size = props.size.unwrap_or(String::from("small"));
 
+    let cursor = props.page_index * props.limit;
+
     let is_first_page = props.page_index == 1;
 
-    let is_last_page = props.items_count < props.limit;
+    let is_last_page = cursor >= props.items_count;
 
     rsx! {
         div {
