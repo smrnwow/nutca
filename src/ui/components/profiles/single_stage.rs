@@ -14,20 +14,11 @@ pub struct SingleStageProps {
 pub fn SingleStage(props: SingleStageProps) -> Element {
     let stage = use_memo(move || props.profile.read().stages().last().unwrap().clone());
 
-    let nutrients = use_memo(move || stage.read().nutrients().clone());
+    let nutrients = stage.read().nutrients().clone();
 
     rsx! {
         Column {
             gap: "small",
-
-            /*
-            Row {
-                Title {
-                    size: "small",
-                    "Питательные элементы",
-                }
-            }
-            */
 
             StageNutrients {
                 nutrients,

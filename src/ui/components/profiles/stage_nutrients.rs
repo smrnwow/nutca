@@ -6,13 +6,13 @@ use dioxus::prelude::*;
 
 #[derive(Props, PartialEq, Clone)]
 pub struct StageNutrientsProps {
-    nutrients: Memo<Nutrients>,
+    nutrients: Nutrients,
     on_nutrient_update: EventHandler<NutrientAmount>,
 }
 
 #[component]
 pub fn StageNutrients(props: StageNutrientsProps) -> Element {
-    let nutrients = props.nutrients.read();
+    let nutrients = props.nutrients;
 
     rsx! {
         Column {

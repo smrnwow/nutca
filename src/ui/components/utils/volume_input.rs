@@ -2,10 +2,6 @@ use super::{Input, Select};
 use crate::model::chemistry::{Volume, VolumeUnits};
 use dioxus::prelude::*;
 
-fn round(value: f64) -> String {
-    format!("{:.2}", value)
-}
-
 #[derive(Props, PartialEq, Clone)]
 pub struct VolumeInputProps {
     volume: Memo<Volume>,
@@ -35,9 +31,9 @@ pub fn VolumeInput(props: VolumeInputProps) -> Element {
             class: "volume-input",
 
             Input {
-                value: round(volume.value()),
+                value: volume.value().to_string(),
                 on_change: move |value: String| {
-                    let value = value.parse::<f64>().unwrap_or(0.0);
+                    let value = value.parse::<usize>().unwrap_or(0);
 
                     props.on_change.call(Volume::new(value, volume.units()));
                 },
@@ -47,7 +43,7 @@ pub fn VolumeInput(props: VolumeInputProps) -> Element {
                 value,
                 options: options.read().clone(),
                 on_change: move |units: String| {
-                    props.on_change.call(volume.convert(VolumeUnits::from(units)));
+                    props.on_change.call(Volume::new(volume.value(), VolumeUnits::from(units)));
                 },
             }
         }

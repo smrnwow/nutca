@@ -82,8 +82,9 @@ impl Solutions {
             },
         )?;
 
+        
         let mut solutions = vec![];
-
+        
         for item in response {
             let solution: SolutionSchema = serde_json::from_str(&item?)?;
 

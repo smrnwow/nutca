@@ -19,7 +19,7 @@ pub struct StagesListProps {
 pub fn StagesList(props: StagesListProps) -> Element {
     let profile = props.profile.read();
 
-    let stages = profile.stages().iter().map(|s| Signal::new(s.clone()));
+    let stages = profile.stages().iter().cloned().map(|s| Memo::new(move || s.clone()));
 
     rsx! {
         Row {
@@ -48,7 +48,7 @@ pub fn StagesList(props: StagesListProps) -> Element {
 
                     for stage in stages {
                         MultiStage {
-                            stage: Memo::new(move || stage.read().clone()),
+                            stage,
                             on_name_update: move |name| {
                                 props.on_stage_name_update.call((stage.read().id().to_string(), name));
                             },

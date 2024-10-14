@@ -1,11 +1,7 @@
 use crate::model::chemistry::{Volume, VolumeUnits};
 use crate::ui::components::layout::Row;
-use crate::ui::components::utils::{FloatField, Label, Select};
+use crate::ui::components::utils::{NumberField, Label, Select};
 use dioxus::prelude::*;
-
-fn round(value: f64) -> f64 {
-    format!("{:.2}", value).parse().unwrap()
-}
 
 #[derive(Props, PartialEq, Clone)]
 pub struct VolumeFieldProps {
@@ -40,8 +36,8 @@ pub fn VolumeField(props: VolumeFieldProps) -> Element {
             Label {
                 text: props.label,
 
-                FloatField {
-                    value: round(volume.value()),
+                NumberField {
+                    value: volume.value(),
                     on_change: move |value| {
                         props.on_change.call(Volume::new(value, volume.units()));
                     },
@@ -52,7 +48,7 @@ pub fn VolumeField(props: VolumeFieldProps) -> Element {
                 value,
                 options: options.read().clone(),
                 on_change: move |units: String| {
-                    props.on_change.call(volume.convert(VolumeUnits::from(units)));
+                    props.on_change.call(Volume::new(volume.value(), VolumeUnits::from(units)));
                 },
             }
         }

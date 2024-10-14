@@ -16,7 +16,7 @@ pub struct MultiStageProps {
 
 #[component]
 pub fn MultiStage(props: MultiStageProps) -> Element {
-    let nutrients = use_memo(move || props.stage.read().nutrients().clone());
+    let nutrients = props.stage.read().nutrients().clone();
 
     rsx! {
         Column {
@@ -41,15 +41,6 @@ pub fn MultiStage(props: MultiStageProps) -> Element {
                     }
                 }
             }
-
-            /*
-            Row {
-                Title {
-                    size: "small",
-                    "Питательные элементы",
-                }
-            }
-            */
 
             StageNutrients {
                 nutrients,
