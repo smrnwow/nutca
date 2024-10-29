@@ -2,7 +2,7 @@ use super::icons::{ArrowDown, ArrowUp, Check, Close, SearchIcon};
 use dioxus::prelude::*;
 use std::rc::Rc;
 
-fn select_list_class(opened: bool) -> String {
+fn select_list_class(_opened: bool) -> String {
     /*
     if opened {
         String::from("select__list select__list_opened")
@@ -33,7 +33,7 @@ pub fn SearchableSelect(props: SearchableSelectProps) -> Element {
 
     let show_value = use_memo(move || props.value.read().0.len() > 0 && !*is_opened.read());
 
-    let mut search_input: Signal<Option<Rc<MountedData>>> = use_signal(|| None);
+    let mut _search_input: Signal<Option<Rc<MountedData>>> = use_signal(|| None);
 
     let search_query = use_signal(|| props.search_query.unwrap_or(String::new()));
 
@@ -43,7 +43,7 @@ pub fn SearchableSelect(props: SearchableSelectProps) -> Element {
 
     let show_cancel = use_memo(move || props.on_search.is_some() && props.value.read().0.len() > 0);
 
-    let show_placeholder = use_memo(move || !*show_value.read() && !*show_search.read());
+    let _show_placeholder = use_memo(move || !*show_value.read() && !*show_search.read());
 
     rsx! {
         div {

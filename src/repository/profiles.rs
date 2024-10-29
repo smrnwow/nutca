@@ -1,4 +1,3 @@
-use crate::model::chemistry::NutrientAmount;
 use crate::model::profiles::Profile;
 use crate::repository::{Error, RepositoryError};
 use rusqlite::{named_params, params, Connection};

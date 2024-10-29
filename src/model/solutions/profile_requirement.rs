@@ -1,4 +1,4 @@
-use crate::model::chemistry::{Nutrient, NutrientAmount, Nutrients};
+use crate::model::chemistry::{NutrientAmount, Nutrients};
 use crate::model::profiles::Profile;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -55,10 +55,6 @@ impl ProfileRequirement {
 
     pub fn nutrients(&self) -> &Nutrients {
         &self.nutrients
-    }
-
-    pub fn value_of(&self, nutrient: Nutrient) -> f64 {
-        self.nutrients.value_of(nutrient).value()
     }
 }
 

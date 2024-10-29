@@ -1,5 +1,5 @@
 use super::{Diff, NutritionContent, ProfileRequirement, Solver};
-use crate::model::chemistry::{Nutrient, NutrientAmount, Volume};
+use crate::model::chemistry::{NutrientAmount, Volume};
 use crate::model::fertilizers::FertilizerAmount;
 use crate::model::profiles::Profile;
 use crate::model::solutions::Conductivity;
@@ -131,7 +131,7 @@ impl Solution {
     pub fn update_fertilizer_amount(&mut self, fertilizer_id: &String, amount: f64) {
         if let Some(fertilizer_amount) = self.fertilizers.get_mut(fertilizer_id) {
             let amount = amount / self.volume.to_litres();
-            
+
             fertilizer_amount.update_amount(amount);
 
             self.calculate_nutrients();

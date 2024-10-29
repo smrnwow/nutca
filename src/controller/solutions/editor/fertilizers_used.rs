@@ -1,5 +1,5 @@
-use crate::model::fertilizers::FertilizerAmount;
 use crate::model::chemistry::Volume;
+use crate::model::fertilizers::FertilizerAmount;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct FertilizersUsed {
@@ -25,7 +25,7 @@ impl FertilizersUsed {
         self
     }
 
-    pub fn with_volume(&mut self, volume: Volume) -> &mut Self {
+    pub fn _with_volume(&mut self, volume: Volume) -> &mut Self {
         self.volume = volume;
 
         self

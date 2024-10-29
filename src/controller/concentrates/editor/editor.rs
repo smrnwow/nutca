@@ -156,22 +156,4 @@ impl Editor {
             }
         }
     }
-
-    pub fn _open_solution(&self) {
-        match self
-            .concentrates_repository
-            .save_draft(self.concentrate.clone())
-        {
-            Ok(concentrate_id) => {
-                navigator().push(Route::SolutionAddPage {
-                    profile_id: String::new(),
-                    concentrate_id,
-                });
-            }
-
-            Err(error) => {
-                println!("error {:#?}", error);
-            }
-        }
-    }
 }

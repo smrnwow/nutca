@@ -1,18 +1,6 @@
 use super::icons::{ArrowDown, ArrowUp, Check};
 use dioxus::prelude::*;
 
-fn select_list_class(opened: bool) -> String {
-    /*
-    if opened {
-        String::from("select__list select__list_opened")
-    } else {
-        String::from("select__list")
-    }
-    */
-
-    String::from("select__list")
-}
-
 #[derive(Props, PartialEq, Clone)]
 pub struct SelectProps {
     value: Memo<(String, String)>,
@@ -62,7 +50,6 @@ pub fn Select(props: SelectProps) -> Element {
 
             ul {
                 class: "select__list",
-                // class: select_list_class(*is_opened.read()),
 
                 for option in props.options.iter().cloned().map(|o| Signal::new(o)) {
                     li {

@@ -51,6 +51,10 @@ impl FertilizerAmount {
         }
     }
 
+    pub fn is_liquid(&self) -> bool {
+        self.fertilizer.liquid
+    }
+
     pub fn fertilizer(&self) -> &Fertilizer {
         &self.fertilizer
     }

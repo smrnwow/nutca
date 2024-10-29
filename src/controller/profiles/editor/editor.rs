@@ -70,7 +70,7 @@ impl Editor {
         }
     }
 
-    pub fn back(&self) {
+    pub fn _back(&self) {
         navigator().push(Route::ProfilesMainPage {});
     }
 }

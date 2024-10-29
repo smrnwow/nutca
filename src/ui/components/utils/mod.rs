@@ -1,9 +1,7 @@
 mod badge;
-mod banner;
 mod block;
 mod button;
 mod buttons_group;
-mod card;
 mod checkbox;
 mod divider;
 mod dropdown;
@@ -28,12 +26,10 @@ mod tooltip;
 mod volume_input;
 
 pub use badge::Badge;
-pub use banner::Banner;
 pub use block::Block;
 pub use button::Button;
 pub use buttons_group::ButtonsGroup;
 pub use buttons_group::ButtonsGroupButton;
-pub use card::Card;
 pub use checkbox::Checkbox;
 pub use divider::Divider;
 pub use dropdown::Dropdown;

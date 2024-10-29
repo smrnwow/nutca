@@ -29,12 +29,12 @@ impl ProfileValidator {
 
     pub fn validate_name(&mut self, name: &str) {
         if name.len() == 0 {
-            self.name = Some(Error::SolutionNameEmpty);
+            self.name = Some(Error::ProfileNameEmpty);
             return;
         }
 
         if name.len() > 100 {
-            self.name = Some(Error::SolutionNameTooLong);
+            self.name = Some(Error::ProfileNameTooLong);
             return;
         }
 

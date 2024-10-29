@@ -1,5 +1,6 @@
 use super::FertilizersSetTooltip;
 use crate::model::fertilizers::FertilizerAmount;
+use crate::ui::components::chemistry::SubstanceAmount;
 use crate::ui::components::layout::Row;
 use crate::ui::components::utils::{FloatField, QuickAction, Text};
 use dioxus::prelude::*;
@@ -37,6 +38,15 @@ pub fn FertilizersSetItem(props: FertilizersSetItemProps) -> Element {
                     }
                 }
 
+                SubstanceAmount {
+                    amount: props.fertilizer_amount.read().amount(),
+                    is_liquid: props.fertilizer_amount.read().is_liquid(),
+                    on_amount_update: move |value| {
+                        props.on_amount_update.call((props.fertilizer_amount.read().fertilizer().id(), value));
+                    },
+                }
+
+                /*
                 div {
                     class: "fertilizers-set-item__amount",
 
@@ -52,6 +62,7 @@ pub fn FertilizersSetItem(props: FertilizersSetItemProps) -> Element {
                         {props.fertilizer_amount.read().units()},
                     }
                 }
+                */
             }
         }
     }
