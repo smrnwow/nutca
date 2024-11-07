@@ -39,6 +39,30 @@ impl Nutrients {
         nutrients
     }
 
+    pub fn plus(&self, nutrients: Nutrients) -> Self {
+        let mut new_nutrients = Self::new();
+
+        for nutrient_amount in self.nutrients {
+            let value = nutrients.value_of(nutrient_amount.nutrient());
+
+            new_nutrients.set(nutrient_amount.plus(value.value()));
+        }
+
+        new_nutrients
+    }
+
+    pub fn minus(&self, nutrients: Nutrients) -> Self {
+        let mut new_nutrients = Self::new();
+
+        for nutrient_amount in self.nutrients {
+            let value = nutrients.value_of(nutrient_amount.nutrient());
+
+            new_nutrients.set(nutrient_amount.minus(value.value()));
+        }
+
+        new_nutrients
+    }
+
     pub fn list(&self) -> Vec<NutrientAmount> {
         self.nutrients
             .iter()

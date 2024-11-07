@@ -99,4 +99,61 @@ impl NutrientAmount {
             Self::Molybdenum(value) => Self::Molybdenum(value + amount),
         }
     }
+
+    pub fn plus(&self, amount: f64) -> Self {
+        match self {
+            Self::Nitrogen(value) => Self::Nitrogen(value + amount),
+            Self::NitrogenNitrate(value) => Self::NitrogenNitrate(value + amount),
+            Self::NitrogenAmmonium(value) => Self::NitrogenAmmonium(value + amount),
+            Self::Phosphorus(value) => Self::Phosphorus(value + amount),
+            Self::Potassium(value) => Self::Potassium(value + amount),
+            Self::Calcium(value) => Self::Calcium(value + amount),
+            Self::Magnesium(value) => Self::Magnesium(value + amount),
+            Self::Sulfur(value) => Self::Sulfur(value + amount),
+            Self::Iron(value) => Self::Iron(value + amount),
+            Self::Manganese(value) => Self::Manganese(value + amount),
+            Self::Copper(value) => Self::Copper(value + amount),
+            Self::Zinc(value) => Self::Zinc(value + amount),
+            Self::Boron(value) => Self::Boron(value + amount),
+            Self::Molybdenum(value) => Self::Molybdenum(value + amount),
+        }
+    }
+
+    pub fn minus(&self, amount: f64) -> Self {
+        match self {
+            Self::Nitrogen(value) => Self::Nitrogen(value - amount),
+            Self::NitrogenNitrate(value) => Self::NitrogenNitrate(value - amount),
+            Self::NitrogenAmmonium(value) => Self::NitrogenAmmonium(value - amount),
+            Self::Phosphorus(value) => Self::Phosphorus(value - amount),
+            Self::Potassium(value) => Self::Potassium(value - amount),
+            Self::Calcium(value) => Self::Calcium(value - amount),
+            Self::Magnesium(value) => Self::Magnesium(value - amount),
+            Self::Sulfur(value) => Self::Sulfur(value - amount),
+            Self::Iron(value) => Self::Iron(value - amount),
+            Self::Manganese(value) => Self::Manganese(value - amount),
+            Self::Copper(value) => Self::Copper(value - amount),
+            Self::Zinc(value) => Self::Zinc(value - amount),
+            Self::Boron(value) => Self::Boron(value - amount),
+            Self::Molybdenum(value) => Self::Molybdenum(value - amount),
+        }
+    }
+
+    pub fn multiple(&self, factor: f64) -> Self {
+        match self {
+            Self::Nitrogen(value) => Self::Nitrogen(value * factor),
+            Self::NitrogenNitrate(value) => Self::NitrogenNitrate(value * factor),
+            Self::NitrogenAmmonium(value) => Self::NitrogenAmmonium(value * factor),
+            Self::Phosphorus(value) => Self::Phosphorus(value * factor),
+            Self::Potassium(value) => Self::Potassium(value * factor),
+            Self::Calcium(value) => Self::Calcium(value * factor),
+            Self::Magnesium(value) => Self::Magnesium(value * factor),
+            Self::Sulfur(value) => Self::Sulfur(value * factor),
+            Self::Iron(value) => Self::Iron(value * factor),
+            Self::Manganese(value) => Self::Manganese(value * factor),
+            Self::Copper(value) => Self::Copper(value * factor),
+            Self::Zinc(value) => Self::Zinc(value * factor),
+            Self::Boron(value) => Self::Boron(value * factor),
+            Self::Molybdenum(value) => Self::Molybdenum(value * factor),
+        }
+    }
 }

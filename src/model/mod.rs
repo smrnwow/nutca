@@ -7,3 +7,4 @@ pub mod solutions;
 pub mod water_analysis;
 
 pub use error::Error;
+mod computing;

@@ -2,12 +2,15 @@ mod calculation;
 mod calculation_result;
 mod conductivity;
 mod diff;
+mod fertilizers;
 mod nutrient_result;
 mod nutrition_content;
 mod profile_requirement;
+mod results;
 mod solution;
 mod solution_summary;
 mod solver;
+mod computing;
 
 pub use calculation::Calculation;
 pub use calculation_result::CalculationResult;

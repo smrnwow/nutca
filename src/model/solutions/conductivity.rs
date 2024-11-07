@@ -7,38 +7,25 @@ pub struct Conductivity<'a> {
 
 impl<'a> Conductivity<'a> {
     pub fn new(solution_composition: &'a Nutrients) -> Self {
-        let ionic_strength = Self::ionic_strength(&solution_composition);
-
-        Self {
+        let mut conductivity = Self {
             solution_composition,
-            ionic_strength,
-        }
+            ionic_strength: 0.0,
+        };
+
+        conductivity.ionic_strength();
+
+        conductivity
     }
 
     pub fn conductivity(&self) -> f64 {
-        self.solution_composition
-            .list()
+        self.nutrients()
             .iter()
             .map(|nutrient_amount| {
                 let nutrient = nutrient_amount.nutrient();
 
                 let activity_coefficient = self.activity_coefficient(nutrient);
 
-                /*
-                println!(
-                    "{:#?} activity coefficient {:#?}",
-                    nutrient, activity_coefficient
-                );
-                */
-
                 let dissolve_coefficient = self.dissolve_coefficient(nutrient);
-
-                /*
-                println!(
-                    "{:#?} dissolve coefficient {:#?}",
-                    nutrient, dissolve_coefficient
-                );
-                */
 
                 let ion_concentration = Self::ppms_to_moles(*nutrient_amount);
 
@@ -49,31 +36,22 @@ impl<'a> Conductivity<'a> {
             .sum()
     }
 
-    fn ionic_strength(solution_composition: &Nutrients) -> f64 {
-        0.5 * solution_composition
-            .list()
-            .iter()
-            .map(|nutrient_amount| {
-                let charge = nutrient_amount.nutrient().ionic_charge().abs() as f64;
+    fn ionic_strength(&mut self) {
+        self.ionic_strength = 0.5
+            * self
+                .nutrients()
+                .iter()
+                .map(|nutrient_amount| {
+                    let charge = nutrient_amount.nutrient().ionic_charge().abs() as f64;
 
-                let molarity = Self::ppms_to_moles(*nutrient_amount);
+                    let molarity = Self::ppms_to_moles(*nutrient_amount);
 
-                molarity * (charge * charge)
-            })
-            .sum::<f64>()
+                    molarity * (charge * charge)
+                })
+                .sum::<f64>();
     }
 
     fn a_constant(&self) -> f64 {
-        /*
-        let molarity = self
-            .solution_composition
-            .list()
-            .iter()
-            .map(|nutrient_amount| Self::ppms_to_moles(*nutrient_amount))
-            .sum::<f64>();
-        0.5085 * molarity.powf(-0.5)
-        */
-
         0.5085
     }
 
@@ -84,18 +62,6 @@ impl<'a> Conductivity<'a> {
             * self.a_constant()
             * (charge * charge)
             * self.ionic_strength.sqrt();
-
-        /*
-        println!(
-            "coefficient {:#?}, {:#?}, {:#?}, {:#?}, {:#?} = {:#?}",
-            nutrient,
-            -((10. as f64).ln()),
-            self.a_constant,
-            (charge * charge),
-            self.ionic_strength.sqrt(),
-            coefficient
-        );
-        */
 
         coefficient.exp()
     }
@@ -112,6 +78,18 @@ impl<'a> Conductivity<'a> {
 
     fn ppms_to_moles(nutrient_amount: NutrientAmount) -> f64 {
         nutrient_amount.value() / (1000. * nutrient_amount.nutrient().molar_mass())
+    }
+
+    fn nutrients(&self) -> Vec<NutrientAmount> {
+        let nutrients = self
+            .solution_composition
+            .list()
+            .iter()
+            .filter(|nutrient_amount| nutrient_amount.nutrient().ionic_charge() != 0)
+            .map(|nutrient_amount| *nutrient_amount)
+            .collect();
+
+        nutrients
     }
 }
 
